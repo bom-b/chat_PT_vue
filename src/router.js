@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import store from './store';
 import Login from "./views/common/login-page.vue";
-import D_Home from "@/views/default/d_home-page.vue";
-import D_About from "@/views/default/d_about-page.vue";
+import D_Home from "@/views/default/d-home-page.vue";
+import D_About from "@/views/default/d-about-page.vue";
 import PT_Home from "./views/pt/pt-home-page.vue";
 
 const router = createRouter({
