@@ -4,6 +4,7 @@
   <div class="app">
     <router-view/>
   </div>
+  <Footer />
 </template>
 <script setup>
 </script>
@@ -12,9 +13,13 @@ import {mapState} from "vuex";
 import None_Header from "@/components/header/none-header.vue";
 import PT_Header from "@/components/header/pt-header.vue";
 import Default_Header from "@/components/header/d-header.vue";
+import Footer from '@/components/footer/footer.vue';
 
 export default {
   name: 'App',
+  components: {
+    Footer,
+  },
   computed: {
     ...mapState(['headerType']),
     headerComponent() {
