@@ -1,31 +1,31 @@
-<!--https://github.com/fullcalendar/fullcalendar-vue?tab=readme-ov-file-->
+<template>
+  <div class="body">
+    <h1> 관리할 회원을 추가해주세요.</h1>
+    <ul>
+      <li v-for="member in memList" :key="member">
+        {{ member.name }}: {{ member.phoneNumber }}
+      </li>
+    </ul>
+  </div>
+</template>
 <script>
-import FullCalendar from '@fullcalendar/vue3'
-import dayGridPlugin from '@fullcalendar/daygrid'
-
-export default {
-  components: {
-    FullCalendar // make the <FullCalendar> tag available
-  },
-  data: function () {
+export default ({
+  data() {
     return {
-      calendarOptions: {
-        plugins: [dayGridPlugin],
-        initialView: 'dayGridMonth',
-        weekends: false,
-        events: [
-          { title: 'Meeting', start: new Date() }
-        ]
-      }
+      memList: [
+        { name: '홍길동', phoneNumber: '010-1234-5678' },
+        { name: '김첨지', phoneNumber: '010-9876-5432' },
+        { name: '놀부', phoneNumber: '010-5555-5555' }
+      ]
     }
+  },
+  components: {
   }
-}
+})
 </script>
 
-<template>
-  <h1>스케줄 관리</h1>
-  <calendarOptions>
-    
-  </calendarOptions>
-  <FullCalendar :options='calendarOptions' />  
-</template>
+<style>
+.body {
+  padding: 20px;
+}
+</style>
