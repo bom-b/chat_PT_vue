@@ -7,6 +7,10 @@ import "aos/dist/aos.css"; // 스크롤 할때 애니메이션 보여주는 라�
 import './assets/css/global-style.css'; // 전체 페이지에 적용할 css
 import 'material-icons/iconfont/material-icons.css'; // 구글 아이콘 사용
 
+// 테이블 추가
+// import 'vxe-table/lib/style.css';
+// import VXETable from 'vxe-table';
+
 /*부트스트랩*/
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
@@ -14,6 +18,7 @@ import "bootstrap"
 const app = createApp(App);
 app.use(router);
 app.use(store);
+// app.use(VXETable);
 // app.use(BootstrapVue);
 // app.use(IconsPlugin);
 app.mount('#app');
