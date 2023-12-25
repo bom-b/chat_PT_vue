@@ -8,79 +8,41 @@
 </style>
 
 <template>
-  <div>
-    <header v-if="userType === 'admin'">
-      <nav class="navbar navbar-expand-sm navbar-light bg-light" style="min-height: 80px;">
-  <div class="container-fluid">
-    <router-link to="/pt_home" class="router-link">
-      <img src="../../assets/img/배경지운 로고.png" alt="" style="width: 50px;">
-      <a class="navbar-brand">Chat PT</a>
-    </router-link>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="mynavbar">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <router-link to="/about" class="router-link">
-            <a class="nav-link" href="javascript:void(0)">회원 관리</a>
+  <nav class="navbar navbar-expand-sm navbar-light bg-light" style="min-height: 80px;">
+    <div class="container-fluid">
+      <router-link to="/d_home" class="router-link">
+        <img src="../../assets/img/배경지운 로고.png" alt="" style="width: 50px;">
+        <a class="navbar-brand">Chat PT</a>
+      </router-link>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mynavbar">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <router-link to="/pt_members" class="router-link">
+              <a class="nav-link" href="javascript:void(0)">수강회원 관리</a>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/pt_schedule" class="router-link">
+              <a class="nav-link" href="javascript:void(0)">스케줄 관리</a>
+            </router-link>
+          </li>
+          <router-link to="/pt_profile" class="router-link">
+            <a class="nav-link" href="javascript:void(0)">프로필 관리</a>
           </router-link>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="javascript:void(0)">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="javascript:void(0)">Link</a>
-        </li>
-      </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="text" placeholder="Search">
-        <button class="btn btn-primary" type="button">Search</button>
-      </form>
+        </ul>
+        <form class="d-flex">
+          <button class="btn btn-primary" type="button">로그인</button>
+        </form>
+      </div>
     </div>
-  </div>
-</nav>
-
-    </header>
-    <header v-else>
-      <nav class="navbar navbar-expand-sm navbar-light bg-light" style="min-height: 80px;">
-  <div class="container-fluid">
-    <router-link to="/d_home" class="router-link">
-      <img src="../../assets/img/배경지운 로고.png" alt="" style="width: 50px;">
-      <a class="navbar-brand">Chat PT</a>
-    </router-link>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="mynavbar">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <router-link to="/d_about" class="router-link">
-            <a class="nav-link" href="javascript:void(0)">식단 등록</a>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="javascript:void(0)">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="javascript:void(0)">Link</a>
-        </li>
-      </ul>
-            <form class="d-flex">  
-        <input class="form-control me-2" type="text" placeholder="Search">
-        <button class="btn btn-primary" type="button">Search</button>
-      </form>
-    </div>
-  </div>
-</nav>
-    </header>
-  </div>
+  </nav>
 </template>
 
-
-<template></template>
 <script>
-  export default {
-    name: "app-header",
-  };
+export default {
+
+};
 </script>
