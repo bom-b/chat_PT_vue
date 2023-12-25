@@ -1,7 +1,7 @@
 <template>
   <aside :class="`${is_expanded && 'is-expanded'}`">
     <div class="logo">
-      <img src="../../assets/img/배경지운%20로고.png" alt="">
+      <img src="../../assets/img/blank.png" alt="">
     </div>
     <div class="menu-toggle-wrap">
       <button class="menu-toggle" @click="ToggleMenu">
@@ -12,19 +12,19 @@
     <h1 class="menu-title">일반 사용자 메뉴</h1>
     <div class="menu">
       <router-link class="button" to="/d_home">
-        <span class="material-icons">home</span>
+        <span class="material-icons">edit_document</span>
         <span class="text">식단등록</span>
       </router-link>
       <router-link class="button" to="/d_about">
-        <span class="material-icons">home</span>
+        <span class="material-icons">recommend</span>
         <span class="text">식단 추천 받기</span>
       </router-link>
       <router-link class="button" to="/about">
-        <span class="material-icons">group</span>
+        <span class="material-icons">bar_chart</span>
         <span class="text">식단 분석</span>
       </router-link>
-      <router-link class="button" to="/about">
-        <span class="material-icons">email</span>
+      <router-link class="button" to="/about" style="margin-top: 50px;">
+        <span class="material-icons">search</span>
         <span class="text">트레이너 찾기</span>
       </router-link>
     </div>
@@ -76,6 +76,10 @@ aside {
     }
   }
 
+  .button {
+    height: 60px;
+  }
+
   .menu-toggle-wrap {
     display: flex;
     justify-content: flex-end;
@@ -104,7 +108,8 @@ aside {
   }
 
   .menu-title, .button .text {
-    opacity: 0;
+    display: none;
+    //opacity: 0;
     transition: 0.3s ease-out;
   }
 
@@ -163,6 +168,7 @@ aside {
     }
 
     .menu-title, .button .text {
+      display: block;
       opacity: 1;
     }
 

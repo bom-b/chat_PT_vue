@@ -1,3 +1,30 @@
+/*시그니처 배경색*/
+.gray {
+  background-color: #f8f9f8;
+}
+
+.lime-green {
+  background-color: #e5f5f2;
+}
+
+.ivory {
+  background-color: #f8f9f8;
+}
+
+.green {
+  background-color: #085c57;
+}
+
+.pine_Green {
+  background-color: #00997b;
+}
+
+/*글자 강조색*/
+.pine_Green_text {
+  color: #00997b;
+}
+
+
 /*더잠실체*/
 @font-face {
   font-family: 'TheJamsil300';
