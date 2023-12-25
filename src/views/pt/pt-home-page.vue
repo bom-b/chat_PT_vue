@@ -1,6 +1,7 @@
 <template>
   <div>
-    <h1>pt쌤 페이지</h1>
+    home
+    
   </div>
 </template>
 <script>
