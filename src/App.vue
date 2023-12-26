@@ -45,7 +45,7 @@ main {
 }
 
 .app {
-
+  overflow: hidden;
 }
 
 .nav-item{

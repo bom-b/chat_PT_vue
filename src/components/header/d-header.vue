@@ -59,7 +59,7 @@ nav {
       <div class="collapse navbar-collapse" id="mynavbar">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <router-link to="/d_upload" class="router-link">
+            <router-link to="/d_kakao" class="router-link">
               <a class="nav-link" href="javascript:void(0)" style="color: #085c57;">카카오톡 채널</a>
             </router-link>
           </li>
@@ -88,7 +88,7 @@ nav {
           <img class="profile-img" src="../../assets/img/코딩춘식.jpeg" alt="" style="width: 32px; object-fit: contain;">
         </div>
         <form class="d-flex">
-          <button class="btn btn-login" type="button">로그인</button>
+          <button class="btn btn-login" type="button">로그아웃</button>
         </form>
       </div>
     </div>
