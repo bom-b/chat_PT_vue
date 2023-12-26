@@ -35,6 +35,13 @@
       <option value="역삼">역삼</option>
     </select>
   </div>
+  <div class="m_category">
+    <h3>메인화면에서 보일 간단 자기소개</h3>
+    <textarea class="form-control" style="width: 400px; height: 400px;"></textarea>
+    <br>
+    <h3>프로필 화면에서 보일 자기소개</h3>
+    <textarea class="form-control" style="width: 400px; height: 400px;"></textarea>
+  </div>
 </template>
 
 <script>
