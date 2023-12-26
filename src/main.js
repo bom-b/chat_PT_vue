@@ -30,3 +30,4 @@ AOS.init();
 
 // 페이지 테스트
 app.component('PagiNate', Paginate)
+
