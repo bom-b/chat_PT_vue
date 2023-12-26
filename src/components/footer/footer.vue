@@ -4,12 +4,10 @@
   <footer>
     <div class="footer-content">
       <div class="footer-logo">
-        <img src="../../assets/img/춘계인%20확대.jpg" alt="Logo" />
+        <img src="../../assets/img/춘식이눕기_회색.png" alt="Logo" />
       </div>
       <div class="footer-links">
-        <router-link to="/">Home</router-link>
-        <router-link to="/about">About</router-link>
-        <router-link to="/contact">Contact</router-link>
+        <router-link to="/contact">ict 01기 D조</router-link>
       </div>
       <div class="footer-social">
         <a href="#" target="_blank" rel="noopener noreferrer">
