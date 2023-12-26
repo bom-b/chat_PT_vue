@@ -165,7 +165,7 @@ img {
           <h5 class="" style="color: #727070" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100">chat PT를
             통해</h5>
           <h3 class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100">어떤 목표를 이루고
-            싶으세요?</h3>
+            싶으세요? 🚀</h3>
           <div class="row justify-content-center align-items-center" style="margin-top: 50px; text-align: center;">
             <div class="goal-box col-6 col-sm-3"
                  style="display: flex; justify-content: space-between; align-items: flex-start;"
