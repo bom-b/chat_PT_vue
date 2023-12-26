@@ -35,6 +35,7 @@ nav {
   object-fit: contain;
 }
 
+
 /* 모바일 환경에서의 스타일 적용 */
 @media (max-width: 768px) {
   .btn-login {

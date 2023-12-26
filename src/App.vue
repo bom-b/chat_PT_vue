@@ -4,7 +4,7 @@
   <div class="app">
     <router-view/>
   </div>
-  <Footer />
+  <Footer/>
 </template>
 <script setup>
 </script>
@@ -46,5 +46,19 @@ main {
 
 .app {
 
+}
+
+.nav-item{
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .section1800 {
+    max-width: 100vw;
+    margin: 0 auto;
+    text-align: center;
+    overflow: hidden;
+  }
 }
 </style>
