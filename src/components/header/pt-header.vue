@@ -6,7 +6,6 @@
   /* 기본 링크 색상 유지 */
 
 }
-
 </style>
 
 <template>
@@ -31,9 +30,11 @@
               <a class="nav-link" href="javascript:void(0)">스케줄 관리</a>
             </router-link>
           </li>
-          <router-link to="/pt_profile" class="router-link">
-            <a class="nav-link" href="javascript:void(0)">프로필 관리</a>
-          </router-link>
+          <li class="nav-item">
+            <router-link to="/pt_profile" class="router-link">
+              <a class="nav-link" href="javascript:void(0)">프로필 관리</a>
+            </router-link>
+          </li>
         </ul>
         <form class="d-flex">
           <button class="btn btn-primary" type="button">로그인</button>
