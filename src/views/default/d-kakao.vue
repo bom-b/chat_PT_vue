@@ -2,7 +2,7 @@
   <div class="scroll-container">
     <!--  섹션1  -->
     <div class="scroll-area green"
-         style="display: flex; flex-direction: column; justify-content: flex-end; align-items: center; min-height: 100vh;">
+         style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
       <div class="row section1400">
         <div id="phone-col" class="col-lg-6 col-sm-12" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="100">
           <img id="phone" class="" src="../../assets/img/kakaoplus.png" alt=""
@@ -110,7 +110,7 @@
   }
 
   #phone-col {
-    width: 300px;
+    margin-top: 100px;
   }
 
   #chun-icon {
