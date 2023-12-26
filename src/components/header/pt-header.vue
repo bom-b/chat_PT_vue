@@ -6,6 +6,7 @@
   /* 기본 링크 색상 유지 */
 
 }
+
 </style>
 
 <template>
@@ -44,7 +45,5 @@
   </nav>
 </template>
 <script>
-export default {
-
-};
+export default {};
 </script>
