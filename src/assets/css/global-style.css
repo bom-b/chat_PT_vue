@@ -24,6 +24,14 @@
   color: #00997b;
 }
 
+/*시그니처 버튼*/
+button {
+  background-color: #e5f5f2;
+  color: #085c57;
+  border: none;
+  border-radius: 1px;
+  padding: 10px 20px;
+}
 
 /*더잠실체*/
 @font-face {
@@ -61,4 +69,6 @@
 * {
   font-family: 'TheJamsil300', sans-serif;
 }
+
+
 
