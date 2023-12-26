@@ -79,11 +79,11 @@ export default defineComponent({
   <div class='demo-app'>
     <div class='demo-app-sidebar'>
       <div class='demo-app-sidebar-section'>
-        <h2>Instructions</h2>
+        <h2>회원 스케줄 관리</h2>
         <ul>
-          <li>Select dates and you will be prompted to create a new event</li>
-          <li>Drag, drop, and resize events</li>
-          <li>Click an event to delete it</li>
+          <li>나는 오늘부터 지지관계에서 벗어나</li>
+          <li>춘식이와 나는 한몸으로 일체가 된다</li>
+          <li>춘식이에 대한 공격은 나에대한 공격으로 간주한다.</li>
         </ul>
       </div>
       <div class='demo-app-sidebar-section'>
@@ -93,11 +93,11 @@ export default defineComponent({
             :checked='calendarOptions.weekends'
             @change='handleWeekendsToggle'
           />
-          toggle weekends
+          주말 on/off
         </label>
       </div>
       <div class='demo-app-sidebar-section'>
-        <h2>All Events ({{ currentEvents.length }})</h2>
+        <h2>일정 ({{ currentEvents.length }})</h2>
         <ul>
           <li v-for='event in currentEvents' :key='event.id'>
             <b>{{ event.startStr }}</b>
