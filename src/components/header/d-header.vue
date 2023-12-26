@@ -88,7 +88,9 @@ nav {
           <img class="profile-img" src="../../assets/img/코딩춘식.jpeg" alt="" style="width: 32px; object-fit: contain;">
         </div>
         <form class="d-flex">
-          <button class="btn btn-login" type="button">로그아웃</button>
+          <router-link to="/" class="router-link">
+            <button class="btn btn-login" type="button">로그아웃</button>
+          </router-link>
         </form>
       </div>
     </div>
