@@ -205,7 +205,7 @@ img {
            style="color: #FFFFFF; margin-top: 20px; font-size: 30px;">연속
           <span class="TheJamsil400" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="500"
                 style="color: #FFFFFF; margin-top: 20px; font-size: 50px;">10</span>
-          일</p>
+          일째</p>
         <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
            style="margin-top: 10px; font-size: 20px; color: #00997b;">업로드 중입니다 😊</p>
       </div>
