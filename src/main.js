@@ -21,7 +21,5 @@ app.use(vxetable);
 app.config.globalProperties.$AOS = AOS;
 AOS.init();
 
-// 페이지 테스트
-// app.component('PagiNate', Paginate)
 
 app.mount('#app');

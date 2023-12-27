@@ -1,24 +1,16 @@
 <template>
   <div id="app">
-    <h1>수강회원 관리 페이지</h1>
-    <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
-    <vxe-grid border :columns="columns" :data="data" show-overflow>
-      <template #content="{ row }">
-        <div style="border: 1px solid red; overflow: hidden">
-          <vxe-table>
-            <vxe-table-column title="테스트1"></vxe-table-column>
-            <vxe-table-column title="테스트2"></vxe-table-column>
-            <vxe-table-column title="테스트3"></vxe-table-column>
-          </vxe-table>
-        </div>
-        <div>
-          <button @click="addSelected(row)">선택</button>
-        </div>
-      </template>
+    <div class="m_title">
+      <h2>수강회원 관리 페이지</h2>
+    </div>
+    <vxe-grid border :columns="new_mem" :data="data" show-overflow @checkbox-change="handleCheckboxChange">    
     </vxe-grid>
-
-    <h2>선택한 회원</h2>
-    <vxe-grid border :columns="selectedColumns" :data="selectedData" show-overflow></vxe-grid>
+    <br>
+    <div class="m_title">
+      <h2>선택한 회원</h2>
+    </div>
+    <vxe-grid border :columns="selectedColumns" :data="selectedData" show-overflow>
+    </vxe-grid>
   </div>
 
   <div v-for="(question, index) in questions" :key="index" class="faq">
@@ -32,104 +24,105 @@ export default {
   name: "App",
   data() {
     return {
-      columns: [
+      new_mem: [
         {
           type: "seq",
-          title: "순서",
+          title: "번호",
           width: 50,
           fixed: "left",
         },
         {
           type: "checkbox",
-          fixed: "left",
+          fixed: "center",
           width: 50,
         },
         {
-          title: "펼치기",
-          type: "expand",
-          slots: { content: "content" },
-        },
-        {
           field: "name",
-          title: "name",
+          title: "이름",
           width: 200,
         },
         {
           field: "age",
-          title: "age",
+          title: "나이",
           width: 200,
         },
         {
-          field: "전화번호",
+          field: "phone",
           title: "전화번호",
           width: 200,
         },
         {
-          field: "주소",
-          title: "주소",
-          width: 200,
+          field: "weight",
+          title: "체중",
         },
+        {
+          field: "goal",
+          title:"목표"
+        }
       ],
+      // 더미 데이터
       data: [
         {
           name: "홍길동",
           age: "18",
+          phone: "010-1111-2222",
         },
         {
           name: "김첨지",
           age: "24",
+          phone: "010-3333-4444"
         },
         {
           name: "놀부",
           age: "24",
+          phone: "010-5555-6666"
         },
       ],
       selectedColumns: [
         {
           type: "seq",
-          title: "순서",
+          title: "번호",
           width: 50,
           fixed: "left",
         },
         {
+          type: "checkbox",
+          fixed: "center",
+          width: 50,
+        },
+        {
           field: "name",
-          title: "name",
+          title: "이름",
           width: 200,
         },
         {
           field: "age",
-          title: "age",
+          title: "나이",
           width: 200,
         },
         {
-          field: "전화번호",
+          field: "phone",
           title: "전화번호",
           width: 200,
         },
         {
-          field: "주소",
-          title: "주소",
-          width: 200,
+          field: "weight",
+          title: "체중",
         },
         {
-          title: "삭제",
-          width: 100,
-          fixed: "right",
-          slots: { default: "deleteBtn" },
-        },
+          field: "goal",
+          title:"목표"
+        }
       ],
-      selectedData: [],
+      selectedData: [],      
     };
   },
   methods: {
-    removeAward(index) {
-      this.awards.splice(index, 1);
-    },    
-    addSelected(row) {
-      this.selectedData.push(row);
+    handleCheckboxChange({ records }) {
+      this.selectedData = records.filter((record) => record._XSelection);
     },
-    deleteSelected(index) {
-      this.selectedData.splice(index, 1);
+    toggleAnswer(index) {
+      this.questions[index].open = !this.questions[index].open;
     },
   },
 };
@@ -149,9 +142,12 @@ export default {
 .answer.open {
   display: block;
 }
+
 .vxe-table--empty-content {
-  
   display: none !important;
-  
+}
+
+.app {
+  padding: 20px;
 }
 </style>
