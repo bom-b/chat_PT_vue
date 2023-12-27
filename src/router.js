@@ -24,6 +24,7 @@ const router = createRouter({
         {path: "/d_home", component: D_Home, meta: {headerType: 1}},
         {path: "/d_kakao", component: D_Kakao, meta: {headerType: 1}},
         {path: "/d_upload", component: D_Upload, meta: {headerType: 1}},
+        {path: "/d_find_trainer", component: D_Find_Trainer, meta: {headerType: 1}},
         {path: "/d_a_change", component: D_A_Change, meta: {headerType: 1}},
         {path: "/d_a_balance", component: D_A_Balance, meta: {headerType: 1}},
         {path: "/d_a_record", component: D_A_Record, meta: {headerType: 1}},

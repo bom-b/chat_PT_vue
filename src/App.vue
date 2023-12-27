@@ -33,7 +33,7 @@ export default {
 <style lang="scss">
 main {
   background-color: #f8f9f8;
-  min-height: 2000px;
+  min-height: 1000px;
   margin-top: 80px;
 }
 
