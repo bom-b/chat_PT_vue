@@ -37,6 +37,20 @@ main {
   margin-top: 80px;
 }
 
+.section1400 {
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+  overflow: hidden;
+}
+
+.section1600 {
+  max-width: 1600px;
+  margin: 0 auto;
+  text-align: center;
+  overflow: hidden;
+}
+
 .section1800 {
   max-width: 1800px;
   margin: 0 auto;
