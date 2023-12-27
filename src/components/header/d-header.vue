@@ -89,7 +89,7 @@ export default {
         { name: '식단등록', route: '/d_upload' },
         { name: '식단 추천 받기', route: '/pt_schedule' },
         { name: '식단 분석', route: '/d_a_change' },
-        { name: '트레이너 찾기', route: '/pt_profile' }
+        { name: '트레이너 찾기', route: '/d_find_trainer' }
       ],
       currentRoute: this.$route.path
     };
