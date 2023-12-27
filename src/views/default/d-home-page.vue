@@ -254,7 +254,7 @@ img {
           <div class="col-lg-6 col-sm-6" style="height: 600px; text-align: center;"
                data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
             <p class="TheJamsil400" style="white-space: nowrap; font-size: 1.3rem; margin-bottom: 30px;">오늘의 칼로리</p>
-              <img src="../../assets/img/칼로리.png" style="max-height: 40%; object-fit: contain; " alt="s">
+              <img src="../../assets/img/메인_칼로리.png" style="max-height: 40%; object-fit: contain; " alt="s">
           </div>
 
           <div class="col-lg-6 col-sm-6" style="height: 600px; text-align: center;"
