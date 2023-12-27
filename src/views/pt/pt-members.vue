@@ -3,13 +3,13 @@
     <div class="m_title">
       <h2>예약 관리 페이지</h2>
     </div>
-    <h3>예약 신청 회원</h3>
+    <h3>예약 신청 회원 목록</h3>
     <vxe-grid border :columns="new_mem_table" :data="new_data" show-overflow @checkbox-change="selectCheck">
     </vxe-grid>
     <button class="btn btn-primary" @click="agree">수락</button>
     <br>
     <div class="m_title">
-      <h2></h2>
+      <h2>수락한 회원 목록</h2>
     </div>
     <vxe-grid border :columns="select_mem_table" :data="select_data" show-overflow>
     </vxe-grid>
