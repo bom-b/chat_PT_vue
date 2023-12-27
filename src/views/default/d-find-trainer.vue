@@ -22,7 +22,7 @@
     <!--이달의 베스트 트레이너-->
     <section style="background: #FFFFFF">
       <div class="best-trainer-icon-container section1800" style="padding: 4vw;">
-        <div >
+        <div>
           <h4 class="text-xl mb-5" style="text-align: left;">이달의 베스트 트레이너</h4>
           <div class="row no-gutters" style="text-align: left;">
             <div class="best-trainer-icon col-lg-3 col-md-6 col-sm-6 text-center" style="max-width: 220px;">
@@ -60,7 +60,7 @@
         <h4 class="text-xl mb-2" style="text-align: left;"><strong>강남구 서초동</strong>에서</h4>
         <h4 class="text-xl mb-4" style="text-align: left;">근무하시는 트레이너 분들이에요.</h4>
         <hr class="mb-3" style="border-width: 3px; border-color: #085c57;">
-        <p class="mb-5" style="text-align: right;">▼ 인기순</p>
+        <p class="pine_Green_text mb-5" style="text-align: right;">▼ 인기순</p>
         <div class="mt-4" style="text-align: left;">
           <table class="table transparent-table">
             <thead>
@@ -137,6 +137,10 @@
   padding-left: 50px;
 }
 
+#section3 {
+  margin-top: 100px;
+}
+
 /* 모바일 환경에서의 스타일 적용 */
 @media (max-width: 768px) {
   .best-trainer-icon-container {
@@ -158,10 +162,10 @@
     margin-bottom: 30px;
   }
 
-.pt-description {
-  padding: 30px 0px;
-  padding-left: 20px;
-}
+  .pt-description {
+    padding: 30px 0px;
+    padding-left: 20px;
+  }
 
   #section3 {
     margin-top: 50px;
