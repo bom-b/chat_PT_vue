@@ -8,7 +8,6 @@ import './assets/css/global-style.css';
 import 'material-icons/iconfont/material-icons.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
-import "xe-utils";
 import vxetable from "vxe-table";
 import "vxe-table/lib/style.css";
 
