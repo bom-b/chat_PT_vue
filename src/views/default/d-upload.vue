@@ -23,7 +23,8 @@
 
             <div v-if="uploadedImages.length > 0" class="preview">
               <div v-for="(image, index) in uploadedImages" :key="index" class="image-item">
-                <img :src="image" alt="Uploaded Preview" />
+                <img :src="image" alt="Uploaded Image" class="uploaded-image"/>
+                <button class="delete-button" @click="removeImage(index)">X</button>
               </div>
             </div>
 
@@ -97,6 +98,9 @@ export default {
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
+    removeImage(index) {
+      this.uploadedImages.splice(index, 1);
+    },
   },
 };
 </script>
@@ -108,7 +112,24 @@ export default {
   position: relative; /* 하위 요소들의 위치 지정 기준 */
 }
 
+.uploaded-image {
+  border: 2px solid red; /* 붉은 색 테두리 */
+}
 
+.image-item {
+  position: relative;
+  display: inline-block; /* 또는 필요에 따라 다른 디스플레이 속성 사용 */
+}
+
+.delete-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
 
 .multi-image-uploader {
   display: flex;
