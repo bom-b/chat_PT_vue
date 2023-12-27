@@ -1,157 +1,77 @@
 <template>
   <div id="app">
-    <h1>수강회원 관리 페이지</h1>
-    <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
-    <vxe-grid border :columns="columns" :data="data" show-overflow>
-      <template #content="{ row }">
-        <div style="border: 1px solid red; overflow: hidden">
-          <vxe-table>
-            <vxe-table-column title="테스트1"></vxe-table-column>
-            <vxe-table-column title="테스트2"></vxe-table-column>
-            <vxe-table-column title="테스트3"></vxe-table-column>
-          </vxe-table>
-        </div>
-        <div>
-          <button @click="addSelected(row)">선택</button>
-        </div>
-      </template>
+    <div class="m_title">
+      <h2>예약 관리 페이지</h2>
+    </div>
+    <h3>예약 신청 회원 목록</h3>
+    <vxe-grid border :columns="new_mem_table" :data="new_data" show-overflow @checkbox-change="selectCheck">
     </vxe-grid>
-
-    <h2>선택한 회원</h2>
-    <vxe-grid border :columns="selectedColumns" :data="selectedData" show-overflow></vxe-grid>
-  </div>
-
-  <div v-for="(question, index) in questions" :key="index" class="faq">
-    <div class="question" @click="toggleAnswer(index)">{{ question.title }}</div>
-    <div v-if="question.open" class="answer">{{ question.answer }}</div>
+    <button class="btn btn-primary" @click="agree">수락</button>
+    <br>
+    <div class="m_title">
+      <h2>수락한 회원 목록</h2>
+    </div>
+    <vxe-grid border :columns="select_mem_table" :data="select_data" show-overflow>
+    </vxe-grid>
   </div>
 </template>
 
 <script>
+
 export default {
   name: "App",
   data() {
     return {
-      columns: [
-        {
-          type: "seq",
-          title: "순서",
-          width: 50,
-          fixed: "left",
-        },
-        {
-          type: "checkbox",
-          fixed: "left",
-          width: 50,
-        },
-        {
-          title: "펼치기",
-          type: "expand",
-          slots: { content: "content" },
-        },
-        {
-          field: "name",
-          title: "name",
-          width: 200,
-        },
-        {
-          field: "age",
-          title: "age",
-          width: 200,
-        },
-        {
-          field: "전화번호",
-          title: "전화번호",
-          width: 200,
-        },
-        {
-          field: "주소",
-          title: "주소",
-          width: 200,
-        },
+      new_mem_table: [
+        { type: "seq", title: "번호", width: 50, fixed: "left" },
+        { type: "checkbox", fixed: "center", width: 50 },
+        { field: "name", title: "이름", width: 200 },
+        { field: "age", title: "나이", width: 200 },
+        { field: "phone", title: "전화번호", width: 200 },
+        { field: "weight", title: "체중" },
+        { field: "goal", title: "목표" }
       ],
-      data: [
-        {
-          name: "홍길동",
-          age: "18",
-        },
-        {
-          name: "김첨지",
-          age: "24",
-        },
-        {
-          name: "놀부",
-          age: "24",
-        },
+      new_data: [
+        { name: "홍길동", age: "18", phone: "010-1111-2222", weight: 87, goal: "다이어트" },
+        { name: "김첨지", age: "24", phone: "010-3333-4444", weight: 66, goal: "증량" },
+        { name: "놀부", age: "24", phone: "010-5555-6666", weight: 57, goal: "재활" },
       ],
-      selectedColumns: [
-        {
-          type: "seq",
-          title: "순서",
-          width: 50,
-          fixed: "left",
-        },
-        {
-          field: "name",
-          title: "name",
-          width: 200,
-        },
-        {
-          field: "age",
-          title: "age",
-          width: 200,
-        },
-        {
-          field: "전화번호",
-          title: "전화번호",
-          width: 200,
-        },
-        {
-          field: "주소",
-          title: "주소",
-          width: 200,
-        },
-        {
-          title: "삭제",
-          width: 100,
-          fixed: "right",
-          slots: { default: "deleteBtn" },
-        },
+      select_mem_table: [
+        { type: "seq", title: "번호", width: 50, fixed: "left" },
+        { type: "checkbox", fixed: "center", width: 50 },
+        { field: "name", title: "이름", width: 200 },
+        { field: "age", title: "나이", width: 200 },
+        { field: "phone", title: "전화번호", width: 200 },
+        { field: "weight", title: "체중" },
+        { field: "goal", title: "목표" }
       ],
-      selectedData: [],
+      select_data: [],
     };
   },
   methods: {
-    removeAward(index) {
-      this.awards.splice(index, 1);
-    },    
-    addSelected(row) {
-      this.selectedData.push(row);
+    selectCheck({ records }) {
+      this.select_data = records.filter((record) => record._XSelection);
     },
-    deleteSelected(index) {
-      this.selectedData.splice(index, 1);
+    agree() {
+      this.select_data.forEach((record) => {
+        const index = this.new_data.indexOf(record);
+        if (index !== -1) {
+          this.new_data.splice(index, 1);
+          this.select_mem_table.push(record);
+        }
+      });
+      this.select_data = []; // 선택한 회원 데이터 초기화
     },
   },
 };
 </script>
 
-<style>
-.faq {
-  margin-bottom: 15px;
-  cursor: pointer;
+<style scoped>
+.m_title {
+  margin-top: 20px;
 }
 
-.answer {
-  display: none;
-  margin-top: 10px;
-}
-
-.answer.open {
-  display: block;
-}
 .vxe-table--empty-content {
-  
   display: none !important;
-  
 }
 </style>
