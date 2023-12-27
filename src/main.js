@@ -13,7 +13,7 @@ import vxetable from "vxe-table";
 import "vxe-table/lib/style.css";
 
 const app = createApp(App);
-
+app.use(VXETable );
 app.use(router);
 app.use(store);
 app.use(vxetable); 
