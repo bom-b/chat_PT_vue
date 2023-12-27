@@ -7,6 +7,19 @@
   background-position: center; /* 배경 이미지를 가운데 정렬 */
   color: white; /* 텍스트 색상을 설정하세요 (배경 이미지에 대한 대비를 높이기 위해) */
   text-align: left;
+
+  #hero-title {
+    white-space: nowrap;
+    margin: 1vw;
+    font-size: 1.5rem;
+  }
+
+  #hero-sub {
+    white-space: nowrap;
+    margin: 1vw;
+    font-size: 1rem;
+    text-decoration: none;
+  }
 }
 
 .goal-box {
@@ -22,7 +35,8 @@
 }
 
 .goal-box:hover {
-  background-color: rgba(166, 227, 215, 0.99);/* 원하는 hover 시 배경 색상 */;
+  background-color: rgba(166, 227, 215, 0.99); /* 원하는 hover 시 배경 색상 */
+;
   /* 추가로 필요한 스타일들을 여기에 추가하세요. */
 }
 
@@ -60,6 +74,33 @@
   #hero {
     height: 300px;
     padding: 0 20px;
+
+    // 글자크기 작게
+    #hero-title {
+      white-space: nowrap;
+      margin: 1vw;
+      font-size: 1.3rem;
+    }
+
+    #hero-sub {
+      white-space: nowrap;
+      margin: 3vw 1vw 1vw;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+  }
+
+  .goal-box {
+    font-size: 13px;
+    width: 140px;
+    height: 100px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    color: #000000;
+    text-align: left;
+    margin: 10px 10px 10px 10px;
+    border: 1px solid #f0f2f1;
   }
 
   // 이미지 업로드 텍스트
@@ -70,6 +111,7 @@
     .up-btn {
       margin-top: 10px;
     }
+
   }
 
   #MultiImageUploader {
@@ -83,51 +125,54 @@ img {
 
 </style>
 <template>
-  <main id="main" class="">
+  <main id="main">
 
     <!-- ======= Hero Section ======= -->
     <section id="hero" class="hero d-flex align-items-center section-bg">
       <div class="col-12" style="max-width: 1600px; margin: 0 auto;">
-        <h1 data-aos="fade-in" data-aos-duration="1000" class="TheJamsil400"
-            style="white-space: nowrap; margin: 1vw;">간편하게 이용하는 식단관리
-          솔루션,<br>Chat PT</h1>
-        <p data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100" class=""
-           style="white-space: nowrap; margin: 1vw; color: #727070">
+        <p data-aos="fade-in" data-aos-duration="1000" class="TheJamsil400" id="hero-title">간편하게 이용하는 식단관리
+          솔루션,<br>Chat PT</p>
+        <p data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100" class="" id="hero-sub"
+           style="color: #727070;">
           건강한 식단을 찾고 계신 당신에게
           <br>
           맞춤 식단 전문가가 되어 드립니다.
         </p>
         <div class="d-flex" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100">
-          <a href="shipdan.me/" class="" style="margin: 1vw; text-decoration: none;">자세히 알아보기</a>
+          <a href="shipdan.me/" class="" id="hero-sub" style="color: cornflowerblue;">자세히 알아보기</a>
         </div>
       </div>
     </section><!-- End Hero Section -->
 
     <!--  목표달성  -->
     <section>
-      <div class="gray" style="min-height: 100%; height: auto; padding: 30px;">
+      <div class="gray" style="min-height: 100%; height: auto; padding: 30px; padding-bottom: 120px;">
         <div class="section1800">
           <h5 class="" style="color: #727070" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100">chat PT를
             통해</h5>
           <h3 class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100">어떤 목표를 이루고
             싶으세요?</h3>
           <div class="row justify-content-center align-items-center" style="margin-top: 50px; text-align: center;">
-            <div class="goal-box col-3" style="display: flex; justify-content: space-between; align-items: flex-start;"
+            <div class="goal-box col-6 col-sm-3"
+                 style="display: flex; justify-content: space-between; align-items: flex-start;"
                  data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
               <p class="TheJamsil400" style="display: inline-block;">뚜렷한<br>체중 감량</p>
               <img class="" src="../../assets/img/icon1.png" alt="" style="width: 32px;">
             </div>
-            <div class="goal-box col-3" style="display: flex; justify-content: space-between; align-items: flex-start;"
+            <div class="goal-box col-6 col-sm-3"
+                 style="display: flex; justify-content: space-between; align-items: flex-start;"
                  data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
               <p class="TheJamsil400" style="display: inline-block;">현재 체중<br>유지</p>
               <img class="" src="../../assets/img/icon2.png" alt="" style="width: 32px;">
             </div>
-            <div class="goal-box col-3" style="display: flex; justify-content: space-between; align-items: flex-start;"
+            <div class="goal-box col-6 col-sm-3"
+                 style="display: flex; justify-content: space-between; align-items: flex-start;"
                  data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
               <p class="TheJamsil400" style="display: inline-block;">체중 증량<br>(벌크업)</p>
               <img class="" src="../../assets/img/icon4.png" alt="" style="width: 32px;">
             </div>
-            <div class="goal-box col-3" style="display: flex; justify-content: space-between; align-items: flex-start;"
+            <div class="goal-box col-6 col-sm-3"
+                 style="display: flex; justify-content: space-between; align-items: flex-start;"
                  data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
               <p class="TheJamsil400" style="display: inline-block;">건강한<br>식습관</p>
               <img class="" src="../../assets/img/icon3.png" alt="" style="width: 32px;">
@@ -135,7 +180,19 @@ img {
           </div>
         </div>
       </div>
-      <div class="col-12 green" style="height: 100px; margin-bottom: 0;">
+    </section>
+
+    <!--  연속 업로드  -->
+    <section class="green" style="padding:0 2vw;">
+      <div class="section1800" style="height: 300px; padding-top: 50px;">
+        <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
+           style="font-size: 20px; color: #00997b;">오늘까지</p>
+        <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
+           style="color: #FFFFFF; margin-top: 20px; font-size: 30px;">연속
+          <span class="TheJamsil400" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="500" style="color: #FFFFFF; margin-top: 20px; font-size: 50px;">10</span>
+          일</p>
+        <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
+           style="margin-top: 10px; font-size: 20px; color: #00997b;">업로드 중입니다 😊</p>
       </div>
     </section>
 

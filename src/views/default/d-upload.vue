@@ -9,7 +9,6 @@
   >
   <main id="main" class="">
     <section>
-
       <div class="" style="margin: 100px 0 100px 0; text-align: center;">
           <h3 id="plz-up" class="" style=" white-space: nowrap">오늘의 식단을 업로드 해주세요!</h3>
           <p class="" style=" white-space: nowrap">사진을 전부 등록 해주시면 저희가 분류해드릴게요.</p>
