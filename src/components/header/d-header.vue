@@ -69,17 +69,17 @@ nav {
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/pt_schedule" class="router-link">
+            <router-link to="/d_find_trainer" class="router-link">
               <a class="nav-link" href="javascript:void(0)">식단 추천 받기</a>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/pt_profile" class="router-link">
+            <router-link to="/d_find_trainer" class="router-link">
               <a class="nav-link" href="javascript:void(0)">식단 분석</a>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/pt_profile" class="router-link">
+            <router-link to="/d_find_trainer" class="router-link">
               <a class="nav-link" href="javascript:void(0)">트레이너 찾기</a>
             </router-link>
           </li>

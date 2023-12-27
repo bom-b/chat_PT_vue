@@ -32,7 +32,7 @@ export default {
 </script>
 <style lang="scss">
 main {
-  background-color: #F2F4F7;
+  background-color: #f8f9f8;
   min-height: 2000px;
   margin-top: 80px;
 }
@@ -68,7 +68,7 @@ main {
 }
 
 @media (max-width: 768px) {
-  .section1800 {
+  .section1800, .section1600, .section1400 {
     max-width: 100vw;
     margin: 0 auto;
     text-align: center;
