@@ -4,12 +4,15 @@
   <footer>
     <div class="footer-content">
       <div class="footer-logo">
-        <img src="../../assets/img/춘식이눕기_회색.png" alt="Logo" />
+        <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
+        <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
       </div>
       <div class="footer-links">
         <router-link to="/contact">ict 01기 D조</router-link>
       </div>
       <div class="footer-social">
+        <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
+        <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
         <a href="#" target="_blank" rel="noopener noreferrer">
           <i class="fab fa-facebook-f"></i>
         </a>

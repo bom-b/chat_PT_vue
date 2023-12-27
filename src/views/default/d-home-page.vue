@@ -36,13 +36,13 @@
 
 .goal-box:hover {
   background-color: rgba(166, 227, 215, 0.99); /* 원하는 hover 시 배경 색상 */
-;
-  /* 추가로 필요한 스타일들을 여기에 추가하세요. */
 }
 
 // 이미지 업로드 텍스트
 .img-upload {
   padding: 0 0 0 50px;
+  height: 300px;
+  text-align: left;
 
   .up-btn {
     margin-top: 50px;
@@ -67,6 +67,13 @@
 
 .video::-webkit-media-controls-enclosure {
   display: none !important;
+}
+
+// 모바일 버튼 처음엔 숨기기
+#mobile-btn {
+  display: none;
+  text-align: center;
+  margin-top: 50px;
 }
 
 /* 모바일 환경에서의 스타일 적용 */
@@ -107,16 +114,23 @@
   .img-upload {
     margin-top: 50px;
     padding: 0 0 0 10px;
+    text-align: center;
 
     .up-btn {
       margin-top: 10px;
     }
-
   }
 
+  // 드래그앤 드롭 숨기기
   #MultiImageUploader {
-    margin-top: 10px;
+    display: none;
   }
+
+  // 대신 모바일 전용 버튼 보여주기
+  #mobile-btn {
+    display: block;
+  }
+
 }
 
 img {
@@ -151,7 +165,7 @@ img {
           <h5 class="" style="color: #727070" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100">chat PT를
             통해</h5>
           <h3 class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100">어떤 목표를 이루고
-            싶으세요?</h3>
+            싶으세요? 🚀</h3>
           <div class="row justify-content-center align-items-center" style="margin-top: 50px; text-align: center;">
             <div class="goal-box col-6 col-sm-3"
                  style="display: flex; justify-content: space-between; align-items: flex-start;"
@@ -189,8 +203,9 @@ img {
            style="font-size: 20px; color: #00997b;">오늘까지</p>
         <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
            style="color: #FFFFFF; margin-top: 20px; font-size: 30px;">연속
-          <span class="TheJamsil400" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="500" style="color: #FFFFFF; margin-top: 20px; font-size: 50px;">10</span>
-          일</p>
+          <span class="TheJamsil400" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="500"
+                style="color: #FFFFFF; margin-top: 20px; font-size: 50px;">10</span>
+          일째</p>
         <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
            style="margin-top: 10px; font-size: 20px; color: #00997b;">업로드 중입니다 😊</p>
       </div>
@@ -209,15 +224,17 @@ img {
             </video>
           </div>
 
-          <div class="col-lg-8 col-sm-6 img-upload" style="height: 300px; text-align: left;"
+          <div class="col-lg-8 col-sm-6 img-upload"
                data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
             <h3 id="plz-up" class="TheJamsil400" style=" white-space: nowrap">오늘의 식단을 업로드 해주세요!</h3>
             <p class="pine_Green_text" style=" white-space: nowrap">사진을 전부 등록 해주시면 저희가 분류해드릴게요.</p>
             <div id="MultiImageUploader">
               <MultiImageUploader/>
             </div>
+            <div id="mobile-btn">
+              <button class="" @click="triggerFileInput">파일 선택</button>
+            </div>
           </div>
-
         </div>
       </div>
     </section>
@@ -237,13 +254,13 @@ img {
           <div class="col-lg-6 col-sm-6" style="height: 600px; text-align: center;"
                data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
             <p class="TheJamsil400" style="white-space: nowrap; font-size: 1.3rem; margin-bottom: 30px;">오늘의 칼로리</p>
-            <img src="../../assets/img/칼로리.png" style="max-height: 50%; object-fit: contain; " alt="s">
+              <img src="../../assets/img/칼로리.png" style="max-height: 40%; object-fit: contain; " alt="s">
           </div>
 
           <div class="col-lg-6 col-sm-6" style="height: 600px; text-align: center;"
                data-aos="fade-in" data-aos-duration="1000" data-aos-delay="300">
             <p class="TheJamsil400" style="white-space: nowrap; font-size: 1.3rem; margin-bottom: 30px;">오늘의 영양소</p>
-            <img src="../../assets/img/바차트.png" style="max-height: 50%; object-fit: contain; " alt="s">
+            <img src="../../assets/img/바차트.png" style="max-height: 40%; object-fit: contain; " alt="s">
           </div>
 
         </div><!-- 사진 등록 -->

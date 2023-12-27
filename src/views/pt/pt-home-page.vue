@@ -28,4 +28,5 @@ export default ({
 .body {
   padding: 20px;
 }
+
 </style>
