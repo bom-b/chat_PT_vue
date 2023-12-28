@@ -1,109 +1,73 @@
 <template>
-	<main>
-		<div>
-			<h2>회원가입</h2>
+	<div class="container">
+		<div class="login-container">
+			<h2 class="mb-4">회원가입</h2>
 
-			<div class="btn-group">
-				<button v-for="categoryOption in categoryOptions" :key="categoryOption.value"
-					:class="['btn', 'btn-secondary', { 'active': category === categoryOption.value }]"
-					@click="selectCategory(categoryOption.value)">
-					{{ categoryOption.label }}
-				</button>
+			<!-- 이름 입력 폼 -->
+			<div class="form-group">
+				<label for="name">이름:</label>
+				<input type="text" class="form-control" id="name" placeholder="이름을 입력하세요" v-model="name">
 			</div>
 
-			<div>
-				<label>이메일:</label>
-				<input type="email" v-model="email" class="form-control">
+			<!-- 이메일 입력 폼 -->
+			<div class="form-group">
+				<label for="email">이메일:</label>
+				<input type="email" class="form-control" id="email" placeholder="이메일을 입력하세요" v-model="email">
+				<button type="button" class="btn btn-primary" @click="sendVerificationCode">인증번호 발송</button>
 			</div>
 
-			<div>
-				<label>이름:</label>
-				<input type="text" v-model="name" class="form-control">
+			<!-- 인증번호 입력 폼 -->
+			<div class="form-group">
+				<label for="verificationCode">인증번호:</label>
+				<input type="text" class="form-control" id="verificationCode" placeholder="인증번호를 입력하세요"
+					v-model="verificationCode">
 			</div>
 
-			<div>
-				<label>나이:</label>
-				<input type="number" v-model="age" class="form-control">
+			<!-- 비밀번호 입력 폼 -->
+			<div class="form-group">
+				<label for="password">비밀번호:</label>
+				<input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요" v-model="password">
 			</div>
 
-			<div>
-				<label>키:</label>
-				<input type="number" v-model="height" class="form-control">
-			</div>
+			<!-- 다음 페이지로 이동하는 버튼 -->
+			<button type="button" class="btn btn-primary" :disabled="!isVerificationCodeValid"
+				@click="registerUser">다음</button>
 
-			<div>
-				<label>체중:</label>
-				<input type="number" v-model="weight" class="form-control">
-			</div>
-
-			<div>
-				<label>성별:</label>
-				<div>
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" id="male" value="남성" v-model="gender">
-						<label class="form-check-label" for="male">남성</label>
-					</div>
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" id="female" value="여성" v-model="gender">
-						<label class="form-check-label" for="female">여성</label>
-					</div>
-				</div>
-			</div>
-
-			<button @click="submitForm" class="btn btn-primary">가입하기</button>
+			<!-- AJAX 테스트 버튼 -->
+			<button type="button" class="btn btn-secondary" @click="testAjaxRequest">Test</button>
 		</div>
-	</main>
+	</div>
 </template>
   
 <script>
 export default {
 	data() {
 		return {
-			category: '일반회원',
-			categoryOptions: [
-				{ label: '일반회원', value: '일반회원' },
-				{ label: 'PT회원', value: 'PT회원' }
-			],
-			email: '',
 			name: '',
-			age: null,
-			height: null,
-			weight: null,
-			gender: ''
+			email: '',
+			verificationCode: '',
+			password: '',
+			isVerificationCodeValid: false,
 		};
 	},
 	methods: {
-		selectCategory(category) {
-			this.category = category;
+		sendVerificationCode() {
+			// 인증번호 발송 로직 구현
+			// 서버에 AJAX 요청을 보내어 이메일로 인증번호를 발송하고, 발송 여부 및 유효성을 확인하여 isVerificationCodeValid 값을 업데이트합니다.
+			// 인증번호를 발송한 후, 유효한 인증번호를 입력했을 때 isVerificationCodeValid 값을 true로 설정합니다.
+			alert('인증번호가 발송되었습니다.')
 		},
-		submitForm() {
-			// 회원가입 폼 제출 로직 구현
-			console.log('회원가입 폼 제출:', this.category, this.email, this.name, this.age, this.height, this.weight, this.gender);
-		}
-	}
+		registerUser() {
+			// 회원가입을 처리하는 로직 구현
+			// 서버에 AJAX 요청을 보내어 회원가입 정보를 전송합니다.
+			// 회원가입이 성공적으로 처리되면 다음 페이지로 이동합니다.
+		},
+		testAjaxRequest() {
+			// AJAX 테스트 요청
+			// 서버에 AJAX 요청을 보내고 응답을 처리합니다.
+			// 실제로는 서버와의 통신이 구현되어야 하며, 이 코드에서는 예시로 console.log로 응답을 출력합니다.
+			console.log('AJAX 요청을 보냈습니다.');
+		},
+	},
 };
 </script>
-  
-<style scoped>
-.btn-group {
-	display: flex;
-	margin-bottom: 1rem;
-}
-
-.btn {
-	flex: 1;
-}
-
-.form-control {
-	width: 100%;
-	margin-bottom: 1rem;
-}
-
-.form-check-inline {
-	margin-right: 1rem;
-}
-.btn.active {
-  background-color: #007bff; /* 선택된 카테고리 배경색 */
-  color: #fff; /* 선택된 카테고리 텍스트 색상 */
-}
-</style>
