@@ -11,7 +11,7 @@ export default {
         "/assets/img/graphic/donut.png",
         "/assets/img/graphic/burger.png",
         "/assets/img/graphic/carrot.png",
-        "/assets/img/graphic/coffe.png",
+        "/assets/img/graphic/coffee.png",
         "/assets/img/graphic/cookies.png",
         "/assets/img/graphic/croisant.png",
         "/assets/img/graphic/egg_bacon.png",
