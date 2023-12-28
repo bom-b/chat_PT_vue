@@ -54,13 +54,15 @@
   max-width: 600px;
 }
 
-// 비디오
-.video {
+// 비디오 또는 그래픽
+#mobile-food-icon {
+  display: none;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
+#web-food-icon
 .video::-webkit-media-controls {
   display: none !important;
 }
@@ -121,6 +123,15 @@
     }
   }
 
+  // 모바일에선 슬롯머신 보여주고 그래픽 숨기기
+  #mobile-food-icon {
+    display: block;
+  }
+
+  #web-food-icon {
+    display: none;
+  }
+
   // 드래그앤 드롭 숨기기
   #MultiImageUploader {
     display: none;
@@ -152,9 +163,9 @@ img {
           <br>
           맞춤 식단 전문가가 되어 드립니다.
         </p>
-<!--        <div class="d-flex" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100">-->
-<!--          <a href="shipdan.me/" class="" id="hero-sub" style="color: cornflowerblue;">자세히 알아보기</a>-->
-<!--        </div>-->
+        <!--        <div class="d-flex" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100">-->
+        <!--          <a href="shipdan.me/" class="" id="hero-sub" style="color: cornflowerblue;">자세히 알아보기</a>-->
+        <!--        </div>-->
       </div>
     </section><!-- End Hero Section -->
 
@@ -171,25 +182,25 @@ img {
                  style="display: flex; justify-content: space-between; align-items: flex-start;"
                  data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
               <p class="TheJamsil400" style="display: inline-block;">뚜렷한<br>체중 감량</p>
-              <img class="" src="../../assets/img/icon1.png" alt="" style="width: 32px;">
+              <img class="" src="../../../public/assets/img/graphic/icon1.png" alt="" style="width: 32px;">
             </div>
             <div class="goal-box col-6 col-sm-3"
                  style="display: flex; justify-content: space-between; align-items: flex-start;"
                  data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
               <p class="TheJamsil400" style="display: inline-block;">현재 체중<br>유지</p>
-              <img class="" src="../../assets/img/icon2.png" alt="" style="width: 32px;">
+              <img class="" src="../../../public/assets/img/graphic/icon2.png" alt="" style="width: 32px;">
             </div>
             <div class="goal-box col-6 col-sm-3"
                  style="display: flex; justify-content: space-between; align-items: flex-start;"
                  data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
               <p class="TheJamsil400" style="display: inline-block;">체중 증량<br>(벌크업)</p>
-              <img class="" src="../../assets/img/icon4.png" alt="" style="width: 32px;">
+              <img class="" src="../../../public/assets/img/graphic/icon4.png" alt="" style="width: 32px;">
             </div>
             <div class="goal-box col-6 col-sm-3"
                  style="display: flex; justify-content: space-between; align-items: flex-start;"
                  data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
               <p class="TheJamsil400" style="display: inline-block;">건강한<br>식습관</p>
-              <img class="" src="../../assets/img/icon3.png" alt="" style="width: 32px;">
+              <img class="" src="../../../public/assets/img/graphic/icon3.png" alt="" style="width: 32px;">
             </div>
           </div>
         </div>
@@ -218,10 +229,16 @@ img {
 
           <div class="col-lg-4 col-sm-6" style="height: 300px; text-align: left; "
                data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
-            <video class="video" autoplay loop muted playsinline style="object-fit: contain;">
+            <video id="mobile-food-icon" class="video" autoplay loop muted playsinline style="object-fit: contain;">
               <source src="../../assets/img/changeable_diet_minified.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
+            <div style="text-align: center; padding-left: 20px;">
+              <!--              <img id="web-food-icon" src="../../assets/img/graphic/taco%201.png"-->
+              <!--                   style="margin-left: 20px; object-fit: contain;">-->
+              <DynamicImage id="web-food-icon"/>
+<!--              <img src="/assets/img/graphic/taco%201.png" style="max-height: 80%; object-fit: contain;">-->
+            </div>
           </div>
 
           <div class="col-lg-8 col-sm-6 img-upload"
@@ -254,7 +271,7 @@ img {
           <div class="col-lg-6 col-sm-6" style="height: 600px; text-align: center;"
                data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
             <p class="TheJamsil400" style="white-space: nowrap; font-size: 1.3rem; margin-bottom: 30px;">오늘의 칼로리</p>
-              <img src="../../assets/img/메인_칼로리.png" style="max-height: 40%; object-fit: contain; " alt="s">
+            <img src="../../assets/img/메인_칼로리.png" style="max-height: 40%; object-fit: contain; " alt="s">
           </div>
 
           <div class="col-lg-6 col-sm-6" style="height: 600px; text-align: center;"
@@ -271,10 +288,12 @@ img {
 </template>
 <script>
 import MultiImageUploader from '@/components/util/img-upload.vue';
+import DynamicImage from '@/components/util/dynamic-image.vue';
 
 export default {
   components: {
     MultiImageUploader,
+    DynamicImage,
   },
 };
 </script>
