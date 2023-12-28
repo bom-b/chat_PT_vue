@@ -31,7 +31,7 @@ const router = createRouter({
         {path: "/d_a_record", component: D_A_Record, meta: {headerType: 1}},
         
         // 로그인
-        {path: "/sign-up", component:Sign_up, meta: {headerType: 1}},
+        {path: "/sign_up", component:Sign_up, meta: {headerType: 1}},
         //pt
         {path: "/pt_home", component: PT_Home, meta: {headerType: 2}},
         {path: "/pt_members", component: pt_members, meta: {headerType: 2}},

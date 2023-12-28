@@ -2,9 +2,9 @@
   <!-- 사용자 정의 헤더 컴포넌트를 동적으로 선택 -->
   <component :is="headerComponent"/>
   <div class="app">
-    <router-view/>
+    <router-view/>       
   </div>
-  <Footer />
+  <Footer/>
 </template>
 <script setup>
 </script>
@@ -30,49 +30,4 @@ export default {
   },
 };
 </script>
-<style lang="scss">
-main {
-  background-color: #F2F4F7;
-  min-height: 2000px;
-  margin-top: 80px;
-}
 
-.section1400 {
-  max-width: 1400px;
-  margin: 0 auto;
-  text-align: center;
-  overflow: hidden;
-}
-
-.section1600 {
-  max-width: 1600px;
-  margin: 0 auto;
-  text-align: center;
-  overflow: hidden;
-}
-
-.section1800 {
-  max-width: 1800px;
-  margin: 0 auto;
-  text-align: center;
-  overflow: hidden;
-}
-
-.app {
-  overflow: hidden;
-}
-
-.nav-item{
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-@media (max-width: 768px) {
-  .section1800 {
-    max-width: 100vw;
-    margin: 0 auto;
-    text-align: center;
-    overflow: hidden;
-  }
-}
-</style>
