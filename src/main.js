@@ -4,7 +4,7 @@ import router from './router';
 import store from './store';
 import AOS from 'aos';
 import "aos/dist/aos.css";
-import './assets/css/global-style.css';
+import '@/../public/assets/css/global-style.css';
 import 'material-icons/iconfont/material-icons.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
