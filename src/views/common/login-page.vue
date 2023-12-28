@@ -42,16 +42,19 @@ body {
         <!-- 로그인 버튼 -->
         <div>
           <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/sign_up">
-            회원가입            
+            회원가입
           </a>
           <br>
           <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="#">
-            아이디/패스워드 찾기            
+            아이디/패스워드 찾기
           </a>
-          
+
 
 
           <!-- <a class="" href="#">아이디/패스워드 찾기</a> -->
+          <router-link to="d_home" class="router-link">
+            <img src="../../assets/img/kakao_login_medium_wide.png">
+          </router-link>
           <router-link to="d_home" class="router-link">
             <button type="button" class="btn btn-primary btn-login">일반사용자로 로그인</button>
           </router-link>
@@ -69,10 +72,12 @@ export default {};
 <style>
 .arrow {
   display: inline-block;
-  transition: transform 0.5s ease; /* 부드러운 전환 효과 */
+  transition: transform 0.5s ease;
+  /* 부드러운 전환 효과 */
 }
 
 .signup-link:hover .arrow {
-  transform: translateX(-5px); /* 호버시 왼쪽으로 5픽셀 이동 */
+  transform: translateX(-5px);
+  /* 호버시 왼쪽으로 5픽셀 이동 */
 }
 </style>

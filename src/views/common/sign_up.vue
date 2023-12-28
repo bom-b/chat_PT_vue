@@ -102,4 +102,8 @@ export default {
 .form-check-inline {
 	margin-right: 1rem;
 }
+.btn.active {
+  background-color: #007bff; /* 선택된 카테고리 배경색 */
+  color: #fff; /* 선택된 카테고리 텍스트 색상 */
+}
 </style>
