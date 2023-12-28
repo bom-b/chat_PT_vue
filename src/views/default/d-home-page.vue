@@ -152,9 +152,9 @@ img {
           <br>
           맞춤 식단 전문가가 되어 드립니다.
         </p>
-        <div class="d-flex" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100">
-          <a href="shipdan.me/" class="" id="hero-sub" style="color: cornflowerblue;">자세히 알아보기</a>
-        </div>
+<!--        <div class="d-flex" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100">-->
+<!--          <a href="shipdan.me/" class="" id="hero-sub" style="color: cornflowerblue;">자세히 알아보기</a>-->
+<!--        </div>-->
       </div>
     </section><!-- End Hero Section -->
 
@@ -254,7 +254,7 @@ img {
           <div class="col-lg-6 col-sm-6" style="height: 600px; text-align: center;"
                data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
             <p class="TheJamsil400" style="white-space: nowrap; font-size: 1.3rem; margin-bottom: 30px;">오늘의 칼로리</p>
-              <img src="../../assets/img/칼로리.png" style="max-height: 40%; object-fit: contain; " alt="s">
+              <img src="../../assets/img/메인_칼로리.png" style="max-height: 40%; object-fit: contain; " alt="s">
           </div>
 
           <div class="col-lg-6 col-sm-6" style="height: 600px; text-align: center;"
