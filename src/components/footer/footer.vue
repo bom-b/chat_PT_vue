@@ -72,6 +72,9 @@ footer {
 }
 
 .footer-bottom {
-  margin-top: 20px;
+  margin-top: auto;
+}
+template {
+  min-height: 100%;
 }
 </style>

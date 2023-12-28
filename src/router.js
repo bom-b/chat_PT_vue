@@ -9,6 +9,9 @@ import D_A_Change from "@/views/default/d-a-change.vue";
 import D_A_Balance from "@/views/default/d-a-balance.vue";
 import D_A_Record from "@/views/default/d-a-record.vue";
 
+import Sign_up from "@/views/common/sign_up.vue";
+
+
 import PT_Home from "./views/pt/pt-home-page.vue";
 import pt_members from "./views/pt/pt-members.vue";
 import pt_schedule from "./views/pt/pt-schedule.vue";
@@ -26,6 +29,9 @@ const router = createRouter({
         {path: "/d_a_change", component: D_A_Change, meta: {headerType: 1}},
         {path: "/d_a_balance", component: D_A_Balance, meta: {headerType: 1}},
         {path: "/d_a_record", component: D_A_Record, meta: {headerType: 1}},
+        
+        // 로그인
+        {path: "/sign-up", component:Sign_up, meta: {headerType: 1}},
         //pt
         {path: "/pt_home", component: PT_Home, meta: {headerType: 2}},
         {path: "/pt_members", component: pt_members, meta: {headerType: 2}},
