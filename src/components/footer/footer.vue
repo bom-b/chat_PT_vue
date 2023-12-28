@@ -39,7 +39,7 @@ export default {
 <style scoped>
 /* Add your styling for the footer here */
 footer {
-  background-color: #f8f9f8;
+  background-color: #efefef;
   color: #727070;
   padding: 20px 0;
   text-align: center;
