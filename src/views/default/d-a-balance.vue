@@ -1,9 +1,8 @@
 <template>
-  <br/>
-  <br/>
-  <br/>
+  <main id="main" class="">
   <analyze_header/>
-  <div style="padding-left: 5vw;">
+  <div style="width: 50%; margin: 0 auto;">
+  <div >
     <button type="button" class="btn btn-dark-gray">{{ formattedStartDate }} ~ {{ formattedEndDate }}</button>
     <button type="button" class="btn bold" @click="moveWeek(-1)">&lt;</button>
     <button type="button" class="btn bold" @click="moveWeek(1)">&gt;</button>
@@ -11,6 +10,8 @@
   <div>
     <img src="../../assets/img/영양소.png" alt="영양소 그래프 이미지">
   </div>
+  </div>
+  </main>
 </template>
 
 <style scoped>
