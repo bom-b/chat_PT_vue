@@ -14,7 +14,6 @@ import PT_Header from "@/components/header/pt-header.vue";
 import Default_Header from "@/components/header/d-header.vue";
 import Footer from "@/components/footer/footer.vue";
 import Login_Header from "@/components/header/login-header.vue"
-// import main_header from '@/components/header/main-header.vue';
 import None_Header from "@/components/header/none-header.vue";
 
 export default {

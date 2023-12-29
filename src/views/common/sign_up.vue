@@ -67,9 +67,9 @@ export default {
 	computed: {
 		progress() {
 			if (this.name && this.email && this.verificationCode && this.password && this.password === this.password_Check) {
-				return 25; // 필요한 모든 정보가 입력되었고, 비밀번호와 비밀번호 확인이 일치할 때 25를 반환하여 게이지바를 채웁니다.
+				return 25; 
 			} else {
-				return 0; // 그 외의 경우에는 0을 반환하여 게이지바를 비웁니다.
+				return 0; 
 			}
 		},
 		isFormValid() {
