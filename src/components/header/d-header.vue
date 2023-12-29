@@ -1,6 +1,6 @@
 <style lang="scss" scoped>
 nav {
-  opacity: 0.9
+  opacity: 1
   ; 
 }
 
@@ -47,17 +47,15 @@ nav {
   color: #085c57;
 }
 
-
 </style>
 <style lang="scss" scoped>
-
 
 .floating-widget {// [st]마이페이지 위젯 스타일링
   position: fixed;
   top: 100px;
   right: 20px;
+  
   padding: 10px;
-  //background-color: #fff;
   background-color: rgba(255, 255, 255);
   border: 1px solid #ccc;
   opacity: 1;
@@ -108,7 +106,8 @@ nav {
             {{ widgetVisible ? "❌ 닫기" : "○○○ 님의 마이페이지" }}
           </button>
           
-          <div v-if="widgetVisible" class="floating-widget">
+          <div v-if="widgetVisible" class="floating-widget" :style="{ width: widgetWidth, height: widgetHeight }">
+          <!-- <div v-if="widgetVisible" class="floating-widget"> -->
             <!-- 위젯 내용 -->
             <WidgetContent :widgetVisible="widgetVisible"/>
           </div>
@@ -154,7 +153,16 @@ export default {
       ],
       currentRoute: this.$route.path,
       widgetVisible: false, // 마이페이지 위젯
+      widgetWidth: "960px", // 마이페이지 위젯 
+      widgetHeight: "607px", // 마이페이지 위젯
     };
+  },
+  mounted() { //마이페이지 위젯
+    window.addEventListener("resize", this.handleResize);
+    this.handleResize(); // 초기 렌더링 시 호출
+  },
+  unmounted() { //마이페이지 위젯
+    window.removeEventListener('resize', this.handleResize);
   },
 
   watch: {
@@ -166,7 +174,13 @@ export default {
   methods: { //마이페이지 위젯 사용을 위해 추가
     toggleWidget() {
       this.widgetVisible = !this.widgetVisible;
-    }
+    },
+    handleResize() {
+      // 창 크기 변화 감지
+      this.widgetWidth = window.innerWidth > 768 ? '960px' : '468px';
+      this.widgetHeight = window.innerWidth > 768 ? '607px' : '750px';
+      // 원하는 조건에 따라 크기를 동적으로 변경할 수 있습니다.
+    },
   },
 };
 </script>
