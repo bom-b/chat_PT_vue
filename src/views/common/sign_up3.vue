@@ -51,19 +51,21 @@
 .active-image {
   border: 2px solid red;
   /* 예시: 빨간 테두리 추가 */
+  
 }
 
 .image-container {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
-  /* 이미지 간의 여백을 조절할 수 있습니다. */
+  justify-content: center; /* 이미지를 가운데에 정렬합니다. */
   align-items: center;
   margin-top: 20px;
 }
 
 .image {
-  width: calc(25% - 10px);
+  /* width: calc(25% - 10px); */
+  width: 100px;
+  height: 100px;
   margin: 5px;
   border-radius: 10px;
   cursor: pointer;
