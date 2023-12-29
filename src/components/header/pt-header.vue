@@ -12,7 +12,7 @@
 <template>
   <nav class="navbar navbar-expand-sm navbar-light bg-light" style="min-height: 80px;">
     <div class="container-fluid">
-      <router-link to="/d_home" class="router-link">
+      <router-link to="/pt_home" class="router-link">
         <img src="../../assets/img/배경지운 로고.png" alt="" style="width: 50px;">
         <a class="navbar-brand">Chat PT</a>
       </router-link>
