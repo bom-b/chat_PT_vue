@@ -88,11 +88,7 @@ export default defineComponent({
       </div>
       <div class='demo-app-sidebar-section'>
         <label>
-          <input
-            type='checkbox'
-            :checked='calendarOptions.weekends'
-            @change='handleWeekendsToggle'
-          />
+          <input type='checkbox' :checked='calendarOptions.weekends' @change='handleWeekendsToggle' />
           주말 on/off
         </label>
       </div>
@@ -105,12 +101,12 @@ export default defineComponent({
           </li>
         </ul>
       </div>
+      <div class='demo-app-sidebar-section'>
+        dddd
+      </div>
     </div>
     <div class='demo-app-main'>
-      <FullCalendar
-        class='demo-app-calendar'
-        :options='calendarOptions'
-      >
+      <FullCalendar class='demo-app-calendar' :options='calendarOptions'>
         <template v-slot:eventContent='arg'>
           <b>{{ arg.timeText }}</b>
           <i>{{ arg.event.title }}</i>
@@ -121,7 +117,6 @@ export default defineComponent({
 </template>
 
 <style lang='css'>
-
 h2 {
   margin: 0;
   font-size: 16px;
@@ -137,7 +132,8 @@ li {
   padding: 0;
 }
 
-b { /* used for event dates/times */
+b {
+  /* used for event dates/times */
   margin-right: 3px;
 }
 
@@ -164,9 +160,9 @@ b { /* used for event dates/times */
   padding: 3em;
 }
 
-.fc { /* the calendar root */
+.fc {
+  /* the calendar root */
   max-width: 1100px;
   margin: 0 auto;
 }
-
 </style>
