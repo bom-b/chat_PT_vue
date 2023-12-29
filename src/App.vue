@@ -1,19 +1,21 @@
 <template>
   <!-- 사용자 정의 헤더 컴포넌트를 동적으로 선택 -->
-  <component :is="headerComponent"/>
+  <component :is="headerComponent" />
   <div class="app">
-    <router-view/>
+    <router-view />
   </div>
-  <Footer />
+  <Footer/>
 </template>
 <script setup>
 </script>
 <script>
-import {mapState} from "vuex";
-import None_Header from "@/components/header/none-header.vue";
+import { mapState } from "vuex";
 import PT_Header from "@/components/header/pt-header.vue";
 import Default_Header from "@/components/header/d-header.vue";
-import Footer from '@/components/footer/footer.vue';
+import Footer from "@/components/footer/footer.vue";
+import Login_Header from "@/components/header/login-header.vue"
+// import main_header from '@/components/header/main-header.vue';
+import None_Header from "@/components/header/none-header.vue";
 
 export default {
   name: 'App',
@@ -23,56 +25,20 @@ export default {
   computed: {
     ...mapState(['headerType']),
     headerComponent() {
-      return this.headerType === 100 ? None_Header :
-          this.headerType === 1 ? Default_Header :
-              this.headerType === 2 ? PT_Header : null;
+      // 일반회원
+      if (this.headerType === 1) {
+        return Default_Header;
+        // PT
+      } else if (this.headerType === 2) {
+        return PT_Header;
+        // 비회원
+      } else if (this.headerType === 100) {
+        return None_Header;
+      } else {
+        return Login_Header;
+      }
     },
   },
 };
 </script>
-<style lang="scss">
-main {
-  background-color: #f8f9f8;
-  min-height: 1000px;
-  margin-top: 80px;
-}
 
-.section1400 {
-  max-width: 1400px;
-  margin: 0 auto;
-  text-align: center;
-  overflow: hidden;
-}
-
-.section1600 {
-  max-width: 1600px;
-  margin: 0 auto;
-  text-align: center;
-  overflow: hidden;
-}
-
-.section1800 {
-  max-width: 1800px;
-  margin: 0 auto;
-  text-align: center;
-  overflow: hidden;
-}
-
-.app {
-  overflow: hidden;
-}
-
-.nav-item{
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-@media (max-width: 768px) {
-  .section1800, .section1600, .section1400 {
-    max-width: 100vw;
-    margin: 0 auto;
-    text-align: center;
-    overflow: hidden;
-  }
-}
-</style>
