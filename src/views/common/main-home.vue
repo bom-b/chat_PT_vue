@@ -6,7 +6,9 @@
       <img class="background-img" src="/assets/img/background/1.png" alt="" style="">
       <div class="in-img-text">
         <p class="TheJamsil400 font120px" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
-           style="color: white;">Life on <span class="TheJamsil400 font50" style="color: #A9D18E; margin-top: 20px; font-weight: bold;">Chat PT</span></p>
+           style="color: white;">Life on <span class="TheJamsil400 font50"
+                                               style="color: #A9D18E; margin-top: 20px; font-weight: bold;">Chat PT</span>
+        </p>
         <p id="sec1-sub" class="font15 mt-3" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200"
            style="color: white;">일상과 함께하는 식단관리 서비스</p>
       </div>
@@ -14,9 +16,9 @@
     <!--  섹션2  -->
     <div class="scroll-area" style="display: flex; justify-content: center; align-items: center;">
       <img class="background-img" src="/assets/img/background/2.png" alt="" style="">
-      <div class="in-img-text">
+      <div class="img-text">
         <p id="sec1-sub" class="font15 mt-3" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200"
-           style="color: white;">어디서나 간편하게 식단을 등록하고 추천을 받아보세요.</p>
+           style="color: black;">어디서나 간편하게 식단을 등록하고 추천을 받아보세요.</p>
       </div>
     </div>
     <!--  섹션3  -->
@@ -79,6 +81,8 @@ export default {
 
 /* 자식 스크롤 스냅 영역 */
 .scroll-area {
+  position: relative;
+  display: flex;
   width: 100%;
   height: 100vh;
   scroll-snap-align: center;
@@ -101,6 +105,14 @@ export default {
   margin-top: 20px;
   position: absolute;
   left: 15%;
+}
+
+.img-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
 }
 
 .font120px {
