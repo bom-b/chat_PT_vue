@@ -30,12 +30,12 @@ body {
       <!-- 아이디 및 비밀번호 입력 폼 -->
       <form>
         <div class="form-group">
-          <label for="username">아이뒤:</label>
+          <label for="username">아이디:</label>
           <input type="text" class="form-control" id="username" placeholder="Enter your username">
         </div>
 
         <div class="form-group">
-          <label for="password">뺴쓰워드:</label>
+          <label for="password">패스워드:</label>
           <input type="password" class="form-control" id="password" placeholder="Enter your password">
         </div>
 
