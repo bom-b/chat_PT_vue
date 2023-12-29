@@ -1,10 +1,9 @@
 <template>
-  <br/>
-  <br/>
-  <br/>
+  <main id="main" class="">
   <analyze_header/>
+  <div style="width: 50%; margin: 0 auto;">
   <div>
-    <h4><span class="badge bg-primary">칼로리</span></h4>
+    <h2><span class="badge bg-primary" >칼로리</span></h2>
     <table class="table table-borderless">
       <tbody>
       <tr>
@@ -32,11 +31,11 @@
     </table>
   </div>
   <div>
-    <h4><span class="badge bg-primary">몸무게</span></h4>
+    <h2><span class="badge bg-primary" >몸무게</span></h2>
     <img src="../../assets/img/몸무게.png" alt="몸무게 이미지">
   </div>
-
-
+  </div>
+  </main>
 </template>
 
 <style>
