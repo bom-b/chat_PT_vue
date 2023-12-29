@@ -1,7 +1,6 @@
 <template>
-  <main>
+  <div class="pt-body">
     <section>
-      7098
       <div class="m_title">
         <h2>예약 관리 페이지</h2>
       </div>
@@ -12,13 +11,13 @@
     </section>
     <section>
       <div class="m_title">
-        <h2>수락한 회원 mok록</h2>
+        <h2>수락한 회원 목록</h2>
       </div>
       <vxe-grid border :columns="select_mem_table" :data="new_data" show-overflow>
       </vxe-grid>
       <button class="btn btn-primary" @click="agree">위로 이동</button>
     </section>
-  </main>
+  </div>
 </template>
 
 <script>
