@@ -1,18 +1,22 @@
 <template>
-  <div id="app">
-    <div class="m_title">
-      <h2>예약 관리 페이지</h2>
-    </div>
-    <h3>예약 신청 회원 목록</h3>
-    <vxe-grid border :columns="new_mem_table" :data="new_data" show-overflow @checkbox-change="selectCheck">
-    </vxe-grid>
-    <button class="btn btn-primary" @click="agree">수락</button>
-    <br>
-    <div class="m_title">
-      <h2>수락한 회원 목록</h2>
-    </div>
-    <vxe-grid border :columns="select_mem_table" :data="select_data" show-overflow>
-    </vxe-grid>
+  <div class="pt-body">
+    <section>
+      <div class="m_title">
+        <h2>예약 관리 페이지</h2>
+      </div>
+      <h3>예약 신청 회원 목록</h3>
+      <vxe-grid border :columns="new_mem_table" :data="new_data" show-overflow @checkbox-change="selectCheck">
+      </vxe-grid>
+      <button class="btn btn-primary" @click="agree">아래로 이동</button>
+    </section>
+    <section>
+      <div class="m_title">
+        <h2>수락한 회원 목록</h2>
+      </div>
+      <vxe-grid border :columns="select_mem_table" :data="new_data" show-overflow>
+      </vxe-grid>
+      <button class="btn btn-primary" @click="agree">위로 이동</button>
+    </section>
   </div>
 </template>
 

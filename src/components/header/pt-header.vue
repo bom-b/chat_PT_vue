@@ -6,7 +6,6 @@
   /* 기본 링크 색상 유지 */
 
 }
-
 </style>
 
 <template>
@@ -38,12 +37,17 @@
           </li>
         </ul>
         <form class="d-flex">
-          <button class="btn btn-primary" type="button">로그인</button>
+          <router-link to="/" class="router-link">
+            <button class="btn btn-primary" type="button">로그인</button>
+          </router-link>
         </form>
       </div>
     </div>
   </nav>
 </template>
+
 <script>
-export default {};
+export default {
+  
+};
 </script>
