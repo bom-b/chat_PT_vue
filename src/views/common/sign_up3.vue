@@ -33,7 +33,11 @@
           </li>
         </ul>
       </div>
-
+      <div class="image-container">
+        <div v-for="image in images" :key="image.path" :class="{ 'active-image': image.active }">
+          <img :src="image.path" :alt="image.alt" class="image" @click="handleImageClick(image)">
+        </div>
+      </div>
       <div class="button-container">
         <button type="button" class="btn btn-primary" @click="proceedToNextPage" :disabled="!height || !weight || !sex">
           다음
@@ -44,6 +48,28 @@
 </template>
 
 <style scoped>
+.active-image {
+  border: 2px solid red;
+  /* 예시: 빨간 테두리 추가 */
+}
+
+.image-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  /* 이미지 간의 여백을 조절할 수 있습니다. */
+  align-items: center;
+  margin-top: 20px;
+}
+
+.image {
+  width: calc(25% - 10px);
+  margin: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+
 .button-container {
   display: flex;
   justify-content: center;
@@ -82,6 +108,7 @@ export default {
     };
   },
   computed: {
+
     progress() {
       if (this.height && this.weight && this.sex) {
         return 75;
@@ -89,8 +116,37 @@ export default {
         return 50;
       }
     },
+    // 이미지 데이터 배열
+    images() {
+      return [
+        { path: require('./ptgogo.png'), alt: 'Image 1', active: this.BMI >= 0 && this.BMI < 18.5 },
+        { path: require('./ptgogo.png'), alt: 'Image 2', active: this.BMI >= 18.5 && this.BMI < 23 },
+        { path: require('./qrchoon.png'), alt: 'Image 3', active: this.BMI >= 23 && this.BMI < 25 },
+        { path: require('./qrchoon.png'), alt: 'Image 4', active: this.BMI >= 25 },
+      ];
+    },
+    getImagePath() {
+      if (this.BMI >= 0 && this.BMI < 18.5) {
+        return require('./ptgogo.png');
+      } else if (this.BMI >= 18.5 && this.BMI < 23) {
+        // return require('@/assets/정상.png');
+        return require('./ptgogo.png');
+      } else if (this.BMI >= 23 && this.BMI < 25) {
+        // return require('@/assets/과체중.png');
+        return require('./qrchoon.png');
+      } else if (this.BMI >= 25) {
+        // return require('@/assets/비만.png');
+        return require('./qrchoon.png');
+      } else {
+        return require('./춘식얼굴.png'); // or provide a default image path
+      }
+    },
   },
   methods: {
+    handleImageClick(image) {
+      // 클릭한 이미지에 따라 특정 동작 수행
+      console.log(`Clicked on image: ${image.alt}`);
+    },
     proceedToNextPage() {
       if (this.height && this.weight && this.sex) {
         // 다음 페이지로 이동
