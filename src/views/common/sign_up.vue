@@ -37,15 +37,14 @@
 					<label for="password_Check">비밀번호 확인:</label>
 					<input type="password" class="form-control" id="password_Check" placeholder="비밀번호를 입력하세요"
 						v-model="password_Check">
+					<div class="noti" :class="{ 'noti-mismatch': isPasswordMismatch, 'noti-match': !isPasswordMismatch }">
+						<p v-if="isPasswordMismatch" style="color: red;">비밀번호가 일치하지 않습니다.</p>
+						<p v-else style="color: blue;">비밀번호가 일치합니다.</p>
+					</div>
 				</div>
-
-				<!-- 다음 페이지로 이동하는 버튼 -->
-				<!-- <button type="button" class="btn btn-primary" :disabled="!isVerificationCodeValid"
-					@click="registerUser">다음</button> -->
-				<!-- "동의함" 버튼 -->
 				<div class="button-container">
 					<button type="button" class="btn btn-primary" @click="proceedToNextPage"
-						:disabled="!name || !email || !verificationCode || !password || !password_Check">다음</button>
+						:disabled="!name || !email || !verificationCode || !password || !password_Check && (password !== password_Check)">다음</button>
 				</div>
 
 			</div>
@@ -62,8 +61,7 @@ export default {
 			verificationCode: '',
 			password: '',
 			password_Check: '',
-
-			// isVerificationCodeValid: false,
+			isPasswordMismatch: false,
 		};
 	},
 	computed: {
@@ -72,6 +70,31 @@ export default {
 				return 25; // 필요한 모든 정보가 입력되었고, 비밀번호와 비밀번호 확인이 일치할 때 25를 반환하여 게이지바를 채웁니다.
 			} else {
 				return 0; // 그 외의 경우에는 0을 반환하여 게이지바를 비웁니다.
+			}
+		},
+		isFormValid() {
+			return (
+				this.name &&
+				this.email &&
+				this.verificationCode &&
+				this.password &&
+				this.password === this.password_Check
+			);
+		},
+	},
+	watch: {
+		password(newPassword) {
+			if (this.password && this.password_Check) {
+				this.isPasswordMismatch = newPassword !== this.password_Check;
+			} else {
+				this.isPasswordMismatch = false;
+			}
+		},
+		password_Check(newPasswordCheck) {
+			if (this.password && this.password_Check) {
+				this.isPasswordMismatch = this.password !== newPasswordCheck;
+			} else {
+				this.isPasswordMismatch = false;
 			}
 		},
 	},
@@ -90,7 +113,7 @@ export default {
 				console.log("비밀번호 확인:", this.password_Check);
 				this.$router.push('/sign_up2');
 			}
-		}
+		},
 	},
 };
 </script>
