@@ -12,7 +12,6 @@
     "@fullcalendar/daygrid": "^6.1.10",
     "@fullcalendar/interaction": "^6.1.10",
     "@fullcalendar/timegrid": "^6.1.10",
-    "@fullcalendar/vue": "^6.1.10",
     "@fullcalendar/vue3": "^6.1.10",
     "@popperjs/core": "^2.11.8",
     "@splidejs/vue-splide": "^0.6.12",
