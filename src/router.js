@@ -4,6 +4,8 @@ import store from './store';
 import Login from "./views/common/login-page.vue";
 import Home from "./views/common/main-home.vue";
 import Sign_up from "@/views/common/sign_up.vue";
+import Sign_up2 from "@/views/common/sign_up2.vue";
+import Sign_up3 from "@/views/common/sign_up3.vue";
 
 /*일반사용자*/
 import D_Home from "@/views/default/d-home-page.vue";
@@ -27,7 +29,10 @@ const router = createRouter({
         {path: "/", component: Home, meta: {headerType: 100}},
 
         // 로그인
-        {path: "/sign_up", component:Sign_up, meta: {headerType: 1}},
+        {path: "/sign_up", component:Sign_up, meta: {headerType: null} },
+        {path: "/sign_up2", component:Sign_up2, meta: {headerType: null}},
+        {path: "/sign_up3", component:Sign_up3, meta: {headerType: null}},
+
         {path: "/login", component: Login, meta: {headerType: 100}},
 
         // 일반 사용자
