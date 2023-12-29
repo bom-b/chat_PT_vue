@@ -26,3 +26,5 @@ AOS.init();
 //app.component('PagiNate', Paginate)
 
 app.mount('#app');
+
+// 1229 머지

@@ -31,9 +31,10 @@ export default {
         // PT
       } else if (this.headerType === 2) {
         return PT_Header;
-        // 비회원
+        // none헤더
       } else if (this.headerType === 100) {
         return None_Header;
+        // 비회원
       } else {
         return Login_Header;
       }
