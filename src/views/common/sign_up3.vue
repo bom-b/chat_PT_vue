@@ -51,7 +51,6 @@
 .active-image {
   border: 2px solid red;
   /* 예시: 빨간 테두리 추가 */
-  
 }
 
 .image-container {
