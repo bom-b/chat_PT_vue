@@ -184,9 +184,9 @@ img {
               <img class="" src="../../../public/assets/img/graphic/icon1.png" alt="" style="width: 32px;">
             </div>
             <div class="goal-box col-6 col-sm-3"
-                 style="display: flex; justify-content: space-between; align-items: flex-start;"
+                 style="display: flex; justify-content: space-between; align-items: flex-start; background-color: rgba(166, 227, 215, 0.99);"
                  data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
-              <p class="TheJamsil400" style="display: inline-block;">현재 체중<br>유지</p>
+              <p class="TheJamsil400" style="display: inline-block; ">현재 체중<br>유지</p>
               <img class="" src="../../../public/assets/img/graphic/icon2.png" alt="" style="width: 32px;">
             </div>
             <div class="goal-box col-6 col-sm-3"
