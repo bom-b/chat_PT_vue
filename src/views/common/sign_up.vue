@@ -37,8 +37,8 @@
 					<label for="password_Check">비밀번호 확인:</label>
 					<input type="password" class="form-control" id="password_Check" placeholder="비밀번호를 입력하세요"
 						v-model="password_Check">
-					<div class="noti" :class="{ 'noti-mismatch': isPasswordMismatch, 'noti-match': !isPasswordMismatch }">
-						<p v-if="isPasswordMismatch" style="color: red;">비밀번호가 일치하지 않습니다.</p>
+					<div class="noti">
+						<p v-if="matchpwd" style="color: red;">비밀번호가 일치하지 않습니다.</p>
 						<p v-else style="color: blue;">비밀번호가 일치합니다.</p>
 					</div>
 				</div>
@@ -83,18 +83,18 @@ export default {
 		},
 	},
 	watch: {
-		password(newPassword) {
+		password(password) {
 			if (this.password && this.password_Check) {
-				this.isPasswordMismatch = newPassword !== this.password_Check;
+				this.matchpwd = password !== this.password_Check;
 			} else {
-				this.isPasswordMismatch = false;
+				this.matchpwd = false;
 			}
 		},
-		password_Check(newPasswordCheck) {
+		password_Check(passwordCheck) {
 			if (this.password && this.password_Check) {
-				this.isPasswordMismatch = this.password !== newPasswordCheck;
+				this.matchpwd = this.password !== passwordCheck;
 			} else {
-				this.isPasswordMismatch = false;
+				this.matchpwd = true;
 			}
 		},
 	},
