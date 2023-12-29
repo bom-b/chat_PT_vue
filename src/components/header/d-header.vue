@@ -87,7 +87,7 @@ export default {
       navLinks: [
         { name: '카카오톡 채널', route: '/d_kakao' },
         { name: '식단등록', route: '/d_upload' },
-        { name: '식단 추천 받기', route: '/pt_schedule' },
+        { name: '식단 추천 받기', route: '/d_recommand' },
         { name: '식단 분석', route: '/d_a_change' },
         { name: '트레이너 찾기', route: '/d_find_trainer' }
       ],
