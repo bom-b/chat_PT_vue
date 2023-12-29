@@ -15,7 +15,7 @@ import Default_Header from "@/components/header/d-header.vue";
 import Footer from "@/components/footer/footer.vue";
 import Login_Header from "@/components/header/login-header.vue"
 // import main_header from '@/components/header/main-header.vue';
-// import None_Header from "@/components/header/none-header.vue";
+import None_Header from "@/components/header/none-header.vue";
 
 export default {
   name: 'App',
@@ -32,6 +32,8 @@ export default {
       } else if (this.headerType === 2) {
         return PT_Header;
         // 비회원
+      } else if (this.headerType === 100) {
+        return None_Header;
       } else {
         return Login_Header;
       }
