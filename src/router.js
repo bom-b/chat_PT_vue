@@ -15,13 +15,13 @@ import D_Find_Trainer from "@/views/default/d-find-trainer.vue";
 import D_A_Change from "@/views/default/d-a-change.vue";
 import D_A_Balance from "@/views/default/d-a-balance.vue";
 import D_A_Record from "@/views/default/d-a-record.vue";
+import D_A_Recommand from "@/views/default/d-diet-recommand.vue"
 
 /*PT사용자*/
 import PT_Home from "./views/pt/pt-home-page.vue";
 import pt_members from "./views/pt/pt-members.vue";
 import pt_schedule from "./views/pt/pt-schedule.vue";
 import pt_profile from "./views/pt/pt-profile.vue";
-
 
 const router = createRouter({
     history: createWebHistory(),
@@ -42,7 +42,9 @@ const router = createRouter({
         {path: "/d_find_trainer", component: D_Find_Trainer, meta: {headerType: 1}},
         {path: "/d_a_change", component: D_A_Change, meta: {headerType: 1}},
         {path: "/d_a_balance", component: D_A_Balance, meta: {headerType: 1}},
+        {path: "/d_recommand", component: D_A_Recommand, meta: {headerType: 1}},
         {path: "/d_a_record", component: D_A_Record, meta: {headerType: 1}},
+        
 
         //pt
         {path: "/pt_home", component: PT_Home, meta: {headerType: 2}},
