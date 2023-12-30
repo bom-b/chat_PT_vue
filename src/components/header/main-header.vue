@@ -30,7 +30,7 @@ nav {
   background-color: #e5f5f2;
   color: #085c57;
   border-radius: 15px;
-  opacity: 0.7;
+  opacity: 0.5;
 }
 
 .profile-img-container {
