@@ -2,10 +2,9 @@
   <main_header/>
   <div class="scroll-container">
     <!--  섹션1  -->
-    <div class="scroll-area" style="position: relative; display: flex; justify-content: center; align-items: center;">
-      <img class="background-img" src="/assets/img/background/1.png" alt="" style="">
-      <div class="in-img-text">
-        <p class="TheJamsil400 font120px" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
+    <div id="section1" class="scroll-area" style="">
+      <div class="img-text">
+        <p id="sec1-title" class="TheJamsil400 font120px" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
            style="color: white;">Life on <span class="TheJamsil400 font50"
                                                style="color: #A9D18E; margin-top: 20px; font-weight: bold;">Chat PT</span>
         </p>
@@ -13,18 +12,37 @@
            style="color: white;">일상과 함께하는 식단관리 서비스</p>
       </div>
     </div>
+
     <!--  섹션2  -->
-    <div class="scroll-area" style="display: flex; justify-content: center; align-items: center;">
-      <img class="background-img" src="/assets/img/background/2.png" alt="" style="">
-      <div class="img-text">
-        <p id="sec1-sub" class="font15 mt-3" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200"
-           style="color: black;">어디서나 간편하게 식단을 등록하고 추천을 받아보세요.</p>
+    <div id="section2" class="scroll-area" style="">
+      <div class="img-text" style="">
+        <div id="sec2-title">
+          <p id="sec2-sub-title" class="pine_Green_text TheJamsil100 font25 mb-3" data-aos="fade-in" data-aos-duration="1000"
+             data-aos-delay="">확실한 식단관리가 필요한 당신에게,</p>
+          <p class="TheJamsil400 font45" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
+            어디서나 간편하게 식단을 등록하고<br>추천을 받아보세요.</p>
+        </div>
+      </div>
+      <div class="img-icon">
+        <img id="sec2-icon" src="/assets/img/graphic/사용자아이콘.png" alt="" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="400">
       </div>
     </div>
+
     <!--  섹션3  -->
-    <div class="scroll-area" style="display: flex; justify-content: center; align-items: center;">
-      <img class="background-img" src="/assets/img/background/3.png" alt="" style="">
+    <div id="section3" class="scroll-area" style="">
+      <div class="img-text" style="">
+        <div id="sec3-title">
+          <p id="sec3-sub-title" class="pine_Green_text TheJamsil100 font25 mb-3" data-aos="fade-in" data-aos-duration="1000"
+             data-aos-delay="">회원의 식단관리를 대신 해줄 사람이 필요한 당신에게,</p>
+          <p class="TheJamsil400 font45" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
+            운동 코칭에만 집중할 수 있도록<br>식단 관리는 저희가 해드릴게요.</p>
+        </div>
+      </div>
+      <div class="img-icon">
+        <img id="sec3-icon" src="/assets/img/graphic/PT아이콘2.png" alt="" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="400">
+      </div>
     </div>
+
     <!--  섹션4  -->
     <div class="scroll-area" style="display: flex; justify-content: center; align-items: center;">
       <video id="" class="background-video" autoplay loop muted playsinline>
@@ -55,6 +73,7 @@ export default {
     },
   },
 };
+
 </script>
 <style>
 .nav-item {
@@ -88,10 +107,84 @@ export default {
   scroll-snap-align: center;
 }
 
-.background-img {
-  width: 100%;
-  height: 100vh;
-  object-fit: cover;
+.img-in-box {
+  width: 1800px;
+  margin: 0 auto;
+  position: absolute
+}
+
+.img-text {
+  width: 1800px;
+  margin: 0 auto;
+}
+
+.img-icon {
+  width: 1800px;
+  margin: 0 auto;
+  text-align: right;
+}
+
+#section1 {
+  background-image: url('../../assets/img/background/1.png');
+  background-size: cover; /* 배경 이미지를 섹션에 맞게 확대/축소 */
+  background-position: center; /* 배경 이미지를 가운데 정렬 */
+  color: white;
+  align-items: center;
+  text-align: left;
+
+  #sec1-title {
+    white-space: nowrap;
+  }
+}
+
+#section2 {
+  background-image: url('../../assets/img/background/2.png');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  align-items: center;
+  text-align: left;
+  flex-direction: column;
+
+  #sec2-title {
+    white-space: nowrap;
+    color: white;
+    position: absolute;
+    top: 20%;
+  }
+
+  #sec2-icon {
+    text-align: right;
+    width: 50vw;
+    position: absolute;
+    bottom: 0%;
+    right: 0%;
+  }
+}
+
+#section3 {
+  background-image: url('../../assets/img/background/3.png');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  align-items: center;
+  text-align: left;
+  flex-direction: column;
+
+  #sec3-title {
+    white-space: nowrap;
+    color: white;
+    position: absolute;
+    top: 20%;
+  }
+
+  #sec3-icon {
+    text-align: right;
+    width: 60vw;
+    position: absolute;
+    bottom: 0%;
+    right: 0%;
+  }
 }
 
 .background-video {
@@ -100,24 +193,15 @@ export default {
   object-fit: cover;
 }
 
-.in-img-text {
-  overflow: hidden;
-  margin-top: 20px;
-  position: absolute;
-  left: 15%;
-}
-
-.img-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-}
-
 .font120px {
   top: 20%;
   font-size: 120px;
+  white-space: nowrap;
+}
+
+.font45 {
+  //font-size: 3vw;
+  font-size: 4.5rem;
   white-space: nowrap;
 }
 
