@@ -17,14 +17,16 @@
     <div id="section2" class="scroll-area" style="">
       <div class="img-text" style="">
         <div id="sec2-title">
-          <p id="sec2-sub-title" class="pine_Green_text TheJamsil100 font25 mb-3" data-aos="fade-in" data-aos-duration="1000"
+          <p id="sec2-sub-title" class="pine_Green_text TheJamsil100 font25 mb-3" data-aos="fade-in"
+             data-aos-duration="1000"
              data-aos-delay="">확실한 식단관리가 필요한 당신에게,</p>
           <p class="TheJamsil400 font45" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
             어디서나 간편하게 식단을 등록하고<br>추천을 받아보세요.</p>
         </div>
       </div>
       <div class="img-icon">
-        <img id="sec2-icon" src="/assets/img/graphic/사용자아이콘.png" alt="" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="400">
+        <img id="sec2-icon" src="/assets/img/graphic/사용자아이콘.png" alt="" data-aos="fade-in" data-aos-duration="2000"
+             data-aos-delay="400">
       </div>
     </div>
 
@@ -32,24 +34,39 @@
     <div id="section3" class="scroll-area" style="">
       <div class="img-text" style="">
         <div id="sec3-title">
-          <p id="sec3-sub-title" class="pine_Green_text TheJamsil100 font25 mb-3" data-aos="fade-in" data-aos-duration="1000"
+          <p id="sec3-sub-title" class="pine_Green_text TheJamsil100 font25 mb-3" data-aos="fade-in"
+             data-aos-duration="1000"
              data-aos-delay="">회원의 식단관리를 대신 해줄 사람이 필요한 당신에게,</p>
           <p class="TheJamsil400 font45" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
             운동 코칭에만 집중할 수 있도록<br>식단 관리는 저희가 해드릴게요.</p>
         </div>
       </div>
       <div class="img-icon">
-        <img id="sec3-icon" src="/assets/img/graphic/PT아이콘2.png" alt="" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="400">
+        <img id="sec3-icon" src="/assets/img/graphic/PT아이콘2.png" alt="" data-aos="fade-in" data-aos-duration="2000"
+             data-aos-delay="400">
       </div>
     </div>
 
     <!--  섹션4  -->
-    <div class="scroll-area" style="display: flex; justify-content: center; align-items: center;">
+    <div id="section4" class="scroll-area" style="">
       <video id="" class="background-video" autoplay loop muted playsinline>
         <source src="/assets/img/background/fdd.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
+      <div id="section4-content">
+        <p class="TheJamsil400 font45" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">지금 시작해보세요!</p>
+
+          <router-link to="/sign_up" class="router-link">
+            <button class="" type="button">이메일로 가입하기</button>
+          </router-link>
+          <router-link to="/d_kakao" class="router-link">
+            <img src="/assets/img/graphic/kakao_login_kor.png">
+          </router-link>
+
+      </div>
     </div>
+
+
   </div>
 
 
@@ -186,6 +203,26 @@ export default {
     right: 0%;
   }
 }
+
+#section4 {
+  z-index: -1000;
+
+  #section4-content {
+    color: white;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+
+  .router-link {
+    pointer-events: auto; /* Ensure that pointer events are not disabled */
+    z-index: 1; /* Adjust the z-index if needed */
+  }
+
+}
+
 
 .background-video {
   width: 100%;
