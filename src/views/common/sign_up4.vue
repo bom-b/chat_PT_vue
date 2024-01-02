@@ -5,24 +5,16 @@
                 aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <div class="container">
-            <h2>키와 몸무게 입력</h2>
+            <h2>선호하는 음식 선택 (최대 5개 선택 가능)</h2>
             <div class="input-container">
                 <ul>
-                    <li>
-                        <label for="height">키(cm)</label>
-                        <input class="form-control" type="number" id="height" v-model="height">
-                    </li>
-                    <li>
-                        <label for="weight">몸무게(kg)</label>
-                        <input class='form-control' type="number" id="weight" v-model="weight">
-                    </li>
-                    
+                
                 </ul>
             </div>
 
             <div class="button-container">
                 <button type="button" class="btn btn-primary" @click="proceedToNextPage"
-                    :disabled="!height || !weight">다음</button>
+                    :disabled="!purpose || !weight">다음</button>
             </div>
         </div>
     </main>
@@ -34,29 +26,34 @@
     justify-content: center;
     margin-top: 20px;
 }
+
+.radio-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.radio-group label {
+    margin-bottom: 5px;
+}
 </style>
 
 <script>
 export default {
     data() {
         return {
-            height: '',
+            purpose: '',
             weight: '',
-            hasAllergy: '',
         };
     },
     methods: {
         proceedToNextPage() {
-            if (this.height && this.weight) {
-
-                this.$router.push('/sign_up4');
-
+            if (this.purpose && this.weight) {
+                // 다음 페이지로 이동하거나 추가적인 처리를 수행할 수 있습니다.
             } else {
-                // 키 또는 몸무게가 입력되지 않았을 때 처리
-                alert('키와 몸무게를 입력해주세요!');
+                // 목적 또는 몸무게가 입력되지 않았을 때 처리
+                alert('목적과 몸무게를 입력해주세요!');
             }
         },
     },
-
 };
 </script>
