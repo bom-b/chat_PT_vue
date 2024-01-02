@@ -1,4 +1,5 @@
 <template>
+<main>
   <div class="pt-body">
     <section>
       <div class="m_title">
@@ -18,6 +19,7 @@
       <button class="btn btn-primary" @click="agree">위로 이동</button>
     </section>
   </div>
+</main>
 </template>
 
 <script>
