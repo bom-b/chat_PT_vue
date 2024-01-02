@@ -1,13 +1,7 @@
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f8f9fa;
-}
-
 .login-container {
   max-width: 400px;
   margin: auto;
-  margin-top: 100px;
   padding: 20px;
   background-color: #ffffff;
   border: 1px solid #dee2e6;
@@ -23,12 +17,12 @@ body {
 }
 </style>
 <template>
-  <div class="container">
+<main>
     <div class="login-container">
       <h2 class="mb-4">Login</h2>
 
       <!-- 아이디 및 비밀번호 입력 폼 -->
-      <form>
+      <form >
         <div class="form-group">
           <label for="username">아이디:</label>
           <input type="text" class="form-control" id="username" placeholder="Enter your username">
@@ -70,10 +64,13 @@ body {
         </div>
       </form>
     </div>
-  </div>
+</main>
 </template>
 <script>
-export default {};
+
+export default {
+
+};
 </script>
 <style>
 .arrow {
