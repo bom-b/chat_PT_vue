@@ -24,7 +24,7 @@
   <div class="col-xs-8" @click="toggleWidget" style="padding: 2px">
     <!-- <div class="col-xs-8" @click="toggleWidget" style="width: 960px; height: 607px; padding: 2px;" > -->
     <!-- <div @click="toggleWidget" style="{ width: widgetWidth, height: widgetHeight }"> -->
-    <h2>마이페이지</h2>
+    <h2>없어짐</h2>
     <p>Click to hide me!</p>
 
     <div class="row">
