@@ -55,12 +55,9 @@
 
 </template>
 <script>
-import main_header from '@/components/header/main-header.vue';
+
 
 export default {
-  components: {
-    main_header,
-  },
   mounted() {
     this.setVideoPlaybackRate();
   },
