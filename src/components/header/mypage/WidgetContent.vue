@@ -24,7 +24,7 @@
   <div class="col-xs-8" @click="toggleWidget" style="padding: 2px">
     <!-- <div class="col-xs-8" @click="toggleWidget" style="width: 960px; height: 607px; padding: 2px;" > -->
     <!-- <div @click="toggleWidget" style="{ width: widgetWidth, height: widgetHeight }"> -->
-    <h2>없어짐</h2>
+    <h2>마이페이지</h2>
     <p>Click to hide me!</p>
 
     <div class="row">
@@ -32,6 +32,7 @@
         <img
           src="@/assets/img/user_icon.png"
           style="margin: 10px; height: 30px"
+          @click="showTemplate('ptSchedule')"
         />
         <img
           src="@/assets/img/icon/Frame-1.png"
@@ -52,15 +53,15 @@
 </template>
 
 <script>
-import PtSchedule from "@/views/pt/pt-schedule.vue";
+import PtSchedule from "@/views/pt/pt-schedule.vue"; //피티스케쥴로 링크
 
 export default {
   components: {
-    PtSchedule,
+    PtSchedule, //피티스케쥴로 링크
   },
   data() {
     return {
-      currentComponent: null,
+      currentComponent: null, // 창 열때 기본페이지 : 피티스케쥴로 되어있음
     };
   },
 
