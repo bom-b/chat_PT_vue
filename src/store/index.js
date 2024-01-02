@@ -2,7 +2,7 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    headerType: 1, // 기본 헤더 타입
+    headerType: null, // 기본 헤더 타입
     
     // 윤승현 테스트
     // new_data: [

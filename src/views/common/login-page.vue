@@ -44,6 +44,12 @@ body {
           <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/sign_up">
             회원가입
           </a>
+
+          <span style="margin-right: 10px; margin-left: 10px;"> | </span> <!-- 공백을 위한 span 태그 -->
+
+          <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/pt_sign_up">
+            PT쌤 회원가입
+          </a>
           <br>
           <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="#">
             아이디/패스워드 찾기
