@@ -18,7 +18,7 @@ import D_A_Change from "@/views/default/d-a-change.vue";
 import D_A_Balance from "@/views/default/d-a-balance.vue";
 import D_A_Record from "@/views/default/d-a-record.vue";
 import D_A_Recommand from "@/views/default/d-diet-recommand.vue"
-
+import D_A_joinsuccess from "@/views/default/d-joinsuccess.vue"
 
 /*PT사용자*/
 import PT_Home from "./views/pt/pt-home-page.vue";
@@ -36,6 +36,7 @@ const router = createRouter({
         { path: "/sign_up2", component: Sign_up2, meta: { headerType: null } },
         { path: "/sign_up3", component: Sign_up3, meta: { headerType: null } },
         { path: "/sign_up4", component: Sign_up4, meta: { headerType: null } },
+        { path: "/joinsuccess", component: D_A_joinsuccess, meta: { headerType: 1 } },
 
         { path: "/login", component: Login, meta: { headerType: 100 } },
 
@@ -49,6 +50,7 @@ const router = createRouter({
         { path: "/d_a_balance", component: D_A_Balance, meta: { headerType: 1 } },
         { path: "/d_recommand", component: D_A_Recommand, meta: { headerType: 1 } },
         { path: "/d_a_record", component: D_A_Record, meta: { headerType: 1 } },
+
 
         //pt
         { path: "/pt_home", component: PT_Home, meta: { headerType: 2 } },
