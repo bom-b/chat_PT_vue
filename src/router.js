@@ -59,7 +59,7 @@ const router = createRouter({
 
         // Admin
         {path: "/a_userList", component: a_userList, meta: {headerType: null}},
-        {path: "/a_userList", component: a_checkFood, meta: {headerType: null}},
+        {path: "/a_checkFood", component: a_checkFood, meta: {headerType: null}},
     ],
 });
 router.beforeEach((to, from, next) => {
