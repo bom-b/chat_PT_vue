@@ -20,6 +20,10 @@
             </div>
           </li>
           <li>
+            <label for="age">나이</label>
+            <input class="form-control" type="number" id="age" v-model="age">
+          </li>
+          <li>
             <label for="height">키(cm)</label>
             <input class="form-control" type="number" id="height" v-model="height">
           </li>
@@ -31,74 +35,34 @@
             <label for="bmi"> bmi </label>
             <div>{{ calculateBMI() }}</div>
           </li>
+          <div class="image-container">
+            <div v-for="image in images" :key="image.path" :class="{ 'active-image': image.active }">
+              <img :src="image.path" :alt="image.alt" class="image" @click="handleImageClick(image)">
+            </div>
+          </div>
+          <li>
+            <label for="purpose">목적</label>
+            <div class="purpose_list">
+        <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'diet' }" id="diet" @click="setPurpose('diet')"> 다이어트 </button>
+        <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'keep' }" id="keep" @click="setPurpose('keep')"> 체중유지 </button>
+        <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'bulk-up' }" id="bulk-up" @click="setPurpose('bulk-up')"> 벌크업 </button>
+        <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'improve' }" id="improve" @click="setPurpose('improve')"> 식습관 개선 </button>
+      </div>
+
+          </li>
         </ul>
       </div>
-      <div class="image-container">
-        <div v-for="image in images" :key="image.path" :class="{ 'active-image': image.active }">
-          <img :src="image.path" :alt="image.alt" class="image" @click="handleImageClick(image)">
-        </div>
-      </div>
       <div class="button-container">
-        <button type="button" class="btn btn-primary" @click="proceedToNextPage" :disabled="!height || !weight || !sex">
+        <button type="button" class="btn btn-primary" @click="proceedToNextPage"
+          :disabled="!height || !weight || !sex || !purpose">
           다음
         </button>
       </div>
     </div>
   </main>
 </template>
-
-<style scoped>
-.active-image {
-  border: 2px solid red;
-  /* 예시: 빨간 테두리 추가 */
-}
-
-.image-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center; /* 이미지를 가운데에 정렬합니다. */
-  align-items: center;
-  margin-top: 20px;
-}
-
-.image {
-  /* width: calc(25% - 10px); */
-  width: 100px;
-  height: 100px;
-  margin: 5px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-
-.button-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.btn-group {
-  display: flex;
-}
-
-.btn-group button {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-}
-
-.btn-male {
-  background-color: skyblue;
-}
-
-.btn-female {
-  background-color: pink;
-}
-</style>
-
 <script>
+
 export default {
   data() {
     return {
@@ -106,10 +70,10 @@ export default {
       weight: '',
       BMI: '',
       sex: '',
+      purpose: '',
     };
   },
   computed: {
-
     progress() {
       if (this.height && this.weight && this.sex) {
         return 75;
@@ -166,6 +130,82 @@ export default {
     setSex(sex) {
       this.sex = sex;
     },
+    setPurpose(purpose) {
+      this.purpose = purpose;
+    }
   },
 };
 </script>
+
+<style scoped>
+.active-image {
+  border: 2px solid red;
+}
+
+.image-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.image {
+  width: 100px;
+  height: 100px;
+  margin: 5px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.btn-group {
+  display: flex;
+}
+
+.btn-group button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.btn-male {
+  background-color: skyblue;
+}
+
+.btn-female {
+  background-color: pink;
+}
+
+@import url("https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  text-align: center;
+  padding: 100px;
+  background: whitesmoke;
+  display: table-cell;
+}
+
+button {
+  margin: 20px;
+}
+.selected-purpose {
+  background-color: black;
+  /* 선택된 목적 버튼에 원하는 스타일을 추가하세요 */
+}
+
+</style>
