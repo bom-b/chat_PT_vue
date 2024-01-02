@@ -1,6 +1,6 @@
 <template>
 	<main>
-		<div class="progress mt-3">
+		<div class="progress fixed-top" style="margin-top: 81px;">
 			<div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
 				aria-valuemin="0" aria-valuemax="100"></div>
 		</div>

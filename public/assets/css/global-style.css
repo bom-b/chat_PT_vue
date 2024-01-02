@@ -35,6 +35,18 @@ button {
 
 /*더잠실체*/
 @font-face {
+    font-family: 'TheJamsil100';
+    font-weight: 100;
+    font-style: normal;
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Thin.eot');
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Thin.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Thin.woff2') format('woff2'),
+        url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Thin.woff') format('woff'),
+        url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Thin.ttf') format("truetype");
+    font-display: swap;
+}
+
+@font-face {
   font-family: 'TheJamsil300';
   font-weight: 300;
   font-style: normal;
@@ -58,12 +70,32 @@ button {
   font-display: swap;
 }
 
+@font-face {
+    font-family: 'TheJamsil700';
+    font-weight: 700;
+    font-style: normal;
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Medium.eot');
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Medium.eot?#iefix') format('embedded-opentype'),
+        url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Medium.woff2') format('woff2'),
+        url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Medium.woff') format('woff'),
+        url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Medium.ttf') format("truetype");
+    font-display: swap;
+}
+
+.TheJamsil100 {
+  font-family: 'TheJamsil100', sans-serif;
+}
+
 .TheJamsil300 {
   font-family: 'TheJamsil300', sans-serif;
 }
 
 .TheJamsil400 {
   font-family: 'TheJamsil400', sans-serif;
+}
+
+.TheJamsil700 {
+  font-family: 'TheJamsil700', sans-serif;
 }
 
 * {
