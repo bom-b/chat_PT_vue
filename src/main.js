@@ -4,10 +4,10 @@ import router from './router';
 import store from './store';
 import AOS from 'aos';
 import "aos/dist/aos.css";
-import './assets/css/global-style.css';
+import '@/../public/assets/css/global-style.css';
 import 'material-icons/iconfont/material-icons.css';
-import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "xe-utils";
 import vxetable from "vxe-table";
 import "vxe-table/lib/style.css";
@@ -26,3 +26,5 @@ AOS.init();
 //app.component('PagiNate', Paginate)
 
 app.mount('#app');
+
+// 1229 머지

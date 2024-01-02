@@ -1,4 +1,4 @@
-# test
+# Chat PT
 
 ## Project setup
 ```

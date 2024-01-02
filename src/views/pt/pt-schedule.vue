@@ -1,89 +1,18 @@
-<script>
-import { defineComponent } from 'vue'
-import FullCalendar from '@fullcalendar/vue3'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import { INITIAL_EVENTS, createEventId } from './event-utils'
-
-export default defineComponent({
-  components: {
-    FullCalendar,
-  },
-  data() {
-    return {
-      calendarOptions: {
-        plugins: [
-          dayGridPlugin,
-          timeGridPlugin,
-          interactionPlugin, // needed for dateClick
-        ],
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        initialView: 'dayGridMonth',
-        initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
-        editable: true,
-        selectable: true,
-        selectMirror: true,
-        dayMaxEvents: true,
-        weekends: true,
-        select: this.handleDateSelect,
-        eventClick: this.handleEventClick,
-        eventsSet: this.handleEvents
-        /* you can update a remote database when these fire:
-        eventAdd:
-        eventChange:
-        eventRemove:
-        */
-      },
-      currentEvents: [],
-    }
-  },
-  methods: {
-    handleWeekendsToggle() {
-      this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
-    },
-    handleDateSelect(selectInfo) {
-      let title = prompt('Please enter a new title for your event')
-      let calendarApi = selectInfo.view.calendar
-
-      calendarApi.unselect() // clear date selection
-
-      if (title) {
-        calendarApi.addEvent({
-          id: createEventId(),
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay
-        })
-      }
-    },
-    handleEventClick(clickInfo) {
-      if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-        clickInfo.event.remove()
-      }
-    },
-    handleEvents(events) {
-      this.currentEvents = events
-    },
-  }
-})
-
-</script>
-
 <template>
   <div class='demo-app'>
     <div class='demo-app-sidebar'>
       <div class='demo-app-sidebar-section'>
         <h2>회원 스케줄 관리</h2>
         <ul>
-          <li>나는 오늘부터 지지관계에서 벗어나</li>
-          <li>춘식이와 나는 한몸으로 일체가 된다</li>
-          <li>춘식이에 대한 공격은 나에대한 공격으로 간주한다.</li>
+          <li
+            v-for='(event, index) in externalEvents'
+            :key='index'
+            class='external-event'
+            :draggable='true'
+            :data-event='JSON.stringify(event)'
+          >
+            {{ event.title }}
+          </li>
         </ul>
       </div>
       <div class='demo-app-sidebar-section'>
@@ -101,12 +30,9 @@ export default defineComponent({
           </li>
         </ul>
       </div>
-      <div class='demo-app-sidebar-section'>
-        dddd
-      </div>
     </div>
     <div class='demo-app-main'>
-      <FullCalendar class='demo-app-calendar' :options='calendarOptions'>
+      <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref='fullCalendar'>
         <template v-slot:eventContent='arg'>
           <b>{{ arg.timeText }}</b>
           <i>{{ arg.event.title }}</i>
@@ -115,6 +41,122 @@ export default defineComponent({
     </div>
   </div>
 </template>
+
+<script>
+import { defineComponent } from 'vue';
+import FullCalendar from '@fullcalendar/vue3';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin, { ThirdPartyDraggable } from '@fullcalendar/interaction';
+import dragula from 'dragula';
+import 'dragula/dist/dragula.css';
+
+function createEventId() {
+  return String(Date.now());
+}
+
+export default defineComponent({
+  components: {
+    FullCalendar,
+  },
+  data() {
+    return {
+      calendarOptions: {
+        plugins: [
+          dayGridPlugin,
+          timeGridPlugin,
+          interactionPlugin,
+        ],
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay',
+        },
+        initialView: 'dayGridMonth',
+        editable: true,
+        selectable: true,
+        selectMirror: true,
+        dayMaxEvents: true,
+        weekends: true,
+        select: this.handleDateSelect,
+        eventClick: this.handleEventClick,
+        eventsSet: this.handleEvents,
+      },
+      currentEvents: [],
+      externalEvents: [
+        { title: '나는 오늘부터 지지관계에서 벗어나' },
+        { title: '춘식이와 나는 한몸으로 일체가 된다' },
+        { title: '춘식이에 대한 공격은 나에 대한 공격으로 간주한다.' },
+      ],
+      drake: null,
+    };
+  },
+  methods: {
+    handleDateSelect(selectInfo) {
+      let title = prompt('Please enter a new title for your event');
+      let calendarApi = selectInfo.view.calendar;
+
+      calendarApi.unselect(); // clear date selection
+
+      if (title) {
+        calendarApi.addEvent({
+          id: createEventId(),
+          title,
+          start: selectInfo.startStr,
+          end: selectInfo.endStr,
+          allDay: selectInfo.allDay,
+        });
+      }
+    },
+    handleEventClick(clickInfo) {
+      if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
+        clickInfo.event.remove();
+      }
+    },
+    handleEvents(events) {
+      this.currentEvents = events;
+
+    },
+    handleWeekendsToggle() {
+      this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
+    },
+    initCalendar() {
+      const containerEl = document.getElementById('external-events-list');
+
+      this.drake = dragula({
+        containers: [containerEl],
+        copy: true,
+      });
+
+      this.drake.on('drop', (el, target) => {
+        const title = el.innerText;
+        const calendarApi = this.$refs.fullCalendar.getApi();
+
+        calendarApi.addEvent({
+          title,
+          start: calendarApi.getDateFromElement(target),
+          allDay: !calendarApi.getOption('allDaySlot'),
+        });
+      });
+
+      new ThirdPartyDraggable(containerEl, {
+        itemSelector: '.external-event',
+        mirrorSelector: '.gu-mirror',
+        eventData: (eventEl) => {
+          return {
+            title: eventEl.innerText,
+          };
+        },
+      });
+    },
+  },
+  mounted() {
+    this.initCalendar();
+  },
+});
+</script>
+
+
 
 <style lang='css'>
 h2 {

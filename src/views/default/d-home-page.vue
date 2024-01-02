@@ -169,37 +169,34 @@ img {
       </div>
     </section><!-- End Hero Section -->
 
-    <!--  목표달성  -->
-    <section>
-      <div class="gray" style="min-height: 100%; height: auto; padding: 30px; padding-bottom: 120px;">
-        <div class="section1800">
-          <h5 class="" style="color: #727070" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100">chat PT를
-            통해</h5>
-          <h3 class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100">어떤 목표를 이루고 계신가요? 🚀</h3>
-          <div class="row justify-content-center align-items-center" style="margin-top: 50px; text-align: center;">
-            <div class="goal-box col-6 col-sm-3"
-                 style="display: flex; justify-content: space-between; align-items: flex-start;"
-                 data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
-              <p class="TheJamsil400" style="display: inline-block;">뚜렷한<br>체중 감량</p>
-              <img class="" src="../../../public/assets/img/graphic/icon1.png" alt="" style="width: 32px;">
+    <!--  식단 업로드  -->
+    <section class="ivory" style="padding:0 2vw;">
+      <div class="section1800">
+        <div class="row " style="margin-top: 100px; margin-bottom:200px; text-align: center;">
+
+          <div class="col-lg-4 col-sm-6" style="height: 300px; text-align: left; "
+               data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
+            <video id="mobile-food-icon" class="video" autoplay loop muted playsinline style="object-fit: contain;">
+              <source src="../../assets/img/changeable_diet_minified.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <div style="text-align: center; padding-left: 20px;">
+              <!--              <img id="web-food-icon" src="../../assets/img/graphic/taco%201.png"-->
+              <!--                   style="margin-left: 20px; object-fit: contain;">-->
+              <DynamicImage id="web-food-icon"/>
+              <!--              <img src="/assets/img/graphic/taco%201.png" style="max-height: 80%; object-fit: contain;">-->
             </div>
-            <div class="goal-box col-6 col-sm-3"
-                 style="display: flex; justify-content: space-between; align-items: flex-start;"
-                 data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
-              <p class="TheJamsil400" style="display: inline-block;">현재 체중<br>유지</p>
-              <img class="" src="../../../public/assets/img/graphic/icon2.png" alt="" style="width: 32px;">
+          </div>
+
+          <div class="col-lg-8 col-sm-6 img-upload"
+               data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
+            <h3 id="plz-up" class="TheJamsil400" style=" white-space: nowrap">오늘의 식단을 업로드 해주세요!</h3>
+            <p class="pine_Green_text" style=" white-space: nowrap">사진을 전부 등록 해주시면 저희가 분류해드릴게요.</p>
+            <div id="MultiImageUploader">
+              <MultiImageUploader/>
             </div>
-            <div class="goal-box col-6 col-sm-3"
-                 style="display: flex; justify-content: space-between; align-items: flex-start;"
-                 data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
-              <p class="TheJamsil400" style="display: inline-block;">체중 증량<br>(벌크업)</p>
-              <img class="" src="../../../public/assets/img/graphic/icon4.png" alt="" style="width: 32px;">
-            </div>
-            <div class="goal-box col-6 col-sm-3"
-                 style="display: flex; justify-content: space-between; align-items: flex-start;"
-                 data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
-              <p class="TheJamsil400" style="display: inline-block;">건강한<br>식습관</p>
-              <img class="" src="../../../public/assets/img/graphic/icon3.png" alt="" style="width: 32px;">
+            <div id="mobile-btn">
+              <button class="" @click="triggerFileInput">파일 선택</button>
             </div>
           </div>
         </div>
@@ -218,40 +215,6 @@ img {
           일째</p>
         <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
            style="margin-top: 10px; font-size: 20px; color: #00997b;">업로드 중입니다 😊</p>
-      </div>
-    </section>
-
-    <!--  식단 업로드  -->
-    <section class="ivory" style="padding:0 2vw;">
-      <div class="section1800">
-        <div class="row " style="margin-top: 100px; margin-bottom:200px; text-align: center;">
-
-          <div class="col-lg-4 col-sm-6" style="height: 300px; text-align: left; "
-               data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
-            <video id="mobile-food-icon" class="video" autoplay loop muted playsinline style="object-fit: contain;">
-              <source src="../../assets/img/changeable_diet_minified.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-            <div style="text-align: center; padding-left: 20px;">
-              <!--              <img id="web-food-icon" src="../../assets/img/graphic/taco%201.png"-->
-              <!--                   style="margin-left: 20px; object-fit: contain;">-->
-              <DynamicImage id="web-food-icon"/>
-<!--              <img src="/assets/img/graphic/taco%201.png" style="max-height: 80%; object-fit: contain;">-->
-            </div>
-          </div>
-
-          <div class="col-lg-8 col-sm-6 img-upload"
-               data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
-            <h3 id="plz-up" class="TheJamsil400" style=" white-space: nowrap">오늘의 식단을 업로드 해주세요!</h3>
-            <p class="pine_Green_text" style=" white-space: nowrap">사진을 전부 등록 해주시면 저희가 분류해드릴게요.</p>
-            <div id="MultiImageUploader">
-              <MultiImageUploader/>
-            </div>
-            <div id="mobile-btn">
-              <button class="" @click="triggerFileInput">파일 선택</button>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
 
