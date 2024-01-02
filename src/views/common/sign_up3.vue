@@ -1,9 +1,9 @@
 <template>
     <main>
-        <div class="progress mt-3">
-            <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
-                aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
+        <div class="progress fixed-top" style="margin-top: 81px;">
+			<div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
+				aria-valuemin="0" aria-valuemax="100"></div>
+		</div>
         <div class="container">
             <h2>키와 몸무게 입력</h2>
             <div class="input-container">

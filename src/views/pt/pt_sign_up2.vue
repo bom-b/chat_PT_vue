@@ -5,8 +5,9 @@
 				aria-valuemin="0" aria-valuemax="100"></div>
 		</div>
         <div class="container">
-            <h2>회원가입</h2>
-            <div class="signup-container">
+            
+            <div class="login-container">
+                <h2 class = "mb-4"> 개인정보동의 내역</h2>
                 <!-- 개인정보 동의 체크박스 -->
                 <div>
                     <ul>
