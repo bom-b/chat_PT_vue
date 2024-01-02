@@ -18,12 +18,15 @@ import D_A_Balance from "@/views/default/d-a-balance.vue";
 import D_A_Record from "@/views/default/d-a-record.vue";
 import D_A_Recommand from "@/views/default/d-diet-recommand.vue"
 
-
 /*PT사용자*/
 import PT_Home from "./views/pt/pt-home-page.vue";
 import pt_members from "./views/pt/pt-members.vue";
 import pt_schedule from "./views/pt/pt-schedule.vue";
 import pt_profile from "./views/pt/pt-profile.vue";
+
+// Admin
+import a_userList from "./views/admin/a-userList.vue";
+import a_checkFood from "./views/admin/a-checkFood.vue";
 
 const router = createRouter({
     history: createWebHistory(),
@@ -53,6 +56,10 @@ const router = createRouter({
         {path: "/pt_members", component: pt_members, meta: {headerType: 2}},
         {path: "/pt_schedule", component: pt_schedule, meta: {headerType: 2}},
         {path: "/pt_profile", component: pt_profile, meta: {headerType: 2}},
+
+        // Admin
+        {path: "/a_userList", component: a_userList, meta: {headerType: null}},
+        {path: "/a_userList", component: a_checkFood, meta: {headerType: null}},
     ],
 });
 router.beforeEach((to, from, next) => {
