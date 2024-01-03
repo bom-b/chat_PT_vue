@@ -20,7 +20,7 @@
             <p>이미지를 드래그 앤 드롭하세요</p>
         <input type="file" ref="fileInput" multiple style="display: none" @change="handleFileInput"/>
             <button @click="triggerFileInput">파일 선택</button>
-
+            <button>제출</button>
 
       <!-- 카테고리별 드래그 앤 드롭 영역 -->
         <div class="categories">
