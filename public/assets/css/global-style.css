@@ -1,36 +1,44 @@
 /*시그니처 배경색*/
 .gray {
-  background-color: #f8f9f8;
+    background-color: #f8f9f8;
 }
 
 .lime-green {
-  background-color: #e5f5f2;
+    background-color: #e5f5f2;
 }
 
 .ivory {
-  background-color: #f8f9f8;
+    background-color: #f8f9f8;
 }
 
 .green {
-  background-color: #085c57;
+    background-color: #085c57;
 }
 
 .pine_Green {
-  background-color: #00997b;
+    background-color: #00997b;
 }
 
 /*글자 강조색*/
 .pine_Green_text {
-  color: #00997b;
+    color: #00997b;
 }
 
 /*시그니처 버튼*/
-button {
-  background-color: #e5f5f2;
-  color: #085c57;
-  border: none;
-  border-radius: 1px;
-  padding: 10px 20px;
+.btn-signature {
+    background-color: #e5f5f2;
+    color: #085c57;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    min-width: 20px;
+    min-height: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease !important;
+}
+
+.btn-signature:hover {
+    background-color: #b2ebda !important;
+    color: #02413b !important;
 }
 
 /*더잠실체*/
@@ -40,34 +48,34 @@ button {
     font-style: normal;
     src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Thin.eot');
     src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Thin.eot?#iefix') format('embedded-opentype'),
-        url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Thin.woff2') format('woff2'),
-        url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Thin.woff') format('woff'),
-        url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Thin.ttf') format("truetype");
+    url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Thin.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Thin.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Thin.ttf') format("truetype");
     font-display: swap;
 }
 
 @font-face {
-  font-family: 'TheJamsil300';
-  font-weight: 300;
-  font-style: normal;
-  src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Light.eot');
-  src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Light.eot?#iefix') format('embedded-opentype'),
-  url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Light.woff2') format('woff2'),
-  url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Light.woff') format('woff'),
-  url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Light.ttf') format("truetype");
-  font-display: swap;
+    font-family: 'TheJamsil300';
+    font-weight: 300;
+    font-style: normal;
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Light.eot');
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Light.eot?#iefix') format('embedded-opentype'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Light.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Light.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Light.ttf') format("truetype");
+    font-display: swap;
 }
 
 @font-face {
-  font-family: 'TheJamsil400';
-  font-weight: 400;
-  font-style: normal;
-  src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Regular.eot');
-  src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Regular.eot?#iefix') format('embedded-opentype'),
-  url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Regular.woff2') format('woff2'),
-  url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Regular.woff') format('woff'),
-  url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Regular.ttf') format("truetype");
-  font-display: swap;
+    font-family: 'TheJamsil400';
+    font-weight: 400;
+    font-style: normal;
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Regular.eot');
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Regular.eot?#iefix') format('embedded-opentype'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Regular.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Regular.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Regular.ttf') format("truetype");
+    font-display: swap;
 }
 
 @font-face {
@@ -76,79 +84,79 @@ button {
     font-style: normal;
     src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Medium.eot');
     src: url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Medium.eot?#iefix') format('embedded-opentype'),
-        url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Medium.woff2') format('woff2'),
-        url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Medium.woff') format('woff'),
-        url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Medium.ttf') format("truetype");
+    url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Medium.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Medium.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/webfontworld/TheJamsil/TheJamsil-Medium.ttf') format("truetype");
     font-display: swap;
 }
 
 .TheJamsil100 {
-  font-family: 'TheJamsil100', sans-serif;
+    font-family: 'TheJamsil100', sans-serif;
 }
 
 .TheJamsil300 {
-  font-family: 'TheJamsil300', sans-serif;
+    font-family: 'TheJamsil300', sans-serif;
 }
 
 .TheJamsil400 {
-  font-family: 'TheJamsil400', sans-serif;
+    font-family: 'TheJamsil400', sans-serif;
 }
 
 .TheJamsil700 {
-  font-family: 'TheJamsil700', sans-serif;
+    font-family: 'TheJamsil700', sans-serif;
 }
 
 * {
-  font-family: 'TheJamsil300', sans-serif;
+    font-family: 'TheJamsil300', sans-serif;
 }
 
 main {
-  background-color: #F2F4F7;
-  /* min-height: 2000px; */
-  min-height: 1000px;
-  margin-top: 80px;
+    background-color: #F2F4F7;
+    min-height: calc(100vh - 80px - 200px); /* 화면 최대길이 - 헤더높이 - 풋터높이*/
+    margin-top: 80px;
 }
 
 .section1400 {
-  max-width: 1400px;
-  margin: 0 auto;
-  text-align: center;
-  overflow: hidden;
-}
-
-.section1600 {
-  max-width: 1600px;
-  margin: 0 auto;
-  text-align: center;
-  overflow: hidden;
-}
-
-.section1800 {
-  max-width: 1800px;
-  margin: 0 auto;
-  text-align: center;
-  overflow: hidden;
-}
-
-.app {
-  overflow: hidden;
-}
-
-.nav-item{
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-
-@media (max-width: 768px) {
-  .section1800 {
-    max-width: 100vw;
+    max-width: 1400px;
     margin: 0 auto;
     text-align: center;
     overflow: hidden;
-  }
 }
+
+.section1600 {
+    max-width: 1600px;
+    margin: 0 auto;
+    text-align: center;
+    overflow: hidden;
+}
+
+.section1800 {
+    max-width: 1800px;
+    margin: 0 auto;
+    text-align: center;
+    overflow: hidden;
+}
+
+.app {
+    overflow: hidden;
+}
+
+.nav-item {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+@media (max-width: 768px) {
+    .section1800 {
+        max-width: 100vw;
+        margin: 0 auto;
+        text-align: center;
+        overflow: hidden;
+    }
+}
+
 /* 윤승현 추가*/
-.pt-body{
-  padding-left: 10%;
-  padding-right: 10%;
+.pt-body {
+    padding-left: 10%;
+    padding-right: 10%;
 }

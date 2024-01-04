@@ -1,5 +1,5 @@
 <template>
-
+<main>
   <section id="hero" class="hero d-flex align-items-center section-bg">
         <div class="col-12" style="max-width: 1600px; margin: 0 auto;">
           <h1 data-aos="fade-in" data-aos-duration="1000" class="TheJamsil400"
@@ -249,6 +249,7 @@
     <a><img src="../../assets/img/춘식이눕기.png"></a>
   
   </div>
+</main>
   </template>
   
   

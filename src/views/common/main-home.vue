@@ -60,7 +60,7 @@
           시작해보세요!</p>
 
         <router-link to="/sign_up" class="router-link">
-          <button class="mb-3" type="button" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="200">이메일로
+          <button class="mb-3 btn-signature" type="button" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="200">이메일로
             가입하기
           </button>
         </router-link>
@@ -80,12 +80,9 @@
 
 </template>
 <script>
-import main_header from '@/components/header/main-header.vue';
+
 
 export default {
-  components: {
-    main_header,
-  },
   mounted() {
     this.setVideoPlaybackRate();
   },

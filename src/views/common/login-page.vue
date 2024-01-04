@@ -1,83 +1,141 @@
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f8f9fa;
-}
-
+<style scoped>
 .login-container {
   max-width: 400px;
   margin: auto;
-  margin-top: 100px;
   padding: 20px;
   background-color: #ffffff;
   border: 1px solid #dee2e6;
   border-radius: 5px;
+  width: 400px;
+
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  margin-top: 150px;
+  margin-bottom: 150px;
 }
 
 .form-group {
   margin-bottom: 20px;
 }
 
-.btn-login {
-  width: 100%;
+.kakao-login-btn {
+  width: 170px;
 }
+
+.login-btn {
+  background-color: #e5f5f2;
+  color: #085c57;
+  border: none;
+  border-radius: 7px;
+  padding: 10px 20px;
+  height: 42px;
+  width: 170px;
+}
+
+main {
+  text-align: right;
+  position: relative;
+}
+
+#left-icon {
+  text-align: right;
+  width: 220px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+#right-icon {
+  text-align: right;
+  width: 400px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
 </style>
 <template>
-  <div class="container">
-    <div class="login-container">
-      <h2 class="mb-4">Login</h2>
+  <main id="mainContainer" style="background-color: #428176;">
+    <img id="left-icon" src="../../../public/assets/img/graphic/login_left.png">
+    <img id="right-icon" src="../../../public/assets/img/graphic/login_right.png">
+    <div class="section1400">
+      <div class="login-container">
+        <h2 class="mb-4 TheJamsil400 pine_Green_text mt-2 mb-5">Login</h2>
 
-      <!-- 아이디 및 비밀번호 입력 폼 -->
-      <form>
-        <div class="form-group">
-          <label for="username">아이디:</label>
-          <input type="text" class="form-control" id="username" placeholder="Enter your username">
-        </div>
+        <!-- 아이디 및 비밀번호 입력 폼 -->
+        <form style="text-align: left;">
+          <div class="form-group">
+            <label for="username">아이디:</label>
+            <input type="text" class="form-control" id="username" placeholder="Enter your username">
+          </div>
 
-        <div class="form-group">
-          <label for="password">패스워드:</label>
-          <input type="password" class="form-control" id="password" placeholder="Enter your password">
-        </div>
+          <div class="form-group">
+            <label for="password">패스워드:</label>
+            <input type="password" class="form-control" id="password" placeholder="Enter your password">
+          </div>
 
-        <!-- 로그인 버튼 -->
-        <div>
-          <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/sign_up">
-            회원가입
-          </a>
-          <br>
-          <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="#">
-            아이디/패스워드 찾기
-          </a>
+          <!--     로그인 버튼     -->
+          <div class="mt-5" style="text-align: center">
+            <div>
+              <router-link to="d_home" class="router-link">
+                <button type="button" class="mb-2 btn-signature login-btn">로그인</button>
+              </router-link>
+            </div>
+            <!--            <div>-->
+            <!--              <router-link to="pt_home" class="router-link">-->
+            <!--                <button type="button" class="btn-signature login-btn">PT 선생님 회원으로 로그인</button>-->
+            <!--              </router-link>-->
+            <!--            </div>-->
+            <router-link to="d_home" class="router-link">
+              <img class="kakao-login-btn" src="../../assets/img/kakao_login_medium_narrow.png">
+            </router-link>
+          </div>
+
+          <!-- 회원가입 / 아이디 비번 찾기-->
+          <div class="mt-5">
+            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/sign_up">
+              회원가입
+            </a>
+
+            <span style="margin-right: 10px; margin-left: 10px;"> | </span> <!-- 공백을 위한 span 태그 -->
+
+            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/pt_sign_up">
+              PT쌤 회원가입
+            </a>
+            <br>
+            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="#">
+              아이디/패스워드 찾기
+            </a>
+          </div>
 
 
-
-          <!-- <a class="" href="#">아이디/패스워드 찾기</a> -->
-          <router-link to="d_home" class="router-link">
-            <img src="../../assets/img/kakao_login_medium_wide.png">
-          </router-link>
-          <router-link to="d_home" class="router-link">
-            <button type="button" class="btn btn-primary btn-login">일반사용자로 로그인</button>
-          </router-link>
-          <router-link to="pt_home" class="router-link">
-            <button type="button" class="btn btn-success btn-login">PT 선생님 회원으로 로그인</button>
-          </router-link>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
-  </div>
+  </main>
 </template>
 <script>
-export default {};
+export default {
+  mounted() {
+    this.setMainHeight();
+    window.addEventListener('resize', this.setMainHeight);
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.setMainHeight);
+  },
+  methods: {
+    setMainHeight() {
+      const loginContainer = document.querySelector('.login-container');
+      const mainContainer = document.getElementById('mainContainer');
+      if (loginContainer && mainContainer) {
+        const margins = parseInt(getComputedStyle(loginContainer).marginTop) +
+                        parseInt(getComputedStyle(loginContainer).marginBottom);
+        mainContainer.style.height = loginContainer.offsetHeight + margins + 'px';
+      }
+    }
+  }
+};
 </script>
-<style>
-.arrow {
-  display: inline-block;
-  transition: transform 0.5s ease;
-  /* 부드러운 전환 효과 */
-}
-
-.signup-link:hover .arrow {
-  transform: translateX(-5px);
-  /* 호버시 왼쪽으로 5픽셀 이동 */
-}
-</style>

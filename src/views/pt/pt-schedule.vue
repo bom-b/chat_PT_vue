@@ -1,5 +1,6 @@
 <template>
-  <div class='demo-app'>
+<main>
+  <div class='demo-app' data-aos="fade-in" data-aos-duration="2000" data-aos-delay="">
     <div class='demo-app-sidebar'>
       <div class='demo-app-sidebar-section'>
         <h2>회원 스케줄 관리</h2>
@@ -40,6 +41,7 @@
       </FullCalendar>
     </div>
   </div>
+</main>
 </template>
 
 <script>

@@ -77,7 +77,7 @@ nav {
         </ul>
         <form class="d-flex">
           <router-link to="/login" class="router-link">
-            <button class="btn btn-login" type="button">로그인</button>
+            <button class="btn btn-login btn-signature" type="button">로그인</button>
           </router-link>
         </form>
       </div>
@@ -92,7 +92,7 @@ export default {
     return {
       navLinks: [
         { name: '일반회원으로 가입', route: '/sign_up' },
-        { name: 'PT선생님으로 가입', route: '/sign_up' },
+        { name: 'PT선생님으로 가입', route: '/pt_sign_up' },
       ],
       currentRoute: this.$route.path
     };
