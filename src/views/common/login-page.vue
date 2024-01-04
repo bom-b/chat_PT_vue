@@ -69,18 +69,19 @@ main {
         <form style="text-align: left;">
           <div class="form-group">
             <label for="username">아이디:</label>
-            <input type="text" class="form-control" id="username" placeholder="Enter your username">
+            <input v-model="userType" type="text" class="form-control" id="username"
+                   placeholder="일반유저: 1, PT쌤: 2, 관리자: 3 으로 로그인해주세요.">
           </div>
 
           <div class="form-group">
             <label for="password">패스워드:</label>
-            <input type="password" class="form-control" id="password" placeholder="Enter your password">
+            <input type="password" class="form-control" id="password" placeholder="비밀번호는 입력할 필요 없습니다.">
           </div>
 
           <!--     로그인 버튼     -->
           <div class="mt-5" style="text-align: center">
             <div>
-              <router-link to="d_home" class="router-link">
+              <router-link :to="getRouterLink" class="router-link">
                 <button type="button" class="mb-2 btn-signature login-btn">로그인</button>
               </router-link>
             </div>
@@ -119,11 +120,16 @@ main {
 </template>
 <script>
 export default {
+  data() {
+    return {
+      userType: '', // 입력된 아이디 정보임
+    }
+  },
   mounted() {
     this.setMainHeight();
     window.addEventListener('resize', this.setMainHeight);
   },
-  destroyed() {
+  unmounted() {
     window.removeEventListener('resize', this.setMainHeight);
   },
   methods: {
@@ -132,8 +138,22 @@ export default {
       const mainContainer = document.getElementById('mainContainer');
       if (loginContainer && mainContainer) {
         const margins = parseInt(getComputedStyle(loginContainer).marginTop) +
-                        parseInt(getComputedStyle(loginContainer).marginBottom);
+            parseInt(getComputedStyle(loginContainer).marginBottom);
         mainContainer.style.height = loginContainer.offsetHeight + margins + 'px';
+      }
+    }
+  },
+  computed: {
+    getRouterLink() {
+      switch (this.userType) {
+        case '1':
+          return 'd_home';
+        case '2':
+          return 'pt_home';
+        case '3':
+          return 'a_userList';
+        default:
+          return 'd_home';
       }
     }
   }
