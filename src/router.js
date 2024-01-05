@@ -14,6 +14,8 @@ import D_A_joinsuccess from "@/views/common/d-joinsuccess.vue";
 /*PT쌤 회원가입*/
 import PT_Sign_Up from "@/views/pt/pt_sign_up.vue";
 import PT_Sign_Up2 from "@/views/pt/pt_sign_up2.vue";
+import PT_Sign_Up3 from "@/views/pt/pt_sign_up3.vue";
+import PT_Sign_Finish from "@/views/pt/pt_sign_finish.vue";
 /*일반사용자*/
 import D_Home from "@/views/default/d-home-page.vue";
 import D_Kakao from "@/views/default/d-kakao.vue";
@@ -51,6 +53,8 @@ const router = createRouter({
         // pt쌤 회원가입
         { path: "/pt_sign_up", component: PT_Sign_Up, meta: { headerType: 100 } },
         { path: "/pt_sign_up2", component: PT_Sign_Up2, meta: { headerType: 100 } },
+        { path: "/pt_sign_up3", component: PT_Sign_Up3, meta: { headerType: 100 } },
+        { path: "/pt_sign_finish", component: PT_Sign_Finish, meta: { headerType: 100 } },
         // 로그인
 
         {path: "/sign_up", component:Sign_up, meta: {headerType: 999} },
@@ -81,7 +85,7 @@ const router = createRouter({
 
         // Admin
         {path: "/a_userList", component: a_userList, meta: {headerType: null}},
-        {path: "/a_userList", component: a_checkFood, meta: {headerType: null}},
+        {path: "/a_checkFood", component: a_checkFood, meta: {headerType: null}},
 
     ],
 });
