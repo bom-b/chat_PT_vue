@@ -1,4 +1,5 @@
 <template>
+<main>
   <div class='demo-app' data-aos="fade-in" data-aos-duration="2000" data-aos-delay="">
     <div class='demo-app-sidebar'>
       <div class='demo-app-sidebar-section'>
@@ -40,6 +41,7 @@
       </FullCalendar>
     </div>
   </div>
+</main>
 </template>
 
 <script>

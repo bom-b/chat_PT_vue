@@ -29,7 +29,7 @@
             <div
                 :class="['drag-area', { 'over': draggedOverCategory === category }]"
                 @dragover.prevent="handleDragOver(category)"
-                @drop.prevent="handleDrop(category)"
+                @drop.prevent="handleDrop()"
             >
               <div
                   v-for="(image, index) in images"
@@ -45,7 +45,12 @@
           </div>
         </div>
       </div>
-
+      <div>
+        <input type="file" @change="handleImageUpload" />
+        <div v-if="photoTakenDate">
+          <h3>사진 찍은 날짜 및 시간: {{ formattedExifData }}</h3>
+        </div>
+      </div>
     </section>
     </div>
   </main>
@@ -53,6 +58,9 @@
 </template>
 
 <script>
+import sha256 from 'js-sha256';
+import EXIF from 'exif-js';
+
 export default {
 
   data() {
@@ -71,6 +79,7 @@ export default {
         저녁: [],
         간식: [],
       },
+      photoTakenDate: null,
     };
   },
   mounted() {
@@ -82,14 +91,13 @@ export default {
     document.removeEventListener('drop', this.handleDrop, false);
   },
   methods: {
-    // 이미지를 업로드하면 아침 카테고리에 추가합니다
-    uploadImage(image) {
-      this.categorizedImages.아침.push(image);
-    },
     // 특정 카테고리에서 이미지를 삭제합니다
     removeImage(category, index) {
+      console.log("category : " + category)
+      console.log("index : " + index)
       this.categorizedImages[category].splice(index, 1);
       this.uploadedImageHashes.splice(index, 1);
+      console.log(this.uploadedImageHashes.length)
     },
     highlight() {
       this.isDragOver = true;
@@ -110,31 +118,34 @@ export default {
     },
     handleDragOver(category) {
       event.preventDefault(); // 드래그 오버 이벤트의 기본 동작을 방지
-      this.draggedOverCategory = category;
+
+      // category가 문자열이 아닌 경우 무시 (DragEvent 객체 방지)
+      if (typeof category !== 'string') {
+        return;
+      }
+
+      // 현재 카테고리가 이전에 저장된 카테고리와 다른 경우에만 업데이트
+      if (this.draggedOverCategory !== category) {
+        this.draggedOverCategory = category;
+        console.log("this.draggedOverCategory asd : " + this.draggedOverCategory);
+      }
     },
-    handleDrop(category) {
+    async handleDrop() {
       event.preventDefault();
+      event.stopPropagation(); // 이벤트 전파 중단
+      console.log("handleDrop 실행")
       const files = event.dataTransfer.files;
-      this.handleFiles(files)
-      // 드롭된 카테고리가 존재하는지 확인
-      if (!this.categorizedImages[category]) {
-        console.error(`Unknown category: ${category}`);
-        return;
+      console.log("files : " + files)
+      if (files.length > 0) {
+        await this.handleFiles(files);
+      } else {
+        // 아무것도 하지 않는다.
       }
 
-      // 같은 카테고리로의 드롭은 무시
-      if (category === this.draggedFromCategory) {
-        return;
-      }
-
-      // 이미지 이동 처리
-      const movedImage = this.categorizedImages[this.draggedFromCategory].splice(this.draggedImageIndex, 1)[0];
-      this.categorizedImages[category].push(movedImage);
-
-      // 드래그 상태 초기화
       this.resetDragState();
     },
     resetDragState() {
+      console.log("이게 실행 된다고?")
       this.draggedImage = null;
       this.draggedFromCategory = null;
       this.draggedImageIndex = null;
@@ -146,18 +157,63 @@ export default {
       this.handleFiles(files);
     },
     async handleFiles(files) {
-      console.log(`image`);
-      for (const file of files) {
-        if (file.type.startsWith('image/')) {
-          const fileHash = await this.hashFile(file);
-          if (!this.uploadedImageHashes.includes(fileHash)) {
-            this.uploadedImageHashes.push(fileHash);
-            this.previewImage(file);
-          }
-        } else {
-          alert('이미지 파일을 선택하세요.');
-        }
+      var targetCategory = null
+      if (this.draggedOverCategory) {
+        targetCategory = this.draggedOverCategory
+      }else{
+        targetCategory = "아침"
       }
+      for (const file of files) {
+        await this.hashFile(file).then(hash => {
+          if (!this.uploadedImageHashes.includes(hash)) {
+            // 새로운 이미지 업로드 처리
+            this.uploadedImageHashes.push(hash);
+            this.uploadImage(file, targetCategory);
+          } else {
+            // 이미지가 현재 속해 있는 카테고리와 인덱스를 찾음
+            let currentCategory = this.draggedFromCategory;
+            let imageIndex = this.draggedImageIndex;
+
+            console.log("currentCategory : " + currentCategory)
+            // 이미지를 새로운 카테고리로 이동
+            if (currentCategory !== null && imageIndex !== -1) {
+              const movedImage = this.categorizedImages[currentCategory].splice(imageIndex, 1)[0];
+              if (!this.categorizedImages[targetCategory]) {
+                this.categorizedImages[targetCategory] = [];
+              }
+              this.categorizedImages[targetCategory].push(movedImage);
+            }
+          }
+        });
+      }
+      this.resetDragState();
+    },
+    uploadImage(file, targetCategory) {
+      // FileReader 객체 생성
+      const reader = new FileReader();
+
+      // 파일 읽기가 완료되면 실행될 콜백 함수 정의
+      reader.onload = (e) => {
+        const imageUrl = e.target.result; // 읽은 파일의 내용 (Base64 인코딩된 URL)
+        console.log("this.draggedOverCategory : "+  this.draggedOverCategory)
+        // 현재 위치한 마우스 카테고리에 추가
+        if (!this.categorizedImages[targetCategory]) {
+          this.categorizedImages[targetCategory] = [];
+        }
+        this.categorizedImages[targetCategory].push(imageUrl);
+
+        // 추가적인 이미지 처리 로직 (예: 미리보기 생성, 서버로 업로드 등)
+        // ...
+      };
+
+      // 파일 읽기 에러 처리
+      reader.onerror = (error) => {
+        console.error("File reading error: ", error);
+        // 에러 처리 로직
+      };
+
+      // 파일 읽기 시작
+      reader.readAsDataURL(file); // Base64 인코딩된 데이터 URL로 파일을 읽음
     },
     previewImage(file) {
       const reader = new FileReader();
@@ -171,20 +227,36 @@ export default {
     hashFile(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = async (e) => {
+        reader.onload = (e) => {
           const arrayBuffer = e.target.result;
-          const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
-          const hashArray = Array.from(new Uint8Array(hashBuffer));
-          const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-          resolve(hashHex);
+          const hash = sha256(arrayBuffer);
+          resolve(hash);
         };
-        reader.onerror = reject;
+        reader.onerror = () => reject(reader.error);
         reader.readAsArrayBuffer(file);
       });
     },
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
+    handleImageUpload(event) {
+      event.stopPropagation();
+      const imageFile = event.target.files[0];
+      if (imageFile) {
+        this.extractExifData(imageFile);
+      }
+    },
+    //사진 찍은 날짜 및 시간 추출
+    extractExifData(imageFile) {
+      EXIF.getData(imageFile, () => {
+        this.photoTakenDate = EXIF.getAllTags(imageFile)["DateTimeOriginal"];
+      });
+    },
+  },
+  computed: {
+    formattedExifData() {
+      return JSON.stringify(this.photoTakenDate, null, 2);
+    }
   },
 };
 </script>

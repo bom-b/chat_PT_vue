@@ -1,26 +1,66 @@
 <template>
-  <div class="pt-body">
-    <section>
-      <div class="m_title">
-        <h2>예약 관리 페이지</h2>
+  <main>
+    <div class="pt-body">
+      <section>
+        <div class="m_title">
+          <h2>예약 관리 페이지</h2>
+        </div>
+        <h3>예약 신청 회원 목록</h3>
+        <vxe-grid border :columns="new_mem_table" :data="new_data" show-overflow @checkbox-change="selectCheck">
+        </vxe-grid>
+        <button class="btn btn-primary" @click="agree">아래로 이동</button>
+      </section>
+      <section>
+        <div class="m_title">
+          <h2>수락한 회원 목록</h2>
+        </div>
+        <vxe-grid border :columns="select_mem_table" :data="new_data" show-overflow>
+        </vxe-grid>
+        <button class="btn btn-primary" @click="agree">위로 이동</button>
+      </section>
+    </div>
+    <!-- test -->
+    <div class="side-bar">
+      <div class="side-bar-icon-div sideon">
+        <a class="kakao-button side-icon sideon" href="https://open.kakao.com/o/gY9q37Ef" target='_blank'>
+          <img class="side-icon kakao" src="../../assets/img/loggo.png">
+        </a>
+        <a class="naver-mail-button side-icon sideon" href="">
+          <img class="side-icon naver" src="../../assets/img/loggo.png">
+        </a>
+        <a class="top-btn" href="">
+          <span class="arrow"></span>
+        </a>
       </div>
-      <h3>예약 신청 회원 목록</h3>
-      <vxe-grid border :columns="new_mem_table" :data="new_data" show-overflow @checkbox-change="selectCheck">
-      </vxe-grid>
-      <button class="btn btn-primary" @click="agree">아래로 이동</button>
-    </section>
-    <section>
-      <div class="m_title">
-        <h2>수락한 회원 목록</h2>
+      <div>
+        <a class="side-hide-btn " href="javascript:toggleSideOff();">
+          <span class="hide-arrow sideon"></span>
+        </a>
       </div>
-      <vxe-grid border :columns="select_mem_table" :data="new_data" show-overflow>
-      </vxe-grid>
-      <button class="btn btn-primary" @click="agree">위로 이동</button>
-    </section>
-  </div>
+    </div>
 </template>
 
+<style scoped>
+.side-icon {
+  position: relative;
+  /* right: -75px; */
+  transition: transform 300ms;
+}
+
+.side .side-icon:hover {
+  transform: rotateY(360deg);
+  pointer-events: all;
+}
+
+.naver {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+</style>
+
 <script>
+
 
 export default {
   name: "App",

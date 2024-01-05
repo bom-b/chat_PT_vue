@@ -5,6 +5,7 @@ import store from './store';
 import AOS from 'aos';
 import "aos/dist/aos.css";
 import '@/../public/assets/css/global-style.css';
+import '@/../public/assets/css/button-style.css';
 import 'material-icons/iconfont/material-icons.css';
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";

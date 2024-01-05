@@ -1,9 +1,9 @@
 <template>
     <main>
         <div class="progress fixed-top" style="margin-top: 81px;">
-			<div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
-				aria-valuemin="0" aria-valuemax="100"></div>
-		</div>
+            <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
+                aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
         <div class="container">
             <h2>선호하는 음식 선택 (5개 선택 필수)</h2>
             <p>음식 추천을 할때 도와드려요</p>
@@ -58,7 +58,7 @@
 
             <div class="button-container">
                 <button type="button" class="btn btn-primary" @click="proceedToNextPage"
-                :disabled="selectedImages.length !== 5">다음</button>
+                    :disabled="selectedImages.length !== 5">다음</button>
             </div>
         </div>
     </main>
@@ -120,8 +120,8 @@ export default {
         isSelected(image) {
             return this.selectedImages.includes(image);
         },
-        
+
     },
-    
+
 };
 </script>

@@ -14,6 +14,8 @@ import D_A_joinsuccess from "@/views/common/d-joinsuccess.vue";
 /*PT쌤 회원가입*/
 import PT_Sign_Up from "@/views/pt/pt_sign_up.vue";
 import PT_Sign_Up2 from "@/views/pt/pt_sign_up2.vue";
+import PT_Sign_Up3 from "@/views/pt/pt_sign_up3.vue";
+import PT_Sign_Finish from "@/views/pt/pt_sign_finish.vue";
 /*일반사용자*/
 import D_Home from "@/views/default/d-home-page.vue";
 import D_Kakao from "@/views/default/d-kakao.vue";
@@ -24,6 +26,7 @@ import D_A_Change from "@/views/default/d-a-change.vue";
 import D_A_Balance from "@/views/default/d-a-balance.vue";
 import D_A_Record from "@/views/default/d-a-record.vue";
 import D_A_Recommand from "@/views/default/d-diet-recommand.vue"
+import tt from "@/views/default/d-show-trainer-info.vue"
 
 /*PT사용자*/
 import PT_Home from "./views/pt/pt-home-page.vue";
@@ -53,20 +56,29 @@ const router = createRouter({
         // pt쌤 회원가입
         { path: "/pt_sign_up", component: PT_Sign_Up, meta: { headerType: 100 } },
         { path: "/pt_sign_up2", component: PT_Sign_Up2, meta: { headerType: 100 } },
+        { path: "/pt_sign_up3", component: PT_Sign_Up3, meta: { headerType: 100 } },
+        { path: "/pt_sign_finish", component: PT_Sign_Finish, meta: { headerType: 100 } },
         // 로그인
-        { path: "/login", component: Login, meta: { headerType: 100 } },
+
+        {path: "/sign_up", component:Sign_up, meta: {headerType: 999} },
+        {path: "/sign_up2", component:Sign_up2, meta: {headerType: 999}},
+        {path: "/sign_up3", component:Sign_up3, meta: {headerType: 999}},
+        {path: "/sign_up4", component:Sign_up4, meta: {headerType: 999}},
+
+        {path: "/login", component: Login, meta: {headerType: 100}},
 
         // 일반 사용자
-        { path: "/d_home", component: D_Home, meta: { headerType: 1 } },
-        { path: "/d_kakao", component: D_Kakao, meta: { headerType: 1 } },
-        { path: "/d_upload", component: D_Upload, meta: { headerType: 1 } },
-        { path: "/d_overview", component: D_overview, meta: { headerType: 1 } },
-        { path: "/d_find_trainer", component: D_Find_Trainer, meta: { headerType: 1 } },
-        { path: "/d_a_change", component: D_A_Change, meta: { headerType: 1 } },
-        { path: "/d_a_balance", component: D_A_Balance, meta: { headerType: 1 } },
-        { path: "/d_recommand", component: D_A_Recommand, meta: { headerType: 1 } },
-        { path: "/d_a_record", component: D_A_Record, meta: { headerType: 1 } },
-
+        {path: "/d_home", component: D_Home, meta: {headerType: 1}},
+        {path: "/d_kakao", component: D_Kakao, meta: {headerType: 1}},
+        {path: "/d_upload", component: D_Upload, meta: {headerType: 1}},
+        {path: "/d_overview", component: D_overview, meta: {headerType: 1}},
+        {path: "/d_find_trainer", component: D_Find_Trainer, meta: {headerType: 1}},
+        {path: "/d_a_change", component: D_A_Change, meta: {headerType: 1}},
+        {path: "/d_a_balance", component: D_A_Balance, meta: {headerType: 1}},
+        {path: "/d_recommand", component: D_A_Recommand, meta: {headerType: 1}},
+        {path: "/d_a_record", component: D_A_Record, meta: {headerType: 1}},
+        {path: "/d_show_trainer_info", component: tt, meta: {headerType: 1}},
+        
         //pt
 <<<<<<< HEAD
         {path: "/pt_home", component: PT_Home, meta: {headerType: 2}},
@@ -85,7 +97,7 @@ const router = createRouter({
 
         // Admin
         {path: "/a_userList", component: a_userList, meta: {headerType: null}},
-        {path: "/a_userList", component: a_checkFood, meta: {headerType: null}},
+        {path: "/a_checkFood", component: a_checkFood, meta: {headerType: null}},
 
 >>>>>>> master
     ],

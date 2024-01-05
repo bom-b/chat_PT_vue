@@ -81,7 +81,7 @@ export default {
     methods: {
         proceedToNextPage() {
             if (this.agree1 &&this.agree2 && this.agree3 && this.agree4) {
-                this.$router.push('/sign_up3'); // 이름 입력 페이지로 이동
+                this.$router.push('/pt_sign_up3'); // 이름 입력 페이지로 이동
             }
         },
     },
