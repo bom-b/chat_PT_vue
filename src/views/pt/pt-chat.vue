@@ -1,4 +1,5 @@
 <template>
+  <main>
     <div>
       <div id="app">
         <div class="chat-container">
@@ -25,6 +26,7 @@
         </div>
       </div>
     </div>
+  </main>
   </template>
   
   <script>

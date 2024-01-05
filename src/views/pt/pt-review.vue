@@ -1,5 +1,5 @@
 <template>
-
+<main>
     <section id="section1800">
         <div class="">
       <div class="card-container" style="text-align: center; border: none">
@@ -110,13 +110,13 @@
     
     </section>
     
-    
+</main>
     </template>
     
     
     
     
-    <style>
+    <style scoped>
     body{margin-top:20px;
     background:#EE82EE;
     }

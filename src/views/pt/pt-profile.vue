@@ -1,4 +1,5 @@
 <template>
+  <main>
   <h1 class="main">프로필 관리</h1>
   <div class="drag-drop-container m_category">
     <h3>프로필 사진</h3>
@@ -46,6 +47,7 @@
   </div>
   <button class="btn btn-save" type="submit">저장</button>
   </form>
+</main>
 </template>
 
 <script>
@@ -105,7 +107,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .m_category {
   padding: 20px;
 }
