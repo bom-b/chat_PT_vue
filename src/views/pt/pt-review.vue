@@ -116,7 +116,7 @@
     
     
     
-    <style>
+    <style scoped>
     body{margin-top:20px;
     background:#EE82EE;
     }

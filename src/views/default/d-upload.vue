@@ -260,10 +260,12 @@ export default {
     extractExifData(imageFile) {
       return new Promise((resolve, reject) => {
         EXIF.getData(imageFile, () => {
+          let label;
           try {
             const photoTakenDate = EXIF.getAllTags(imageFile)["DateTimeOriginal"];
             if (!photoTakenDate) {
-              reject("날짜 정보를 찾을 수 없음");
+              label = '아침';
+              resolve(label);
               return;
             }
 
@@ -273,7 +275,7 @@ export default {
             const totalMinutes = hours * 60 + minutes; // 총 분으로 변환
 
             // 시간대에 따라 라벨을 할당
-            let label;
+
             if (totalMinutes >= 240 && totalMinutes < 630) {
               label = '아침';
             } else if (totalMinutes >= 630 && totalMinutes < 900) {
