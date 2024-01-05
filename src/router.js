@@ -33,7 +33,9 @@ import PT_Home from "./views/pt/pt-home-page.vue";
 import pt_members from "./views/pt/pt-members.vue";
 import pt_schedule from "./views/pt/pt-schedule.vue";
 import pt_profile from "./views/pt/pt-profile.vue";
-
+import pt_coupon from "./views/pt/pt-coupon.vue"
+import pt_review from "./views/pt/pt-review.vue"
+import pt_chat from "./views/pt/pt-chat.vue"
 // Admin
 import a_userList from "./views/admin/a-userList.vue";
 import a_checkFood from "./views/admin/a-checkFood.vue";
@@ -55,6 +57,7 @@ const router = createRouter({
         { path: "/pt_sign_up2", component: PT_Sign_Up2, meta: { headerType: 100 } },
         { path: "/pt_sign_up3", component: PT_Sign_Up3, meta: { headerType: 100 } },
         { path: "/pt_sign_finish", component: PT_Sign_Finish, meta: { headerType: 100 } },
+        
         // 로그인
 
         {path: "/sign_up", component:Sign_up, meta: {headerType: 999} },
@@ -82,7 +85,9 @@ const router = createRouter({
         { path: "/pt_schedule", component: pt_schedule, meta: { headerType: 2 } },
         { path: "/pt_profile", component: pt_profile, meta: { headerType: 2 } },
         { path: "/pt_profile", component: pt_profile, meta: { headerType: 2 } },
-
+        {path: "/pt_coupon", component: pt_coupon, meta: {headerType: 2}},
+        {path: "/pt_review", component: pt_review, meta: {headerType: 2}},
+        {path: "/pt_chat", component: pt_chat, meta: {headerType: 2}},
         // Admin
         {path: "/a_userList", component: a_userList, meta: {headerType: null}},
         {path: "/a_checkFood", component: a_checkFood, meta: {headerType: null}},
