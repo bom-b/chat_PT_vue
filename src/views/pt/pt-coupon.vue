@@ -1,4 +1,5 @@
 <template>
+  <main>
     <div>
       <div class="col-12 green" style="height: 80px; margin-bottom: 0;"></div>
       <div>
@@ -24,13 +25,13 @@
               <td>{{ value.cname }}</td>
               <td>{{ value.cdate }}</td>
               <td>
-            <button v-if="value.cstate === '진행중'"
-                style="border-radius: 100px; background-color: black; color: white;">
+            <button class="w-btn" v-if="value.cstate === '진행중'"
+                style scoped="border-radius: 100px; background-color: black; color: white;">
                 {{ value.cstate }}
             </button>
-            <button
+            <button class="w-btn-gra1"
                 v-else
-                style="border-radius: 100px; background-color: gray; color: white;"
+                style scoped="border-radius: 100px; background-color: gray; color: white;"
             >
                 {{ value.cstate }}
   </button>
@@ -42,6 +43,7 @@
   
       <div class="col-12 green" style="height: 80px; margin-bottom: 0;"></div>
     </div>
+  </main>
   </template>
   
   <script>
