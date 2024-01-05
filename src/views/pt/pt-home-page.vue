@@ -275,7 +275,7 @@
   
   </script>
   
-  <style>
+  <style scoped>
   .select_button_menu {
     border: none;
     background-color: white;

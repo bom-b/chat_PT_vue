@@ -160,7 +160,7 @@ export default defineComponent({
 
 
 
-<style lang='css'>
+<style lang='css' scoped>
 h2 {
   margin: 0;
   font-size: 16px;
