@@ -44,7 +44,7 @@
               data-aos-delay="200"
             >
               <p class="TheJamsil400" style="display: inline-block">
-                <router-link to="/pt_members" class="router-link">
+                <router-link to="/pt_coupon" class="router-link">
                 <button class="select_button_menu cupon_cl">
                   
                   <img
@@ -91,6 +91,7 @@
               data-aos-delay="200"
             >
               <p class="TheJamsil400" style="display: inline-block">
+                <router-link to="/pt_members" class="router-link">
                 <img
                   class=""
                   src="../../assets/img/user_icon.png"
@@ -98,6 +99,7 @@
                   style="width: 32px"
                 /><button class="select_button_menu mem_cl">회원 관리</button
                 ><br />
+                </router-link>
               </p>
             </div>
             <div
@@ -112,6 +114,7 @@
               data-aos-delay="200"
             >
               <p class="TheJamsil400" style="display: inline-block">
+                <router-link to="/pt_chat" class="router-link">
                 <img
                   class=""
                   src="../../assets/img/chat.png"
@@ -120,6 +123,7 @@
                 /><button class="select_button_menu chat_cl" ref="#">
                   채팅방</button
                 ><br />
+                </router-link>
               </p>
             </div>
   
@@ -135,6 +139,7 @@
               data-aos-delay="200"
             >
               <p class="TheJamsil400" style="display: inline-block">
+                <router-link to="/pt_review#" class="router-link">
                 <img
                   class=""
                   src="../../assets/img/recommend.png"
@@ -142,6 +147,7 @@
                   style="width: 32px"
                 /><button class="select_button_menu review_cl">리뷰 관리</button
                 ><br />
+                </router-link>
               </p>
             </div>
           </div>

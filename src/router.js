@@ -23,8 +23,10 @@ import D_A_Recommand from "@/views/default/d-diet-recommand.vue"
 import PT_Home from "./views/pt/pt-home-page.vue";
 import pt_members from "./views/pt/pt-members.vue";
 import pt_schedule from "./views/pt/pt-schedule.vue";
-import pt_profile from "./views/pt/pt-profile.vue";
-import pt_review from "./views/pt/pt-review.vue";
+import pt_profile from "./views/pt/pt-profile.vue"
+import pt_review from "./views/pt/pt-review.vue"
+import pt_chat from "./views/pt/pt-chat.vue"
+import pt_coupon from "./views/pt/pt-coupon.vue"
 
 const router = createRouter({
     history: createWebHistory(),
@@ -55,6 +57,8 @@ const router = createRouter({
         {path: "/pt_schedule", component: pt_schedule, meta: {headerType: 2}},
         {path: "/pt_profile", component: pt_profile, meta: {headerType: 2}},
         {path: "/pt_review", component: pt_review, meta: {headerType: 2}},
+        {path: "/pt_chat", component: pt_chat, meta: {headerType: 2}},
+        {path: "/pt_coupon", component: pt_coupon, meta: {headerType: 2}},
     ],
 });
 router.beforeEach((to, from, next) => {
