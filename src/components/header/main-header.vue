@@ -30,7 +30,7 @@ nav {
   background-color: #e5f5f2;
   color: #085c57;
   border-radius: 15px;
-  opacity: 0.7;
+  opacity: 0.5;
 }
 
 .profile-img-container {
@@ -92,7 +92,7 @@ export default {
     return {
       navLinks: [
         { name: '일반회원으로 가입', route: '/sign_up' },
-        { name: 'PT선생님으로 가입', route: '/sign_up' },
+        { name: 'PT선생님으로 가입', route: '/pt_sign_up' },
       ],
       currentRoute: this.$route.path
     };
