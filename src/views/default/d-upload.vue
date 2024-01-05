@@ -15,21 +15,24 @@
           <p class="" style=" white-space: nowrap">사진을 전부 등록 해주시면 저희가 분류해드릴게요.</p>
         </div>
       <div class="multi-image-uploader">
-
-
             <p>이미지를 드래그 앤 드롭하세요</p>
         <input type="file" ref="fileInput" multiple style="display: none" @change="handleFileInput"/>
             <button @click="triggerFileInput">파일 선택</button>
-
+            <button>제출</button>
 
       <!-- 카테고리별 드래그 앤 드롭 영역 -->
         <div class="categories">
-          <div v-for="(images, category) in categorizedImages" :key="category" class="category">
-            <h3>{{ category }}</h3>
+          <div v-for="(images, category) in categorizedImages" :key="category">
+            <div class="category-title-container">
+              <h1 class="badge rounded-pill bg-secondary category-name">{{ category }}</h1>
+            </div>
+            <!-- 카테고리별 이미지 드래그 앤 드롭 영역 -->
+            <div class="category" @dragover.prevent="handleDragOver(category)"
+                 @drop.prevent="handleDrop()">
+
             <div
                 :class="['drag-area', { 'over': draggedOverCategory === category }]"
-                @dragover.prevent="handleDragOver(category)"
-                @drop.prevent="handleDrop()"
+
             >
               <div
                   v-for="(image, index) in images"
@@ -43,6 +46,7 @@
               </div>
             </div>
           </div>
+        </div>
         </div>
       </div>
       <div>
@@ -80,6 +84,7 @@ export default {
         간식: [],
       },
       photoTakenDate: null,
+      time: "아침",
     };
   },
   mounted() {
@@ -200,7 +205,12 @@ export default {
         if (!this.categorizedImages[targetCategory]) {
           this.categorizedImages[targetCategory] = [];
         }
-        this.categorizedImages[targetCategory].push(imageUrl);
+        this.extractExifData(file).then(label => {
+          this.categorizedImages[label].push(imageUrl);
+        }).catch(error => {
+          console.error(error); // 오류 처리
+        });
+
 
         // 추가적인 이미지 처리 로직 (예: 미리보기 생성, 서버로 업로드 등)
         // ...
@@ -246,10 +256,41 @@ export default {
         this.extractExifData(imageFile);
       }
     },
-    //사진 찍은 날짜 및 시간 추출
+    // 사진 찍은 날짜 및 시간 추출
     extractExifData(imageFile) {
-      EXIF.getData(imageFile, () => {
-        this.photoTakenDate = EXIF.getAllTags(imageFile)["DateTimeOriginal"];
+      return new Promise((resolve, reject) => {
+        EXIF.getData(imageFile, () => {
+          try {
+            const photoTakenDate = EXIF.getAllTags(imageFile)["DateTimeOriginal"];
+            if (!photoTakenDate) {
+              reject("날짜 정보를 찾을 수 없음");
+              return;
+            }
+
+            // "2020:11:10 12:12:45" 형식의 문자열에서 시간과 분을 추출
+            const timePart = photoTakenDate.split(' ')[1];
+            const [hours, minutes] = timePart.split(':').map(Number);
+            const totalMinutes = hours * 60 + minutes; // 총 분으로 변환
+
+            // 시간대에 따라 라벨을 할당
+            let label;
+            if (totalMinutes >= 240 && totalMinutes < 630) {
+              label = '아침';
+            } else if (totalMinutes >= 630 && totalMinutes < 900) {
+              label = '점심';
+            } else if (totalMinutes >= 900 && totalMinutes < 1020) {
+              label = '간식';
+            } else if (totalMinutes >= 1020 && totalMinutes < 1260) {
+              label = '저녁';
+            } else {
+              label = '기타';
+            }
+
+            resolve(label);
+          } catch (error) {
+            reject("EXIF 데이터 처리 중 오류 발생");
+          }
+        });
       });
     },
   },
@@ -262,6 +303,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.category-title-container {
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto; /* 필요에 따라 조정 가능 */
+  /* 추가적인 스타일링 */
+}
+.category-name {
+  flex-shrink: 0; /* 카테고리 이름의 크기가 줄어들지 않도록 설정 */
+  margin-right: 20px; /* 이름과 이미지 사이의 간격을 설정 */
+  font-size: 24px;
+
+}
 #app {
   width: 100%;
   height: 100vh; /* 뷰포트 높이 전체를 사용 */
@@ -273,27 +326,33 @@ export default {
   flex-wrap: wrap; /* 필요한 경우 요소들이 다음 줄로 넘어가도록 설정 */
   margin: 0 auto; /* 중앙 정렬 */
   gap: 10px; /* 카테고리 간의 간격 설정 */
+  flex-direction: column; /* 세로 정렬 */
   box-sizing: border-box;
   width: 100%; /* 화면 전체 너비 */
+  align-items: flex-start; /* 좌측 정렬 */
 }
 
 .category {
   flex-grow: 1; /* 각 카테고리가 공간을 균등하게 차지하도록 함 */
-  border: 1px dashed #ccc; /* 카테고리 경계 표시 */
   padding: 10px; /* 내부 패딩 추가 */
   box-sizing: border-box; /* 패딩과 보더를 너비에 포함 */
   display: flex; /* flexbox 레이아웃 적용 */
-  flex-direction: column; /* 자식 요소들을 세로로 정렬 */
-  align-items: stretch; /* 자식 요소들을 가로로 늘림 */
+  flex-direction: row; /* 자식 요소들을 가로로 정렬 */
+  align-items: center; /* 자식 요소들을 가로로 늘림 */
   min-height: 200px; /* 최소 높이 설정 */
   margin: 10px;
-  max-width: 22%;
+  //max-width: 22%;
   min-width: 22%;
 }
 
 .drag-area {
+  display: flex; /* flex 컨테이너로 설정 */
+  flex-direction: row; /* 자식 요소들을 가로로 나열 */
+  flex-wrap: nowrap; /* 자식 요소들이 다음 줄로 넘어가지 않도록 설정 */
+  overflow-x: auto; /* 내용이 넘칠 경우 스크롤 가능하게 설정 */
   flex-grow: 1; /* drag-area가 남은 공간을 모두 차지하도록 함 */
-  border: 2px solid teal; /* 시각적으로 확인하기 위한 임시 테두리 */
+  align-items: stretch;
+
 }
 .over {
   background-color: lightblue; /* 드래그 오버 시 시각적 피드백 */
@@ -305,6 +364,7 @@ export default {
 
 .image-item {
   position: relative;
+  flex-shrink: 0; /* 이미지 크기가 줄어들지 않도록 설정 */
   display: inline-block; /* 또는 필요에 따라 다른 디스플레이 속성 사용 */
 }
 
