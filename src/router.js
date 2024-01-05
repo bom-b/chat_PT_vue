@@ -24,6 +24,7 @@ import D_A_Change from "@/views/default/d-a-change.vue";
 import D_A_Balance from "@/views/default/d-a-balance.vue";
 import D_A_Record from "@/views/default/d-a-record.vue";
 import D_A_Recommand from "@/views/default/d-diet-recommand.vue"
+import tt from "@/views/default/d-show-trainer-info.vue"
 
 /*PT사용자*/
 import PT_Home from "./views/pt/pt-home-page.vue";
@@ -51,19 +52,26 @@ const router = createRouter({
         { path: "/pt_sign_up", component: PT_Sign_Up, meta: { headerType: 100 } },
         { path: "/pt_sign_up2", component: PT_Sign_Up2, meta: { headerType: 100 } },
         // 로그인
-        { path: "/login", component: Login, meta: { headerType: 100 } },
+
+        {path: "/sign_up", component:Sign_up, meta: {headerType: 999} },
+        {path: "/sign_up2", component:Sign_up2, meta: {headerType: 999}},
+        {path: "/sign_up3", component:Sign_up3, meta: {headerType: 999}},
+        {path: "/sign_up4", component:Sign_up4, meta: {headerType: 999}},
+
+        {path: "/login", component: Login, meta: {headerType: 100}},
 
         // 일반 사용자
-        { path: "/d_home", component: D_Home, meta: { headerType: 1 } },
-        { path: "/d_kakao", component: D_Kakao, meta: { headerType: 1 } },
-        { path: "/d_upload", component: D_Upload, meta: { headerType: 1 } },
-        { path: "/d_overview", component: D_overview, meta: { headerType: 1 } },
-        { path: "/d_find_trainer", component: D_Find_Trainer, meta: { headerType: 1 } },
-        { path: "/d_a_change", component: D_A_Change, meta: { headerType: 1 } },
-        { path: "/d_a_balance", component: D_A_Balance, meta: { headerType: 1 } },
-        { path: "/d_recommand", component: D_A_Recommand, meta: { headerType: 1 } },
-        { path: "/d_a_record", component: D_A_Record, meta: { headerType: 1 } },
-
+        {path: "/d_home", component: D_Home, meta: {headerType: 1}},
+        {path: "/d_kakao", component: D_Kakao, meta: {headerType: 1}},
+        {path: "/d_upload", component: D_Upload, meta: {headerType: 1}},
+        {path: "/d_overview", component: D_overview, meta: {headerType: 1}},
+        {path: "/d_find_trainer", component: D_Find_Trainer, meta: {headerType: 1}},
+        {path: "/d_a_change", component: D_A_Change, meta: {headerType: 1}},
+        {path: "/d_a_balance", component: D_A_Balance, meta: {headerType: 1}},
+        {path: "/d_recommand", component: D_A_Recommand, meta: {headerType: 1}},
+        {path: "/d_a_record", component: D_A_Record, meta: {headerType: 1}},
+        {path: "/d_show_trainer_info", component: tt, meta: {headerType: 1}},
+        
         //pt
         { path: "/pt_home", component: PT_Home, meta: { headerType: 2 } },
         { path: "/pt_members", component: pt_members, meta: { headerType: 2 } },
