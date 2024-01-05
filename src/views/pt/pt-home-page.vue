@@ -18,7 +18,6 @@
       </div>
     </section><!-- End Hero Section -->
 
-
     <!--  오늘 어쩌구~ -->
     <section>
       <div class="gray" style="min-height: 100%; height: auto; padding: 30px">
