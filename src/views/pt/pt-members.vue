@@ -38,6 +38,7 @@
         </a>
       </div>
     </div>
+  </main>
 </template>
 
 <style scoped>
