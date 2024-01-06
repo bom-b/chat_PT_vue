@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import store from './store';
 /*공통*/
 import Login from "./views/common/login-page.vue";
+import Test_Login from "./views/common/test-login-page.vue";
 import Home from "./views/common/main-home.vue";
 
 /*일반회원 가입*/ 
@@ -43,6 +44,7 @@ import a_checkFood from "./views/admin/a-checkFood.vue";
 const router = createRouter({
     history: createWebHistory(),
     routes: [
+        // 메인
         { path: "/", component: Home, meta: { headerType: -1 } },
 
         // 일반 회원가입
@@ -58,14 +60,15 @@ const router = createRouter({
         { path: "/pt_sign_up3", component: PT_Sign_Up3, meta: { headerType: 100 } },
         { path: "/pt_sign_finish", component: PT_Sign_Finish, meta: { headerType: 100 } },
         
-        // 로그인
 
         {path: "/sign_up", component:Sign_up, meta: {headerType: 999} },
         {path: "/sign_up2", component:Sign_up2, meta: {headerType: 999}},
         {path: "/sign_up3", component:Sign_up3, meta: {headerType: 999}},
         {path: "/sign_up4", component:Sign_up4, meta: {headerType: 999}},
 
+        // 로그인
         {path: "/login", component: Login, meta: {headerType: 100}},
+        {path: "/test_login", component: Test_Login, meta: {headerType: 100}}, // 효준 로그인 테스트
 
         // 일반 사용자
         {path: "/d_home", component: D_Home, meta: {headerType: 1}},
@@ -88,6 +91,7 @@ const router = createRouter({
         {path: "/pt_coupon", component: pt_coupon, meta: {headerType: 2}},
         {path: "/pt_review", component: pt_review, meta: {headerType: 2}},
         {path: "/pt_chat", component: pt_chat, meta: {headerType: 2}},
+
         // Admin
         {path: "/a_userList", component: a_userList, meta: {headerType: null}},
         {path: "/a_checkFood", component: a_checkFood, meta: {headerType: null}},
