@@ -34,9 +34,10 @@ import PT_Home from "./views/pt/pt-home-page.vue";
 import pt_members from "./views/pt/pt-members.vue";
 import pt_schedule from "./views/pt/pt-schedule.vue";
 import pt_profile from "./views/pt/pt-profile.vue";
-import pt_coupon from "./views/pt/pt-coupon.vue"
-import pt_review from "./views/pt/pt-review.vue"
-import pt_chat from "./views/pt/pt-chat.vue"
+import pt_coupon from "./views/pt/pt-coupon.vue";
+import pt_review from "./views/pt/pt-review.vue";
+import pt_chat from "./views/pt/pt-chat.vue";
+import pt_chatroom from "./views/pt/pt-chatroom.vue";
 // Admin
 import a_userList from "./views/admin/a-userList.vue";
 import a_checkFood from "./views/admin/a-checkFood.vue";
@@ -91,6 +92,7 @@ const router = createRouter({
         {path: "/pt_coupon", component: pt_coupon, meta: {headerType: 2}},
         {path: "/pt_review", component: pt_review, meta: {headerType: 2}},
         {path: "/pt_chat", component: pt_chat, meta: {headerType: 2}},
+        {path: "/pt_chatroom", component: pt_chatroom, meta: {headerType: 2}},
 
         // Admin
         {path: "/a_userList", component: a_userList, meta: {headerType: null}},
