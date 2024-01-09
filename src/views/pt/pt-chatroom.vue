@@ -1,55 +1,97 @@
 <template>
   <main>
-  <div>
-    <h1>채팅방 목록</h1>
-    <ul>
-      <li v-for="room in rooms" :key="room.roomId">
-        Room ID: {{ room.roomId }}
-      </li>
-    </ul>
-
-    <h2>채팅방 생성</h2>
-    <form @submit.prevent="createRoom">
-      <label for="roomName">채팅방 이름:</label>
-      <input type="text" id="roomName" v-model="roomName" required>
-      <button type="submit">채팅방 생성</button>
-    </form>
-  </div>
-</main>
+    <div class="container" v-cloak>
+      <div class="row">
+        <div class="col-md-12">
+          <h3>채팅방 리스트</h3>
+        </div>
+      </div>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <label class="input-group-text">방제목</label>
+        </div>
+        <input
+          type="text"
+          class="form-control"
+          v-model="room_name"
+          @keyup.enter="createRoom"
+        />
+        <div class="input-group-append">
+          <button class="btn btn-primary" type="button" @click="createRoom">
+            채팅방 개설
+          </button>
+        </div>
+      </div>
+      <ul class="list-group">
+        <li
+          class="list-group-item list-group-item-action"
+          v-for="item in chatrooms"
+          :key="item.roomId"
+          @click="enterRoom(item.roomId)"
+        >
+          {{ item.name }}
+        </li>
+      </ul>
+    </div>
+  </main>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios"; // axios import 추가
+
 
 export default {
   data() {
     return {
-      rooms: [], // 채팅방 목록을 담을 배열
-      roomName: '', // 채팅방 이름
+      room_name: "",
+      chatrooms: [],
     };
   },
-  mounted() {
-    this.fetchRooms(); // 컴포넌트가 마운트되면 채팅방 목록을 가져오도록 설정
+  created() {
+    this.findAllRoom();
   },
   methods: {
-    async fetchRooms() {
-      try {
-        const response = await axios.get('http://localhost/pt_chatroom'); // MsgController의 findAllRoom 매핑에 GET 요청
-        this.rooms = response.data; // 가져온 데이터를 rooms 배열에 할당
-      } catch (error) {
-        console.error('Error fetching chat rooms:', error);
-      }
+    findAllRoom() {
+      axios.get("http://localhost/chat/rooms").then((response) => {
+        this.chatrooms = response.data;
+      });
     },
-    async createRoom() {
-      try {
-        const response = await axios.post('http://localhost/pt_chatroom', { name: this.roomName }); // MsgController의 createRoom 매핑에 POST 요청
-        console.log('Created room:', response.data);
-        this.roomName = ''; // 폼 초기화
-        this.fetchRooms(); // 새로운 채팅방 생성 후 목록을 다시 가져옴
-      } catch (error) {
-        console.error('Error creating chat room:', error);
+    createRoom() {
+      if (this.room_name === "") {
+        alert("방 제목을 입력해 주십시요.");
+        return;
+      }
+      var params = new URLSearchParams();
+      params.append("name", this.room_name);
+      axios
+        .post("http://localhost/chat/room", params)
+        .then((response) => {
+          alert(response.data.name + "방 개설에 성공하였습니다.");
+          this.room_name = "";
+          this.findAllRoom();
+        })
+        .catch(() => {
+          // 'response' 매개변수 제거
+          alert("채팅방 개설에 실패하였습니다.");
+        });
+    },
+
+    enterRoom(roomId) {
+      var sender = prompt("대화명을 입력해 주세요.");
+      if (sender !== "") {
+        localStorage.setItem("wschat.sender", sender);
+        localStorage.setItem("wschat.roomId", roomId);
+        //window.location.href = `/chat/room/enter/${roomId}`;
+        window.location.href = `http://localhost:8081/pt_chat`;
+      //}
       }
     },
   },
 };
 </script>
+
+<style>
+[v-cloak] {
+  display: none;
+}
+</style>
