@@ -4,7 +4,7 @@ import store from './store';
 import Login from "./views/common/login-page.vue";
 import Home from "./views/common/main-home.vue";
 
-/*일반회원 가입*/ 
+/*일반회원 가입*/
 import Sign_up from "@/views/common/sign_up.vue";
 import Sign_up2 from "@/views/common/sign_up2.vue";
 import Sign_up3 from "@/views/common/sign_up3.vue";
@@ -26,7 +26,7 @@ import D_A_Change from "@/views/default/d-a-change.vue";
 import D_A_Balance from "@/views/default/d-a-balance.vue";
 import D_A_Record from "@/views/default/d-a-record.vue";
 import D_A_Recommand from "@/views/default/d-diet-recommand.vue"
-import tt from "@/views/default/d-show-trainer-info.vue"
+import showDetail from "@/views/default/d-show-trainer-info.vue"
 
 /*PT사용자*/
 import PT_Home from "./views/pt/pt-home-page.vue";
@@ -36,6 +36,13 @@ import pt_profile from "./views/pt/pt-profile.vue";
 import pt_coupon from "./views/pt/pt-coupon.vue"
 import pt_review from "./views/pt/pt-review.vue"
 import pt_chat from "./views/pt/pt-chat.vue"
+
+// -----------------
+// 테스트
+import pt_test from "./views/pt/pt-test.vue"
+
+// -------------------
+
 // Admin
 import a_userList from "./views/admin/a-userList.vue";
 import a_checkFood from "./views/admin/a-checkFood.vue";
@@ -50,47 +57,52 @@ const router = createRouter({
         { path: "/sign_up2", component: Sign_up2, meta: { headerType: 100 } },
         { path: "/sign_up3", component: Sign_up3, meta: { headerType: 100 } },
         { path: "/sign_up4", component: Sign_up4, meta: { headerType: 100 } },
-        { path: "/joinsuccess", component: D_A_joinsuccess, meta: { headerType: 100} },
+        { path: "/joinsuccess", component: D_A_joinsuccess, meta: { headerType: 100 } },
 
         // pt쌤 회원가입
         { path: "/pt_sign_up", component: PT_Sign_Up, meta: { headerType: 100 } },
         { path: "/pt_sign_up2", component: PT_Sign_Up2, meta: { headerType: 100 } },
         { path: "/pt_sign_up3", component: PT_Sign_Up3, meta: { headerType: 100 } },
         { path: "/pt_sign_finish", component: PT_Sign_Finish, meta: { headerType: 100 } },
-        
+
         // 로그인
 
-        {path: "/sign_up", component:Sign_up, meta: {headerType: 999} },
-        {path: "/sign_up2", component:Sign_up2, meta: {headerType: 999}},
-        {path: "/sign_up3", component:Sign_up3, meta: {headerType: 999}},
-        {path: "/sign_up4", component:Sign_up4, meta: {headerType: 999}},
+        { path: "/sign_up", component: Sign_up, meta: { headerType: 999 } },
+        { path: "/sign_up2", component: Sign_up2, meta: { headerType: 999 } },
+        { path: "/sign_up3", component: Sign_up3, meta: { headerType: 999 } },
+        { path: "/sign_up4", component: Sign_up4, meta: { headerType: 999 } },
 
-        {path: "/login", component: Login, meta: {headerType: 100}},
+        { path: "/login", component: Login, meta: { headerType: 100 } },
 
         // 일반 사용자
-        {path: "/d_home", component: D_Home, meta: {headerType: 1}},
-        {path: "/d_kakao", component: D_Kakao, meta: {headerType: 1}},
-        {path: "/d_upload", component: D_Upload, meta: {headerType: 1}},
-        {path: "/d_overview", component: D_overview, meta: {headerType: 1}},
-        {path: "/d_find_trainer", component: D_Find_Trainer, meta: {headerType: 1}},
-        {path: "/d_a_change", component: D_A_Change, meta: {headerType: 1}},
-        {path: "/d_a_balance", component: D_A_Balance, meta: {headerType: 1}},
-        {path: "/d_recommand", component: D_A_Recommand, meta: {headerType: 1}},
-        {path: "/d_a_record", component: D_A_Record, meta: {headerType: 1}},
-        {path: "/d_show_trainer_info", component: tt, meta: {headerType: 1}},
+        { path: "/d_home", component: D_Home, meta: { headerType: 1 } },
+        { path: "/d_kakao", component: D_Kakao, meta: { headerType: 1 } },
+        { path: "/d_upload", component: D_Upload, meta: { headerType: 1 } },
+        { path: "/d_overview", component: D_overview, meta: { headerType: 1 } },
+        { path: "/d_find_trainer", component: D_Find_Trainer, meta: { headerType: 1 } },
+        { path: "/d_a_change", component: D_A_Change, meta: { headerType: 1 } },
+        { path: "/d_a_balance", component: D_A_Balance, meta: { headerType: 1 } },
+        { path: "/d_recommand", component: D_A_Recommand, meta: { headerType: 1 } },
+        { path: "/d_a_record", component: D_A_Record, meta: { headerType: 1 } },
         
+        //
+        { path: "/d_show_trainer_info", component: showDetail, meta: { headerType: 1 } },
+        //
+
+
         //pt
         { path: "/pt_home", component: PT_Home, meta: { headerType: 2 } },
         { path: "/pt_members", component: pt_members, meta: { headerType: 2 } },
         { path: "/pt_schedule", component: pt_schedule, meta: { headerType: 2 } },
         { path: "/pt_profile", component: pt_profile, meta: { headerType: 2 } },
         { path: "/pt_profile", component: pt_profile, meta: { headerType: 2 } },
-        {path: "/pt_coupon", component: pt_coupon, meta: {headerType: 2}},
-        {path: "/pt_review", component: pt_review, meta: {headerType: 2}},
-        {path: "/pt_chat", component: pt_chat, meta: {headerType: 2}},
+        { path: "/pt_coupon", component: pt_coupon, meta: { headerType: 2 } },
+        { path: "/pt_review", component: pt_review, meta: { headerType: 2 } },
+        { path: "/pt_chat", component: pt_chat, meta: { headerType: 2 } },
+        { path: "/pt_test", component: pt_test, meta: { headerType: 2 } },
         // Admin
-        {path: "/a_userList", component: a_userList, meta: {headerType: null}},
-        {path: "/a_checkFood", component: a_checkFood, meta: {headerType: null}},
+        { path: "/a_userList", component: a_userList, meta: { headerType: null } },
+        { path: "/a_checkFood", component: a_checkFood, meta: { headerType: null } },
 
     ],
 });

@@ -2,7 +2,4 @@ module.exports = {
   transpileDependencies: [
     'axios',
   ]
-
-
-  
 };

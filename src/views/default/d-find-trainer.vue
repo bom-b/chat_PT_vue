@@ -32,7 +32,7 @@
           <h4 class="text-xl mb-5" style="text-align: left;">이달의 베스트 트레이너</h4>
           <div class="row no-gutters" style="text-align: left;">
             <div class="best-trainer-icon col-lg-3 col-md-6 col-sm-6 text-center" style="max-width: 220px;">
-              <a href="/">
+              <a href="d_show_trainer_info">
                 <img src="../../assets/img/trainer1.jpg" alt="" class="best-profile rounded-circle mb-2"
                   style="text-align: center;">
                 <p class="">강남구 서초동</p>
