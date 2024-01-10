@@ -20,6 +20,10 @@ import PT_Sign_Finish from "@/views/pt/pt_sign_finish.vue";
 import D_Home from "@/views/default/d-home-page.vue";
 import D_Kakao from "@/views/default/d-kakao.vue";
 import D_Upload from "@/views/default/d-upload.vue";
+import D_Upload_Main from "@/views/default/d-upload-main.vue";
+import D_Upload_Self from "@/views/default/d-upload-self-method.vue";
+import D_Upload_Auto from "@/views/default/d-upload-auto-method.vue";
+import D_Upload_Result from "@/views/default/d-upload-result.vue";
 import D_overview from "@/views/default/d-overview.vue";
 import D_Find_Trainer from "@/views/default/d-find-trainer.vue";
 import D_A_Change from "@/views/default/d-a-change.vue";
@@ -73,6 +77,10 @@ const router = createRouter({
         {path: "/d_home", component: D_Home, meta: {headerType: 1}},
         {path: "/d_kakao", component: D_Kakao, meta: {headerType: 1}},
         {path: "/d_upload", component: D_Upload, meta: {headerType: 1}},
+        {path: "/d_upload_main", component: D_Upload_Main, meta: {headerType: 1}},
+        {path: "/d_upload_self", component: D_Upload_Self, meta: {headerType: 1}},
+        {path: "/d_upload_auto", component: D_Upload_Auto, meta: {headerType: 1}},
+        {path: "/d_upload_result", component: D_Upload_Result, meta: {headerType: 1}},
         {path: "/d_overview", component: D_overview, meta: {headerType: 1}},
         {path: "/d_find_trainer", component: D_Find_Trainer, meta: {headerType: 1}},
         {path: "/d_a_change", component: D_A_Change, meta: {headerType: 1}},
