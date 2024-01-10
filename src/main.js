@@ -22,8 +22,8 @@ app.use(vxetable);
 
 // axios 전역변수 등록
 app.config.globalProperties.$axios=axios; // 전역변수 -> this.$axios
-app.config.globalProperties.$serverUrl='http://localhost' //서버주소
-const serverUrl = 'http://localhost'
+app.config.globalProperties.$serverUrl='http://localhost/springpt' //서버주소
+const serverUrl = 'http://localhost/springpt'
 // provide 함수는 부모 컴포넌트에서 자식 컴포넌트로 데이터를 전달하는 역할
 // 자식 컴포넌트에서는 inject함수를 사용하여 해당 데이터를 찾아서 사용할 수 있다.
 app.provide('$axios',axios)
