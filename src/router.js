@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import store from './store';
 /*공통*/
 import Login from "./views/common/login-page.vue";
-import Test_Login from "./views/common/test-login-page.vue";
 import Home from "./views/common/main-home.vue";
 
 /*일반회원 가입*/ 
@@ -69,7 +68,6 @@ const router = createRouter({
 
         // 로그인
         {path: "/login", component: Login, meta: {headerType: 100}},
-        {path: "/test_login", component: Test_Login, meta: {headerType: 100}}, // 효준 로그인 테스트
 
         // 일반 사용자
         {path: "/d_home", component: D_Home, meta: {headerType: 1}},

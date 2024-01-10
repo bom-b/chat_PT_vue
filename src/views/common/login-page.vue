@@ -66,30 +66,23 @@ main {
         <h2 class="mb-4 TheJamsil400 pine_Green_text mt-2 mb-5">Login</h2>
 
         <!-- 아이디 및 비밀번호 입력 폼 -->
-        <form style="text-align: left;">
+        <form id="loginForm" @submit.prevent="login" style="text-align: left;">
           <div class="form-group">
             <label for="username">아이디:</label>
-            <input v-model="userType" type="text" class="form-control" id="username"
-                   placeholder="일반유저: 1, PT쌤: 2, 관리자: 3 으로 로그인해주세요.">
+            <input v-model="user.userName" type="text" class="form-control" id="username"
+                   placeholder="아이디를 입력해주세요.">
           </div>
 
           <div class="form-group">
             <label for="password">패스워드:</label>
-            <input type="password" class="form-control" id="password" placeholder="비밀번호는 입력할 필요 없습니다.">
+            <input v-model="user.password" type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요.">
           </div>
 
           <!--     로그인 버튼     -->
           <div class="mt-5" style="text-align: center">
             <div>
-              <router-link :to="getRouterLink" class="router-link">
-                <button type="button" class="mb-2 btn-signature login-btn">로그인</button>
-              </router-link>
+                <button type="submit" class="mb-2 btn-signature login-btn">로그인</button>
             </div>
-            <!--            <div>-->
-            <!--              <router-link to="pt_home" class="router-link">-->
-            <!--                <button type="button" class="btn-signature login-btn">PT 선생님 회원으로 로그인</button>-->
-            <!--              </router-link>-->
-            <!--            </div>-->
             <router-link to="d_home" class="router-link">
               <img class="kakao-login-btn" src="../../assets/img/kakao_login_medium_narrow.png">
             </router-link>
@@ -119,10 +112,14 @@ main {
   </main>
 </template>
 <script>
+import AuthService from "@/services/AuthService";
 export default {
   data() {
     return {
-      userType: '', // 입력된 아이디 정보임
+      user: {
+        userName: '',
+        password: '',
+      }
     }
   },
   mounted() {
@@ -133,7 +130,7 @@ export default {
     window.removeEventListener('resize', this.setMainHeight);
   },
   methods: {
-    setMainHeight() {
+    setMainHeight() { // 로그인 페이지의 높이를 동적으로 조절하기 위한 메서드
       const loginContainer = document.querySelector('.login-container');
       const mainContainer = document.getElementById('mainContainer');
       if (loginContainer && mainContainer) {
@@ -141,21 +138,34 @@ export default {
             parseInt(getComputedStyle(loginContainer).marginBottom);
         mainContainer.style.height = loginContainer.offsetHeight + margins + 'px';
       }
+    },
+    login() {
+      // 로그인 버튼을 눌렀을 때, 토큰을 받아오는 메서드
+      if (!this.user.userName) {
+        this.$swal.fire('','아이디를 입력해주세요.');
+        return;
+      } else if (!this.user.password) {
+        this.$swal.fire('','비밀번호를 입력해주세요.');
+        return;
+      }
+
+      AuthService.login(this.user).then((response) => {
+        if (response.data) {
+          // console.log('응답 : ' + response.data);
+          window.localStorage.clear();
+          window.localStorage.setItem('jwtToken', response.data);
+          window.location.href = '/d_home';
+        } else {
+          this.$swal.fire('','아이디 또는 비밀번호가 일치하지 않습니다.','warning');
+          // 아이디와 비밀번호 초기화
+          this.user.userName = '';
+          this.user.password = '';
+        }
+      })
     }
   },
   computed: {
-    getRouterLink() {
-      switch (this.userType) {
-        case '1':
-          return 'd_home';
-        case '2':
-          return 'pt_home';
-        case '3':
-          return 'a_userList';
-        default:
-          return 'd_home';
-      }
-    }
+
   }
 };
 </script>

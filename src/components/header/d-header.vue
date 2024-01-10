@@ -128,7 +128,7 @@ nav {
         </div>
         <form class="d-flex">
           <router-link to="/" class="router-link">
-            <button class="btn btn-login" type="button">로그아웃</button>
+            <button @click="logout" class="btn btn-login" type="button">로그아웃</button>
           </router-link>
         </form>
       </div>
@@ -138,6 +138,8 @@ nav {
 
 <script>
 import WidgetContent from "@/components/header/mypage/WidgetContent.vue";
+import {ref} from "vue";
+import router from "@/router";
 
 export default {
   components: {
@@ -145,6 +147,18 @@ export default {
   },
 
   name: "app-header",
+
+  setup() { // useRoute, useRouter 대신 VueRouter.createRouter를 사용합니다.
+    const isLoggedIn = ref(!!localStorage.getItem("jwtToken"));
+
+    const logout = () => {
+      localStorage.removeItem("jwtToken");
+      isLoggedIn.value = false; // isLoggedIn 상태를 업데이트
+      router.push("/login");
+    };
+
+    return { isLoggedIn, logout };
+  },
 
   data() {
     return {
