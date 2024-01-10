@@ -297,7 +297,7 @@ export default {
     };
   },
   mounted() {
-    this.mainImage = { url: require("../../assets/img/defaultImage.jpeg") };
+    this.mainImage = { url: require("../../../assets/img/defaultImage.jpeg") };
   },
   computed: {
 		progress() {

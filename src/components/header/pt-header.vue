@@ -71,7 +71,7 @@ nav {
       style="min-height: 80px; background-color: white !important"
   >
     <div class="container-fluid">
-      <router-link to="/d_home" class="router-link">
+      <router-link to="/trainer/pt_home" class="router-link">
         <img
             src="../../assets/img/배경지운 로고.png"
             alt=""
@@ -104,6 +104,9 @@ nav {
             >
           </li>
         </ul>
+        <button class="btn">
+          {{name+"님"}}
+        </button>
         <div class="profile-img-container d-flex" style="margin-right: 20px">
           <img
               class="profile-img"
@@ -113,9 +116,7 @@ nav {
           />
         </div>
         <form class="d-flex">
-          <router-link to="/" class="router-link">
-            <button class="btn btn-login" type="button">로그아웃</button>
-          </router-link>
+          <button @click="logout" class="btn btn-login" type="button">로그아웃</button>
         </form>
       </div>
     </div>
@@ -123,17 +124,34 @@ nav {
 </template>
 
 <script>
-export default {
-  components: {
+import {ref} from "vue";
+import router from "@/router";
 
-  },
+export default {
   name: "app-header",
+  components: {},
+  computed: {
+    name() {
+      return window.localStorage.getItem('name');
+    }
+  },
+  setup() { // useRoute, useRouter 대신 VueRouter.createRouter를 사용합니다.
+    const isLoggedIn = ref(!!localStorage.getItem("jwtToken"));
+
+    const logout = () => {
+      localStorage.clear();
+      isLoggedIn.value = false; // isLoggedIn 상태를 업데이트
+      router.push("/");
+    };
+
+    return {isLoggedIn, logout};
+  },
   data() {
     return {
       navLinks: [
-        {name: "수강회원 관리", route: "/pt_members"},
-        {name: "스케줄 관리", route: "/pt_schedule"},
-        {name: "프로필 관리", route: "/pt_profile"},
+        {name: "수강회원 관리", route: "/trainer/pt_members"},
+        {name: "스케줄 관리", route: "/trainer/pt_schedule"},
+        {name: "프로필 관리", route: "/trainer/pt_profile"},
       ],
     };
   },

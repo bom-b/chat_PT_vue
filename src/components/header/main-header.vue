@@ -91,8 +91,8 @@ export default {
   data() {
     return {
       navLinks: [
-        { name: '일반회원으로 가입', route: '/sign_up' },
-        { name: 'PT선생님으로 가입', route: '/pt_sign_up' },
+        { name: '일반회원으로 가입', route: '/signUp/sign_up' },
+        { name: 'PT선생님으로 가입', route: '/signUp/pt_sign_up' },
       ],
       currentRoute: this.$route.path
     };

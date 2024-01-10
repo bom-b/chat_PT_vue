@@ -2,7 +2,7 @@ import {createStore} from 'vuex'
 
 export default createStore({
     state: {
-        headerType: null, // 기본 헤더 타입
+        headerType: "non_member", // 기본 헤더 타입
         account: {
             id: 0,
         }
