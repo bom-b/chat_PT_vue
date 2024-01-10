@@ -66,7 +66,7 @@ main {
         <h2 class="mb-4 TheJamsil400 pine_Green_text mt-2 mb-5">Login</h2>
 
         <!-- 아이디 및 비밀번호 입력 폼 -->
-        <form style="text-align: left;">
+        <form @submit.prevent="login" style="text-align: left;">
           <div class="form-group">
             <label for="username">아이디:</label>
             <input v-model="userType" type="text" class="form-control" id="username"
@@ -81,15 +81,8 @@ main {
           <!--     로그인 버튼     -->
           <div class="mt-5" style="text-align: center">
             <div>
-              <router-link :to="getRouterLink" class="router-link">
-                <button type="button" class="mb-2 btn-signature login-btn">로그인</button>
-              </router-link>
+                <button type="submit" class="mb-2 btn-signature login-btn">로그인</button>
             </div>
-            <!--            <div>-->
-            <!--              <router-link to="pt_home" class="router-link">-->
-            <!--                <button type="button" class="btn-signature login-btn">PT 선생님 회원으로 로그인</button>-->
-            <!--              </router-link>-->
-            <!--            </div>-->
             <router-link to="d_home" class="router-link">
               <img class="kakao-login-btn" src="../../assets/img/kakao_login_medium_narrow.png">
             </router-link>
@@ -118,6 +111,13 @@ main {
     </div>
   </main>
 </template>
+<script setup>
+
+function login() {
+  console.log('login');
+}
+
+</script>
 <script>
 export default {
   data() {
@@ -144,8 +144,7 @@ export default {
     },
     getTokken() { // 로그인 버튼을 눌렀을 때, 토큰을 받아오는 메서드
       this.$axios
-          .post("http://localhost/login", this.formData, {
-          })
+          .post("http://localhost/login", this.formData, {})
           .then((resp) => {
             console.log(resp);
           })
@@ -155,18 +154,7 @@ export default {
     }
   },
   computed: {
-    getRouterLink() {
-      switch (this.userType) {
-        case '1':
-          return 'd_home';
-        case '2':
-          return 'pt_home';
-        case '3':
-          return 'a_userList';
-        default:
-          return 'd_home';
-      }
-    }
+
   }
 };
 </script>
