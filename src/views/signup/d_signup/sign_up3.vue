@@ -88,26 +88,26 @@ export default {
     // 이미지 데이터 배열
     images() {
       return [
-        { path: require('../../assets/img/ptgogo.png'), alt: 'Image 1', active: this.BMI >= 0 && this.BMI < 18.5 },
-        { path: require('../../assets/img/ptgogo.png'), alt: 'Image 2', active: this.BMI >= 18.5 && this.BMI < 23 },
-        { path: require('../../assets/img/qrchoon.png'), alt: 'Image 3', active: this.BMI >= 23 && this.BMI < 25 },
-        { path: require('../../assets/img/qrchoon.png'), alt: 'Image 4', active: this.BMI >= 25 },
+        { path: require('../../../assets/img/ptgogo.png'), alt: 'Image 1', active: this.BMI >= 0 && this.BMI < 18.5 },
+        { path: require('../../../assets/img/ptgogo.png'), alt: 'Image 2', active: this.BMI >= 18.5 && this.BMI < 23 },
+        { path: require('../../../assets/img/qrchoon.png'), alt: 'Image 3', active: this.BMI >= 23 && this.BMI < 25 },
+        { path: require('../../../assets/img/qrchoon.png'), alt: 'Image 4', active: this.BMI >= 25 },
       ];
     },
     getImagePath() {
       if (this.BMI >= 0 && this.BMI < 18.5) {
-        return require('../../assets/img/ptgogo.png');
+        return require('../../../assets/img/ptgogo.png');
       } else if (this.BMI >= 18.5 && this.BMI < 23) {
         // return require('@/assets/정상.png');
-        return require('../../assets/img/ptgogo.png');
+        return require('../../../assets/img/ptgogo.png');
       } else if (this.BMI >= 23 && this.BMI < 25) {
         // return require('@/assets/과체중.png');
-        return require('../../assets/img/qrchoon.png');
+        return require('../../../assets/img/qrchoon.png');
       } else if (this.BMI >= 25) {
         // return require('@/assets/비만.png');
-        return require('../../assets/img/qrchoon.png');
+        return require('../../../assets/img/qrchoon.png');
       } else {
-        return require('../../assets/img/춘식얼굴.png'); // or provide a default image path
+        return require('../../../assets/img/춘식얼굴.png'); // or provide a default image path
       }
     },
   },

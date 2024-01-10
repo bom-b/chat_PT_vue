@@ -111,7 +111,7 @@ export default {
 				console.log("인증번호:", this.verificationCode);
 				console.log("비밀번호:", this.password);
 				console.log("비밀번호 확인:", this.password_Check);
-				this.$router.push('/pt_sign_up2');
+				this.$router.push('/signUp/pt_sign_up2');
 			}
 		},
 	},

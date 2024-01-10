@@ -75,13 +75,14 @@ main {
 
           <div class="form-group">
             <label for="password">패스워드:</label>
-            <input v-model="user.password" type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요.">
+            <input v-model="user.password" type="password" class="form-control" id="password"
+                   placeholder="비밀번호를 입력해주세요.">
           </div>
 
           <!--     로그인 버튼     -->
           <div class="mt-5" style="text-align: center">
             <div>
-                <button type="submit" class="mb-2 btn-signature login-btn">로그인</button>
+              <button type="submit" class="mb-2 btn-signature login-btn">로그인</button>
             </div>
             <router-link to="d_home" class="router-link">
               <img class="kakao-login-btn" src="../../assets/img/kakao_login_medium_narrow.png">
@@ -90,13 +91,14 @@ main {
 
           <!-- 회원가입 / 아이디 비번 찾기-->
           <div class="mt-5">
-            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/sign_up">
+            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/signUp/sign_up">
               회원가입
             </a>
 
             <span style="margin-right: 10px; margin-left: 10px;"> | </span> <!-- 공백을 위한 span 태그 -->
 
-            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/pt_sign_up">
+            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
+               href="/signUp/pt_sign_up">
               PT쌤 회원가입
             </a>
             <br>
@@ -113,6 +115,7 @@ main {
 </template>
 <script>
 import AuthService from "@/services/AuthService";
+
 export default {
   data() {
     return {
@@ -142,30 +145,40 @@ export default {
     login() {
       // 로그인 버튼을 눌렀을 때, 토큰을 받아오는 메서드
       if (!this.user.userName) {
-        this.$swal.fire('','아이디를 입력해주세요.');
+        this.$swal.fire('', '아이디를 입력해주세요.');
         return;
       } else if (!this.user.password) {
-        this.$swal.fire('','비밀번호를 입력해주세요.');
+        this.$swal.fire('', '비밀번호를 입력해주세요.');
         return;
       }
 
-      AuthService.login(this.user).then((response) => {
-        if (response.data) {
+      AuthService.login(this.user)
+          .then((response) => {
+        if (response.data.token != null) {
           // console.log('응답 : ' + response.data);
           window.localStorage.clear();
-          window.localStorage.setItem('jwtToken', response.data);
-          window.location.href = '/d_home';
-        } else {
-          this.$swal.fire('','아이디 또는 비밀번호가 일치하지 않습니다.','warning');
-          // 아이디와 비밀번호 초기화
-          this.user.userName = '';
-          this.user.password = '';
+          window.localStorage.setItem('jwtToken', response.data.token);
+          window.localStorage.setItem('role', response.data.role);
+
+          const role = response.data.role;
+          if (role === 'NORMAL') {
+            window.localStorage.setItem('nickname', response.data.nickname);
+            window.location.href = '/default/d_home';
+          } else if (role === 'TRAINER') {
+            window.localStorage.setItem('name', response.data.name);
+            window.location.href = '/trainer/pt_home';
+          } else if (role === 'ADMIN') {
+            window.location.href = '/admin/a_userList';
+          }
         }
       })
+          .catch(() => {
+            this.$swal.fire('', '아이디 또는 비밀번호가 일치하지 않습니다.', 'warning');
+            // 비밀번호 초기화
+            this.user.password = '';
+          });
     }
   },
-  computed: {
-
-  }
+  computed: {}
 };
 </script>

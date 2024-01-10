@@ -28,9 +28,6 @@ app.use(VueSweetalert2, sweetalertOptions);
 // axios 전역변수 등록. 헤더에 토큰값을 적재하기 위해서 해당 $axios를 사용해야함.
 app.config.globalProperties.$axios = axiosInstance;
 
-// 서버주소
-app.config.globalProperties.$serverUrl='http://localhost/springpt'
-
 // AOS 초기화
 app.config.globalProperties.$AOS = AOS;
 AOS.init();

@@ -8,7 +8,7 @@
         <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
       </div>
       <div class="footer-links">
-        <router-link to="/contact">ict 01기 D조</router-link>
+        <router-link to="/">ict 01기 D조</router-link>
       </div>
       <div class="footer-social">
         <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />

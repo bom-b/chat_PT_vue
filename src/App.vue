@@ -35,11 +35,11 @@ export default {
             if (response.data) {
               window.localStorage.setItem('role', response.data);
             } else {
-              window.localStorage.removeItem('role');
+              window.localStorage.clear();
             }
           })
           .catch(() => {
-                window.localStorage.removeItem('role');
+                window.localStorage.clear();
               }
           );
     }
@@ -48,16 +48,16 @@ export default {
     ...mapState(['headerType']),
     headerComponent() {
       // 일반회원
-      if (this.headerType === 1) {
+      if (this.headerType === "default") {
         return Default_Header;
         // PT
-      } else if (this.headerType === 2) {
+      } else if (this.headerType === "trainer") {
         return PT_Header;
-        // none헤더
-      } else if (this.headerType === 100) {
-        return Login_Header;
         // 비회원
-      } else if (this.headerType === -1) {
+      } else if (this.headerType === "non_member") {
+        return Login_Header;
+        // 헤더 없음
+      } else if (this.headerType === "no-header") {
         return main_header;
       }
 

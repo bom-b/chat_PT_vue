@@ -71,7 +71,7 @@ nav {
       style="min-height: 80px; background-color: white !important"
   >
     <div class="container-fluid">
-      <router-link to="/d_home" class="router-link">
+      <router-link to="/default/d_home" class="router-link">
         <img
             src="../../assets/img/배경지운 로고.png"
             alt=""
@@ -107,7 +107,7 @@ nav {
         <!-- [st]위젯 -->
 
         <button @click="toggleWidget" class="btn">
-          {{ widgetVisible ? "❌ 닫기" : "○○○ 님의 마이페이지" }}
+          {{ widgetVisible ? "❌ 닫기" : nickname + "님의 마이페이지" }}
         </button>
 
         <div v-if="widgetVisible" class="floating-widget" :style="{ width: widgetWidth, height: widgetHeight }">
@@ -127,9 +127,7 @@ nav {
           />
         </div>
         <form class="d-flex">
-          <router-link to="/" class="router-link">
-            <button @click="logout" class="btn btn-login" type="button">로그아웃</button>
-          </router-link>
+          <button @click="logout" class="btn btn-login" type="button">로그아웃</button>
         </form>
       </div>
     </div>
@@ -142,32 +140,39 @@ import {ref} from "vue";
 import router from "@/router";
 
 export default {
+
+  name: "app-header",
+
   components: {
     WidgetContent, // 마이페이지 위젯사용을 위한 추가
   },
 
-  name: "app-header",
+  computed: {
+    nickname() {
+      return window.localStorage.getItem('nickname');
+    }
+  },
 
   setup() { // useRoute, useRouter 대신 VueRouter.createRouter를 사용합니다.
     const isLoggedIn = ref(!!localStorage.getItem("jwtToken"));
 
     const logout = () => {
-      localStorage.removeItem("jwtToken");
+      localStorage.clear();
       isLoggedIn.value = false; // isLoggedIn 상태를 업데이트
-      router.push("/login");
+      router.push("/");
     };
 
-    return { isLoggedIn, logout };
+    return {isLoggedIn, logout};
   },
 
   data() {
     return {
       navLinks: [
-        {name: "카카오톡 채널", route: "/d_kakao"},
-        {name: "식단등록", route: "/d_upload_main"},
-        {name: "식단 추천 받기", route: "/d_recommand"},
-        {name: "식단 분석", route: "/d_a_change"},
-        {name: "트레이너 찾기", route: "/d_find_trainer"},
+        {name: "카카오톡 채널", route: "/default/d_kakao"},
+        {name: "식단등록", route: "/default/d_upload_main"},
+        {name: "식단 추천 받기", route: "/default/d_recommand"},
+        {name: "식단 분석", route: "/default/d_a_change"},
+        {name: "트레이너 찾기", route: "/default/d_find_trainer"},
       ],
       currentRoute: this.$route.path,
       widgetVisible: false, // 마이페이지 위젯
