@@ -1,12 +1,10 @@
-
-
 <template>
   <main id="main" class="">
     <div class="" style="margin: 100px 0 100px 0; text-align: center; ">
       <h3 id="plz-up" class="" style=" white-space: nowrap">오늘의 식단을 업로드 해주세요!</h3>
       <p class="" style=" white-space: nowrap">아침, 점심, 저녁, 간식으로 분류해서 업로드 해주세요.</p>
       <router-link to="/d_upload_result" class="router-link">
-        <button>제출</button>
+        <button @click="submitImages">제출</button>
       </router-link>
       <div class="d-flex justify-content-center">
         <ul class="pagination pagination-lg">
@@ -43,6 +41,7 @@
 </style>
 <script>
 import ImgUpload from "@/components/util/img-upload.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -62,11 +61,52 @@ export default {
   methods: {
     selectTab(tab) {
       this.selectedTab = tab;
+      console.log(this.tabImages)
     },
     updateImages(tab, newImage) {
       this.tabImages[tab].push(newImage);
-    }
-  },
+      console.log(this.tabImages)
+    },
+    convertBase64ToFile(base64Data, filename) {
+      console.log(base64Data[0])
+      const arr = base64Data[0].split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+
+      return new File([u8arr], filename, { type: mime });
+    },
+    submitImages() {
+      const formData = new FormData();
+      Object.keys(this.tabImages).forEach(tab => {
+        this.tabImages[tab].forEach((base64Image, index) => {
+          const file = this.convertBase64ToFile(base64Image, `image-${tab}-${index}.jpg`);
+          formData.append(`${tab}[${index}]`, file);
+        });
+      });
+      // FormData 내용 확인
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+      // Axios 요청
+      axios.post('http://192.168.0.225:9000/imgmodel/findFood', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+          .then(response => {
+            console.log(response);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+    },
+  }
 };
 </script>
 
