@@ -56,7 +56,7 @@ export default {
     findRoom() {
       // API 주소는 해당 프로젝트의 실제 백엔드 주소에 따라 달라집니다.
       axios
-        .get(`http://localhost/chat/room/${this.roomId}`)
+        .get(`http://192.168.0.60/chat/room/${this.roomId}`)
         .then((response) => {
           this.room = response.data;
         });
@@ -71,7 +71,7 @@ export default {
         };
         let messageString = JSON.stringify(messageData);
 
-        this.ws.send("/pub/chat/message", {}, messageString);
+        this.ws.send("/pub/chat/message",  messageString, {},);
         this.message = "";
       }
     },
@@ -84,7 +84,7 @@ export default {
       });
     },
     connect() {
-      const sock = new SockJS("http://localhost/ws-stomp");
+      const sock = new SockJS("http://192.168.0.60/ws-stomp");
       this.ws = Stomp.over(sock);
 
       const onConnected = () => {
@@ -97,14 +97,14 @@ export default {
         });
 
         this.ws.send(
-          "/pub/chat/message",
-          {},
-          JSON.stringify([{
+          "/pub/chat/message",JSON.stringify({
             type: "ENTER",
             roomId: this.roomId,
             sender: this.sender,
             message: this.message
-          }])
+          },
+          {},
+          )
         );
       };
 
