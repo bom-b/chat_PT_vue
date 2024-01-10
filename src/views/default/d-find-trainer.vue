@@ -3,7 +3,12 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      bestTrainers: []
+      // 지역 구
+      location: '',
+      // 베스트 트레이너 section
+      bestTrainers: [],
+      // 지역 트레이너 section
+      locationTrainers: []
     };
   },
   methods: {
@@ -24,7 +29,17 @@ export default {
       } catch (e) {
         console.log('여기가 에러', e)
       }
-    }
+    },
+    // 지역 트레이너 가져오기
+    async fetchLocationTrainers() {
+      try {
+        const response = await axios.get('http://localhost/springpt/WorkingTrainerList');
+        this.workingTrainers = response.data;
+        console.log('리스폰스 근무하는 트레이너', response);
+      } catch (e) {
+        console.log('에러 근무하는 트레이너', e);
+      }
+    },
   },
   mounted() {
     // 컴포넌트가 마운트된 후 베스트 트레이너 데이터를 불러옴
