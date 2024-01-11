@@ -78,7 +78,7 @@ export default {
             <div v-for="trainer in bestTrainers" :key="trainer.id"
               class="best-trainer-icon col-lg-3 col-md-6 col-sm-6 text-center" style="max-width: 220px;">
               <!--트레이너 디테일 링크-->
-              <a :href="`/trainerList/${trainer.memberVO.id}`">
+              <a :href="`/default/d_trainer_detail/${trainer.memberVO.id}`">
                 <img :src="getImagePath(trainer.mainimage)" alt="" class="best-profile rounded-circle mb-2"
                   style="text-align: center;">
                 <p class="">{{ trainer.location}}</p>
