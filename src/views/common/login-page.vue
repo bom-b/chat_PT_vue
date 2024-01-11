@@ -91,18 +91,11 @@ main {
 
           <!-- 회원가입 / 아이디 비번 찾기-->
           <div class="mt-5">
-            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/signUp/sign_up">
+            <a class="mt-3 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/signUp/sign_up_main">
               회원가입
             </a>
-
-            <span style="margin-right: 10px; margin-left: 10px;"> | </span> <!-- 공백을 위한 span 태그 -->
-
-            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
-               href="/signUp/pt_sign_up">
-              PT쌤 회원가입
-            </a>
             <br>
-            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="#">
+            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="#">
               아이디/패스워드 찾기
             </a>
           </div>
