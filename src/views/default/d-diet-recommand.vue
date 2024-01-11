@@ -3,7 +3,8 @@
     <!--  섹션1  -->
     <div class="scroll-area section1400"
       style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
-      <div class="row" style="margin-top: 50px; text-align: center; display: flex;">
+      <div class="row" style="margin-top: 50px; text-align: center; display: flex;" data-aos="fade-in"
+        data-aos-duration="1000" data-aos-delay="200">
 
         <div style="margin-bottom: 50px;" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="100">
           <span class="material-icons pine_Green_text">bar_chart</span>
@@ -28,7 +29,7 @@
             <div class="product-item" v-for="item in recommand_fooddata" :key="item.FOODNUM"
               @click="divclick(item.FOODNUM, item.FOODCAL, item.FOOD_TAN, item.FOOD_DAN, item.FOOD_GI)">
               <!-- 이미지를 넣을 자리 -->
-              <img src="placeholder-image-url" alt={{item.FOODNAME}} class="product-image">
+              <img src="../../assets/img/don.jpeg" alt="프로필 이미지" class="profile-image">
               <!-- 음식 설명을 넣을 자리 -->
               <div class="product-details">
                 <h3>{{ item.FOODNAME }}</h3>
@@ -72,33 +73,55 @@
 
         <div data-aos="fade-in" data-aos-duration="1000" data-aos-delay="100">
           <span class="material-icons pine_Green_text">bar_chart</span>
-          <span id="" class="pine_Green_text TheJamsil400" style="white-space: nowrap; font-size: 1.7rem;">{{ageDecade}}대가 최근에 올린
-            음식</span>
+          <span id="" class="pine_Green_text TheJamsil400" style="white-space: nowrap; font-size: 1.7rem;">{{ tablename
+          }}</span>
 
           <div style="margin-bottom: 50px;">
-            <p>회원과 비슷한 나이대의 다른 회원들의 등록한 음식을 보여드려요</p>
+            <p>{{ tablecoment }}</p>
+            <span style="justify-content: center;"><button class="btn" @click="tablechange"><span
+                  class="material-icons ">sync</span>{{ buttonpurpose }}</button></span>
             <div>
               <table class="table" style="width: 100%;">
                 <thead>
                   <tr>
-                    <th>순위</th>
+                    <th>등록 회원</th>
                     <th>음식 이미지</th>
                     <th>음식명</th>
-                    <th>음식 정보</th>
-                    <th>등록 회원</th>
+                    <th>칼로리</th>
+                    <th>탄수화물</th>
+                    <th>단백질</th>
+                    <th>지방</th>
+                    <th>카테고리</th>
                     <th>등록 날짜</th>
                   </tr>
                 </thead>
-
+                <tbody>
+                  <tr v-for="item in paginatedData" :key="item.idx">
+                    <td>{{ maskName(item[0]) }}</td>
+                    <td><img src="../../assets/img/don.jpeg" alt="프로필 이미지" class="profile-image"></td>
+                    <td>{{ item[7] }}</td>
+                    <td>{{ item[2].toFixed(2) }} kcal</td>
+                    <td>{{ item[4].toFixed(2) }} g</td>
+                    <td>{{ item[5].toFixed(2) }} g</td>
+                    <td>{{ item[6].toFixed(2) }} g</td>
+                    <td>{{ item[9] }}</td>
+                    <td>{{ formattedDate(item[8]) }}</td>
+                  </tr>
+                </tbody>
               </table>
+            </div>
+            <div class="col-12">
+              <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item" v-for="page in pageCount" :key="page" :class="{ active: currentPage === page }">
+                    <button class="page-link" @click="changePage(page)">{{ page }}</button>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <!--  섹션3  -->
-    <div class="scroll-area ivory" style="display: flex; justify-content: center; align-items: center;">
-      <img class="" src="../../assets/img/헤헷.png" alt="" style="">
     </div>
   </div>
 </template>
@@ -109,6 +132,7 @@ Chart.register(...registerables);
 export default {
   data() {
     return {
+      // 기본적인 칼로리 및 영양성분 데이터들
       recommandCal: 0,
       recommand_tan: 0,
       recommand_dan: 0,
@@ -133,8 +157,25 @@ export default {
       FOODGI: 0,
 
       userage: 0,
-      ageDecade : 0,
+      ageDecade: 0,
+      userpurpose: '',
 
+      age_food_info: [],
+      purpose_food_info: [],
+
+      // 페이징 처리 부분
+      currentPage: 1,
+      pageSize: 5, // 한 페이지에 표시할 아이템의 수
+
+      // 테이블 변환 부분
+      status: 0,
+      tablename: '',
+      tablecoment: '',
+      tableinfo: [],
+      buttonpurpose: '',
+
+
+      // 칼로리 차트 데이터 
       chartData: {
 
         labels: ['현재 칼로리', '남은 칼로리'],
@@ -183,7 +224,7 @@ export default {
     fetchDataAndCreateCharts() {
       this.axiosInstance.get('/dlmodel/getCal?id=user002')
         .then((res) => {
-          const { recommand_cal, now_cal, recomand_nutrition, now_nutrition, lastfood, recomandfood, userage } = res.data;
+          const { recommand_cal, now_cal, recomand_nutrition, now_nutrition, lastfood, recomandfood, userage, age_food_info, purpose_food_info, userpurpose } = res.data;
           // 추천 데이터 등록         
           this.recommandCal = recommand_cal.toFixed(2);
           this.recommand_tan = recomand_nutrition[0].toFixed(2);
@@ -211,9 +252,31 @@ export default {
 
           // 추천음식 목록
           this.recommand_fooddata = recomandfood
-          
+
           // 연령대 구하기
           this.getageGroup(this.userage)
+          if (userpurpose == 0) {
+            this.userpurpose = "다이어트가"
+          } else if (userpurpose == 1) {
+            this.userpurpose = "체중유지가"
+          } else if (userpurpose == 2) {
+            this.userpurpose = "벌크업이"
+          }
+
+
+
+
+          // 연령대 별 최근 올린 음식 25개
+          this.age_food_info = age_food_info
+          // 목적 별 최근 올린 음식 25개
+          this.purpose_food_info = purpose_food_info
+
+          // 테이블 전환 초기 설정(연령대 별이 디폴트 값)
+          this.tableinfo = age_food_info
+          this.tablename = this.ageDecade + "대가 최근에 올린 음식"
+          this.tablecoment = '회원님과 비슷한 연령대의 다른 회원들이 등록한 음식을 보여드려요'
+          this.status = 0
+          this.buttonpurpose = '목적이 비슷한 사람 보기'
 
           // 영양소 차트 데이터 업데이트
           this.updateNutritionChartData();
@@ -221,6 +284,8 @@ export default {
           this.updateCalChartData();
           // 차트 생성
           this.createCharts();
+
+
         })
         .catch((err) => {
           console.error("Error fetching data: ", err);
@@ -255,7 +320,7 @@ export default {
 
       const age_Decade = Math.floor(age / 10) * 10;
       this.ageDecade = age_Decade
-      
+
     },
     updateNutritionChartData() {
       // API 응답에서 데이터를 받아와야 합니다.
@@ -337,7 +402,57 @@ export default {
       this.createCharts();
 
     },
-  }
+    tablechange() {
+      if (this.status == 0) {
+        this.tableinfo = this.purpose_food_info
+        this.tablename = this.userpurpose + " 목적인 사람들이 올린 음식"
+        this.tablecoment = '목적이 회원님과 비슷한 사람들이 올린 음식을 보여드려요'
+        this.status = 1
+        this.buttonpurpose = '연령대가 비슷한 사람 보기'
+      } else if (this.status == 1) {
+        this.tableinfo = this.age_food_info
+        this.tablename = this.ageDecade + "대가 최근에 올린 음식"
+        this.tablecoment = '회원님과 비슷한 연령대의 다른 회원들이 등록한 음식을 보여드려요'
+        this.status = 0
+        this.buttonpurpose = '목적이 비슷한 사람 보기'
+      }
+
+    },
+    changePage(page) {
+      this.currentPage = page;
+    },
+    maskName(name) {
+      // 이름이 비어있거나 한 글자인 경우 그대로 반환
+      if (!name || name.length <= 1) {
+        return name;
+      }
+      // 이름의 마지막 글자를 마스킹
+      return name.substring(0, name.length - 1) + '*';
+    },
+    formattedDate(date) {
+      const d = new Date(date);
+      const year = d.getFullYear();
+      const month = (d.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 1을 더해줍니다.
+      const day = d.getDate().toString().padStart(2, '0');
+      const hours = d.getHours().toString().padStart(2, '0');
+      const minutes = d.getMinutes().toString().padStart(2, '0');
+      const seconds = d.getSeconds().toString().padStart(2, '0');
+
+      return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+
+  },
+  computed: {
+    pageCount() {
+      return Math.ceil(this.tableinfo.length / this.pageSize);
+    },
+    paginatedData() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.tableinfo.slice(start, end);
+    },
+
+  },
 };
 </script>
 
@@ -423,7 +538,7 @@ export default {
 /* 자식 스크롤 스냅 영역 */
 .scroll-area {
   width: 100%;
-  height: 120vh;
+  height: 160vh;
   scroll-snap-align: center;
 }
 
@@ -446,4 +561,78 @@ export default {
     padding: 0px;
   }
 
-}</style>
+  .active {
+    font-weight: bold;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    padding: 1em;
+  }
+
+  .pagination button {
+    border: 1px solid #ccc;
+    background-color: white;
+    padding: 0.5em 1em;
+    margin: 0 0.3em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .pagination button:hover {
+    background-color: #eee;
+  }
+
+  .pagination .active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
+
+  .container {
+    text-align: center;
+  }
+
+  .items-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .item {
+    margin-bottom: 10px;
+  }
+
+  .pagination-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .pagination {
+    list-style: none;
+    padding: 0;
+    display: flex;
+  }
+
+  .pagination li {
+    margin: 0 5px;
+  }
+
+  .pagination li a {
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    color: #333;
+  }
+
+  .pagination li.active a,
+  .pagination li a:hover {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
+}
+</style>
+
