@@ -27,7 +27,7 @@ export default {
     computed: {
         progress() {
             const checkedCount = this.agreementItems.filter((item) => item.checked).length;
-            return (checkedCount / this.agreementItems.length) * 25;
+            return 25 + (checkedCount * 6.25);
         },
     },
     methods: {
@@ -37,7 +37,6 @@ export default {
             }
         },
     },
-
 };
 </script>
 

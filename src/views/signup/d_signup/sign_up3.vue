@@ -66,7 +66,6 @@
   </main>
 </template>
 <script>
-
 export default {
   data() {
     return {
@@ -211,4 +210,5 @@ button {
 .selected-purpose {
   background-color: black;
   /* 선택된 목적 버튼에 원하는 스타일을 추가하세요 */
-}</style>
+}
+</style>
