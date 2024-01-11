@@ -79,14 +79,14 @@ export default {
   methods: {
     findRoom() {
       // API 주소는 해당 프로젝트의 실제 백엔드 주소에 따라 달라집니다.
-      axios
+      this.$axios
         .get(`http://localhost/springpt/chat/room/${this.roomId}`)
         .then((response) => {
           this.room = response.data;
         });
     },
     loadPreviousMessages() {
-      axios
+      this.$axios
         .get(`http://localhost/springpt/chat/rooms/${this.roomId}/messages`)
         .then((response) => {
           // logdate를 기준으로 오름차순 정렬

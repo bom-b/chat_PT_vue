@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     findAllRoom() {
-      axios.get("http://localhost/springpt/chat/rooms").then((response) => {
+      this.$axios.get("http://localhost/springpt/chat/rooms").then((response) => {
         this.chatrooms = response.data;
       });
     },
@@ -62,7 +62,7 @@ export default {
       }
       var params = new URLSearchParams();
       params.append("name", this.room_name);
-      axios
+      this.$axios
         .post("http://localhost/springpt/chat/room", params)
         .then((response) => {
           alert(response.data.name + "방 개설에 성공하였습니다.");
