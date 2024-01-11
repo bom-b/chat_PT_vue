@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     findAllRoom() {
-      this.$axios.get("http://localhost/springpt/chat/rooms").then((response) => {
+      this.$axios.get("/chat/rooms").then((response) => {
         this.chatrooms = response.data;
       });
     },
@@ -63,7 +63,7 @@ export default {
       var params = new URLSearchParams();
       params.append("name", this.room_name);
       this.$axios
-        .post("http://localhost/springpt/chat/room", params)
+        .post("/chat/room", params)
         .then((response) => {
           alert(response.data.name + "방 개설에 성공하였습니다.");
           this.room_name = "";
@@ -81,7 +81,7 @@ export default {
         localStorage.setItem("wschat.sender", sender);
         localStorage.setItem("wschat.roomId", roomId);
         //window.location.href = `/chat/room/enter/${roomId}`;
-        window.location.href = `http://localhost:8081/pt_chat`;
+        window.location.href = `/trainer/pt_chat`;
       //}
       }
     },
