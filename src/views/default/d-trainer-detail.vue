@@ -1,9 +1,8 @@
 <script>
-import axios from 'axios';
 export default {
   data() {
     return {
-      trainerInfo: [],
+      trainerInfo: {}, // 데이터 객체로 받기
     };
   },
   methods: {
@@ -20,7 +19,7 @@ export default {
         const trainerId = this.$route.params.id;
         console.log("여기입니다 여러분", trainerId)
         // 가져온 ID를 사용하여 상세 정보를 요청
-        const response = await axios.get(`http://localhost/springpt/trainerList/${trainerId}`);
+        const response = await this.$axios.get(`/trainerList/${trainerId}`);
         this.trainerInfo = response.data;
         console.log('리스폰스', response);
         console.log(this.trainerInfo);
@@ -36,27 +35,54 @@ export default {
 </script>
 
 <template>
-  <main>
-    <div class="container mt-5">
-      <div class="row">
-        <div class="col-md-4">
-          <img :src="getImagePath(trainer.mainimage)" alt="Trainer Image" class="img-fluid rounded">
-        </div>
-        <div v-for="trainer in trainerInfo" :key="trainer.id"
-          class="best-trainer-icon col-lg-3 col-md-6 col-sm-6 text-center" style="max-width: 220px;">
-          <img :src="getImagePath(trainer.mainimage)" alt="" class="best-profile rounded-circle mb-2"
-            style="text-align: center;">
-          <p class="">{{ trainer.address }}</p>
-          <p class="">{{ trainer.memberVO.name }}</p>
-        </div>
+  <div class="section1800">
+    <!-- Bootstrap 카드 -->
+    <div v-if="Object.keys(trainerInfo).length" class="card mx-auto" style="width: 18rem;">
+      <!-- 카드 이미지 -->
+      <img :src="getImagePath(trainerInfo.mainimage)" class="card-img-top" alt="Trainer Image">
+      <!-- 카드 본문 -->
+      <div class="card-body">
+        <h5 class="card-title">{{ trainerInfo.memberVO.email }}</h5>
+        <p class="card-text">{{ trainerInfo.trainerintro }}</p>
+      </div>
+      <!-- 카드 리스트 -->
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">{{ trainerInfo.location }}</li>
+        <!-- 상에 대한 정보를 표시하고 싶다면 이렇게 할 수 있습니다. -->
+        <li class="list-group-item">{{ trainerInfo.awards1 }}</li>
+        <li class="list-group-item">{{ trainerInfo.awards2 }}</li>
+        <!-- 기타 수상 내역도 추가할 수 있습니다. -->
+      </ul>
+      <!-- 카드 하단 -->
+      <div class="card-body">
+        <a href="#" class="card-link">Card link</a>
+        <a href="#" class="card-link">Another link</a>
       </div>
     </div>
-  </main>
+  </div>
 </template>
-  
-
-  
 <style scoped>
-/* 추가적인 스타일링이 필요하다면 여기에 작성 */
+.section1800{
+  margin-top: 80px;
+}
+.card {
+  transition: transform 0.6s; /* 애니메이션 지속 시간 설정 */
+  transform-origin: center; /* 회전의 중심점을 카드 중앙으로 설정 */
+}
+
+.card:hover {
+  animation: spin 0.6s infinite linear; /* 무한 회전 애니메이션 적용 */
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 </style>
+
+
   

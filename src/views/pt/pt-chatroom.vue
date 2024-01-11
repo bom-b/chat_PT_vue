@@ -81,7 +81,7 @@ export default {
         localStorage.setItem("wschat.sender", sender);
         localStorage.setItem("wschat.roomId", roomId);
         //window.location.href = `/chat/room/enter/${roomId}`;
-        window.location.href = `http://localhost:8081/trainer/pt_chat`;
+        window.location.href = `/trainer/pt_chat`;
       //}
       }
     },

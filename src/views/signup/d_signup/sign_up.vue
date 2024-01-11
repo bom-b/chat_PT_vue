@@ -46,7 +46,6 @@
 					<button type="button" class="btn btn-primary" @click="proceedToNextPage"
 						:disabled="!name || !email || !verificationCode || !password || !password_Check && (password !== password_Check)">다음</button>
 				</div>
-
 			</div>
 		</div>
 	</main>
@@ -67,9 +66,9 @@ export default {
 	computed: {
 		progress() {
 			if (this.name && this.email && this.verificationCode && this.password && this.password === this.password_Check) {
-				return 25; 
+				return 25;
 			} else {
-				return 0; 
+				return 0;
 			}
 		},
 		isFormValid() {
@@ -83,18 +82,18 @@ export default {
 		},
 	},
 	watch: {
-		password(password) {
-			if (this.password && this.password_Check) {
-				this.matchpwd = password !== this.password_Check;
-			} else {
+		password(newPassword) {
+			if (!newPassword && !this.password_Check) {
 				this.matchpwd = false;
+			} else {
+				this.matchpwd = newPassword !== this.password_Check;
 			}
 		},
-		password_Check(passwordCheck) {
-			if (this.password && this.password_Check) {
-				this.matchpwd = this.password !== passwordCheck;
+		password_Check(newPasswordCheck) {
+			if (!this.password && !newPasswordCheck) {
+				this.matchpwd = false;
 			} else {
-				this.matchpwd = true;
+				this.matchpwd = this.password !== newPasswordCheck;
 			}
 		},
 	},
