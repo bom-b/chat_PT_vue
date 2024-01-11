@@ -44,7 +44,7 @@
               data-aos-delay="200"
             >
               <p class="TheJamsil400" style="display: inline-block">
-                <router-link to="/pt_coupon" class="router-link">
+                <router-link to="/trainer/pt_coupon" class="router-link">
                 <button class="select_button_menu cupon_cl">
                   
                   <img
@@ -69,7 +69,7 @@
               data-aos-delay="200"
             >
               <p class="TheJamsil400" style="display: inline-block">
-                <router-link to="/pt_members" class="router-link">
+                <router-link to="/trainer/pt_members" class="router-link">
                 <img
                   class=""
                   src="../../assets/img/time.png"
@@ -91,7 +91,7 @@
               data-aos-delay="200"
             >
               <p class="TheJamsil400" style="display: inline-block">
-                <router-link to="/pt_members" class="router-link">
+                <router-link to="/trainer/pt_members" class="router-link">
                 <img
                   class=""
                   src="../../assets/img/user_icon.png"
@@ -114,7 +114,7 @@
               data-aos-delay="200"
             >
               <p class="TheJamsil400" style="display: inline-block">
-                <router-link to="/pt_chat" class="router-link">
+                <router-link to="/trainer/pt_chat" class="router-link">
                 <img
                   class=""
                   src="../../assets/img/chat.png"
@@ -139,7 +139,7 @@
               data-aos-delay="200"
             >
               <p class="TheJamsil400" style="display: inline-block">
-                <router-link to="/pt_review#" class="router-link">
+                <router-link to="/trainer/pt_review#" class="router-link">
                 <img
                   class=""
                   src="../../assets/img/recommend.png"
@@ -275,7 +275,7 @@
   
   </script>
   
-  <style>
+  <style scoped>
   .select_button_menu {
     border: none;
     background-color: white;

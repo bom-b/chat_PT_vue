@@ -11,46 +11,46 @@
                 <table>
                     <tr>
                         <td>
-                            <img src="../../assets/img/don.jpeg" :class="{ selected: isSelected('don') }"
-                                @click="toggleImageSelection('don')">
+                            <img src="../../../assets/img/don.jpeg" :class="{ selected: isSelected('don') }"
+                                 @click="toggleImageSelection('don')">
                         </td>
                         <td>
-                            <img src="../../assets/img/chicken.jpeg" :class="{ selected: isSelected('chicken') }"
-                                @click="toggleImageSelection('chicken')">
+                            <img src="../../../assets/img/chicken.jpeg" :class="{ selected: isSelected('chicken') }"
+                                 @click="toggleImageSelection('chicken')">
                         </td>
                         <td>
-                            <img src="../../assets/img/fork.jpeg" :class="{ selected: isSelected('fork') }"
-                                @click="toggleImageSelection('fork')">
+                            <img src="../../../assets/img/fork.jpeg" :class="{ selected: isSelected('fork') }"
+                                 @click="toggleImageSelection('fork')">
                         </td>
                         <td>
-                            <img src="../../assets/img/pizza.jpeg" :class="{ selected: isSelected('pizza') }"
-                                @click="toggleImageSelection('pizza')">
+                            <img src="../../../assets/img/pizza.jpeg" :class="{ selected: isSelected('pizza') }"
+                                 @click="toggleImageSelection('pizza')">
                         </td>
                         <td>
-                            <img src="../../assets/img/tang.jpeg" :class="{ selected: isSelected('tang') }"
-                                @click="toggleImageSelection('tang')">
+                            <img src="../../../assets/img/tang.jpeg" :class="{ selected: isSelected('tang') }"
+                                 @click="toggleImageSelection('tang')">
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <img src="../../assets/img/don.jpeg" :class="{ selected: isSelected('don1') }"
-                                @click="toggleImageSelection('don1')">
+                            <img src="../../../assets/img/don.jpeg" :class="{ selected: isSelected('don1') }"
+                                 @click="toggleImageSelection('don1')">
                         </td>
                         <td>
-                            <img src="../../assets/img/chicken.jpeg" :class="{ selected: isSelected('chicken1') }"
-                                @click="toggleImageSelection('chicken1')">
+                            <img src="../../../assets/img/chicken.jpeg" :class="{ selected: isSelected('chicken1') }"
+                                 @click="toggleImageSelection('chicken1')">
                         </td>
                         <td>
-                            <img src="../../assets/img/fork.jpeg" :class="{ selected: isSelected('fork1') }"
-                                @click="toggleImageSelection('fork1')">
+                            <img src="../../../assets/img/fork.jpeg" :class="{ selected: isSelected('fork1') }"
+                                 @click="toggleImageSelection('fork1')">
                         </td>
                         <td>
-                            <img src="../../assets/img/pizza.jpeg" :class="{ selected: isSelected('pizza1') }"
-                                @click="toggleImageSelection('pizza1')">
+                            <img src="../../../assets/img/pizza.jpeg" :class="{ selected: isSelected('pizza1') }"
+                                 @click="toggleImageSelection('pizza1')">
                         </td>
                         <td>
-                            <img src="../../assets/img/tang.jpeg" :class="{ selected: isSelected('tang1') }"
-                                @click="toggleImageSelection('tang1')">
+                            <img src="../../../assets/img/tang.jpeg" :class="{ selected: isSelected('tang1') }"
+                                 @click="toggleImageSelection('tang1')">
                         </td>
                     </tr>
                 </table>
