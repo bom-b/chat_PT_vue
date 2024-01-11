@@ -80,14 +80,14 @@ export default {
     findRoom() {
       // API 주소는 해당 프로젝트의 실제 백엔드 주소에 따라 달라집니다.
       axios
-        .get(`http://192.168.0.60/chat/room/${this.roomId}`)
+        .get(`http://localhost/springpt/chat/room/${this.roomId}`)
         .then((response) => {
           this.room = response.data;
         });
     },
     loadPreviousMessages() {
       axios
-        .get(`http://192.168.0.60/chat/rooms/${this.roomId}/messages`)
+        .get(`http://localhost/springpt/chat/rooms/${this.roomId}/messages`)
         .then((response) => {
           // logdate를 기준으로 오름차순 정렬
           this.messages = response.data.sort(
@@ -131,7 +131,7 @@ export default {
       });
     },
     connect() {
-      const sock = new SockJS("http://192.168.0.60/ws-stomp");
+      const sock = new SockJS("http://localhost/springpt/ws-stomp");
       this.ws = Stomp.over(sock);
 
       const onConnected = () => {
