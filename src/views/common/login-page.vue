@@ -103,7 +103,7 @@ a {
               아이디 찾기
             </a>
             <span> | </span>
-            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="#">
+            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/service/find_pw">
               비밀번호 찾기
             </a>
           </div>
