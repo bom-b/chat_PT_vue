@@ -59,7 +59,7 @@
         <p class="TheJamsil400 font35 mb-5" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="100">지금
           시작해보세요!</p>
 
-        <router-link to="/signUp/sign_up" class="router-link">
+        <router-link to="/signUp/sign_up_main" class="router-link">
           <button class="mb-3 btn-signature" type="button" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="200">이메일로
             가입하기
           </button>

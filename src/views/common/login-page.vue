@@ -56,6 +56,10 @@ main {
   right: 0;
 }
 
+a {
+  text-decoration: none;
+}
+
 </style>
 <template>
   <main id="mainContainer" style="background-color: #428176;">
@@ -95,8 +99,12 @@ main {
               회원가입
             </a>
             <br>
+            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/service/find_id">
+              아이디 찾기
+            </a>
+            <span> | </span>
             <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="#">
-              아이디/패스워드 찾기
+              비밀번호 찾기
             </a>
           </div>
 
