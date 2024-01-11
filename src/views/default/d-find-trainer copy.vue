@@ -1,53 +1,10 @@
-<script>
-export default {
-  data() {
-    return {
-      // 지역 구
-      location: '',
-      // 베스트 트레이너 section
-      bestTrainers: [],
-      // 지역 트레이너 section
-      locationTrainers: []
-    };
-  },
-  methods: {
-    // 파일명 인코딩용 스크립트
-    getImagePath(fileName) {
-      const basePath = 'http://localhost/springpt/images/trainer/';
-      const encodedFileName = encodeURIComponent(fileName);
+<script setup>
 
-      return `${basePath}${encodedFileName}`;
-    },
-    // 베스트 트레이너 가져오기
-    async fetchBestTrainers() {
-      try {
-        const response = await this.$axios.get('/BestTrainerList');
-        this.bestTrainers = response.data;
-        console.log(' 리스폰스', response)
-        console.log(this.bestTrainers)
-      } catch (e) {
-        console.log('여기가 에러', e)
-      }
-    },
-    // 지역 트레이너 가져오기
-    // async fetchLocationTrainers() {
-    //   try {
-    //     const response = await this.$axios.get('/WorkingTrainerList');
-    //     this.workingTrainers = response.data;
-    //     console.log('리스폰스 근무하는 트레이너', response);
-    //   } catch (e) {
-    //     console.log('에러 근무하는 트레이너', e);
-    //   }
-    // },
-  },
-  mounted() {
-    // 컴포넌트가 마운트된 후 베스트 트레이너 데이터를 불러옴
-    this.fetchBestTrainers();
-  }
-}
 </script>
+
 <template>
   <main>
+
     <!--  지역설정  -->
     <section>
       <div class="section1800" style="padding: 4vw;">
@@ -68,21 +25,42 @@ export default {
       </div>
     </section>
 
-    <!-- 이달의 베스트 트레이너 -->
+    <!--이달의 베스트 트레이너-->
     <section style="background: #FFFFFF">
       <div class="best-trainer-icon-container section1800" style="padding: 4vw;">
         <div>
           <h4 class="text-xl mb-5" style="text-align: left;">이달의 베스트 트레이너</h4>
           <div class="row no-gutters" style="text-align: left;">
-            <!-- 베스트 트레이너 리스트 렌더링 -->
-            <div v-for="trainer in bestTrainers" :key="trainer.id"
-              class="best-trainer-icon col-lg-3 col-md-6 col-sm-6 text-center" style="max-width: 220px;">
-              <!--트레이너 디테일 링크-->
-              <a :href="`/trainerList/${trainer.memberVO.id}`">
-                <img :src="getImagePath(trainer.mainimage)" alt="" class="best-profile rounded-circle mb-2"
+            <div class="best-trainer-icon col-lg-3 col-md-6 col-sm-6 text-center" style="max-width: 220px;">
+              <a href="d_show_trainer_info">
+                <img src="../../assets/img/trainer1.jpg" alt="" class="best-profile rounded-circle mb-2"
                   style="text-align: center;">
-                <p class="">{{ trainer.location}}</p>
-                <p class="">{{ trainer.memberVO.name }}</p>
+                <p class="">강남구 서초동</p>
+                <p class="TheJamsil400">현우진</p>
+              </a>
+            </div>
+            <div class="best-trainer-icon col-lg-3 col-md-6 col-sm-6 text-center" style="max-width: 220px;">
+              <a href="#">
+                <img src="../../assets/img/trainer3.jpg" alt="" class="best-profile rounded-circle mb-2"
+                  style="text-align: center;">
+                <p class="">강남구 서초동</p>
+                <p class="TheJamsil400">현우진</p>
+              </a>
+            </div>
+            <div class="best-trainer-icon col-lg-3 col-md-6 col-sm-6 text-center" style="max-width: 220px;">
+              <a href="#">
+                <img src="../../assets/img/trainer2.jpg" alt="" class="best-profile rounded-circle mb-2"
+                  style="text-align: center;">
+                <p class="">강남구 서초동</p>
+                <p class="TheJamsil400">현우진</p>
+              </a>
+            </div>
+            <div class="best-trainer-icon col-lg-3 col-md-6 col-sm-6 text-center" style="max-width: 220px;">
+              <a href="/d_show_trainer_info">
+                <img src="../../assets/img/trainer1.jpg" alt="" class="best-profile rounded-circle mb-2"
+                  style="text-align: center;">
+                <p class="">강남구 서초동</p>
+                <p class="TheJamsil400">현우진</p>
               </a>
             </div>
           </div>
@@ -142,11 +120,6 @@ export default {
 </template>
 
 <style scoped>
-img {
-  width: 150px;
-  height: 210px;
-}
-
 #search {
   max-width: 200px;
 }

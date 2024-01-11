@@ -1,11 +1,14 @@
 <style lang="scss" scoped>
-
 #hero {
   height: 350px;
-  background-image: url('../../assets/img/어두운 배경.png'); /* 이미지 파일 경로를 설정하세요 */
-  background-size: cover; /* 배경 이미지를 섹션에 맞게 확대/축소 */
-  background-position: center; /* 배경 이미지를 가운데 정렬 */
-  color: white; /* 텍스트 색상을 설정하세요 (배경 이미지에 대한 대비를 높이기 위해) */
+  background-image: url('../../assets/img/어두운 배경.png');
+  /* 이미지 파일 경로를 설정하세요 */
+  background-size: cover;
+  /* 배경 이미지를 섹션에 맞게 확대/축소 */
+  background-position: center;
+  /* 배경 이미지를 가운데 정렬 */
+  color: white;
+  /* 텍스트 색상을 설정하세요 (배경 이미지에 대한 대비를 높이기 위해) */
   text-align: left;
 
   #hero-title {
@@ -35,7 +38,8 @@
 }
 
 .goal-box:hover {
-  background-color: rgba(166, 227, 215, 0.99); /* 원하는 hover 시 배경 색상 */
+  background-color: rgba(166, 227, 215, 0.99);
+  /* 원하는 hover 시 배경 색상 */
 }
 
 // 이미지 업로드 텍스트
@@ -62,8 +66,7 @@
   object-fit: cover;
 }
 
-#web-food-icon
-.video::-webkit-media-controls {
+#web-food-icon .video::-webkit-media-controls {
   display: none !important;
 }
 
@@ -147,7 +150,6 @@
 img {
   transition: 0.2s ease-out;
 }
-
 </style>
 <template>
   <main id="main">
@@ -158,7 +160,7 @@ img {
         <p data-aos="fade-in" data-aos-duration="1000" class="TheJamsil400" id="hero-title">간편하게 이용하는 식단관리
           솔루션,<br>Chat PT</p>
         <p data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100" class="" id="hero-sub"
-           style="color: #727070;">
+          style="color: #727070;">
           건강한 식단을 찾고 계신 당신에게
           <br>
           맞춤 식단 전문가가 되어 드립니다.
@@ -174,8 +176,8 @@ img {
       <div class="section1800">
         <div class="row " style="margin-top: 100px; margin-bottom:200px; text-align: center;">
 
-          <div class="col-lg-4 col-sm-6" style="height: 300px; text-align: left; "
-               data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
+          <div class="col-lg-4 col-sm-6" style="height: 300px; text-align: left; " data-aos="fade-in"
+            data-aos-duration="1000" data-aos-delay="200">
             <video id="mobile-food-icon" class="video" autoplay loop muted playsinline style="object-fit: contain;">
               <source src="../../assets/img/changeable_diet_minified.mp4" type="video/mp4">
               Your browser does not support the video tag.
@@ -183,17 +185,16 @@ img {
             <div style="text-align: center; padding-left: 20px;">
               <!--              <img id="web-food-icon" src="../../assets/img/graphic/taco%201.png"-->
               <!--                   style="margin-left: 20px; object-fit: contain;">-->
-              <DynamicImage id="web-food-icon"/>
+              <DynamicImage id="web-food-icon" />
               <!--              <img src="/assets/img/graphic/taco%201.png" style="max-height: 80%; object-fit: contain;">-->
             </div>
           </div>
 
-          <div class="col-lg-8 col-sm-6 img-upload"
-               data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
+          <div class="col-lg-8 col-sm-6 img-upload" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
             <h3 id="plz-up" class="TheJamsil400" style=" white-space: nowrap">오늘의 식단을 업로드 해주세요!</h3>
             <p class="pine_Green_text" style=" white-space: nowrap">사진을 전부 등록 해주시면 저희가 분류해드릴게요.</p>
             <div id="MultiImageUploader">
-              <MultiImageUploader/>
+              <MultiImageUploader />
             </div>
             <div id="mobile-btn">
               <button class="" @click="triggerFileInput">파일 선택</button>
@@ -207,14 +208,15 @@ img {
     <section class="green" style="padding:0 2vw;">
       <div class="section1800" style="height: 300px; padding-top: 50px;">
         <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
-           style="font-size: 20px; color: #00997b;">오늘까지</p>
+          style="font-size: 20px; color: #00997b;">오늘까지</p>
         <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
-           style="color: #FFFFFF; margin-top: 20px; font-size: 30px;">연속
+          style="color: #FFFFFF; margin-top: 20px; font-size: 30px;">연속
           <span class="TheJamsil400" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="500"
-                style="color: #FFFFFF; margin-top: 20px; font-size: 50px;">10</span>
-          일째</p>
+            style="color: #FFFFFF; margin-top: 20px; font-size: 50px;">10</span>
+          일째
+        </p>
         <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
-           style="margin-top: 10px; font-size: 20px; color: #00997b;">업로드 중입니다 😊</p>
+          style="margin-top: 10px; font-size: 20px; color: #00997b;">업로드 중입니다 😊</p>
       </div>
     </section>
 
@@ -223,21 +225,20 @@ img {
       <div class="section1800">
         <div class="row" style="margin-top: 50px; text-align: center; display: flex;">
 
-          <div style="margin-bottom: 100px;"
-               data-aos="fade-in" data-aos-duration="1000" data-aos-delay="100">
+          <div style="margin-bottom: 100px;" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="100">
             <span class="material-icons pine_Green_text">bar_chart</span>
-            <span id="" class="pine_Green_text TheJamsil400"
-                  style="white-space: nowrap; font-size: 1.7rem;">나만의 식습관 맞춤 리포트</span>
+            <span id="" class="pine_Green_text TheJamsil400" style="white-space: nowrap; font-size: 1.7rem;">나만의 식습관 맞춤
+              리포트</span>
           </div>
 
-          <div class="col-lg-6 col-sm-6" style="height: 600px; text-align: center;"
-               data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
+          <div class="col-lg-6 col-sm-6" style="height: 600px; text-align: center;" data-aos="fade-in"
+            data-aos-duration="1000" data-aos-delay="200">
             <p class="TheJamsil400" style="white-space: nowrap; font-size: 1.3rem; margin-bottom: 30px;">오늘의 칼로리</p>
             <img src="../../assets/img/메인_칼로리.png" style="max-height: 40%; object-fit: contain; " alt="s">
           </div>
 
-          <div class="col-lg-6 col-sm-6" style="height: 600px; text-align: center;"
-               data-aos="fade-in" data-aos-duration="1000" data-aos-delay="300">
+          <div class="col-lg-6 col-sm-6" style="height: 600px; text-align: center;" data-aos="fade-in"
+            data-aos-duration="1000" data-aos-delay="300">
             <p class="TheJamsil400" style="white-space: nowrap; font-size: 1.3rem; margin-bottom: 30px;">오늘의 영양소</p>
             <img src="../../assets/img/바차트.png" style="max-height: 40%; object-fit: contain; " alt="s">
           </div>
