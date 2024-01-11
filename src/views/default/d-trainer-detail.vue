@@ -1,9 +1,8 @@
 <script>
-import axios from 'axios';
 export default {
   data() {
     return {
-      trainerInfo: [],
+      trainerInfo: {}, // 데이터 객체로 받기
     };
   },
   methods: {
@@ -20,7 +19,7 @@ export default {
         const trainerId = this.$route.params.id;
         console.log("여기입니다 여러분", trainerId)
         // 가져온 ID를 사용하여 상세 정보를 요청
-        const response = await axios.get(`http://localhost/springpt/trainerList/${trainerId}`);
+        const response = await this.$axios.get(`/trainerList/${trainerId}`);
         this.trainerInfo = response.data;
         console.log('리스폰스', response);
         console.log(this.trainerInfo);
@@ -37,19 +36,11 @@ export default {
 
 <template>
   <main>
-    <div class="container mt-5">
-      <div class="row">
-        <div class="col-md-4">
-          <img :src="getImagePath(trainer.mainimage)" alt="Trainer Image" class="img-fluid rounded">
-        </div>
-        <div v-for="trainer in trainerInfo" :key="trainer.id"
-          class="best-trainer-icon col-lg-3 col-md-6 col-sm-6 text-center" style="max-width: 220px;">
-          <img :src="getImagePath(trainer.mainimage)" alt="" class="best-profile rounded-circle mb-2"
-            style="text-align: center;">
-          <p class="">{{ trainer.address }}</p>
-          <p class="">{{ trainer.memberVO.name }}</p>
-        </div>
-      </div>
+    <div v-if="Object.keys(trainerInfo).length" class="best-trainer-icon col-lg-3 col-md-6 col-sm-6 text-center">
+      <p>{{ trainerInfo.location }}</p>
+      <p>{{ trainerInfo.trainerintro }}</p>
+      <img :src="getImagePath(trainerInfo.mainimage)" alt="Trainer Image" class="img-fluid rounded">
+      <!-- 여기에 더 많은 trainerInfo 속성을 렌더링할 수 있습니다. -->
     </div>
   </main>
 </template>
