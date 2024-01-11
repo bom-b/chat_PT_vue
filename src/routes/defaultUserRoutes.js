@@ -12,7 +12,7 @@ import D_A_Change from "@/views/default/d-a-change.vue";
 import D_A_Balance from "@/views/default/d-a-balance.vue";
 import D_A_Record from "@/views/default/d-a-record.vue";
 import D_A_Recommand from "@/views/default/d-diet-recommand.vue"
-import tt from "@/views/default/d-show-trainer-info.vue"
+import tt from "@/views/default/d-trainer-detail.vue"
 
 const defaultRoutes = [
     { path: "/default/d_home", component: D_Home },

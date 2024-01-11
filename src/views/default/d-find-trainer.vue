@@ -1,5 +1,4 @@
 <script>
-import axios from 'axios';
 export default {
   data() {
     return {
@@ -22,7 +21,7 @@ export default {
     // 베스트 트레이너 가져오기
     async fetchBestTrainers() {
       try {
-        const response = await axios.get('http://localhost/springpt/BestTrainerList');
+        const response = await this.$axios.get('/BestTrainerList');
         this.bestTrainers = response.data;
         console.log(' 리스폰스', response)
         console.log(this.bestTrainers)
@@ -31,15 +30,15 @@ export default {
       }
     },
     // 지역 트레이너 가져오기
-    async fetchLocationTrainers() {
-      try {
-        const response = await axios.get('http://localhost/springpt/WorkingTrainerList');
-        this.workingTrainers = response.data;
-        console.log('리스폰스 근무하는 트레이너', response);
-      } catch (e) {
-        console.log('에러 근무하는 트레이너', e);
-      }
-    },
+    // async fetchLocationTrainers() {
+    //   try {
+    //     const response = await this.$axios.get('/WorkingTrainerList');
+    //     this.workingTrainers = response.data;
+    //     console.log('리스폰스 근무하는 트레이너', response);
+    //   } catch (e) {
+    //     console.log('에러 근무하는 트레이너', e);
+    //   }
+    // },
   },
   mounted() {
     // 컴포넌트가 마운트된 후 베스트 트레이너 데이터를 불러옴
@@ -82,7 +81,7 @@ export default {
               <a :href="`/trainerList/${trainer.memberVO.id}`">
                 <img :src="getImagePath(trainer.mainimage)" alt="" class="best-profile rounded-circle mb-2"
                   style="text-align: center;">
-                <p class="">{{ trainer.address }}</p>
+                <p class="">{{ trainer.location}}</p>
                 <p class="">{{ trainer.memberVO.name }}</p>
               </a>
             </div>
