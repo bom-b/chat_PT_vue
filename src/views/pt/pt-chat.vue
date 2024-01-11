@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import axios from "axios";
+
 import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
 
@@ -79,15 +79,15 @@ export default {
   methods: {
     findRoom() {
       // API 주소는 해당 프로젝트의 실제 백엔드 주소에 따라 달라집니다.
-      axios
-        .get(`http://192.168.0.60/chat/room/${this.roomId}`)
+      this.$axios
+        .get(`/chat/room/${this.roomId}`)
         .then((response) => {
           this.room = response.data;
         });
     },
     loadPreviousMessages() {
-      axios
-        .get(`http://192.168.0.60/chat/rooms/${this.roomId}/messages`)
+      this.$axios
+        .get(`/chat/rooms/${this.roomId}/messages`)
         .then((response) => {
           // logdate를 기준으로 오름차순 정렬
           this.messages = response.data.sort(
@@ -131,20 +131,20 @@ export default {
       });
     },
     connect() {
-      const sock = new SockJS("http://192.168.0.60/ws-stomp");
+      const sock = new SockJS("/ws-stomp");
       this.ws = Stomp.over(sock);
 
       const onConnected = () => {
         console.log("웹소켓 연결 성공!!!!");
         this.reconnect = 0; // 연결 성공 시 재연결 시도 횟수 초기화
-        this.ws.subscribe(`/sub/chat/room/${this.roomId}`, (message) => {
+        this.ws.subscribe(`/springpt/sub/chat/room/${this.roomId}`, (message) => {
           const recv = JSON.parse(message.body);
           console.log("Received message: ", recv);
           this.recvMessage(recv);
         });
 
         this.ws.send(
-          "/pub/chat/message",
+          "/springpt/pub/chat/message",
           JSON.stringify(
             {
               type: "ENTER",
