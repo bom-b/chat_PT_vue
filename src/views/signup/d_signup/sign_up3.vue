@@ -118,7 +118,7 @@ export default {
     },
     proceedToNextPage() {
       if (this.height && this.weight && this.sex) {
-        // 다음 페이지로 이동
+        this.$router.push('/sign_up4');
       } else {
         alert('키, 몸무게, 성별을 입력해주세요!');
       }
