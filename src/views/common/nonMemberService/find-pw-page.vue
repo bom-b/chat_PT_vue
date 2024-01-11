@@ -5,6 +5,7 @@
       <div class="title-box">
         <h3 class="mt-5">회원정보 입력</h3>
         <p style="color:#989494;">가입 시 입력한 본인정보를 입력해 주세요.</p>
+        <p style="color:#ff0000;">현재 미구현!!</p>
       </div>
 
       <div class="main-box mt-5">
