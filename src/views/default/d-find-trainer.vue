@@ -1,4 +1,5 @@
 <script>
+import anime from 'animejs/lib/anime.es.js';
 export default {
   data() {
     return {
@@ -23,7 +24,7 @@ export default {
           this.fetchRegionTrainer();
         }
       }
-    },
+    }
   },
   methods: {
     // 파일명 인코딩용 스크립트
@@ -57,6 +58,7 @@ export default {
     async fetchRegionTrainer() {
       console.log("여기다", this.selectRegion)
       try {
+
         const response = await this.$axios.get(`/regionTrainer/${this.selectRegion}`);
         console.log("지역트레이너", response)
         this.regionTrainerList = response.data;
@@ -69,9 +71,33 @@ export default {
     // 컴포넌트가 마운트된 후 베스트 트레이너 데이터를 불러옴
     this.fetchBestTrainers();
     this.fetchRegions();
+
+    //
+    const button = this.$refs.runawayBtn;
+
+    const animateMove = (element, prop, pixels) =>
+      anime({
+        targets: element,
+        [prop]: `${pixels}px`,
+        easing: "easeOutCirc"
+      });
+    ["mouseover", "click"].forEach(el => {
+      button.addEventListener(el, function (event) {
+        const top = getRandomNumber(window.innerHeight - this.offsetHeight);
+        const left = getRandomNumber(window.innerWidth - this.offsetWidth);
+
+        animateMove(this, "left", left).play();
+        animateMove(this, "top", top).play();
+      });
+    });
   }
-}    
+}
+const getRandomNumber = num => {
+  return Math.floor(Math.random() * (num + 1));
+};
+
 </script>
+
 <template>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -79,7 +105,7 @@ export default {
     <!--  지역설정  -->
     <section>
       <div class="section1800" style="padding: 4vw;">
-        <div class="location">
+        <div class="text-center">
           <select class="form-select" v-model="selectRegion">
             <option value="-" disabled selected>지역을 선택하세요</option>
             <option v-for="region in regionList" :key="region">{{ region }}</option>
@@ -88,33 +114,38 @@ export default {
         </div>
         <div class="flex" style="text-align: right">
           <input placeholder="이름으로 검색" id="search" class="border border-gray rounded py-2" type="text" />
-          <button class="" style="margin-left: 10px;">검색</button>
+          <button id='runaway-btn'>Click Me &#129315;</button>
         </div>
+      </div>
+    </section>
+    <section>
+      <div>
+
       </div>
     </section>
 
     <!-- 이달의 베스트 트레이너 -->
-    <section>
+    <section class="section1800">
       <div class="container">
-        <h4 class="text-xl mb-5" style="text-align: left;">이달의 베스트 트레이너</h4>
-        <div id="loopslider" class="slider-wrap">
-          <ul class="row">
-            <li v-for="trainer in bestTrainerList" :key="trainer.id" class="">
+        <h4 class="text-xl mb-5" style="text-align: left;"><strong>이달의 베스트 트레이너</strong></h4>
+        <ul class="row move1">
+          <li v-for="trainer in bestTrainerList" :key="trainer.id" class="col-md-2 mb-4">
+            <!-- 부모 div에 Flexbox 스타일 적용 -->
+            <a :href="`/default/d_trainer_detail/${trainer.memberVO.id}`">
               <div class="card">
-                <a :href="`/default/d_trainer_detail/${trainer.memberVO.id}`">
-                  <img class="card-img-top" :src="getImagePath(trainer.mainimage)" alt=""
-                    style="object-fit: cover; aspect-ratio: 1/1; width: 100%;">
-                  <div class="card-body">
-                    <p class="card-title mb-0">{{ trainer.region }}</p>
-                    <p class="card-text">{{ trainer.memberVO.name }}</p>
-                  </div>
-                </a>
+                <img class="card-img-top" :src="getImagePath(trainer.mainimage)" alt=""
+                  style="object-fit: cover; aspect-ratio: 1/1; width: 100%;">
+                <div class="card-body">
+                  <p class="mb-0">{{ trainer.region }}</p>
+                  <p class="card-text">{{ trainer.memberVO.name }}</p>
+                </div>
               </div>
-            </li>
-          </ul>
-        </div>
+            </a>
+          </li>
+        </ul>
       </div>
     </section>
+
     <!-- 지역 & 트레이너 -->
     <section>
       <div class="section1800" style="padding: 5vw;">
@@ -124,162 +155,104 @@ export default {
           <hr class="mb-3" style="border-width: 3px; border-color: #085c57;">
         </div>
 
-        <div class="regiontrainerclass">
-          <div v-for="trainer in regionTrainerList" :key="trainer.id" class="col-lg-3 col-md-6 col-sm-6 mb-4">
-            <!-- 트레이너 디테일 링크 -->
-            <a :href="`/default/d_trainer_detail/${trainer.memberVO.id}`" class="card h-100">
-              <img :src="getImagePath(trainer.mainimage)" alt="" class="card-img-top"
-                style="object-fit: cover; aspect-ratio: 1/1; width: 100%;">
-              <div class="card-body">
-                <p class="mb-0">{{ trainer.region }}</p>
-                <p class="card-text">{{ trainer.memberVO.name }}</p>
+        <ul class="row move2">
+          <li v-for="trainer in regionTrainerList" :key="trainer.id" class="col-md-2 mb-4">
+            <!-- 부모 div에 Flexbox 스타일 적용 -->
+            <a :href="`/default/d_trainer_detail/${trainer.memberVO.id}`">
+              <div class="card">
+                <img class="card-img-top" :src="getImagePath(trainer.mainimage)" alt=""
+                  style="object-fit: cover; aspect-ratio: 1/1; width: 100%;">
+                <div class="card-body">
+                  <p class="mb-0">{{ trainer.region }}</p>
+                  <p class="card-text">{{ trainer.memberVO.name }}</p>
+                </div>
               </div>
             </a>
-          </div>
-        </div>
+          </li>
+        </ul>
       </div>
     </section>
   </main>
 </template>
 
 <style scoped>
-@keyframes conveyorMove {
-  0% {
-    transform: translateX(0);
-  }
+/**도망가는 버튼 */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  user-select: none;
+}
 
-  100% {
-    transform: translateX(calc(-100% * 5));
-  }
+body {
+  background-color: rgb(31, 31, 31);
+}
+
+button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 4rem;
+  width: 10rem;
+  font-size: 1.5rem;
+  border-radius: 5px;
+  border: none;
+  box-shadow: 1px 1px 5px black;
+  background-color: white;
 }
 
 /** */
-
-
-@keyframes scroller {
-  0% {
-    transform: translate(0, 0);
-  }
-
-  100% {
-    transform: translate(-4560px, 0);
-  }
+li::marker {
+  content: "♬";
 }
 
-@-webkit-keyframes scroller {
-  0% {
-    -webkit-transform: translate(0, 0);
-  }
-
-  100% {
-    -webkit-transform: translate(-4560px, 0);
-  }
+.card {
+  max-width: 150px;
+  max-height: 220px;
 }
 
-@-moz-keyframes scroller {
-  0% {
-    transform: translate(0, 0);
-  }
-
-  100% {
-    transform: translate(-4560px, 0);
-  }
-}
-
-@-ms-keyframes scroller {
-  0% {
-    transform: translate(0, 0);
-  }
-
-  100% {
-    transform: translate(-4560px, 0);
-  }
-}
-
-@-o-keyframes scroller {
-  0% {
-    transform: translate(0, 0);
-  }
-
-  100% {
-    transform: translate(-4560px, 0);
-  }
-}
-
-#loopslider {
-  margin: 0 auto;
-  width: 100%;
-  height: 170px;
-  text-align: left;
-  position: relative;
-  overflow: hidden;
-}
-
-#loopslider:after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  /* background: url('http://i64.tinypic.com/2qdmzwz.jpg') top center; */
-  background-size: 800px auto;
-}
-
-#loopslider ul {
-  height: 170px;
-  float: left;
-  display: inline;
-  z-index: 2;
-  width: 6840px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  animation-name: scroller;
-  animation-duration: 110s;
-  animation-timing-function: linear;
+.move1 {
+  animation-duration: 10s;
+  animation-name: slidein;
   animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 
-#loopslider ul:before {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 50px;
-  /* background: url('http://i65.tinypic.com/2hn9zdu.jpg'); */
-  background-position: 0px 0;
-  background-size: 20px;
+.move2 {
+  animation-duration: 10s;
+  animation-name: slidein2;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 
-#loopslider ul li {
-  position: relative;
-  width: 190px;
-  height: 150px;
-  text-align: center;
-  float: left;
-  display: inline;
-  overflow: hidden;
+@keyframes slidein {
+  from {
+    margin-left: 100%;
+    width: 200%;
+  }
+
+  to {
+    margin-left: 0%;
+    width: 100%;
+  }
 }
 
-#loopslider ul li img {
-  width: 150px;
-  height: 150px;
+@keyframes slidein2 {
+  from {
+    margin-left: 0%;
+    width: 100%;
+  }
+
+  to {
+    margin-left: 100%;
+    width: 200%;
+  }
 }
 
-#loopslider ul:after {
-  content: ".";
-  height: 0;
-  clear: both;
-  display: block;
-  visibility: hidden;
-}
-
-#loopslider ul {
-  display: inline-block;
-  overflow: hidden;
+img {
+  max-width: 150px;
+  max-height: 200px;
 }
 </style>
 
