@@ -60,6 +60,13 @@ export default {
         alert("방 제목을 입력해 주십시요.");
         return;
       }
+
+      const config = {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer " + localStorage.getItem("jwtToken"),
+        },
+      };
       var params = new URLSearchParams();
       params.append("name", this.room_name);
 
