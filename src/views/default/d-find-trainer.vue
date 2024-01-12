@@ -2,17 +2,28 @@
 export default {
   data() {
     return {
-      // 지역 구
-      location: '',
       // db에 있는 지역을 리스트를 받음
-      regions: [],
+      regionList: [],
       // 선택된 지역
-      selectRegion: '',
+      selectRegion: null,
       // 베스트 트레이너 section
-      bestTrainers: [],
+      bestTrainers: {},
       // 지역 트레이너 section
-      locationTrainers: []
+      regionTrainerList: {}
     };
+  },
+  watch: {
+    selectRegion: {
+      immediate: true, // 페이지 로딩 시에도 호출
+      handler: function (newValue, oldValue) {
+        // selectRegion이 변경될 때마다 호출되는 로직
+        if (oldValue !== newValue) {
+          console.log("뉴벨", newValue)
+          console.log("오벨", oldValue)
+          this.fetchRegionTrainer();
+        }
+      }
+    },
   },
   methods: {
     // 파일명 인코딩용 스크립트
@@ -26,20 +37,31 @@ export default {
     async fetchBestTrainers() {
       try {
         const response = await this.$axios.get('/BestTrainerListMonth');
-        this.bestTrainers = response.data;
-        console.log(' 리스폰스', response)
-        console.log(this.bestTrainers)
+        console.log('베스트 트레이너', response)
+        this.bestTrainerList = response.data;
       } catch (e) {
         console.log('여기가 에러', e)
       }
     },
-    // 지역 목록을 가져오는 메서드
+    // 지역 목록 가져오기
     async fetchRegions() {
       try {
         const response = await this.$axios.get('/regions');
-        this.regions = response.data;
+        console.log("지역 가져오기", response)
+        this.regionList = response.data;
       } catch (e) {
         console.error('지역 목록 가져오기 에러', e);
+      }
+    },
+    // 지역 선택 후, 트레이너 데이터 가져오기
+    async fetchRegionTrainer() {
+      console.log("여기다", this.selectRegion)
+      try {
+        const response = await this.$axios.get(`/regionTrainer/${this.selectRegion}`);
+        console.log("지역트레이너", response)
+        this.regionTrainerList = response.data;
+      } catch (e) {
+        console.error('지역 트레이너 가져오기 에러', e);
       }
     },
   },
@@ -48,7 +70,7 @@ export default {
     this.fetchBestTrainers();
     this.fetchRegions();
   }
-}
+}    
 </script>
 <template>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -58,9 +80,9 @@ export default {
     <section>
       <div class="section1800" style="padding: 4vw;">
         <div class="location">
-          <select class="form-select" v-model="region" @change="fetchBestTrainers">
+          <select class="form-select" v-model="selectRegion">
             <option value="-" disabled selected>지역을 선택하세요</option>
-            <option v-for="region in regions" :key="region">{{ region }}</option>
+            <option v-for="region in regionList" :key="region">{{ region }}</option>
           </select>
           <hr class="my-4" style="border-width: 3px; border-color: #085c57;">
         </div>
@@ -72,15 +94,41 @@ export default {
     </section>
 
     <!-- 이달의 베스트 트레이너 -->
-    <section style="background: #FFFFFF">
-      <div class="container py-4">
+    <section>
+      <div class="container">
         <h4 class="text-xl mb-5" style="text-align: left;">이달의 베스트 트레이너</h4>
-        <div class="row">
-          <!-- 베스트 트레이너 리스트 렌더링 -->
-          <div v-for="trainer in bestTrainers" :key="trainer.id" class="col-lg-3 col-md-6 col-sm-6 mb-4">
-            <!--트레이너 디테일 링크-->
+        <div id="loopslider" class="slider-wrap">
+          <ul class="row">
+            <li v-for="trainer in bestTrainerList" :key="trainer.id" class="">
+              <div class="card">
+                <a :href="`/default/d_trainer_detail/${trainer.memberVO.id}`">
+                  <img class="card-img-top" :src="getImagePath(trainer.mainimage)" alt=""
+                    style="object-fit: cover; aspect-ratio: 1/1; width: 100%;">
+                  <div class="card-body">
+                    <p class="card-title mb-0">{{ trainer.region }}</p>
+                    <p class="card-text">{{ trainer.memberVO.name }}</p>
+                  </div>
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- 지역 & 트레이너 -->
+    <section>
+      <div class="section1800" style="padding: 5vw;">
+        <div class="section-header">
+          <h4 class="text-xl mb-2" style="text-align: left;"><strong>{{ this.selectRegion }}</strong>에서</h4>
+          <h4 class="text-xl mb-4" style="text-align: left;">근무하시는 트레이너 분들이에요.</h4>
+          <hr class="mb-3" style="border-width: 3px; border-color: #085c57;">
+        </div>
+
+        <div class="regiontrainerclass">
+          <div v-for="trainer in regionTrainerList" :key="trainer.id" class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <!-- 트레이너 디테일 링크 -->
             <a :href="`/default/d_trainer_detail/${trainer.memberVO.id}`" class="card h-100">
-              <img :src="getImagePath(trainer.mainimage)" alt="" class="card-img-top rounded-circle mb-2"
+              <img :src="getImagePath(trainer.mainimage)" alt="" class="card-img-top"
                 style="object-fit: cover; aspect-ratio: 1/1; width: 100%;">
               <div class="card-body">
                 <p class="mb-0">{{ trainer.region }}</p>
@@ -91,118 +139,147 @@ export default {
         </div>
       </div>
     </section>
-
-
-    <!--근무하시는 트레이너 분들이에요.-->
-    <div v-for="trainer in bestTrainers" :key="trainer.id">
-      <section id="section3">
-        <div class="section1800" style="padding: 4vw;">
-          <h4 class="text-xl mb-2" style="text-align: left;"><strong>{{ trainer.region }}</strong>에서</h4>
-          <h4 class="text-xl mb-4" style="text-align: left;">근무하시는 트레이너 분들이에요.</h4>
-          <hr class="mb-3" style="border-width: 3px; border-color: #085c57;">
-          <p class="pine_Green_text mb-5" style="text-align: right;">▼ 인기순</p>
-          <div class="mt-4" style="text-align: left;">
-            <table class="table transparent-table">
-              <thead>
-                <tr style="border-bottom: none;">
-                  <th class="col-1"></th>
-                  <th class="col-11"></th>
-                </tr>
-              </thead>
-              <tbody style="text-align: left;">
-                <tr>
-                  <th style="padding: 30px 10px;">
-                    <img src="../../assets/img/trainer3.jpg" alt="" class="list-profile rounded-circle" style="">
-                  </th>
-                  <td class="pt-description">
-                    <p class="TheJamsil400 mb-3">양승진 트레이너</p>
-                    <p class="">최선을 다해서 PT 해드리겠습니다.</p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-    </div>
   </main>
 </template>
 
 <style scoped>
-img {
+@keyframes conveyorMove {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(calc(-100% * 5));
+  }
+}
+
+/** */
+
+
+@keyframes scroller {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-4560px, 0);
+  }
+}
+
+@-webkit-keyframes scroller {
+  0% {
+    -webkit-transform: translate(0, 0);
+  }
+
+  100% {
+    -webkit-transform: translate(-4560px, 0);
+  }
+}
+
+@-moz-keyframes scroller {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-4560px, 0);
+  }
+}
+
+@-ms-keyframes scroller {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-4560px, 0);
+  }
+}
+
+@-o-keyframes scroller {
+  0% {
+    transform: translate(0, 0);
+  }
+
+  100% {
+    transform: translate(-4560px, 0);
+  }
+}
+
+#loopslider {
+  margin: 0 auto;
+  width: 100%;
+  height: 170px;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+#loopslider:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  /* background: url('http://i64.tinypic.com/2qdmzwz.jpg') top center; */
+  background-size: 800px auto;
+}
+
+#loopslider ul {
+  height: 170px;
+  float: left;
+  display: inline;
+  z-index: 2;
+  width: 6840px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation-name: scroller;
+  animation-duration: 110s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+#loopslider ul:before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  /* background: url('http://i65.tinypic.com/2hn9zdu.jpg'); */
+  background-position: 0px 0;
+  background-size: 20px;
+}
+
+#loopslider ul li {
+  position: relative;
+  width: 190px;
+  height: 150px;
+  text-align: center;
+  float: left;
+  display: inline;
+  overflow: hidden;
+}
+
+#loopslider ul li img {
   width: 150px;
-  height: 210px;
+  height: 150px;
 }
 
-#search {
-  max-width: 200px;
+#loopslider ul:after {
+  content: ".";
+  height: 0;
+  clear: both;
+  display: block;
+  visibility: hidden;
 }
 
-.list-profile {
-  width: 120px;
-}
-
-.best-profile {
-  width: 150px;
-}
-
-.transparent-table {
-  background-color: #f8f9f8;
-  border: none;
-}
-
-.transparent-table th,
-.transparent-table td {
-  border: none;
-}
-
-.transparent-table tr {
-  border-bottom: 1px solid #ddd;
-  /* 원하는 색상 및 두께로 조절 가능 */
-}
-
-.pt-description {
-  padding: 30px 10px;
-  padding-left: 50px;
-}
-
-#section3 {
-  margin-top: 100px;
-}
-
-/* 모바일 환경에서의 스타일 적용 */
-@media (max-width: 768px) {
-  .best-trainer-icon-container {
-    text-align: center;
-    margin: auto;
-  }
-
-  .best-trainer-icon {
-    width: 170px;
-    margin-bottom: 30px;
-  }
-
-  .best-profile {
-    width: 100px;
-  }
-
-  #search {
-    max-width: 150px;
-    margin-bottom: 30px;
-  }
-
-  .pt-description {
-    padding: 30px 0px;
-    padding-left: 20px;
-  }
-
-  #section3 {
-    margin-top: 50px;
-  }
-}
-
-.region {
-  margin-bottom: 1rem;
+#loopslider ul {
+  display: inline-block;
+  overflow: hidden;
 }
 </style>
 
