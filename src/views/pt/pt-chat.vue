@@ -61,7 +61,6 @@ const headers = {
   Authorization: "Bearer " + token,
 };
 console.log(headers);
-
 export default {
   data() {
     return {
@@ -76,7 +75,7 @@ export default {
   },
   created() {
     this.roomId = localStorage.getItem("wschat.roomId");
-    this.sender = localStorage.getItem("wschat.sender");
+    this.sender = localStorage.getItem("name");
     this.findRoom();
     this.loadPreviousMessages();
     this.connect();
@@ -108,12 +107,12 @@ export default {
         let messageData = {
           type: "TALK",
           roomId: this.roomId,
-          sender: localStorage.getItem("name"),
+          sender: this.sender,
           message: this.message,
         };
         let messageString = JSON.stringify(messageData);
 
-        this.ws.send("/pub/chat/message", messageString, {});
+        this.ws.send("/pub/chat/message", messageString, headers);
         this.message = "";
       }
     },
@@ -142,25 +141,23 @@ export default {
       const onConnected = () => {
         console.log("웹소켓 연결 성공!!!!");
         this.reconnect = 0; // 연결 성공 시 재연결 시도 횟수 초기화
-        this.ws.subscribe(
-          `/springpt/sub/chat/room/${this.roomId}`,
-          (message) => {
-            const recv = JSON.parse(message.body);
-            console.log("Received message: ", recv);
-            this.recvMessage(recv);
-          }
-        );
+        this.ws.subscribe(`/sub/chat/room/${this.roomId}`, (message) => {
+          const recv = JSON.parse(message.body);
+          console.log("Received message: ", recv);
+          this.recvMessage(recv);
+        },headers);
 
-        // Enter message sending
         this.ws.send(
-          "/springpt/pub/chat/message",
-          JSON.stringify({
-            type: "ENTER",
-            roomId: this.roomId,
-            sender: this.sender,
-            message: this.message,
-          }),
-          headers // Using headers for authentication
+          "/pub/chat/message",
+          JSON.stringify(
+            {
+              type: "ENTER",
+              roomId: this.roomId,
+              sender: this.sender,
+              message: this.message,
+            },
+            headers
+          )
         );
       };
 
