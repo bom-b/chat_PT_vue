@@ -35,7 +35,42 @@
       <!-- 칼로리 변화표 컨텐츠 -->
       <div class="trend_container">
         <!-- 칼로리 변화표 내용 -->
-        <p>칼로리 변화표 Content</p>
+        <p style="font-size: 25px;">전일 대비 칼로리 변화표</p>
+        <table class="table rounded">
+          <thead>
+            <tr>
+              <th>끼니</th>
+              <th>먹은 음식</th>
+              <th>칼로리</th>
+              <th>전일 대비</th>
+              <th>등락률</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>아침</td>
+              <td>먹은 음식들</td>
+              <td>500kcal</td>
+              <td>39kcal</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>점심</td>
+              <td>먹은 음식들</td>
+              <td>500kcal</td>
+              <td>39kcal</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>저녁</td>
+              <td>먹은 음식들</td>
+              <td>500kcal</td>
+              <td>39kcal</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+
       </div>
     </div>
   </main>
@@ -211,7 +246,7 @@ export default {
               borderColor: '#FF5733', // 상수 그래프의 색상 설정
               borderWidth: 1,
               fill: false,
-              pointRadius: 0, 
+              pointRadius: 0,
             },
           ],
         },
@@ -279,7 +314,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 /* 전체 컨테이너 스타일링 */
 .container {
   display: flex;
@@ -351,11 +386,11 @@ export default {
   /* Adjusted to full width */
   background-color: #008136;
   color: #ffffff;
+  padding-left: 20px;
   padding-right: 20px;
   text-align: center;
   border-radius: 10px;
-  opacity: 0.3;
-  height: 300px;
+  height: 350px;
 }
 
 .selected-week {
@@ -377,6 +412,34 @@ export default {
   /* 차트에 그림자 효과 추가 */
   height: 550px;
   /* 차트의 높이를 내용물에 맞춤 */
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border-radius: 10px; /* 테두리를 둥글게 만듭니다. */
+  height: 80%;
+  justify-content: center;
+}
+
+.table th,
+.table td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #008136;
+  color: #ffffff;
+}
+
+.table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.table tr:hover {
+  background-color: #ddd;
 }
 </style>
 
