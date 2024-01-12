@@ -273,9 +273,7 @@ export default {
             }
           })
           .catch(() => {
-            this.$swal.fire('', '서버와의 연결이 원할하지 않습니다..', 'warning');
-            // 비밀번호 초기화
-            this.user.password = '';
+            this.$swal.fire('', '서버와의 연결이 원활하지 않습니다..', 'warning');
           });
     },
     admin_login() {
