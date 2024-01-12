@@ -13,7 +13,7 @@
              v-if="!isCorrect"
              style=""
              data-aos="fade-in" data-aos-duration="100" data-aos-delay="">
-          <p><span class="highlight" style="font-size: 14px;">● </span> 이메일 인증</p>
+          <p class="highlight">이메일 인증</p>
           <form @submit.prevent="sendMail" class="mt-5">
             <div class="form-group">
               <label for="id">ID</label>
@@ -127,7 +127,7 @@ export default {
       this.goodResult = '인증번호를 발송 중입니다. 잠시만 기다려주세요.'
       this.isSend = true;
 
-      this.$axios.post('/service/findPw', this.user)
+      this.$axiosWithoutValidation.post('/service/findPw', this.user)
           .then((response) => {
             this.goodResult = '인증번호가 발송 되었습니다.<br>이메일을 확인해주세요.'
             this.serverCode = response.data;
@@ -170,7 +170,7 @@ export default {
         newPassword: this.password.newPw,
       }
 
-      this.$axios.post('/service/changePw', data)
+      this.$axiosWithoutValidation.post('/service/changePw', data)
           .then(() => {
             this.isSuccessChange = true;
           }).catch(() => {
