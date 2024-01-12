@@ -4,20 +4,20 @@
       <h1>오늘 섭취한 칼로리 : 3000Kcal</h1>
     </div>
     <div class="categories">
-      <div v-for="(images, category) in categorizedImages" :key="category">
+      <div v-for="(data, category) in categorizedImages" :key="category">
         <div class="category-title-container">
           <h1 class="badge rounded-pill bg-secondary category-name">{{ category }}</h1>
         </div>
         <div
-            v-for="(image, index) in images"
+            v-for="(e, index) in data"
             :key="index"
             draggable="false"
             class="image-item"
         >
           <div class="image-text-container">
-            <img :src="image" alt="Uploaded Image" class="uploaded-image"/>
-            <p>음식명 : 피자<br>
-              양 : 300g<br>
+            <img :src="imgLink + e.upphotoid + '.jpg'" alt="Uploaded Image" class="uploaded-image"/>
+            <p>음식명 : {{ this.foods[e.foodnum] }}<br>
+              양 : {{ e.mass }}<br>
               칼로리 : 400Kcal<br>
               탄수화물 : 30g<br>
               단백질 : 20g<br>
@@ -35,18 +35,43 @@
 //import EXIF from 'exif-js';
 
 export default {
-
+  inject: ['foods'],
   data() {
     return {
+      imgLink : 'http://localhost/springpt/images/upphoto/',
       categorizedImages: {
-        아침: ['@/assets/img/pizza.jpeg','@/assets/img/pizza.jpeg','@/assets/img/pizza.jpeg'], // 이미지 URL 배열
-        점심: ['@/assets/img/pizza.jpeg'],
-        저녁: ['@/assets/img/pizza.jpeg'],
-        간식: ['@/assets/img/pizza.jpeg'],
+        아침: [],
+        점심: [],
+        저녁: [],
+        간식: [],
       },
     };
   },
+  created() {
+    this.getTodayPhoto();
+  },
   methods: {
+    getTodayPhoto() {
+      this.$axios.get(`/todayPhoto`)
+          .then(response => {
+            console.log("서버 응답:", response.data);
+            for (const food of response.data) {
+              if (!this.categorizedImages[food.category]) {
+                this.categorizedImages[food.category] = [];
+              }
+              this.categorizedImages[food.category].push({
+                foodnum: food.foodnum,
+                upphotoid: food.upphotoid,
+                mass: food.mass
+              });
+            }
+            console.log(this.categorizedImages)
+          })
+          .catch(error => {
+            // 오류 처리
+            console.error("서버 통신 오류:", error);
+          });
+    }
   },
   computed: {
   },

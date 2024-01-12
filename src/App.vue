@@ -15,10 +15,16 @@ import Default_Header from "@/components/header/d-header.vue";
 import Footer from "@/components/footer/footer.vue";
 import Login_Header from "@/components/header/login-header.vue"
 import main_header from '@/components/header/main-header.vue';
+import foodNames from '@/food_names.json';
 // import None_Header from "@/components/header/none-header.vue";
 
 export default {
   name: 'App',
+  provide() {
+    return {
+      foods: this.foods
+    };
+  },
   components: {
     Footer,
   },
@@ -28,7 +34,14 @@ export default {
       this.checkToken();
     }
   },
+  data() {
+    return {
+      // 가져온 JSON 데이터를 컴포넌트의 데이터 속성에 할당
+      foods: foodNames
+    };
+  },
   methods: {
+
     checkToken() {
       this.$axios.get('/checkToken')
           .then((response) => {
