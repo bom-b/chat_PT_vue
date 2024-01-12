@@ -62,8 +62,15 @@ export default {
       }
       var params = new URLSearchParams();
       params.append("name", this.room_name);
+
+      const config = {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      };
+
       this.$axios
-        .post("/chat/room", params)
+        .post("/chat/room", params, config)
         .then((response) => {
           alert(response.data.name + "방 개설에 성공하였습니다.");
           this.room_name = "";
