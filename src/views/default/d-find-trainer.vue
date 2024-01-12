@@ -1,5 +1,4 @@
 <script>
-import anime from 'animejs/lib/anime.es.js';
 export default {
   data() {
     return {
@@ -71,30 +70,9 @@ export default {
     // 컴포넌트가 마운트된 후 베스트 트레이너 데이터를 불러옴
     this.fetchBestTrainers();
     this.fetchRegions();
-
-    //
-    const button = this.$refs.runawayBtn;
-
-    const animateMove = (element, prop, pixels) =>
-      anime({
-        targets: element,
-        [prop]: `${pixels}px`,
-        easing: "easeOutCirc"
-      });
-    ["mouseover", "click"].forEach(el => {
-      button.addEventListener(el, function (event) {
-        const top = getRandomNumber(window.innerHeight - this.offsetHeight);
-        const left = getRandomNumber(window.innerWidth - this.offsetWidth);
-
-        animateMove(this, "left", left).play();
-        animateMove(this, "top", top).play();
-      });
-    });
   }
 }
-const getRandomNumber = num => {
-  return Math.floor(Math.random() * (num + 1));
-};
+
 
 </script>
 
