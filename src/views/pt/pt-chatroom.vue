@@ -70,12 +70,6 @@ export default {
       var params = new URLSearchParams();
       params.append("name", this.room_name);
 
-      const config = {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      };
-
       this.$axios
         .post("/chat/room", params, config)
         .then((response) => {
@@ -103,7 +97,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 [v-cloak] {
   display: none;
 }
