@@ -211,6 +211,7 @@ export default {
               borderColor: '#FF5733', // 상수 그래프의 색상 설정
               borderWidth: 1,
               fill: false,
+              pointRadius: 0, 
             },
           ],
         },
