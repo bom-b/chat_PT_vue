@@ -109,8 +109,12 @@ a {
     <div class="section1400">
       <div class="login-container">
         <div id="select-tap" class="tab-container">
-          <button id="tab-left" class="tab-button" :class="{active : selectedTab === 'NORMAL'}" @click="selectTab('NORMAL')">회원 로그인</button>
-          <button id="tab-right" class="tab-button" :class="{active : selectedTab === 'ADMIN'}" @click="selectTab('ADMIN')">관리자 로그인</button>
+          <button id="tab-left" class="tab-button" :class="{active : selectedTab === 'NORMAL'}"
+                  @click="selectTab('NORMAL')">회원 로그인
+          </button>
+          <button id="tab-right" class="tab-button" :class="{active : selectedTab === 'ADMIN'}"
+                  @click="selectTab('ADMIN')">관리자 로그인
+          </button>
         </div>
 
         <!-- 회원 로그인 -->
@@ -139,15 +143,18 @@ a {
 
           <!-- 회원가입 / 아이디 비번 찾기-->
           <div class="mt-5">
-            <a class="mt-3 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/signUp/sign_up_main">
+            <a class="mt-3 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
+               href="/signUp/sign_up_main">
               회원가입
             </a>
             <br>
-            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/service/find_id">
+            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
+               href="/service/find_id">
               아이디 찾기
             </a>
             <span> | </span>
-            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/service/find_pw">
+            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
+               href="/service/find_pw">
               비밀번호 찾기
             </a>
           </div>
@@ -176,11 +183,13 @@ a {
 
           <!-- 회원가입 / 아이디 비번 찾기-->
           <div class="mt-5">
-            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/service/find_id">
+            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
+               href="/service/find_id">
               아이디 찾기
             </a>
             <span> | </span>
-            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/service/find_pw">
+            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
+               href="/service/find_pw">
               비밀번호 찾기
             </a>
           </div>
@@ -236,31 +245,40 @@ export default {
 
       AuthService.login(this.user)
           .then((response) => {
-        if (response.data.token != null) {
-          // console.log('응답 : ' + response.data);
-          window.localStorage.clear();
-          window.localStorage.setItem('jwtToken', response.data.token);
-          window.localStorage.setItem('role', response.data.role);
 
-          const role = response.data.role;
-          if (role === 'NORMAL') {
-            window.localStorage.setItem('nickname', response.data.nickname);
-            window.location.href = '/default/d_home';
-          } else if (role === 'TRAINER') {
-            window.localStorage.setItem('name', response.data.name);
-            window.location.href = '/trainer/pt_home';
-          } else if (role === 'ADMIN') {
-            window.location.href = '/admin/a_userList';
-          }
-        }
-      })
+            // 에러처리
+            if (response.data.error === "로그인 실패") {
+              this.$swal.fire('', '아이디 또는 비밀번호가 일치하지 않습니다.', 'warning');
+              this.user.password = '';
+            } else if (response.data.error === "관리자 로그인 이용 필요") {
+              this.$swal.fire('', '관리자 로그인을 이용해주세요.', 'warning');
+              this.user.userName = '';
+              this.user.password = '';
+            }
+
+            if (response.data.token != null) {
+              // console.log('응답 : ' + response.data);
+              window.localStorage.clear();
+              window.localStorage.setItem('jwtToken', response.data.token);
+              window.localStorage.setItem('role', response.data.role);
+
+              const role = response.data.role;
+              if (role === 'NORMAL') {
+                window.localStorage.setItem('nickname', response.data.nickname);
+                window.location.href = '/default/d_home';
+              } else if (role === 'TRAINER') {
+                window.localStorage.setItem('name', response.data.name);
+                window.location.href = '/trainer/pt_home';
+              }
+            }
+          })
           .catch(() => {
-            this.$swal.fire('', '아이디 또는 비밀번호가 일치하지 않습니다.', 'warning');
+            this.$swal.fire('', '서버와의 연결이 원할하지 않습니다..', 'warning');
             // 비밀번호 초기화
             this.user.password = '';
           });
     },
-    admin_login () {
+    admin_login() {
       // 위 코드 복붙해서 구현해주시면 될거같아요
     }
   },
