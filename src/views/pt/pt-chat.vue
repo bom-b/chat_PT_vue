@@ -53,9 +53,14 @@
 </template>
 
 <script>
-
 import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
+
+const token = localStorage.getItem("jwtToken");
+const headers = {
+  Authorization: "Bearer " + token,
+};
+console.log(headers);
 
 export default {
   data() {
@@ -103,7 +108,7 @@ export default {
         let messageData = {
           type: "TALK",
           roomId: this.roomId,
-          sender: this.sender,
+          sender: localStorage.getItem("name"),
           message: this.message,
         };
         let messageString = JSON.stringify(messageData);
@@ -137,23 +142,25 @@ export default {
       const onConnected = () => {
         console.log("웹소켓 연결 성공!!!!");
         this.reconnect = 0; // 연결 성공 시 재연결 시도 횟수 초기화
-        this.ws.subscribe(`/springpt/sub/chat/room/${this.roomId}`, (message) => {
-          const recv = JSON.parse(message.body);
-          console.log("Received message: ", recv);
-          this.recvMessage(recv);
-        });
+        this.ws.subscribe(
+          `/springpt/sub/chat/room/${this.roomId}`,
+          (message) => {
+            const recv = JSON.parse(message.body);
+            console.log("Received message: ", recv);
+            this.recvMessage(recv);
+          }
+        );
 
+        // Enter message sending
         this.ws.send(
           "/springpt/pub/chat/message",
-          JSON.stringify(
-            {
-              type: "ENTER",
-              roomId: this.roomId,
-              sender: this.sender,
-              message: this.message,
-            },
-            {}
-          )
+          JSON.stringify({
+            type: "ENTER",
+            roomId: this.roomId,
+            sender: this.sender,
+            message: this.message,
+          }),
+          headers // Using headers for authentication
         );
       };
 
@@ -169,7 +176,7 @@ export default {
         }
       };
 
-      this.ws.connect({}, onConnected, onError);
+      this.ws.connect(headers, onConnected, onError);
     },
     formatTime(timestamp) {
       const date = new Date(timestamp);

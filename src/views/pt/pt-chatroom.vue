@@ -60,10 +60,17 @@ export default {
         alert("방 제목을 입력해 주십시요.");
         return;
       }
+
+      const config = {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer " + localStorage.getItem("jwtToken"),
+        },
+      };
       var params = new URLSearchParams();
       params.append("name", this.room_name);
       this.$axios
-        .post("/chat/room", params)
+        .post("/chat/room", params, config)
         .then((response) => {
           alert(response.data.name + "방 개설에 성공하였습니다.");
           this.room_name = "";
