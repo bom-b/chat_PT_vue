@@ -2,6 +2,7 @@
 .login-container {
   max-width: 400px;
   margin: auto;
+  padding: 20px;
   background-color: #ffffff;
   border: 1px solid #dee2e6;
   border-radius: 5px;
@@ -14,48 +15,6 @@
 
   margin-top: 150px;
   margin-bottom: 150px;
-}
-
-form {
-  padding: 2rem;
-}
-
-#select-tap {
-
-}
-
-.tab-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.tab-button {
-  width: 200px;
-  height: 60px;
-  padding: 0.5rem 1rem;
-  border: none;
-  background-color: #dee2e6;
-  color: #495057;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-#tab-left {
-  border-top-left-radius: 5px;
-}
-
-#tab-right {
-  border-top-right-radius: 5px;
-}
-
-.tab-button:hover {
-  background-color: #ced4da;
-}
-
-.tab-button.active {
-  background-color: #ffffff;
-  color: #000000;
 }
 
 .form-group {
@@ -108,13 +67,10 @@ a {
     <img id="right-icon" src="../../../public/assets/img/graphic/login_right.png">
     <div class="section1400">
       <div class="login-container">
-        <div id="select-tap" class="tab-container">
-          <button id="tab-left" class="tab-button" :class="{active : selectedTab === 'NORMAL'}" @click="selectTab('NORMAL')">회원 로그인</button>
-          <button id="tab-right" class="tab-button" :class="{active : selectedTab === 'ADMIN'}" @click="selectTab('ADMIN')">관리자 로그인</button>
-        </div>
+        <h2 class="mb-4 TheJamsil400 pine_Green_text mt-2 mb-5">Login</h2>
 
-        <!-- 회원 로그인 -->
-        <form v-if="selectedTab === 'NORMAL'" id="loginForm" @submit.prevent="login" style="text-align: left;">
+        <!-- 아이디 및 비밀번호 입력 폼 -->
+        <form id="loginForm" @submit.prevent="login" style="text-align: left;">
           <div class="form-group">
             <label for="username">아이디:</label>
             <input v-model="user.userName" type="text" class="form-control" id="username"
@@ -151,41 +107,9 @@ a {
               비밀번호 찾기
             </a>
           </div>
+
+
         </form>
-
-        <!-- 관리자 로그인 -->
-        <form v-else id="loginForm" @submit.prevent="admin_login" style="text-align: left;">
-          <div class="form-group">
-            <label for="username">아이디:</label>
-            <input v-model="user.userName" type="text" class="form-control" id="username"
-                   placeholder="아이디를 입력해주세요.">
-          </div>
-
-          <div class="form-group">
-            <label for="password">패스워드:</label>
-            <input v-model="user.password" type="password" class="form-control" id="password"
-                   placeholder="비밀번호를 입력해주세요.">
-          </div>
-
-          <!--     로그인 버튼     -->
-          <div class="mt-5" style="text-align: center">
-            <div>
-              <button type="submit" class="mb-2 btn-signature login-btn">로그인</button>
-            </div>
-          </div>
-
-          <!-- 회원가입 / 아이디 비번 찾기-->
-          <div class="mt-5">
-            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/service/find_id">
-              아이디 찾기
-            </a>
-            <span> | </span>
-            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/service/find_pw">
-              비밀번호 찾기
-            </a>
-          </div>
-        </form>
-
       </div>
     </div>
   </main>
@@ -199,9 +123,7 @@ export default {
       user: {
         userName: '',
         password: '',
-      },
-      // 탭 상태
-      selectedTab: 'NORMAL',
+      }
     }
   },
   mounted() {
@@ -212,9 +134,6 @@ export default {
     window.removeEventListener('resize', this.setMainHeight);
   },
   methods: {
-    selectTab(tabName) {
-      this.selectedTab = tabName;
-    },
     setMainHeight() { // 로그인 페이지의 높이를 동적으로 조절하기 위한 메서드
       const loginContainer = document.querySelector('.login-container');
       const mainContainer = document.getElementById('mainContainer');
@@ -259,9 +178,6 @@ export default {
             // 비밀번호 초기화
             this.user.password = '';
           });
-    },
-    admin_login () {
-      // 위 코드 복붙해서 구현해주시면 될거같아요
     }
   },
   computed: {}
