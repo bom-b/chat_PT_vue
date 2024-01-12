@@ -1,4 +1,3 @@
-
 <style scoped>
 #search {
   max-width: 200px;
@@ -78,7 +77,6 @@
 }
 </style>
 
-
 <template>
   <main>
     <div class="container mt-3">
@@ -98,7 +96,6 @@
 
         <div v-for="(item, index) in filteredItems" :key="index">
           <div v-if="filteredItems.length <= 3">
-            {{ item }}
           </div>
         </div>
 
@@ -107,7 +104,7 @@
         </div>
       </div>
       <!-- [ed]검색상자 -->
-      <button class="solvvy-lazy-button">구왕아아아ㅏㄱ</button>
+  
       <!-- [st] 카테고리 -->
       <div>
         <select v-model="selectedCategory" @change="handleCategoryChange">
@@ -137,40 +134,41 @@
           </tr>
         </thead>
         <tbody style="text-align: left">
-          <tr v-for="(trainer, index) in filteredItems" :key="index">
-            <th style="padding: 30px 10px">
-              <!-- 예시 이미지를 사용합니다. -->
-              <img
-                :src="`../../assets/img/trainer${(index % 3) + 1}.jpg`"
-                alt=""
-                class="list-profile rounded-circle"
-                style=""
-              />
-            </th>
+          <tr v-for="(trainer, index) in filteredItems" :key="index" @click="goToDetailPage(trainer)">
+
+            <th style="padding: 30px 10px"></th>
             <td class="pt-description">
-              <!-- 트레이너 이름을 표시합니다. -->
-              <p class="TheJamsil400 mb-3">{{ trainer }} 트레이너</p>
+              
+              <!-- 유저 표시 -->
+              <p class="TheJamsil400 mb-3">아이디 : {{trainer.userid}}  </p>
+              <p class="TheJamsil400 mb-3">이름 : {{ trainer.username }}</p>
+              <p class="TheJamsil400 mb-3">Role : {{trainer.usertype}} </p>
+              <p v-if="trainer.userstatus != null"> {{trainer.userstatus}}</p>
+              
             </td>
             <td class="pt-description">
               <!-- 체크박스 라벨과 입력을 넣으셨던 부분으로 유지합니다. -->
-              <div class="form-check form-switch">
+              <div class="form-check form-switch"  v-if="trainer.userstatus != null && selectedCategory !='회원' " >
                 <label
-                  class="form-check-label"
-                  :for="`checkbox${index + 1}`"
-                  style="margin: 10px"
-                  >승인 완료</label
+
+                class="form-check-label"
+                :for="`checkbox${index + 1}`"
+                style="margin: 10px"
+                >승인</label
                 >
+                
                 <input
-                  class="form-check-input checkbox1"
-                  type="checkbox"
-                  role="switch"
-                  style="margin: 10px; width: 60px; height: 25px"
-                  :id="`checkbox${index + 1}`"
-                />
+  class="form-check-input checkbox1"
+  type="checkbox"
+  :checked="trainer.userstatus === '승인'"
+  :key="trainer.tnum"
+  @click="event => event.stopPropagation()"
+  @change="updateTrainerRole(trainer, $event)"
+/>
               </div>
             </td>
           </tr>
-        </tbody>
+        </tbody>        
       </table>
     </div>
   </main>
@@ -185,46 +183,148 @@ export default {
     return {
       searchKeyword: "",
       items: [], // 검색 대상 항목들
-      selectedCategory: "",
+      originalItems: [],
+      selectedCategory: "PT선생님(승인X)",
       categories: [
         "회원",
         "PT선생님(승인X)",
         "PT선생님(승인O)",
-        "PT선생님(전부)",
+        "PT선생님(전체)",
       ], // 카테고리 목록
+      isLoading: false,
     };
   },
   created() {
     this.fetchData();
+    this.fetchData2();
   },
-  computed: {
-    filteredItems() {
-      return this.items.filter((item) =>
-        item.toLowerCase().includes(this.searchKeyword.toLowerCase())
-      );
-    },
+computed: {
+  filteredItems() {
+    if (!this.searchKeyword) {
+      return Array.isArray(this.items) ? this.items : [];
+    }
+    return Array.isArray(this.items)
+      ? this.items.filter(item =>
+          item.username.toLowerCase().includes(this.searchKeyword.toLowerCase())
+        )
+      : [];
   },
+},
+
   methods: {
     handleSearch() {
-      // 검색어 변경에 대한 로직 수행
-      // 예: 서버에 검색어를 보내거나, 검색 결과를 업데이트하는 등의 작업
-    },
+  if (this.searchKeyword.trim()) {
+
+    this.items = this.originalItems.filter(item =>
+      item.username.toLowerCase().includes(this.searchKeyword.toLowerCase())
+    );
+  } else {
+
+    this.items = [...this.originalItems];
+  }
+},
+
+  goToDetailPage(trainer) {
+  if (trainer && trainer.userid) {
+    console.log(trainer.userid)
+    this.$router.push({ name: 'userDetails', params: { id: trainer.userid } });
+    
+  } else {
+    console.log("goPage Error");
+  }
+},
+
+  fetchData2() {
+    let url;
+    switch (this.selectedCategory) {
+      case "회원":
+        url = "http://localhost/chat_pt/allUsers";
+        break;
+      case "PT선생님(승인X)":
+        url = "http://localhost/chat_pt/getunApplyUsers";
+        break;
+      case "PT선생님(승인O)":
+        url = "http://localhost/chat_pt/getApplyUsers";
+        break;
+      case "PT선생님(전체)":
+        url = "http://localhost/chat_pt/allPTusers";
+        break;
+    }
+    this.isLoading = true; // 로딩 시작
+    axios.get(url)
+    .then(response => {
+      if (Array.isArray(response.data)) {
+        this.originalItems = response.data;
+        this.items = response.data;
+      } else {
+        console.error("Expected an array, but got:", response.data);
+        // 데이터가 배열이 아니면, 빈 배열로 초기화
+        this.originalItems = [];
+        this.items = [];
+      }
+      if (this.searchKeyword) {
+        this.handleSearch();
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching data: ", error);
+    });
+
+  },
     handleCategoryChange() {
       // 카테고리 변경에 대한 로직 수행
       // 선택된 카테고리에 따른 작업을 수행할 수 있습니다.
+      this.fetchData2();
+
     },
-    fetchData() {
-      //this.list = [{num: 1,name: "이성한",email: "test@naver.com",udate: "2024-01-02"}];
-      axios
-        .get("http://localhost/a_userList")
+
+// <script> 태그 내부
+updateTrainerRole(trainer, event) 
+{
+  const newStatus = event.target.checked ? "승인" : "미승인";
+
+  axios.put(`http://localhost/chat_pt/updateTrainerStatus/${trainer.tnum}`, { status: newStatus })
+    .then(response => {
+      console.log("서버 상태 업데이트 성공", response.data);
+
+      // 각 항목의 상태를 업데이트합니다.
+      this.items = this.items.map(item => {
+        if (item.tnum === trainer.tnum) {
+          return { ...item, userstatus: newStatus };
+        }
+        return item;
+      });
+
+      // 선택된 카테고리에 따라 필터링을 다시 적용합니다.
+      this.filteredItems = this.filterItemsByCategory(this.selectedCategory);
+
+      // 필요한 경우 추가적인 UI 업데이트를 수행합니다.
+    })
+    .catch(error => {
+      console.error("서버 상태 업데이트 실패", error);
+    });
+},
+
+filterItemsByCategory(category) {
+  if (category === "PT선생님(승인X)") {
+    return this.items.filter(item => item.userstatus === "미승인");
+  } else if (category === "PT선생님(승인O)") {
+    return this.items.filter(item => item.userstatus === "승인");
+  } 
+  // 다른 카테고리에 대한 조건을 추가합니다.
+  return this.items; // 기본적으로 모든 항목을 반환합니다.
+},
+
+
+  fetchData() {
+       console.log("axios시작");      
+       axios.get("http://localhost/chat_pt/getunApplyUsers")
         .then((resp) => {
           console.log("!!!!" + resp);
-          this.items = resp.data.map((item) => item.userName.toString());
-          console.log(this.items);
+          this.items = resp.data;
         })
         .catch((error) => {
           console.log(error);
-          console.log("시발!");
         });
     },
     href(row) {
@@ -237,7 +337,7 @@ export default {
 
       // param형식의 라우터
       // :num/ :name/ :email/
-      this.$router.push({ name: "boardDetail", params: row });
+      // this.$router.push({ name: "boardDetail", params: row });
     },
   },
 };

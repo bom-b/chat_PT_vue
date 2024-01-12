@@ -6,6 +6,9 @@ import Login from "./views/common/login-page.vue";
 import Home from "./views/common/main-home.vue";
 import noAuth from "./views/common/noAuth-page.vue";
 
+/*비회원 라우터*/
+import nonMemberServiceRoutes from "@/routes/nonMemberServiceRoutes";
+
 /*일반사용자 라우터*/
 import defaultRoutes from "@/routes/defaultUserRoutes";
 
@@ -27,6 +30,14 @@ const routes = [
 
     // 권한 없음
     {path: "/noAuth", component: noAuth, meta: {headerType: "non_member"}},
+
+    // 비회원 서비스
+    {
+        path: "/service",
+        component: RouterView,
+        children: nonMemberServiceRoutes,
+        meta : { headerType: "non_member" },
+    },
 
     // 회원 가입
     {

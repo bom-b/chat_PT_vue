@@ -2,7 +2,6 @@
 .login-container {
   max-width: 400px;
   margin: auto;
-  padding: 20px;
   background-color: #ffffff;
   border: 1px solid #dee2e6;
   border-radius: 5px;
@@ -15,6 +14,48 @@
 
   margin-top: 150px;
   margin-bottom: 150px;
+}
+
+form {
+  padding: 2rem;
+}
+
+#select-tap {
+
+}
+
+.tab-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.tab-button {
+  width: 200px;
+  height: 60px;
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #dee2e6;
+  color: #495057;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#tab-left {
+  border-top-left-radius: 5px;
+}
+
+#tab-right {
+  border-top-right-radius: 5px;
+}
+
+.tab-button:hover {
+  background-color: #ced4da;
+}
+
+.tab-button.active {
+  background-color: #ffffff;
+  color: #000000;
 }
 
 .form-group {
@@ -56,6 +97,10 @@ main {
   right: 0;
 }
 
+a {
+  text-decoration: none;
+}
+
 </style>
 <template>
   <main id="mainContainer" style="background-color: #428176;">
@@ -63,10 +108,17 @@ main {
     <img id="right-icon" src="../../../public/assets/img/graphic/login_right.png">
     <div class="section1400">
       <div class="login-container">
-        <h2 class="mb-4 TheJamsil400 pine_Green_text mt-2 mb-5">Login</h2>
+        <div id="select-tap" class="tab-container">
+          <button id="tab-left" class="tab-button" :class="{active : selectedTab === 'NORMAL'}"
+                  @click="selectTab('NORMAL')">회원 로그인
+          </button>
+          <button id="tab-right" class="tab-button" :class="{active : selectedTab === 'ADMIN'}"
+                  @click="selectTab('ADMIN')">관리자 로그인
+          </button>
+        </div>
 
-        <!-- 아이디 및 비밀번호 입력 폼 -->
-        <form id="loginForm" @submit.prevent="login" style="text-align: left;">
+        <!-- 회원 로그인 -->
+        <form v-if="selectedTab === 'NORMAL'" id="loginForm" @submit.prevent="login" style="text-align: left;">
           <div class="form-group">
             <label for="username">아이디:</label>
             <input v-model="user.userName" type="text" class="form-control" id="username"
@@ -91,24 +143,58 @@ main {
 
           <!-- 회원가입 / 아이디 비번 찾기-->
           <div class="mt-5">
-            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="/signUp/sign_up">
+            <a class="mt-3 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
+               href="/signUp/sign_up_main">
               회원가입
             </a>
-
-            <span style="margin-right: 10px; margin-left: 10px;"> | </span> <!-- 공백을 위한 span 태그 -->
-
-            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
-               href="/signUp/pt_sign_up">
-              PT쌤 회원가입
-            </a>
             <br>
-            <a class="icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;" href="#">
-              아이디/패스워드 찾기
+            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
+               href="/service/find_id">
+              아이디 찾기
+            </a>
+            <span> | </span>
+            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
+               href="/service/find_pw">
+              비밀번호 찾기
             </a>
           </div>
-
-
         </form>
+
+        <!-- 관리자 로그인 -->
+        <form v-else id="loginForm" @submit.prevent="admin_login" style="text-align: left;">
+          <div class="form-group">
+            <label for="username">아이디:</label>
+            <input v-model="user.userName" type="text" class="form-control" id="username"
+                   placeholder="아이디를 입력해주세요.">
+          </div>
+
+          <div class="form-group">
+            <label for="password">패스워드:</label>
+            <input v-model="user.password" type="password" class="form-control" id="password"
+                   placeholder="비밀번호를 입력해주세요.">
+          </div>
+
+          <!--     로그인 버튼     -->
+          <div class="mt-5" style="text-align: center">
+            <div>
+              <button type="submit" class="mb-2 btn-signature login-btn">로그인</button>
+            </div>
+          </div>
+
+          <!-- 회원가입 / 아이디 비번 찾기-->
+          <div class="mt-5">
+            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
+               href="/service/find_id">
+              아이디 찾기
+            </a>
+            <span> | </span>
+            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
+               href="/service/find_pw">
+              비밀번호 찾기
+            </a>
+          </div>
+        </form>
+
       </div>
     </div>
   </main>
@@ -122,7 +208,9 @@ export default {
       user: {
         userName: '',
         password: '',
-      }
+      },
+      // 탭 상태
+      selectedTab: 'NORMAL',
     }
   },
   mounted() {
@@ -133,6 +221,9 @@ export default {
     window.removeEventListener('resize', this.setMainHeight);
   },
   methods: {
+    selectTab(tabName) {
+      this.selectedTab = tabName;
+    },
     setMainHeight() { // 로그인 페이지의 높이를 동적으로 조절하기 위한 메서드
       const loginContainer = document.querySelector('.login-container');
       const mainContainer = document.getElementById('mainContainer');
@@ -154,29 +245,39 @@ export default {
 
       AuthService.login(this.user)
           .then((response) => {
-        if (response.data.token != null) {
-          // console.log('응답 : ' + response.data);
-          window.localStorage.clear();
-          window.localStorage.setItem('jwtToken', response.data.token);
-          window.localStorage.setItem('role', response.data.role);
 
-          const role = response.data.role;
-          if (role === 'NORMAL') {
-            window.localStorage.setItem('nickname', response.data.nickname);
-            window.location.href = '/default/d_home';
-          } else if (role === 'TRAINER') {
-            window.localStorage.setItem('name', response.data.name);
-            window.location.href = '/trainer/pt_home';
-          } else if (role === 'ADMIN') {
-            window.location.href = '/admin/a_userList';
-          }
-        }
-      })
+            // 에러처리
+            if (response.data.error === "로그인 실패") {
+              this.$swal.fire('', '아이디 또는 비밀번호가 일치하지 않습니다.', 'warning');
+              this.user.password = '';
+            } else if (response.data.error === "관리자 로그인 이용 필요") {
+              this.$swal.fire('', '관리자 로그인을 이용해주세요.', 'warning');
+              this.user.userName = '';
+              this.user.password = '';
+            }
+
+            if (response.data.token != null) {
+              // console.log('응답 : ' + response.data);
+              window.localStorage.clear();
+              window.localStorage.setItem('jwtToken', response.data.token);
+              window.localStorage.setItem('role', response.data.role);
+
+              const role = response.data.role;
+              if (role === 'NORMAL') {
+                window.localStorage.setItem('nickname', response.data.nickname);
+                window.location.href = '/default/d_home';
+              } else if (role === 'TRAINER') {
+                window.localStorage.setItem('name', response.data.name);
+                window.location.href = '/trainer/pt_home';
+              }
+            }
+          })
           .catch(() => {
-            this.$swal.fire('', '아이디 또는 비밀번호가 일치하지 않습니다.', 'warning');
-            // 비밀번호 초기화
-            this.user.password = '';
+            this.$swal.fire('', '서버와의 연결이 원활하지 않습니다..', 'warning');
           });
+    },
+    admin_login() {
+      // 위 코드 복붙해서 구현해주시면 될거같아요
     }
   },
   computed: {}
