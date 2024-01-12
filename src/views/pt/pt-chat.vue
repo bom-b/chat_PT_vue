@@ -53,10 +53,14 @@
 </template>
 
 <script>
-
 import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
 
+const token = localStorage.getItem("jwtToken");
+const headers = {
+  Authorization: "Bearer " + token,
+};
+console.log(headers);
 export default {
   data() {
     return {
@@ -71,7 +75,7 @@ export default {
   },
   created() {
     this.roomId = localStorage.getItem("wschat.roomId");
-    this.sender = localStorage.getItem("wschat.sender");
+    this.sender = localStorage.getItem("name");
     this.findRoom();
     this.loadPreviousMessages();
     this.connect();
@@ -108,7 +112,7 @@ export default {
         };
         let messageString = JSON.stringify(messageData);
 
-        this.ws.send("/pub/chat/message", messageString, {});
+        this.ws.send("/pub/chat/message", messageString, headers);
         this.message = "";
       }
     },
@@ -137,14 +141,14 @@ export default {
       const onConnected = () => {
         console.log("웹소켓 연결 성공!!!!");
         this.reconnect = 0; // 연결 성공 시 재연결 시도 횟수 초기화
-        this.ws.subscribe(`/springpt/sub/chat/room/${this.roomId}`, (message) => {
+        this.ws.subscribe(`/sub/chat/room/${this.roomId}`, (message) => {
           const recv = JSON.parse(message.body);
           console.log("Received message: ", recv);
           this.recvMessage(recv);
-        });
+        },headers);
 
         this.ws.send(
-          "/springpt/pub/chat/message",
+          "/pub/chat/message",
           JSON.stringify(
             {
               type: "ENTER",
@@ -152,7 +156,7 @@ export default {
               sender: this.sender,
               message: this.message,
             },
-            {}
+            headers
           )
         );
       };
@@ -169,7 +173,7 @@ export default {
         }
       };
 
-      this.ws.connect({}, onConnected, onError);
+      this.ws.connect(headers, onConnected, onError);
     },
     formatTime(timestamp) {
       const date = new Date(timestamp);

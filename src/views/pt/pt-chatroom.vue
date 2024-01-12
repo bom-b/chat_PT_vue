@@ -60,14 +60,15 @@ export default {
         alert("방 제목을 입력해 주십시요.");
         return;
       }
-      var params = new URLSearchParams();
-      params.append("name", this.room_name);
 
       const config = {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
+          "Authorization": "Bearer " + localStorage.getItem("jwtToken"),
         },
       };
+      var params = new URLSearchParams();
+      params.append("name", this.room_name);
 
       this.$axios
         .post("/chat/room", params, config)
@@ -96,7 +97,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 [v-cloak] {
   display: none;
 }
