@@ -30,7 +30,7 @@ export default {
   },
   watch: {
     $route() {
-      // $rout가 변경될때마다 실행되는 로직
+      // $route가 변경될때마다 실행되는 로직
       this.checkToken();
     }
   },
@@ -44,6 +44,7 @@ export default {
 
     checkToken() {
       this.$axios.get('/checkToken')
+          // 토큰이 유효한 경우 토큰을 통해 사용자의 권한을 받아옴
           .then((response) => {
             if (response.data) {
               window.localStorage.setItem('role', response.data);
@@ -51,8 +52,12 @@ export default {
               window.localStorage.clear();
             }
           })
+          // 토큰이 유효하지 않을경우 403 에러가 발생하며 에러 발생시 사용자정보 클리어시킴
           .catch(() => {
-                window.localStorage.clear();
+                window.localStorage.removeItem('jwtToken');
+                window.localStorage.removeItem('role');
+                window.localStorage.removeItem('nickname');
+                window.localStorage.removeItem('name');
               }
           );
     }
