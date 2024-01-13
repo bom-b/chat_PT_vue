@@ -67,7 +67,6 @@ export default {
     },
   },
   mounted() {
-    // 컴포넌트가 마운트된 후 베스트 트레이너 데이터를 불러옴
     this.fetchBestTrainers();
     this.fetchRegions();
   }
