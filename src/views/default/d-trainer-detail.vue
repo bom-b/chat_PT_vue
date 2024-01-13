@@ -36,7 +36,6 @@ export default {
 
 <template>
   <div class="section1800">
-    <!-- Bootstrap 카드 -->
     <div v-if="Object.keys(trainerInfo).length" class="card mx-auto" style="width: 18rem;">
       <!-- 카드 이미지 -->
       <img :src="getImagePath(trainerInfo.mainimage)" class="card-img-top" alt="Trainer Image">

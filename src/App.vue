@@ -16,6 +16,8 @@ import Footer from "@/components/footer/footer.vue";
 import Login_Header from "@/components/header/login-header.vue"
 import main_header from '@/components/header/main-header.vue';
 import foodNames from '@/food_names.json';
+// import None_Header from "@/components/header/none-header.vue";
+/* main.css or App.vue */
 
 export default {
   name: 'App',
