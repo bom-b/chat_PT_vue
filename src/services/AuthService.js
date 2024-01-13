@@ -1,4 +1,4 @@
-const apiClient = require("@/utils/apiClient");
+const apiClient = require("@/utils/apiClientWithoutValidation");
 
 class AuthService {
     login = async (user) => {
