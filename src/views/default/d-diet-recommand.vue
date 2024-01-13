@@ -444,10 +444,13 @@ export default {
       return Math.ceil(this.tableinfo.length / this.pageSize);
     },
     paginatedData() {
-      const start = (this.currentPage - 1) * this.pageSize;
-      const end = start + this.pageSize;
-      return this.tableinfo.slice(start, end);
-    },
+    if (!Array.isArray(this.tableinfo)) {
+      return []; // tableinfo가 배열이 아니면 빈 배열 반환
+    }
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    return this.tableinfo.slice(start, end);
+  },
 
   },
 };
