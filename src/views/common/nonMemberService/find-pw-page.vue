@@ -124,14 +124,15 @@ export default {
         return;
       }
 
-      this.goodResult = '인증번호를 발송 중입니다. 잠시만 기다려주세요.'
+      this.goodResult = '확인 중입니다. 잠시만 기다려주세요.'
       this.isSend = true;
 
       this.$axios.post('/service/findPw', this.user)
           .then((response) => {
-            this.goodResult = '인증번호가 발송 되었습니다.<br>이메일을 확인해주세요.'
+            this.goodResult = '인증번호가 발송 되었습니다.<br>이메일을 확인해주세요.';
             this.serverCode = response.data;
           }).catch(() => {
+        this.goodResult = '';
         this.badResult = '입력하신 정보와 일치하는 회원이 없습니다.<br>해당 정보를 다시 확인하거나 회원가입을 진행해주세요.'
       })
     },
