@@ -79,7 +79,7 @@ export default {
 <template>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-  <main>
+  <main class="top100">
     <!--  지역설정  -->
     <section>
       <div class="section1800" style="padding: 4vw;">
@@ -92,7 +92,6 @@ export default {
         </div>
         <div class="flex" style="text-align: right">
           <input placeholder="이름으로 검색" id="search" class="border border-gray rounded py-2" type="text" />
-          <button id='runaway-btn'>Click Me &#129315;</button>
         </div>
       </div>
     </section>
@@ -154,6 +153,9 @@ export default {
 </template>
 
 <style scoped>
+.top100{
+  margin-top: 100px;
+}
 /**도망가는 버튼 */
 * {
   padding: 0;
