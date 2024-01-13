@@ -80,7 +80,7 @@ a:hover {
           </li>
         </ul>
         <form class="d-flex">
-          <router-link to="/login" class="router-link">
+          <router-link to="/service/login" class="router-link">
             <button class="btn btn-login btn-signature" type="button">로그인</button>
           </router-link>
         </form>
