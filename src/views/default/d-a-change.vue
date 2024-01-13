@@ -35,38 +35,31 @@
       <!-- 칼로리 변화표 컨텐츠 -->
       <div class="trend_container">
         <!-- 칼로리 변화표 내용 -->
-        <p style="font-size: 25px;">전일 대비 칼로리 변화표</p>
+        <p style="font-size: 25px; margin-top: 15px;">전일 대비 칼로리 변화표</p>
         <table class="table rounded">
-          <thead>
+          <thead class="TheJamsil400">
             <tr>
               <th>끼니</th>
-              <th>먹은 음식</th>
+              <th>오늘 먹은 음식</th>
               <th>칼로리</th>
               <th>전일 대비</th>
               <th>등락률</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="TheJamsil400" v-for="(item, idx) in last_differ" :key="idx">
             <tr>
-              <td>아침</td>
-              <td>먹은 음식들</td>
-              <td>500kcal</td>
-              <td>39kcal</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>점심</td>
-              <td>먹은 음식들</td>
-              <td>500kcal</td>
-              <td>39kcal</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>저녁</td>
-              <td>먹은 음식들</td>
-              <td>500kcal</td>
-              <td>39kcal</td>
-              <td></td>
+              <td>{{ item.category }}</td>
+              <td style="width: 350px;">{{ item.food_names }}</td>
+              <td>{{ item.total_calories_today.toFixed(2) }} kcal</td>
+              <td :class="{
+                positive: item.calorie_difference > 0,
+                negative: item.calorie_difference < 0
+              }">
+                <i v-if="item.calorie_difference > 0" class="arrow-up">▲</i>
+                <i v-else-if="item.calorie_difference < 0" class="arrow-down">▼</i>
+                {{ item.calorie_difference ? item.calorie_difference.toFixed(2) + ' kcal' : '-' }}
+              </td>
+              <td><canvas id="myChart"></canvas></td>
             </tr>
           </tbody>
         </table>
@@ -100,6 +93,7 @@ export default {
       dataLoaded: true,
       hasData: false,
       isClickable: true,
+      last_differ: [],
     }
   },
   methods: {
@@ -166,7 +160,7 @@ export default {
       })
         .then((res) => {
           this.recommandCal = res.data.recommandCal
-          console.log(this.recommandCal)
+
           if (res.data.dietList.length === 0) {
             // 데이터 길이가 0이면 알림을 띄우고 함수를 종료합니다.
             alert('선택한 기간에 대한 데이터가 없습니다.');
@@ -204,6 +198,8 @@ export default {
           setTimeout(() => {
             this.isClickable = true; // 지정된 시간 후 클릭 활성화
           }, 1500); // 1.5초 동안 클릭 비활성화
+          this.last_differ = res.data.last_differ
+          console.log(this.last_differ)
         })
         .catch((error) => {
           console.error("Error fetching data: ", error);
@@ -390,7 +386,7 @@ export default {
   padding-right: 20px;
   text-align: center;
   border-radius: 10px;
-  height: 350px;
+  height: auto;
 }
 
 .selected-week {
@@ -413,11 +409,14 @@ export default {
   height: 550px;
   /* 차트의 높이를 내용물에 맞춤 */
 }
+
 .table {
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
-  border-radius: 10px; /* 테두리를 둥글게 만듭니다. */
+  border-radius: 10px;
+  /* 테두리를 둥글게 만듭니다. */
+  vertical-align: middle;
   height: 80%;
   justify-content: center;
 }
@@ -429,9 +428,12 @@ export default {
   border: 1px solid #ddd;
 }
 
-.table th {
-  background-color: #008136;
-  color: #ffffff;
+.positive {
+  color: red;
+}
+
+.negative {
+  color: blue;
 }
 
 .table tr:nth-child(even) {
