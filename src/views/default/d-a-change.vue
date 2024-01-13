@@ -35,41 +35,58 @@
       <!-- 칼로리 변화표 컨텐츠 -->
       <div class="trend_container">
         <!-- 칼로리 변화표 내용 -->
-        <p style="font-size: 25px;">전일 대비 칼로리 변화표</p>
-        <table class="table rounded">
-          <thead>
-            <tr>
-              <th>끼니</th>
-              <th>먹은 음식</th>
-              <th>칼로리</th>
-              <th>전일 대비</th>
-              <th>등락률</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>아침</td>
-              <td>먹은 음식들</td>
-              <td>500kcal</td>
-              <td>39kcal</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>점심</td>
-              <td>먹은 음식들</td>
-              <td>500kcal</td>
-              <td>39kcal</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>저녁</td>
-              <td>먹은 음식들</td>
-              <td>500kcal</td>
-              <td>39kcal</td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
+        <p style="font-size: 25px; margin-top: 15px;">전일 대비 칼로리 변화표 </p>
+        <p style="font-size: 15px; margin-bottom: 10px;">({{ formatDate(new Date()) }} 기준)</p>
+        <!-- 오늘 등록한 음식이 있을 경우-->
+          <table class="table rounded">
+            <thead class="TheJamsil400">
+              <tr>
+                <th>끼니</th>
+                <th>오늘 먹은 음식</th>
+                <th>칼로리</th>
+                <th>전일 대비</th>
+                <th>증감률</th>
+              </tr>
+            </thead>
+            <tbody class="TheJamsil400" v-for="(item, idx) in last_differ" :key="idx">
+              <tr>
+                <td>{{ item.category }}</td>
+                <td style="width: 350px;">{{ item.food_names ? item.food_names : '-' }}</td>
+                <td>{{ item.total_calories_today ? item.total_calories_today.toFixed(2) + 'kcal' : '-' }} </td>
+                <td :class="{
+                  positive: item.calorie_difference > 0 && item.food_names,
+                  negative: item.calorie_difference < 0 && item.food_names
+                }">
+                  <i v-if="item.calorie_difference > 0 && item.food_names" class="arrow-up">▲</i>
+                  <i v-else-if="item.calorie_difference < 0 && item.food_names" class="arrow-down">▼</i>
+                  {{ item.food_names ? (item.calorie_difference ? item.calorie_difference.toFixed(2) + ' kcal' : '-') :
+                    '-'
+                  }}
+                </td>
+                <td>
+                  <canvas ref="updownChartCanvas" :data-idx="idx" class="smallchart"></canvas>
+                  <p :class="{
+                    positive: item.calorie_difference > 0 && item.food_names,
+                    negative: item.calorie_difference < 0 && item.food_names
+                  }" v-if="item.calorie_difference > 0 && item.food_names">
+                    <i v-if="item.calorie_difference > 0 && item.food_names" class="arrow-up">▲</i>
+                    <i v-else-if="item.calorie_difference < 0 && item.food_names" class="arrow-down">▼</i>
+                    {{ ((item.todayCalories / item.yesterdayCalories) * 100).toFixed(2) }}%
+
+                  </p>
+                  <p :class="{
+                    positive: item.calorie_difference > 0 && item.food_names,
+                    negative: item.calorie_difference < 0 && item.food_names
+                  }" v-if="item.calorie_difference < 0 && item.food_names">
+                    <i v-if="item.calorie_difference > 0 && item.food_names" class="arrow-up">▲</i>
+                    <i v-else-if="item.calorie_difference < 0 && item.food_names" class="arrow-down">▼</i>
+                    {{ (-(100 - (item.todayCalories / item.yesterdayCalories) * 100)).toFixed(2) }}%
+
+                  </p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
       </div>
     </div>
@@ -100,6 +117,9 @@ export default {
       dataLoaded: true,
       hasData: false,
       isClickable: true,
+      last_differ: [],
+
+      charts: [],
     }
   },
   methods: {
@@ -166,7 +186,7 @@ export default {
       })
         .then((res) => {
           this.recommandCal = res.data.recommandCal
-          console.log(this.recommandCal)
+          console.log(res.data)
           if (res.data.dietList.length === 0) {
             // 데이터 길이가 0이면 알림을 띄우고 함수를 종료합니다.
             alert('선택한 기간에 대한 데이터가 없습니다.');
@@ -199,12 +219,23 @@ export default {
           this.$nextTick(() => {
             this.setupChart(allDates, dailyTotals);
             this.dataLoaded = true; // 데이터 로드 완료
+            this.last_differ.forEach((item, idx) => {
+              item.yesterdayCalories = item.total_calories_yesterday;
+              item.todayCalories = item.total_calories_today;
+              if (item.food_names) {
+                this.updownChart(item, idx);
+              }
+            })
           });
           this.dataLoaded = true; // 데이터 로딩 완료
           setTimeout(() => {
             this.isClickable = true; // 지정된 시간 후 클릭 활성화
           }, 1500); // 1.5초 동안 클릭 비활성화
+          this.last_differ = res.data.last_differ
+
+
         })
+
         .catch((error) => {
           console.error("Error fetching data: ", error);
           alert('데이터 로딩 중 오류가 발생했습니다. 오류 로그를 확인하세요.');
@@ -214,7 +245,7 @@ export default {
     },
 
 
-
+    // 위에 거대한 차트를 만드는 함수
     setupChart(allDates, dailyTotals) {
       if (!this.dataLoaded) return;
 
@@ -277,6 +308,65 @@ export default {
         },
       });
     },
+    updownChart(item, idx) {
+      const yesterdayCalories = item.yesterdayCalories;
+      const todayCalories = item.todayCalories;
+
+      if (yesterdayCalories != 0 && todayCalories != 0) {
+        const canvasElements = this.$refs.updownChartCanvas;
+        const canvas = canvasElements[idx];
+        if (canvas) {
+          const ctx = canvas.getContext('2d');
+          if (!ctx) return;
+          if (this.charts[idx]) {
+            this.charts[idx].destroy();
+          }
+
+          const rate = yesterdayCalories > todayCalories ?
+            -(100 - ((todayCalories / yesterdayCalories) * 100)) :
+            (todayCalories / yesterdayCalories) * 100;
+          const data = {
+            labels: [''],
+            datasets: [
+              {
+                label: rate > 0 ? ['증가율'] : ['감소율'],
+                data: [rate],
+                backgroundColor: rate > 0 ? ['rgba(255, 99, 132, 0.2)'] : ['rgba(54, 162, 235, 0.2)'],
+                borderColor: rate > 0 ? ['rgba(255, 99, 132, 1)'] : ['rgba(54, 162, 235, 1)'],
+                borderWidth: 1,
+                barThickness: 20, // Set the thickness of the bar
+              },
+            ],
+          };
+
+          this.charts[idx] = new Chart(ctx, {
+            type: 'bar', // 'horizontalBar' 대신 'bar' 사용
+            data: data,
+            options: {
+              indexAxis: 'y', // 이 설정을 추가하여 수평 막대 차트로 만듦
+              scales: {
+                x: { // X 축 설정 (수평 막대 차트에서는 값 축)
+                  beginAtZero: true,
+                  min: -300,
+                  max: 300
+                },
+                y: { // Y 축 설정 (수평 막대 차트에서는 카테고리 축)
+                  // Y축 설정 추가
+                }
+              },
+              plugins: {
+                legend: {
+                  display: false
+                }
+              },
+            },
+          });
+
+        }
+      }
+    },
+
+
 
     getAllDates(startDate, endDate) {
       let dates = [];
@@ -390,7 +480,7 @@ export default {
   padding-right: 20px;
   text-align: center;
   border-radius: 10px;
-  height: 350px;
+  height: auto;
 }
 
 .selected-week {
@@ -413,11 +503,14 @@ export default {
   height: 550px;
   /* 차트의 높이를 내용물에 맞춤 */
 }
+
 .table {
   width: 100%;
   border-collapse: collapse;
   border-spacing: 0;
-  border-radius: 10px; /* 테두리를 둥글게 만듭니다. */
+  border-radius: 10px;
+  /* 테두리를 둥글게 만듭니다. */
+  vertical-align: middle;
   height: 80%;
   justify-content: center;
 }
@@ -429,9 +522,12 @@ export default {
   border: 1px solid #ddd;
 }
 
-.table th {
-  background-color: #008136;
-  color: #ffffff;
+.positive {
+  color: red;
+}
+
+.negative {
+  color: blue;
 }
 
 .table tr:nth-child(even) {
@@ -440,6 +536,17 @@ export default {
 
 .table tr:hover {
   background-color: #ddd;
+}
+
+.smallchart {
+  width: 180px;
+  /* 차트 너비 조절 */
+  height: 50px;
+  /* 차트 높이 조절 */
+  display: block;
+  /* 차트를 블록 요소로 설정 */
+  margin: 0 auto;
+  /* 가운데 정렬 */
 }
 </style>
 
