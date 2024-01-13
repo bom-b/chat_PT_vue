@@ -16,12 +16,15 @@
         >
           <div class="image-text-container">
             <img :src="imgLink + e.upphotoid + '.jpg'" alt="Uploaded Image" class="uploaded-image"/>
-            <p>음식명 : {{ this.foods[e.foodnum] }}<br>
+            <p>음식명 : {{ this.foods[e.foodnum] }} {{e.predictrate}}% <br>
               양 : {{ e.mass }}<br>
               칼로리 : 400Kcal<br>
               탄수화물 : 30g<br>
               단백질 : 20g<br>
-              지방 : 10g</p>
+              지방 : 10g<br>
+            후보1 : {{ this.foods[e.candidate1] }} {{e.candidate1rate}}%
+              후보2 : {{ this.foods[e.candidate2] }} {{e.candidate2rate}}%
+              후보3 : {{ this.foods[e.candidate3] }} {{e.candidate3rate}}%</p>
           </div>
         </div>
       </div>
@@ -62,7 +65,14 @@ export default {
               this.categorizedImages[food.category].push({
                 foodnum: food.foodnum,
                 upphotoid: food.upphotoid,
-                mass: food.mass
+                mass: food.mass,
+                predictrate: food.predictrate,
+                candidate1: food.candidate1,
+                candidate2: food.candidate2,
+                candidate3: food.candidate3,
+                candidate1rate: food.candidate1RATE,
+                candidate2rate: food.candidate2RATE,
+                candidate3rate: food.candidate3RATE,
               });
             }
             console.log(this.categorizedImages)
