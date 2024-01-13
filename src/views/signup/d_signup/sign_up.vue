@@ -1,56 +1,3 @@
-<template>
-	<main>
-		<div class="progress fixed-top" style="margin-top: 81px;">
-			<div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
-				aria-valuemin="0" aria-valuemax="100"></div>
-		</div>
-		<div class="container">
-			<div class="login-container">
-				<h2 class="mb-4">회원가입</h2>
-
-				<!-- 이름 입력 폼 -->
-				<div class="form-group">
-					<label for="name">이름:</label>
-					<input type="text" class="form-control" id="name" placeholder="이름을 입력하세요" v-model="name">
-				</div>
-
-				<!-- 이메일 입력 폼 -->
-				<div class="form-group">
-					<label for="email">이메일:</label>
-					<input type="email" class="form-control" id="email" placeholder="이메일을 입력하세요" v-model="email">
-					<button type="button" class="btn btn-primary" @click="sendVerificationCode">인증번호 발송</button>
-				</div>
-
-				<!-- 인증번호 입력 폼 -->
-				<div class="form-group">
-					<label for="verificationCode">인증번호:</label>
-					<input type="text" class="form-control" id="verificationCode" placeholder="인증번호를 입력하세요"
-						v-model="verificationCode">
-				</div>
-
-				<!-- 비밀번호 입력 폼 -->
-				<div class="form-group">
-					<label for="password">비밀번호:</label>
-					<input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요" v-model="password">
-				</div>
-				<div class="form-group">
-					<label for="password_Check">비밀번호 확인:</label>
-					<input type="password" class="form-control" id="password_Check" placeholder="비밀번호를 입력하세요"
-						v-model="password_Check">
-					<div class="noti">
-						<p v-if="matchpwd" style="color: red;">비밀번호가 일치하지 않습니다.</p>
-						<p v-else style="color: blue;">비밀번호가 일치합니다.</p>
-					</div>
-				</div>
-				<div class="button-container">
-					<button type="button" class="btn btn-primary" @click="proceedToNextPage"
-						:disabled="!name || !email || !verificationCode || !password || !password_Check && (password !== password_Check)">다음</button>
-				</div>
-			</div>
-		</div>
-	</main>
-</template>
-  
 <script>
 export default {
 	data() {
@@ -113,6 +60,61 @@ export default {
 				this.$router.push('/signUp/sign_up2');
 			}
 		},
+		mailcheck(){
+			this.$axios.post(`/`)
+		}
 	},
 };
 </script>
+<template>
+	<main>
+		<div class="progress fixed-top" style="margin-top: 81px;">
+			<div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
+				aria-valuemin="0" aria-valuemax="100"></div>
+		</div>
+		<div class="container">
+			<div class="login-container">
+				<h2 class="mb-4">회원가입</h2>
+
+				<!-- 이름 입력 폼 -->
+				<div class="form-group">
+					<label for="name">이름:</label>
+					<input type="text" class="form-control" id="name" placeholder="이름을 입력하세요" v-model="name">
+				</div>
+
+				<!-- 이메일 입력 폼 -->
+				<div class="form-group">
+					<label for="email">이메일:</label>
+					<input type="email" class="form-control" id="email" placeholder="이메일을 입력하세요" v-model="email">
+					<button type="button" class="btn btn-primary" @click="sendVerificationCode">인증번호 발송</button>
+				</div>
+
+				<!-- 인증번호 입력 폼 -->
+				<div class="form-group">
+					<label for="verificationCode">인증번호:</label>
+					<input type="text" class="form-control" id="verificationCode" placeholder="인증번호를 입력하세요"
+						v-model="verificationCode">
+				</div>
+
+				<!-- 비밀번호 입력 폼 -->
+				<div class="form-group">
+					<label for="password">비밀번호:</label>
+					<input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요" v-model="password">
+				</div>
+				<div class="form-group">
+					<label for="password_Check">비밀번호 확인:</label>
+					<input type="password" class="form-control" id="password_Check" placeholder="비밀번호를 입력하세요"
+						v-model="password_Check">
+					<div class="noti">
+						<p v-if="matchpwd" style="color: red;">비밀번호가 일치하지 않습니다.</p>
+					</div>
+				</div>
+				<div class="button-container">
+					<button type="button" class="btn btn-primary" @click="proceedToNextPage"
+						:disabled="!name || !email || !verificationCode || !password || !password_Check && (password !== password_Check)">다음</button>
+				</div>
+			</div>
+		</div>
+	</main>
+</template>
+  
