@@ -42,7 +42,7 @@ export default {
   created() 
   {
 
-    axios.get(`http://localhost/chat_pt/details/${this.$route.params.id}`)
+    axios.get(`http://localhost/springpt/details/${this.$route.params.id}`)
       .then(resp => {
         this.trainer = resp.data[0];
       })
@@ -50,7 +50,7 @@ export default {
         console.error("Error fetching user details: ", error);
       });
 
-      axios.get(`http://localhost/chat_pt/findList/${this.$route.params.id}`)
+      axios.get(`http://localhost/springpt/findList/${this.$route.params.id}`)
       .then(resp => {
         this.member = resp.data;
       })
@@ -68,7 +68,7 @@ export default {
     {
         if (confirm('회원을 정말 삭제하시겠습니까?')) 
         {
-            axios.delete(`http://localhost/chat_pt/nordel/${nnum}`)
+            axios.delete(`http://localhost/springpt/nordel/${nnum}`)
             .then(response => {
             alert(response.data);
             this.$router.push('/a_userList')
@@ -83,7 +83,7 @@ export default {
     {
         if (confirm('회원을 정말 삭제하시겠습니까?')) 
         {
-            axios.delete(`http://localhost/chat_pt/ptdel/${tnum}`)
+            axios.delete(`http://localhost/springpt/ptdel/${tnum}`)
             .then(response => {
             alert(response.data);
             this.$router.push('/a_userList')

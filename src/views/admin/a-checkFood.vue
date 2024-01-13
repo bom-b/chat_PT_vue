@@ -188,7 +188,7 @@ export default {
       return columnNames[index];
     },
     fetchEditList() {
-  axios.get("http://localhost/chat_pt/editList")
+  axios.get("http://localhost/springpt/editList")
     .then(resp => {
       console.log(resp.data[0]); // 데이터 구조 확인
       this.items = resp.data;

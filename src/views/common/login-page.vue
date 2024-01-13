@@ -192,6 +192,7 @@ a {
 </template>
 <script>
 import AuthService from "@/services/AuthService";
+import AdminService from "@/services/AdminService";
 
 export default {
   data() {
@@ -249,8 +250,6 @@ export default {
           } else if (role === 'TRAINER') {
             window.localStorage.setItem('name', response.data.name);
             window.location.href = '/trainer/pt_home';
-          } else if (role === 'ADMIN') {
-            window.location.href = '/admin/a_userList';
           }
         }
       })
@@ -260,8 +259,40 @@ export default {
             this.user.password = '';
           });
     },
-    admin_login () {
+
+
+    admin_login () 
+    {
       // 위 코드 복붙해서 구현해주시면 될거같아요
+      console.log("UserName  : " + this.user.userName);
+      console.log("password : " + this.user.password);
+      if (!this.user.userName) {
+        this.$swal.fire('', '아이디를 입력해주세요.');
+        return;
+      } else if (!this.user.password) {
+        this.$swal.fire('', '비밀번호를 입력해주세요.');
+        return;
+      }
+
+      AdminService.login(this.user)
+          .then((response) => {
+        if (response.data.token != null) {
+          console.log('응답 : ' + response.data);
+          window.localStorage.clear();
+          window.localStorage.setItem('jwtToken', response.data.token);
+          window.localStorage.setItem('role', response.data.role);
+
+          const role = response.data.role;
+          if (role === 'ADMIN') {
+            window.location.href = '/admin/a_userList';
+          } 
+        }
+      })
+          .catch(() => {
+            this.$swal.fire('', '아이디 또는 비밀번호가 일치하지 않습니다.', 'warning');
+            // 비밀번호 초기화
+            this.user.password = '';
+          });
     }
   },
   computed: {}

@@ -1,8 +1,8 @@
 const axios = require("axios");
 
-const API_URL = "http://localhost/springpt";
+const API_URL = "http://localhost/admin";
 
-const axiosInstance = axios.create({
+const AdminaxiosInstance = axios.create({
     baseURL: API_URL,
     headers: {
         "Content-Type": "application/json",
@@ -11,7 +11,7 @@ const axiosInstance = axios.create({
 });
 
 
-axiosInstance.interceptors.request.use(
+AdminaxiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("jwtToken");
         config.headers.Authorization = `Bearer ${token}`;
@@ -22,6 +22,6 @@ axiosInstance.interceptors.request.use(
     }
 );
 
-module.exports = axiosInstance;
+module.exports = AdminaxiosInstance;
 
 
