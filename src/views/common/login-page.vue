@@ -66,6 +66,10 @@ form {
   width: 170px;
 }
 
+.kakao-login-btn:hover {
+  cursor: pointer;
+}
+
 .login-btn {
   background-color: #e5f5f2;
   color: #085c57;
@@ -142,9 +146,9 @@ a {
             <div>
               <button type="submit" class="mb-2 btn-signature login-btn">로그인</button>
             </div>
-            <router-link to="d_home" class="router-link">
-              <img class="kakao-login-btn" src="../../assets/img/kakao_login_medium_narrow.png">
-            </router-link>
+            <div>
+              <img @click="kakaoLogin" class="kakao-login-btn" src="../../assets/img/kakao_login_medium_narrow.png" alt="">
+            </div>
           </div>
 
           <!-- 회원가입 / 아이디 비번 찾기-->
@@ -208,6 +212,7 @@ a {
 <script>
 import AuthService from "@/services/AuthService";
 import AdminService from "@/services/AdminService";
+import router from "@/router";
 
 export default {
   data() {
@@ -225,6 +230,28 @@ export default {
       // 아이디 저장 여부
       saveId: false,
     }
+  },
+  setup() {
+    // 이 함수는 메인 페이지에 정의되어 있어야 합니다.
+    // 함수를 전역으로 등록하려면 다음과 같이 window 객체에 추가할 수 있습니다.
+    // 하지만 이는 일반적인 Vue 패턴이 아니며, 가능하면 피해야 합니다.
+    window.handleKakaoResponse = (isSign, token, email, nickname, profileImage) => {
+      if (isSign) {
+        // 이미 회원가입이 되어 있는 경우
+        localStorage.setItem('jwtToken', token);
+        // 로그인 성공 후 메인 페이지로 리디렉션
+        router.push('/');
+      } else {
+        // 회원가입이 필요한 경우
+        // 회원가입 페이지로 리디렉션하거나
+        // 회원가입에 필요한 데이터를 로컬 스토리지에 저장
+        localStorage.setItem('kakaoSignupEmail', email);
+        localStorage.setItem('kakaoSignupNickname', nickname);
+        localStorage.setItem('kakaoSignupProfileImage', profileImage);
+        // 회원가입 페이지로 리디렉션
+        router.push('/signup');
+      }
+    };
   },
   mounted() {
     this.setMainHeight();
@@ -326,7 +353,7 @@ export default {
           const role = response.data.role;
           if (role === 'ADMIN') {
             window.location.href = '/admin/a_userList';
-          } 
+          }
         }
       })
           .catch(() => {
@@ -334,6 +361,19 @@ export default {
             // 비밀번호 초기화
             this.user.password = '';
           });
+    },
+    kakaoLogin() {
+      const REST_API_KEY = 'aa7e1b658afaea7d32248761c5aed3ef';
+      const REDIRECT_URI = 'http://localhost/springpt/kakao/callback';
+
+      // 새 창의 크기
+      const width = 800;
+      const height = 600;
+
+      // 새 창의 옵션
+      const windowFeatures = `width=${width},height=${height},resizable=yes,scrollbars=yes,status=yes`;
+      window.open(`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`, 'kakaoLogin', windowFeatures);
+
     }
   },
   computed: {}
