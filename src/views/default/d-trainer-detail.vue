@@ -110,8 +110,10 @@ export default {
                 status: "wait",
               };
               try {
+                console.log("시도중");
                 this.$axios.post("/matchCancle", requestData);
               } catch (e) {
+                console.log("실패");
                 console.log(e);
                 this.$swal.fire({
                   icon: "warning",
@@ -135,7 +137,7 @@ export default {
               Toast.fire({
                 icon: "success",
                 title: "이전 PT상담이 취소 되었습니다.",
-                text: "다시 PT신청 부탁드립니다.",
+                text: "다시 PT 예약해주시기 바랍니다.",
               });
             }
           });

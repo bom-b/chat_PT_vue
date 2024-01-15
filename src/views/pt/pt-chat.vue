@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-cloak style="background-color: #003a247c;">
+  <div class="container" v-cloak style="background-color: #003a2452; height: 690px; border-radius: 30px;">
     <div>
       <h2>{{ room.name }}</h2>
     </div>
@@ -244,7 +244,7 @@ export default {
 }
 
 .input-group-text {
-  background-color: #58a778; /* 초록색 배경 */
+  background-color: #58a77854; /* 초록색 배경 */
   color: white; /* 텍스트 색상 */
   border-radius: 5px 0 0 5px; /* 왼쪽 모서리 둥글게 */
 }
@@ -325,6 +325,8 @@ export default {
 .list-group {
   -ms-overflow-style: none; /* IE, 엣지 */
   scrollbar-width: none; /* 파이어폭스 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+
 }
 
 .message-time {

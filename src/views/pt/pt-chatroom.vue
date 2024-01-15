@@ -1,7 +1,7 @@
 <template>
-    <div class="container" v-cloak>
+    <div class="container" v-cloak style="background-color: #003a2452; height: 690px; border-radius: 30px;" >
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" style="margin-top: 30px;">
           <h3>채팅방 리스트</h3>
         </div>
       </div>
@@ -96,5 +96,10 @@ export default {
 <style scoped>
 [v-cloak] {
   display: none;
+}
+.list-group-item{
+  background-color: #5482354f;
+  color: #f3f3f3;
+  border:0px;
 }
 </style>
