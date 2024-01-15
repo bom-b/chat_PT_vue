@@ -58,9 +58,10 @@ export default {
 
               this.$router.push({path: '/'});
 
-              // 회원 시키러 보내기
+              // 회원가입 시키러 보내기
             } else {
               console.log(response.data);
+              this.$router.push({path: '/signUp/kakao_sign_up_main', query: {nickname: response.data.nickname}});
             }
           })
           .catch(() => {
