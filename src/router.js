@@ -2,9 +2,12 @@ import {createRouter, createWebHistory, RouterView } from "vue-router";
 import store from './store';
 
 /*공통*/
-import Login from "./views/common/login-page.vue";
 import Home from "./views/common/main-home.vue";
-import noAuth from "./views/common/noAuth-page.vue";
+
+/*에러*/
+import noAuth from "./views/common/errorPages/noAuth-page.vue";
+import noValidity from "./views/common/errorPages/noValidity-page.vue";
+import pageNotFound from "./views/common/errorPages/pageNotFound-page.vue";
 
 /*비회원 라우터*/
 import nonMemberServiceRoutes from "@/routes/nonMemberServiceRoutes";
@@ -25,11 +28,14 @@ const routes = [
     // 로그인 안했을 때의 메인페이지
     {path: "/", component: Home, meta: {headerType: "no-header"}},
 
-    // 로그인
-    {path: "/login", component: Login, meta: {headerType: "non_member"}},
-
     // 권한 없음
-    {path: "/noAuth", component: noAuth, meta: {headerType: "non_member"}},
+    {path: "/error/noAuth", component: noAuth, meta: {headerType: "non_member"}},
+
+    // 유효하지 않은 접근
+    {path: "/error/noValidity", component: noValidity, meta: {headerType: "non_member"}},
+
+    // 존재하지 않는 페이지
+    {path: "/error/pageNotFound", component: pageNotFound, meta: {headerType: "non_member"}},
 
     // 비회원 서비스
     {
@@ -70,6 +76,9 @@ const routes = [
         children: adminRoutes,
         meta : { headerType: null },
     },
+
+    // 존재하지 않는 페이지
+    {path: "/:pathMatch(.*)*", redirect: '/error/pageNotFound'},
 ];
 
 const router = createRouter({
@@ -101,7 +110,7 @@ router.beforeEach((to, from, next) => {
     if (to.path.startsWith('/default')) {
         const role = window.localStorage.getItem('role');
         if (role !== 'NORMAL') {
-            next('/noAuth'); // 리다이렉트
+            next('/error/noAuth'); // 리다이렉트
             return;
         }
     }
@@ -110,7 +119,7 @@ router.beforeEach((to, from, next) => {
     if (to.path.startsWith('/trainer')) {
         const role = window.localStorage.getItem('role');
         if (role !== 'TRAINER') {
-            next('/noAuth'); // 리다이렉트
+            next('/error/noAuth'); // 리다이렉트
             return;
         }
     }
@@ -119,10 +128,20 @@ router.beforeEach((to, from, next) => {
     if (to.path.startsWith('/admin')) {
         const role = window.localStorage.getItem('role');
         if (role !== 'ADMIN') {
-            next('/noAuth'); // 리다이렉트
+            next('/error/noAuth'); // 리다이렉트
             return;
         }
     }
+
+    // 로그인한 회원의 유효하지 않은 접근 제어
+    if (to.path.startsWith('/service') || to.path.startsWith('/signUp')) {
+        const role = window.localStorage.getItem('role');
+        if (role) {
+            next('/error/noValidity'); // 리다이렉트
+            return;
+        }
+    }
+
     next();
 });
 

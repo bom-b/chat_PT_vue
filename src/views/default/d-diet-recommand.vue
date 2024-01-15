@@ -126,7 +126,6 @@
   </div>
 </template>
 <script>
-import axios from 'axios';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
 export default {
@@ -213,18 +212,16 @@ export default {
     };
   },
   mounted() {
-    this.axiosInstance = axios.create({
-      baseURL: 'http://192.168.0.211:9000',
-    });
     this.fetchDataAndCreateCharts();
-
   },
 
   methods: {
     fetchDataAndCreateCharts() {
-      this.axiosInstance.get('/dlmodel/getCal?id=user002')
+      this.$axios.get('/food_recommand')
         .then((res) => {
-          const { recommand_cal, now_cal, recomand_nutrition, now_nutrition, lastfood, recomandfood, userage, age_food_info, purpose_food_info, userpurpose } = res.data;
+          console.log(res)
+          const { recommand_cal, now_cal, recomand_nutrition, now_nutrition, lastfood, 
+            recomandfood, userage, age_food_info, purpose_food_info, userpurpose } = res.data;
           // 추천 데이터 등록         
           this.recommandCal = recommand_cal.toFixed(2);
           this.recommand_tan = recomand_nutrition[0].toFixed(2);
@@ -236,7 +233,7 @@ export default {
           this.now_tan = now_nutrition[0];
           this.now_dan = now_nutrition[1];
           this.now_gi = now_nutrition[2];
-
+          
           // 차트에 보여질 값 초기화
           this.currentCal = now_cal.toFixed(2);
           this.currenttan = now_nutrition[0].toFixed(2);
@@ -287,9 +284,9 @@ export default {
 
 
         })
-        .catch((err) => {
-          console.error("Error fetching data: ", err);
-          alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
+        .catch(() => {
+          // console.error("Error fetching data: ", err);
+          // alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.');
         });
     },
     updateCalChartData() {

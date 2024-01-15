@@ -53,10 +53,14 @@
 </template>
 
 <script>
-
 import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
 
+const token = localStorage.getItem("jwtToken");
+const headers = {
+  Authorization: "Bearer " + token,
+};
+console.log(headers);
 export default {
   data() {
     return {
@@ -71,7 +75,7 @@ export default {
   },
   created() {
     this.roomId = localStorage.getItem("wschat.roomId");
-    this.sender = localStorage.getItem("wschat.sender");
+    this.sender = localStorage.getItem("name");
     this.findRoom();
     this.loadPreviousMessages();
     this.connect();
@@ -105,10 +109,11 @@ export default {
           roomId: this.roomId,
           sender: this.sender,
           message: this.message,
+          logdate: new Date().toISOString(), // 현재 시간을 ISO 8601 형식으로 추가
         };
         let messageString = JSON.stringify(messageData);
 
-        this.ws.send("/pub/chat/message", messageString, {});
+        this.ws.send("/pub/chat/message", messageString, headers);
         this.message = "";
       }
     },
@@ -137,14 +142,18 @@ export default {
       const onConnected = () => {
         console.log("웹소켓 연결 성공!!!!");
         this.reconnect = 0; // 연결 성공 시 재연결 시도 횟수 초기화
-        this.ws.subscribe(`/springpt/sub/chat/room/${this.roomId}`, (message) => {
-          const recv = JSON.parse(message.body);
-          console.log("Received message: ", recv);
-          this.recvMessage(recv);
-        });
+        this.ws.subscribe(
+          `/sub/chat/room/${this.roomId}`,
+          (message) => {
+            const recv = JSON.parse(message.body);
+            console.log("Received message: ", recv);
+            this.recvMessage(recv);
+          },
+          headers
+        );
 
         this.ws.send(
-          "/springpt/pub/chat/message",
+          "/pub/chat/message",
           JSON.stringify(
             {
               type: "ENTER",
@@ -152,7 +161,7 @@ export default {
               sender: this.sender,
               message: this.message,
             },
-            {}
+            headers
           )
         );
       };
@@ -169,7 +178,7 @@ export default {
         }
       };
 
-      this.ws.connect({}, onConnected, onError);
+      this.ws.connect(headers, onConnected, onError);
     },
     formatTime(timestamp) {
       const date = new Date(timestamp);
@@ -188,7 +197,9 @@ export default {
 }
 
 .container {
-  background-color: #f4f4f4; /* 밝은 배경 */
+  background-color: #f4f4f4;
+
+
   border-radius: 10px; /* 모서리 둥글게 */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* 그림자 효과 */
   max-width: 600px; /* 최대 너비 설정 */
@@ -196,7 +207,17 @@ export default {
   padding: 20px; /* 내부 여백 */
 }
 
+/* 기본 리스트 그룹 아이템 스타일 */
+.list-group-item {
+  border: none; /* 기본 테두리 제거 */
+  position: relative; /* 말풍선 꼬리를 위한 위치 설정 */
+  padding: 10px 20px; /* 여백 조정 */
+  margin-bottom: 8px; /* 메시지 간 간격 */
+  border-radius: 20px; /* 둥근 모서리 */
+}
+
 .list-group {
+
   max-height: 600px; /* 채팅창 높이 */
   overflow-y: auto; /* 스크롤바 */
   background-color: white; /* 채팅창 배경색 */
@@ -207,7 +228,7 @@ export default {
 
 /* 사용자 정의 스크롤바 스타일 */
 .list-group::-webkit-scrollbar {
-  width: 3px;
+  width: 6px;
 }
 
 .list-group::-webkit-scrollbar-track {
@@ -226,15 +247,12 @@ export default {
   background-color: transparent; /* 투명 배경 */
   border: none; /* 테두리 없음 */
   transition: transform 0.5s ease; /* 호버 애니메이션 효과 */
+  background-color: #f4f4f4; /* 입력창 배경 */
 }
 
 .input-group:hover {
-  transform: scale(1.02); /* 호버 시 약간 확대 */
+  transform: scale(1.01); /* 호버 시 약간 확대 */
   /* background-color: #eef2f1; 호버 배경색 변경 */
-}
-
-.input-group {
-  background-color: #f4f4f4; /* 입력창 배경 */
 }
 
 .input-group-text {
@@ -248,23 +266,81 @@ export default {
 }
 
 .btn-primary {
-  background-color: #58a778; /* 초록색 배경 */
+  background-color: #6cad64; /* 초록색 배경 */
   border: none; /* 테두리 없음 */
 }
-
-/* 챗 왼쪽 | 오른쪽 정렬을 위한 CSS */
+/* 내가 보낸 메시지 스타일 */
 .message-mine {
-  text-align: right; /* 내가 보낸 메시지는 오른쪽 정렬 */
-  background-color: #f0f0f0; /* 내 메시지 배경색 */
+  margin-left: auto;
+  background-color: #6cad64; /* 연두색 배경 */
+  border-bottom-right-radius: 0; /* 오른쪽 아래 모서리 둥글게 하지 않음 */
+  text-align: left; /* 텍스트 왼쪽 정렬 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* 그림자 효과 */
+  max-width: 80%;
+  margin-right: 6px;
 }
 
+/* 내 메시지 말풍선 꼬리 (세련된 모양) */
+.message-mine::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: -6px; /* 꼬리의 위치 조정 */
+  width: 15px; /* 꼬리의 너비 */
+  height: 15px; /* 꼬리의 높이 */
+  background-color: #dcf8c6;
+  border: 2px solid #f4f4f4; /* 배경색과 같은 색상으로 보더 설정 */
+  border-left-color: transparent;
+  border-top-color: transparent;
+  border-radius: 16px; /* 둥글게 처리 */
+  transform: rotate(45deg) translate(-50%, 50%);
+}
+
+/* 다른 사람이 보낸 메시지 스타일 */
 .message-other {
-  text-align: left; /* 다른 사람이 보낸 메시지는 왼쪽 정렬 */
-  background-color: #e3e3e3; /* 다른 사람의 메시지 배경색 */
+  margin-right: auto;
+  background-color: #ffffff; /* 흰색 배경 */
+  bottom: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* 그림자 효과 */
+  border-bottom-left-radius: 0; /* 왼쪽 아래 모서리 둥글게 하지 않음 */
+  text-align: left; /* 텍스트 왼쪽 정렬 */
+  max-width: 80%; /* 메시지 최대 너비 설정 */
+  margin-left: 6px;
+}
+
+/* 다른 사람의 메시지 말풍선 꼬리 (세련된 모양) */
+.message-other::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -6px; /* 꼬리의 위치 조정 */
+  width: 15px; /* 꼬리의 너비 */
+  height: 15px; /* 꼬리의 높이 */
+  background-color: #ffffff;
+  border: 2px solid #f4f4f4; /* 배경색과 같은 색상으로 보더 설정 */
+  border-right-color: transparent;
+  border-top-color: transparent;
+  border-radius: 16px; /* 둥글게 처리 */
+  transform: rotate(-45deg) translate(50%, 50%);
+}
+
+/* 스크롤바 제거 */
+.list-group {
+  overflow-y: auto; /* 스크롤바 설정 */
+}
+
+/* 모든 브라우저에서 스크롤바를 제거하기 위한 스타일 */
+.list-group::-webkit-scrollbar {
+  display: none; /* 크롬, 사파리 등 */
+}
+
+.list-group {
+  -ms-overflow-style: none; /* IE, 엣지 */
+  scrollbar-width: none; /* 파이어폭스 */
 }
 
 .message-time {
   font-size: 0.8em; /* 시간 글자 크기 */
-  color: #888; /* 시간 글자 색상 */
+  color: #1e1f22; /* 시간 글자 색상 */
 }
 </style>

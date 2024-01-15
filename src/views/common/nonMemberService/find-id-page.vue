@@ -12,7 +12,7 @@
              v-if="!found_id"
              style=""
              data-aos="fade-in" data-aos-duration="100" data-aos-delay="">
-          <p><span class="highlight" style="font-size: 14px;">● </span> 이메일 인증</p>
+          <p class="highlight">이메일 인증</p>
           <form @submit.prevent="findId" class="mt-5">
             <div class="form-group">
               <label for="exampleInputEmail1">이름</label>
@@ -35,7 +35,7 @@
              style=""
              data-aos="fade-in" data-aos-duration="100" data-aos-delay="">
           <p class="TheJamsil400">입력된 정보로 등록된 아이디는 아래와 같습니다.</p>
-          <p class="mt-5">- {{found_id}}</p>
+          <p class="mt-5"><span class="highlight">▶</span> {{found_id}}</p>
         </div>
       </div>
     </div>
@@ -70,7 +70,7 @@ export default {
         return;
       }
 
-      this.$axios.post('/service/findId', this.user)
+      this.$axiosWithoutValidation.post('/service/findId', this.user)
           .then((response) => {
             this.found_id = response.data;
           }).catch(() => {
