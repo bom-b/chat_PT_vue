@@ -3,9 +3,7 @@
     <div class="" style="margin: 100px 0 100px 0; text-align: center; ">
       <h3 id="plz-up" class="" style=" white-space: nowrap">오늘의 식단을 업로드 해주세요!</h3>
       <p class="" style=" white-space: nowrap">아침, 점심, 저녁, 간식으로 분류해서 업로드 해주세요.</p>
-<!--      <router-link to="/default/d_upload_result" class="router-link">-->
-        <button @click="submitImages">제출</button>
-<!--      </router-link>-->
+        <button class="btn btn-primary" @click="submitImages">제출</button>
       <div class="d-flex justify-content-center">
         <ul class="pagination pagination-lg">
           <li class="page-item"><a class="page-link" href="#" @click.prevent="selectTab('아침')">아침</a></li>
@@ -60,36 +58,23 @@ export default {
   methods: {
     selectTab(tab) {
       this.selectedTab = tab;
+      console.log(this.tabImages)
     },
-    updateImages(tab, newImage) {
-      this.tabImages[tab].push(newImage);
-    },
-    convertBase64ToFile(base64Data, filename) {
-      const arr = base64Data[0].split(',');
-      const mime = arr[0].match(/:(.*?);/)[1];
-      const bstr = atob(arr[1]);
-      let n = bstr.length;
-      const u8arr = new Uint8Array(n);
-
-      while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-      }
-
-      return new File([u8arr], filename, { type: mime });
+    updateImages(tab, newImages) {
+      console.log("newImage 실행 " )
+      this.tabImages[tab].push(...newImages);
     },
     submitImages() {
       const formData = new FormData();
+      // tabImages 객체에 있는 각 탭별로 이미지 데이터를 순회
       Object.keys(this.tabImages).forEach(tab => {
+        // 해당 탭에 있는 모든 이미지에 대해 순회
         this.tabImages[tab].forEach((base64Image, index) => {
-          const file = this.convertBase64ToFile(base64Image, `image-${tab}-${index}.jpg`);
-          formData.append(`${tab}[${index}]`, file);
+          // 각 이미지를 formData에 추가
+          // 키는 '탭이름[인덱스]' 형식이며, 값은 Base64 인코딩된 이미지 데이터
+          formData.append(`${tab}[${index}]`, base64Image);
         });
       });
-
-      // FormData의 내용을 출력
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
 
       this.$axios.post('/food_up', formData, {
         headers: {

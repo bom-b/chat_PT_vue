@@ -5,6 +5,7 @@
     <router-view/>
   </div>
   <Footer/>
+  <ChattingFloatingIcon v-if="['trainer', 'default', 'admin'].includes(headerType)"/>
 </template>
 <script setup>
 </script>
@@ -16,6 +17,7 @@ import Footer from "@/components/footer/footer.vue";
 import Login_Header from "@/components/header/login-header.vue"
 import main_header from '@/components/header/main-header.vue';
 import admin_header from '@/components/header/a-header.vue';
+import ChattingFloatingIcon from "@/components/chatting-floating-icon.vue";
 import foodNames from '@/food_names.json';
 // import None_Header from "@/components/header/none-header.vue";
 /* main.css or App.vue */
@@ -29,6 +31,7 @@ export default {
   },
   components: {
     Footer,
+    ChattingFloatingIcon,
   },
   watch: {
     $route() {
