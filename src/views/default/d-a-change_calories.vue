@@ -266,7 +266,7 @@ export default {
     // 위에 거대한 차트를 만드는 함수
     setupChart(allDates, dailyTotals) {
       if (!this.dataLoaded) return;
-      const canvas = this.$refs.myChart; // Using ref to access the canvas
+      const canvas = this.$refs.myChart; 
       if (!canvas) return;
 
       const ctx = canvas.getContext('2d');
@@ -484,7 +484,7 @@ export default {
 
 /* 사이드바 스타일링 */
 .sidebar {
-  width: 250px;
+  width: 20%;
   border: 2px solid #008136;
   /* 테두리 적용: 두께, 스타일, 색상 */
   color: #000000;
