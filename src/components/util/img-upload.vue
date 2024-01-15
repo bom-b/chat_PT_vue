@@ -56,26 +56,22 @@ export default {
 
       const processedImages = []; // 처리된 이미지들을 저장할 배열
 
-      filesToUpload.forEach((file, index) => {
-        if (file.type.startsWith('image/')) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            processedImages.push(e.target.result);
-
-            // 마지막 파일이 처리되었는지 확인
-            if (index === filesToUpload.length - 1) {
-              // 처리된 각 이미지들을 로컬 상태에 추가합니다.
-              processedImages.forEach(image => {
-                this.localUploadedImages.push(image);
-              });
-
-              // 마지막 파일이 처리된 경우, image-uploaded 이벤트를 발생시키고
-              // 처리된 모든 이미지 데이터를 이벤트와 함께 전달합니다.
-              this.$emit('image-uploaded', processedImages);
-            }
-          };
-          reader.readAsDataURL(file);
-        }
+      Promise.all(filesToUpload.map((file) => {
+        return new Promise((resolve, reject) => {
+          if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              processedImages.push(e.target.result);
+              resolve();
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          }
+        });
+      })).then(() => {
+        // 모든 이미지 처리가 완료된 후
+        this.localUploadedImages.push(...processedImages);
+        this.$emit('image-uploaded', processedImages);
       });
     }
     ,
@@ -96,33 +92,24 @@ export default {
         // 처리된 이미지를 저장할 배열을 초기화합니다.
         const processedImages = [];
 
-        // 업로드할 각 파일에 대해 반복합니다.
-        filesToUpload.forEach((file, index) => {
-          // 파일이 이미지인지 확인합니다.
-          if (file.type.startsWith('image/')) {
-            // 파일 리더를 생성합니다.
-            const reader = new FileReader();
-
-            // 파일 로드가 완료되었을 때 실행할 이벤트 핸들러를 설정합니다.
-            reader.onload = (e) => {
-              // 파일의 결과(이미지 데이터)를 처리된 이미지 배열에 추가합니다.
-              processedImages.push(e.target.result);
-              // 현재 파일이 마지막 파일인지 확인합니다.
-              if (index === filesToUpload.length - 1) {
-                // 마지막 파일이 처리된 경우, image-uploaded 이벤트를 발생시키고
-                // 처리된 각 이미지들을 로컬 상태에 추가합니다.
-                processedImages.forEach(image => {
-                  this.localUploadedImages.push(image);
-                });
-                this.$emit('image-uploaded', processedImages);
-              }
-            };
-
-            // 파일 리더에 의해 파일의 데이터를 읽도록 합니다.
-            // 이렇게 하면 파일의 내용이 Base64 인코딩된 데이터 URL로 변환됩니다.
-            reader.readAsDataURL(file);
-          }
+        Promise.all(filesToUpload.map((file) => {
+          return new Promise((resolve, reject) => {
+            if (file.type.startsWith('image/')) {
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                processedImages.push(e.target.result);
+                resolve();
+              };
+              reader.onerror = reject;
+              reader.readAsDataURL(file);
+            }
+          });
+        })).then(() => {
+          // 모든 이미지 처리가 완료된 후
+          this.localUploadedImages.push(...processedImages);
+          this.$emit('image-uploaded', processedImages);
         });
+
       }
     },
     handleFile(file) {
