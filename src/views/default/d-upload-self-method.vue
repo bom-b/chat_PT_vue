@@ -3,9 +3,7 @@
     <div class="" style="margin: 100px 0 100px 0; text-align: center; ">
       <h3 id="plz-up" class="" style=" white-space: nowrap">오늘의 식단을 업로드 해주세요!</h3>
       <p class="" style=" white-space: nowrap">아침, 점심, 저녁, 간식으로 분류해서 업로드 해주세요.</p>
-<!--      <router-link to="/default/d_upload_result" class="router-link">-->
-        <button @click="submitImages">제출</button>
-<!--      </router-link>-->
+        <button class="btn btn-primary" @click="submitImages">제출</button>
       <div class="d-flex justify-content-center">
         <ul class="pagination pagination-lg">
           <li class="page-item"><a class="page-link" href="#" @click.prevent="selectTab('아침')">아침</a></li>
