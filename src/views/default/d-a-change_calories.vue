@@ -25,7 +25,7 @@
         <!-- 메인 컨텐츠 -->
         <div class="main">
           <div v-if="dataLoaded && hasData" class="chart">
-            <canvas id="myChart"></canvas>
+            <canvas ref="myChart"></canvas>
           </div>
           <img v-else-if="dataLoaded && !hasData" src="../../assets/img/nonochun.png" alt="No data">
           <p v-else>데이터 로딩 중...</p>
@@ -38,55 +38,55 @@
         <p style="font-size: 25px; margin-top: 15px;">전일 대비 칼로리 변화표 </p>
         <p style="font-size: 15px; margin-bottom: 10px;">({{ formatDate(new Date()) }} 기준)</p>
         <!-- 오늘 등록한 음식이 있을 경우-->
-          <table class="table rounded">
-            <thead class="TheJamsil400">
-              <tr>
-                <th>끼니</th>
-                <th>오늘 먹은 음식</th>
-                <th>칼로리</th>
-                <th>전일 대비</th>
-                <th>증감률</th>
-              </tr>
-            </thead>
-            <tbody class="TheJamsil400" v-for="(item, idx) in last_differ" :key="idx">
-              <tr>
-                <td>{{ item.category }}</td>
-                <td style="width: 350px;">{{ item.food_names ? item.food_names : '-' }}</td>
-                <td>{{ item.total_calories_today ? item.total_calories_today.toFixed(2) + 'kcal' : '-' }} </td>
-                <td :class="{
+        <table class="table rounded">
+          <thead class="TheJamsil400">
+            <tr>
+              <th>끼니</th>
+              <th>오늘 먹은 음식</th>
+              <th>칼로리</th>
+              <th>전일 대비</th>
+              <th>증감률</th>
+            </tr>
+          </thead>
+          <tbody class="TheJamsil400" v-for="(item, idx) in last_differ" :key="idx">
+            <tr>
+              <td>{{ item.category }}</td>
+              <td style="width: 350px;">{{ item.food_names ? item.food_names : '-' }}</td>
+              <td>{{ item.total_calories_today ? item.total_calories_today.toFixed(2) + 'kcal' : '-' }} </td>
+              <td :class="{
+                positive: item.calorie_difference > 0 && item.food_names,
+                negative: item.calorie_difference < 0 && item.food_names
+              }">
+                <i v-if="item.calorie_difference > 0 && item.food_names" class="arrow-up">▲</i>
+                <i v-else-if="item.calorie_difference < 0 && item.food_names" class="arrow-down">▼</i>
+                {{ item.food_names ? (item.calorie_difference ? item.calorie_difference.toFixed(2) + ' kcal' : '-') :
+                  '-'
+                }}
+              </td>
+              <td>
+                <canvas ref="updownChartCanvas" :data-idx="idx" class="smallchart"></canvas>
+                <p :class="{
                   positive: item.calorie_difference > 0 && item.food_names,
                   negative: item.calorie_difference < 0 && item.food_names
-                }">
+                }" v-if="item.calorie_difference > 0 && item.food_names">
                   <i v-if="item.calorie_difference > 0 && item.food_names" class="arrow-up">▲</i>
                   <i v-else-if="item.calorie_difference < 0 && item.food_names" class="arrow-down">▼</i>
-                  {{ item.food_names ? (item.calorie_difference ? item.calorie_difference.toFixed(2) + ' kcal' : '-') :
-                    '-'
-                  }}
-                </td>
-                <td>
-                  <canvas ref="updownChartCanvas" :data-idx="idx" class="smallchart"></canvas>
-                  <p :class="{
-                    positive: item.calorie_difference > 0 && item.food_names,
-                    negative: item.calorie_difference < 0 && item.food_names
-                  }" v-if="item.calorie_difference > 0 && item.food_names">
-                    <i v-if="item.calorie_difference > 0 && item.food_names" class="arrow-up">▲</i>
-                    <i v-else-if="item.calorie_difference < 0 && item.food_names" class="arrow-down">▼</i>
-                    {{ ((item.todayCalories / item.yesterdayCalories) * 100).toFixed(2) }}%
+                  {{ ((item.todayCalories / item.yesterdayCalories) * 100).toFixed(2) }}%
 
-                  </p>
-                  <p :class="{
-                    positive: item.calorie_difference > 0 && item.food_names,
-                    negative: item.calorie_difference < 0 && item.food_names
-                  }" v-if="item.calorie_difference < 0 && item.food_names">
-                    <i v-if="item.calorie_difference > 0 && item.food_names" class="arrow-up">▲</i>
-                    <i v-else-if="item.calorie_difference < 0 && item.food_names" class="arrow-down">▼</i>
-                    {{ (-(100 - (item.todayCalories / item.yesterdayCalories) * 100)).toFixed(2) }}%
+                </p>
+                <p :class="{
+                  positive: item.calorie_difference > 0 && item.food_names,
+                  negative: item.calorie_difference < 0 && item.food_names
+                }" v-if="item.calorie_difference < 0 && item.food_names">
+                  <i v-if="item.calorie_difference > 0 && item.food_names" class="arrow-up">▲</i>
+                  <i v-else-if="item.calorie_difference < 0 && item.food_names" class="arrow-down">▼</i>
+                  {{ (-(100 - (item.todayCalories / item.yesterdayCalories) * 100)).toFixed(2) }}%
 
-                  </p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
       </div>
     </div>
@@ -95,6 +95,7 @@
 
 <script>
 import { Chart, registerables } from 'chart.js';
+import analyze_header from '@/components/header/d-analyze.vue';
 Chart.register(...registerables);
 export default {
   data() {
@@ -118,9 +119,13 @@ export default {
       hasData: false,
       isClickable: true,
       last_differ: [],
+      dietList: [],
 
       charts: [],
     }
+  },
+  components: {
+    analyze_header,
   },
   methods: {
     printWeeks(startDate, numWeeks) {
@@ -178,7 +183,7 @@ export default {
       const today = new Date();
       today.setHours(0, 0, 0, 0); // 오늘 날짜만 비교하기 위해 시간을 제거합니다.
 
-      this.$axios.get('/diet_analysis', {
+      this.$axios.get('/diet_cal_analysis', {
         params: {
           startPeriod: this.startOfWeek,
           endPeriod: this.endOfWeek
@@ -186,6 +191,7 @@ export default {
       })
         .then((res) => {
           this.recommandCal = res.data.recommandCal
+          this.dietList = res.data.dietList
           console.log(res.data)
           if (res.data.dietList.length === 0) {
             // 데이터 길이가 0이면 알림을 띄우고 함수를 종료합니다.
@@ -214,6 +220,7 @@ export default {
               dailyTotals.push(dataForDate ? dataForDate.dailyTotal : 0);
             }
           });
+          this.checkAndLoadData();
 
           this.hasData = res.data.dietList.length > 0;
           this.$nextTick(() => {
@@ -240,7 +247,18 @@ export default {
           console.error("Error fetching data: ", error);
           alert('데이터 로딩 중 오류가 발생했습니다. 오류 로그를 확인하세요.');
           this.dataLoaded = true; // 데이터 로드 실패
+          this.dietList = [];
           this.hasData = false;
+        })
+
+        .finally(() => {
+          this.dataLoaded = true; // 데이터 로딩 완료
+          setTimeout(() => {
+            this.isClickable = true; // 지정된 시간 후 클릭 활성화
+          }, 1500); // 1.5초 동안 클릭 비활성화
+          
+
+         
         });
     },
 
@@ -248,38 +266,58 @@ export default {
     // 위에 거대한 차트를 만드는 함수
     setupChart(allDates, dailyTotals) {
       if (!this.dataLoaded) return;
+      const canvas = this.$refs.myChart; // Using ref to access the canvas
+      if (!canvas) return;
 
-      const ctx = document.getElementById('myChart').getContext('2d');
+      const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
       if (this.chart) {
         this.chart.destroy();
       }
 
-      // 새로운 데이터 배열을 생성하여 recommandCal 값을 기반으로 상수 그래프를 만듭니다.
+      // recommandCal 값에 기반한 상수 그래프 데이터
       const constantData = Array(allDates.length).fill(this.recommandCal);
+
+      let datasets = [];
+
+      // 현재 날짜와 startOfWeek가 같고, dietList의 길이가 0일 때
+      if (this.dietList.length === 0 && this.formatDate(new Date()) === this.startOfWeek) {
+        // 오직 recommandCal 데이터만 차트에 추가
+        datasets.push({
+          label: '권장 칼로리',
+          data: constantData,
+          borderColor: '#FF5733',
+          borderWidth: 1,
+          fill: false,
+          pointRadius: 0,
+        });
+      } else {
+        // 일반적인 경우에는 일일 총 칼로리와 권장 칼로리 모두 표시
+        datasets = [
+          {
+            label: '일일 총 칼로리',
+            data: dailyTotals,
+            borderColor: '#008136',
+            borderWidth: 1,
+            fill: false,
+          },
+          {
+            label: '권장 칼로리',
+            data: constantData,
+            borderColor: '#FF5733',
+            borderWidth: 1,
+            fill: false,
+            pointRadius: 0,
+          },
+        ];
+      }
 
       this.chart = new Chart(ctx, {
         type: 'line',
         data: {
           labels: allDates,
-          datasets: [
-            {
-              label: '일일 총 칼로리',
-              data: dailyTotals,
-              borderColor: '#008136',
-              borderWidth: 1,
-              fill: false,
-            },
-            {
-              label: '권장 칼로리',
-              data: constantData, // recommandCal 값을 사용하여 상수 데이터를 설정
-              borderColor: '#FF5733', // 상수 그래프의 색상 설정
-              borderWidth: 1,
-              fill: false,
-              pointRadius: 0,
-            },
-          ],
+          datasets: datasets,
         },
         options: {
           scales: {
@@ -308,6 +346,7 @@ export default {
         },
       });
     },
+
     updownChart(item, idx) {
       const yesterdayCalories = item.yesterdayCalories;
       const todayCalories = item.todayCalories;
@@ -366,6 +405,9 @@ export default {
       }
     },
 
+    tablechange() {
+      this.$router.push('/default/d_a_change_weight');
+    },
 
 
     getAllDates(startDate, endDate) {
@@ -377,28 +419,36 @@ export default {
       }
       return dates;
     },
+
+    checkAndLoadData() {
+      if (this.dietList.length === 0) {
+        // 이번 주 데이터가 없으면 지난 주 데이터 로딩
+        let lastWeek = new Date();
+        lastWeek.setDate(lastWeek.getDate() - 7);
+        this.selectWeek = this.multiWeeks.find(week => week.startOfWeek === this.formatDate(lastWeek));
+        this.startOfWeek = this.selectWeek.startOfWeek;
+        this.endOfWeek = this.selectWeek.endOfWeek;
+        this.fetchData();
+      }
+    },
   },
 
 
 
 
+
   mounted() {
-    this.printWeeks(new Date(), 10); // 주 데이터 생성
+    this.printWeeks(new Date(), 10);
     let today = new Date();
     let currentWeek = this.multiWeeks.find(week => {
       let start = new Date(week.startOfWeek);
       let end = new Date(week.endOfWeek);
       return start <= today && end >= today;
     });
-
-    // 현재 주를 selectWeek에 설정
     this.selectWeek = currentWeek || this.multiWeeks[0];
     this.startOfWeek = this.selectWeek.startOfWeek;
     this.endOfWeek = this.selectWeek.endOfWeek;
-
-    // 초기 데이터 가져오기
-
-    this.fetchData(); // 초기 데이터 로딩
+    this.fetchData();
   }
 };
 </script>

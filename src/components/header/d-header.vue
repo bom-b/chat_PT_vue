@@ -172,7 +172,7 @@ export default {
         {name: "카카오톡 채널", route: "/default/d_kakao"},
         {name: "식단등록", route: "/default/d_upload_main"},
         {name: "식단 추천 받기", route: "/default/d_recommand"},
-        {name: "식단 분석", route: "/default/d_a_change"},
+        {name: "식단 분석", route: "/default/d_a_change_calory"},
         {name: "트레이너 찾기", route: "/default/d_find_trainer"},
       ],
       currentRoute: this.$route.path,
