@@ -157,7 +157,8 @@ export default {
     const isLoggedIn = ref(!!localStorage.getItem("jwtToken"));
 
     const logout = () => {
-      localStorage.removeItem("jwtToken");                window.localStorage.removeItem('jwtToken');
+      window.localStorage.removeItem('jwtToken');
+      window.localStorage.removeItem('nickname');
       window.localStorage.removeItem('role');
       isLoggedIn.value = false; // isLoggedIn 상태를 업데이트
       router.push("/");

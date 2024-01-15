@@ -364,15 +364,15 @@ export default {
     },
     kakaoLogin() {
       const REST_API_KEY = 'aa7e1b658afaea7d32248761c5aed3ef';
-      const REDIRECT_URI = 'http://localhost/springpt/kakao/callback';
+      const REDIRECT_URI = this.$vueBaseURL + '/service/kakaojoin';
 
       // 새 창의 크기
-      const width = 800;
-      const height = 600;
+      const width = 500;
+      const height = 800;
 
       // 새 창의 옵션
       const windowFeatures = `width=${width},height=${height},resizable=yes,scrollbars=yes,status=yes`;
-      window.open(`https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`, 'kakaoLogin', windowFeatures);
+      window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`, 'kakaoLogin', windowFeatures;
 
     }
   },
