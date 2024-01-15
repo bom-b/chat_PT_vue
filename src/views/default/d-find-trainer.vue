@@ -14,7 +14,7 @@ export default {
   },
   watch: {
     selectRegion: {
-      immediate: true, // 페이지 로딩 시에도 호출
+   localhost: true, // 페이지 로딩 시에도 호출
       handler: function (newValue, oldValue) {
         // selectRegion이 변경될 때마다 호출되는 로직
         if (oldValue !== newValue) {
@@ -67,7 +67,6 @@ export default {
     },
   },
   mounted() {
-    // 컴포넌트가 마운트된 후 베스트 트레이너 데이터를 불러옴
     this.fetchBestTrainers();
     this.fetchRegions();
   }

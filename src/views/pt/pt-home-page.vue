@@ -97,7 +97,7 @@
                   src="../../assets/img/user_icon.png"
                   alt=""
                   style="width: 32px"
-                /><button class="select_button_menu mem_cl">회원 관리</button
+                /><button class="select_button_menu mem_cl">회원 관리_수정중(이성한)</button
                 ><br />
                 </router-link>
               </p>
@@ -121,7 +121,7 @@
                   alt=""
                   style="width: 32px"
                 /><button class="select_button_menu chat_cl" ref="#">
-                  채팅방</button
+                  채팅방_수정중(이성한)</button
                 ><br />
                 </router-link>
               </p>

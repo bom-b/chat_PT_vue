@@ -134,6 +134,8 @@
           </tr>
         </thead>
         <tbody style="text-align: left">
+
+          
           <tr v-for="(trainer, index) in filteredItems" :key="index" @click="goToDetailPage(trainer)">
 
             <th style="padding: 30px 10px"></th>
@@ -176,7 +178,6 @@
 
 
 <script>
-import axios from "axios";
 
 export default {
   data() {
@@ -227,7 +228,7 @@ computed: {
   goToDetailPage(trainer) {
   if (trainer && trainer.userid) {
     console.log(trainer.userid)
-    this.$router.push({ name: 'userDetails', params: { id: trainer.userid } });
+    this.$router.push({ name: 'a_userDetails', params: { id: trainer.userid } });
     
   } else {
     console.log("goPage Error");
@@ -238,20 +239,20 @@ computed: {
     let url;
     switch (this.selectedCategory) {
       case "회원":
-        url = "http://localhost/chat_pt/allUsers";
+        url = "/allUsers";
         break;
       case "PT선생님(승인X)":
-        url = "http://localhost/chat_pt/getunApplyUsers";
+        url = "/getunApplyUsers";
         break;
       case "PT선생님(승인O)":
-        url = "http://localhost/chat_pt/getApplyUsers";
+        url = "/getApplyUsers";
         break;
       case "PT선생님(전체)":
-        url = "http://localhost/chat_pt/allPTusers";
+        url = "/allPTusers";
         break;
     }
     this.isLoading = true; // 로딩 시작
-    axios.get(url)
+    this.$Adminaxios.get(url)
     .then(response => {
       if (Array.isArray(response.data)) {
         this.originalItems = response.data;
@@ -283,7 +284,7 @@ updateTrainerRole(trainer, event)
 {
   const newStatus = event.target.checked ? "승인" : "미승인";
 
-  axios.put(`http://localhost/chat_pt/updateTrainerStatus/${trainer.tnum}`, { status: newStatus })
+  this.$Adminaxios.put(`/updateTrainerStatus/${trainer.tnum}`, { status: newStatus })
     .then(response => {
       console.log("서버 상태 업데이트 성공", response.data);
 
@@ -318,7 +319,7 @@ filterItemsByCategory(category) {
 
   fetchData() {
        console.log("axios시작");      
-       axios.get("http://localhost/chat_pt/getunApplyUsers")
+       this.$Adminaxios.get("/getunApplyUsers")
         .then((resp) => {
           console.log("!!!!" + resp);
           this.items = resp.data;

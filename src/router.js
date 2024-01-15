@@ -74,7 +74,7 @@ const routes = [
         path: "/admin",
         component: RouterView,
         children: adminRoutes,
-        meta : { headerType: null },
+        meta : { headerType: "admin" },
     },
 
     // 존재하지 않는 페이지
