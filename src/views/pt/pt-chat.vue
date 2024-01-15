@@ -126,7 +126,7 @@ export default {
         message: recv.message,
         logdate: recv.logdate, // 시간도 추가
       });
-
+     
       // 새 메시지가 추가된 후 스크롤을 아래로
       this.$nextTick(() => {
         if (this.$refs.chatList) {
@@ -329,10 +329,6 @@ export default {
   overflow-y: auto; /* 스크롤바 설정 */
 }
 
-/* 모든 브라우저에서 스크롤바를 제거하기 위한 스타일 */
-.list-group::-webkit-scrollbar {
-  display: none; /* 크롬, 사파리 등 */
-}
 
 .list-group {
   -ms-overflow-style: none; /* IE, 엣지 */
