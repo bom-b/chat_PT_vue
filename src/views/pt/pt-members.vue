@@ -1,33 +1,31 @@
 <template>
   <main>
     <div class="pt-body">
-      <section>
-        <div class="m_title">
-          <h2>예약 관리 페이지</h2>
+      <section style="border: 0px">
+        <div class="m_title" style="margin: 10px;">
+          <h2 style="margin: 10px;">예약 관리 페이지</h2>
         </div>
-        <h3>예약 신청 회원 목록</h3>
-        <vxe-grid
-          border
+        <h4>예약 신청 회원 목록</h4>
+        <div>
+        <vxe-grid class="col-xs-6 col-6 "
           :columns="new_mem_table"
           :data="new_data"
           show-overflow
-          @checkbox-change="selectCheck"
+          @checkbox-change="selectCheck" 
         >
         </vxe-grid>
+      </div>
         <button class="btn btn-primary" @click="agree">PT수락</button>
         <button class="btn btn-primary" @click="agree">삭제</button>
       </section>
       <section>
         <div class="m_title">
-          <h2>수락한 회원 목록</h2>
+          <h4 style="margin: 10px;">수락한 회원 목록</h4>
         </div>
-        <vxe-grid
-          border
-          :columns="select_mem_table"
-          :data="new_data"
-          show-overflow
-        >
+        <div>
+        <vxe-grid :columns="select_mem_table" :data="new_data" show-overflow class="col-xs-6 col-6 ">
         </vxe-grid>
+      </div>
         <button class="btn btn-primary" @click="agree">위로 이동</button>
         <button class="btn btn-primary" @click="agree">위로 이동</button>
       </section>
@@ -62,9 +60,9 @@ export default {
       new_mem_table: [
         { type: "seq", title: "번호", width: 50, fixed: "left" },
         { type: "checkbox", fixed: "center", width: 50 },
-        { field: "name", title: "이름", width: 200 },
-        { field: "age", title: "나이", width: 200 },
-        { field: "phone", title: "전화번호", width: 200 },
+        { field: "name", title: "이름" },
+        { field: "age", title: "나이" },
+        { field: "phone", title: "전화번호" },
         { field: "weight", title: "체중" },
         { field: "goal", title: "목표" },
       ],
@@ -94,11 +92,11 @@ export default {
       select_mem_table: [
         { type: "seq", title: "번호", width: 50, fixed: "left" },
         { type: "checkbox", fixed: "center", width: 50 },
-        { field: "name", title: "이름", width: 200 },
-        { field: "age", title: "나이", width: 200 },
-        { field: "phone", title: "전화번호", width: 200 },
-        { field: "weight", title: "체중" },
-        { field: "goal", title: "목표" },
+        { field: "name", title: "이름", className: "text-wrap" },
+        { field: "age", title: "나이", className: "text-wrap" },
+        { field: "phone", title: "전화번호", className: "text-wrap" },
+        { field: "weight", title: "체중", className: "text-wrap" },
+        { field: "goal", title: "목표", className: "text-wrap" },
       ],
       select_data: [],
     };
@@ -129,8 +127,8 @@ export default {
     },
   },
   mounted() {
-  window.addEventListener('scroll', this.onScrollAnimation);
-}
+    window.addEventListener("scroll", this.onScrollAnimation);
+  },
 };
 </script>
 
@@ -142,6 +140,11 @@ export default {
 .vxe-table--empty-content {
   display: none !important;
 }
+.text-wrap {
+  white-space: normal; /* 줄바꿈 허용 */
+  word-break: break-word; /* 단어 내에서도 줄바꿈 허용 */
+}
+
 .button-animation {
   transition: background-color 0.3s, transform 0.3s;
 }
@@ -151,9 +154,11 @@ export default {
   transform: translateY(-5px); /* 버튼이 살짝 위로 올라감 */
 }
 
+
 .fade-in {
   animation: fadeIn 1s;
 }
+
 
 @keyframes fadeIn {
   from {
@@ -162,14 +167,13 @@ export default {
   to {
     opacity: 1;
   }
-  
 }
 
 .btn {
   padding: 10px 20px;
   margin: 16px;
   border: none;
-  background-image: linear-gradient(45deg, hsl(150, 69%, 37%), #88d3ce);
+  background-image: linear-gradient(45deg, hsl(120, 69%, 11%), #525f5e);
   color: white;
   text-transform: uppercase;
   font-weight: bold;
