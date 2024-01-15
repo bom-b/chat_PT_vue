@@ -113,6 +113,12 @@ export default {
                 this.$axios.post("/matchCancle", requestData);
               } catch (e) {
                 console.log(e);
+                this.$swal.fire({
+                  icon: "warning",
+                  title: "PT신청중에 있습니다!",
+                  text: "PT선생님 변경은 기존 선생님과 상의 후 진행하시기 바랍니다.",
+                  
+                });
               }
               const Toast = this.$swal.mixin({
                 toast: true,

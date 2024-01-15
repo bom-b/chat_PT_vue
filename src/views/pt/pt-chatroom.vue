@@ -1,5 +1,4 @@
 <template>
-  <main>
     <div class="container" v-cloak>
       <div class="row">
         <div class="col-md-12">
@@ -8,7 +7,7 @@
       </div>
       <div class="input-group">
         <div class="input-group-prepend">
-          <label class="input-group-text">방제목</label>
+          <label class="input-group-text">회원 이름</label>
         </div>
         <input
           type="text"
@@ -16,11 +15,7 @@
           v-model="room_name"
           @keyup.enter="createRoom"
         />
-        <div class="input-group-append">
-          <button class="btn btn-primary" type="button" @click="createRoom">
-            채팅방 개설
-          </button>
-        </div>
+        
       </div>
       <ul class="list-group">
         <li
@@ -29,11 +24,10 @@
           :key="item.roomId"
           @click="enterRoom(item.roomId)"
         >
-          {{ item.name }}
+          {{ item.roomId }}
         </li>
       </ul>
     </div>
-  </main>
 </template>
 
 <script>
@@ -89,8 +83,9 @@ export default {
       if (sender !== "") {
         localStorage.setItem("wschat.sender", sender);
         localStorage.setItem("wschat.roomId", roomId);
-        //window.location.href = `/chat/room/enter/${roomId}`;
-        window.location.href = `/trainer/pt_chat`;
+        
+        this.$emit('change-component', 'NextComponentName'); // 이벤트 발송
+//window.location.href = `/trainer/pt_chat`;
       //}
       }
     },

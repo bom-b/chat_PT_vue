@@ -1,12 +1,12 @@
 <template>
   <transition name="slide-fade">
     <div v-if="isFloatingBox" class="floatting-box">
-
+      <component :is="currentComponent" @change-component="handleComponentChange" />
     </div>
   </transition>
   <div class="icon" :class="{active : isFloatingBox, inactive : !isFloatingBox}" @click="doFloating">
-    <img v-if="!isFloatingBox" class="icon-img" src="../../public/배경지운%20로고.png" style="" alt="">
-    <img v-if="isFloatingBox" class="icon-img" src="../../public/assets/img/graphic/x.png" style="width: 30px; opacity: 0.5;" alt="">
+    <img @click="showTemplate('ptSchedule')" v-if="!isFloatingBox" class="icon-img" src="../../public/배경지운%20로고.png" style="" alt="">
+    <img @click="showTemplate('ptSchedule')" v-if="isFloatingBox" class="icon-img" src="../../public/assets/img/graphic/x.png" style="width: 30px; opacity: 0.5;" alt="">
   </div>
 </template>
 <style scoped>
@@ -82,20 +82,40 @@
   opacity: 0;
 }
 </style>
+
 <script>
+import PtSchedule from "@/views/pt/pt-chatroom.vue"; //피티스케쥴로 링크
+import NextComponent from "@/views/pt/pt-chat.vue"; //피티스케쥴로 링크
+
+
 export default {
   name: 'ChattingFloatingIcon',
   data() {
     return {
       isFloatingBox: false,
+      currentComponent: PtSchedule, // 창 열때 기본페이지 : 피티스케쥴로 되어있음
     }
   },
   methods: {
     doFloating() {
       this.isFloatingBox = !this.isFloatingBox;
-    }
+    },
+    toggleWidget() {
+      this.$emit("hide-widget");
+    },
+    showTemplate(componentName) {
+      this.currentComponent = componentName;
+    },
+    handleComponentChange(componentName) {
+      if (componentName === "NextComponentName") {
+        this.currentComponent = NextComponent;
+      }
+    },
   },
-  components: {},
+  components: {
+    PtSchedule, 
+    NextComponent,
+},
   props: {},
   setup() {
   },
