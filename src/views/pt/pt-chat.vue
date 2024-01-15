@@ -1,55 +1,50 @@
 <template>
-  <main style="margin-top: 125px">
-    <div class="container" v-cloak>
-      <div>
-        <h2>{{ room.name }}</h2>
+  <div
+    class="container"
+    v-cloak
+    style="background-color: #003a2452; height: 690px; border-radius: 30px"
+  >
+    <div>
+      <h2>{{ room.name }}</h2>
+    </div>
+    <ul class="list-group" ref="chatList">
+      <li
+        class="list-group-item"
+        v-for="msg in messages"
+        :key="msg.id"
+        :class="{
+          'message-mine': msg.sender === sender,
+          'message-other': msg.sender !== sender,
+          'fade-in': msg.animation === 'fade-in',
+        }"
+      >
+        <span>{{ msg.message }}</span>
+        <div class="message-time">{{ formatTime(msg.logdate) }}</div>
+      </li>
+    </ul>
+    <div class="input-group" style="background-color: unset">
+      <div class="input-group-prepend">
+        <label class="input-group-text" style="border: 0"> ➕ </label>
+        <!--✔️ -->
       </div>
-      <ul class="list-group" ref="chatList">
-        <li
-          class="list-group-item"
-          v-for="msg in messages"
-          :key="msg.id"
-          :class="{
-            'message-mine': msg.sender === sender,
-            'message-other': msg.sender !== sender,
-          }"
+      <input
+        type="text"
+        class="form-control"
+        v-model="message"
+        @keypress.enter="sendMessage"
+      />
+      <div class="input-group-append">
+        <button
+          class="btn btn-primary"
+          type="button"
+          @click="sendMessage"
+          style="margin-left: 10px"
         >
-          <div class="profile-img-container d-flex" style="margin-right: 20px">
-            <img
-              class="profile-img"
-              src="../../assets/img/코딩춘식.jpeg"
-              alt=""
-              style="width: 32px; object-fit: contain; margin: 8px"
-            />{{ msg.sender }}
-          </div>
-          <span>{{ msg.message }}</span>
-          <div class="message-time">{{ formatTime(msg.logdate) }}</div>
-        </li>
-      </ul>
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <label class="input-group-text"> ➕ </label>
-          <!--✔️ -->
-        </div>
-        <input
-          type="text"
-          class="form-control"
-          v-model="message"
-          @keypress.enter="sendMessage"
-        />
-        <div class="input-group-append">
-          <button
-            class="btn btn-primary"
-            type="button"
-            @click="sendMessage"
-            style="margin-left: 10px"
-          >
-            보내기
-          </button>
-        </div>
+          보내기
+        </button>
       </div>
     </div>
-  </main>
+  </div>
 </template>
 
 <script>
@@ -125,8 +120,9 @@ export default {
         sender: recv.type === "ENTER" ? "[알림]" : recv.sender,
         message: recv.message,
         logdate: recv.logdate, // 시간도 추가
+        animation: "fade-in",
       });
-     
+
       // 새 메시지가 추가된 후 스크롤을 아래로
       this.$nextTick(() => {
         if (this.$refs.chatList) {
@@ -199,7 +195,6 @@ export default {
 .container {
   background-color: #f4f4f4;
 
-
   border-radius: 10px; /* 모서리 둥글게 */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* 그림자 효과 */
   max-width: 600px; /* 최대 너비 설정 */
@@ -217,7 +212,6 @@ export default {
 }
 
 .list-group {
-
   max-height: 600px; /* 채팅창 높이 */
   overflow-y: auto; /* 스크롤바 */
   background-color: white; /* 채팅창 배경색 */
@@ -232,11 +226,11 @@ export default {
 }
 
 .list-group::-webkit-scrollbar-track {
-  background: #f4f4f4;
+  background: rgb(200, 245, 226);
 }
 
 .list-group::-webkit-scrollbar-thumb {
-  background: #075b56;
+  background: #cafdcf;
 }
 
 .list-group::-webkit-scrollbar-thumb:hover {
@@ -256,7 +250,7 @@ export default {
 }
 
 .input-group-text {
-  background-color: #58a778; /* 초록색 배경 */
+  background-color: #58a77854; /* 초록색 배경 */
   color: white; /* 텍스트 색상 */
   border-radius: 5px 0 0 5px; /* 왼쪽 모서리 둥글게 */
 }
@@ -269,6 +263,10 @@ export default {
   background-color: #6cad64; /* 초록색 배경 */
   border: none; /* 테두리 없음 */
 }
+.btn-primary:hover {
+  background-color: #3c6037;
+  border: none; /* 테두리 없음 */
+}
 /* 내가 보낸 메시지 스타일 */
 .message-mine {
   margin-left: auto;
@@ -276,6 +274,7 @@ export default {
   border-bottom-right-radius: 0; /* 오른쪽 아래 모서리 둥글게 하지 않음 */
   text-align: left; /* 텍스트 왼쪽 정렬 */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* 그림자 효과 */
+  color: #000000;
   max-width: 80%;
   margin-right: 6px;
 }
@@ -299,7 +298,7 @@ export default {
 /* 다른 사람이 보낸 메시지 스타일 */
 .message-other {
   margin-right: auto;
-  background-color: #ffffff; /* 흰색 배경 */
+  background-color: #f4f4f4; /* 흰색 배경 */
   bottom: 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* 그림자 효과 */
   border-bottom-left-radius: 0; /* 왼쪽 아래 모서리 둥글게 하지 않음 */
@@ -324,19 +323,35 @@ export default {
   transform: rotate(-45deg) translate(50%, 50%);
 }
 
-/* 스크롤바 제거 */
 .list-group {
   overflow-y: auto; /* 스크롤바 설정 */
+  background-color: #0a7069da;
+  border: 0;
 }
-
 
 .list-group {
   -ms-overflow-style: none; /* IE, 엣지 */
   scrollbar-width: none; /* 파이어폭스 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
 }
 
 .message-time {
-  font-size: 0.8em; /* 시간 글자 크기 */
+  font-size: 0.7em; /* 시간 글자 크기 */
   color: #1e1f22; /* 시간 글자 색상 */
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translate3d(-10%, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(0);
+  }
+}
+
+/* 애니메이션 클래스 */
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
 }
 </style>

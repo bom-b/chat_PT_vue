@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import PtSchedule from "@/views/pt/pt-schedule.vue"; //피티스케쥴로 링크
+import PtSchedule from "@/views/default/d-find-trainer.vue"; //피티스케쥴로 링크
 
 export default {
   components: {

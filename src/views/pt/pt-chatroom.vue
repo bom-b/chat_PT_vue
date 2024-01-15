@@ -1,14 +1,13 @@
 <template>
-  <main>
-    <div class="container" v-cloak>
+    <div class="container" v-cloak style="background-color: #003a2452; height: 690px; border-radius: 30px;" >
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-12" style="margin-top: 30px;">
           <h3>채팅방 리스트</h3>
         </div>
       </div>
       <div class="input-group">
         <div class="input-group-prepend">
-          <label class="input-group-text">방제목</label>
+          <label class="input-group-text">회원 이름</label>
         </div>
         <input
           type="text"
@@ -16,11 +15,7 @@
           v-model="room_name"
           @keyup.enter="createRoom"
         />
-        <div class="input-group-append">
-          <button class="btn btn-primary" type="button" @click="createRoom">
-            채팅방 개설
-          </button>
-        </div>
+        
       </div>
       <ul class="list-group">
         <li
@@ -29,11 +24,10 @@
           :key="item.roomId"
           @click="enterRoom(item.roomId)"
         >
-          {{ item.name }}
+          {{ item.roomId }}
         </li>
       </ul>
     </div>
-  </main>
 </template>
 
 <script>
@@ -89,8 +83,9 @@ export default {
       if (sender !== "") {
         localStorage.setItem("wschat.sender", sender);
         localStorage.setItem("wschat.roomId", roomId);
-        //window.location.href = `/chat/room/enter/${roomId}`;
-        window.location.href = `/trainer/pt_chat`;
+        
+        this.$emit('change-component', 'NextComponentName'); // 이벤트 발송
+//window.location.href = `/trainer/pt_chat`;
       //}
       }
     },
@@ -101,5 +96,10 @@ export default {
 <style scoped>
 [v-cloak] {
   display: none;
+}
+.list-group-item{
+  background-color: #5482354f;
+  color: #f3f3f3;
+  border:0px;
 }
 </style>
