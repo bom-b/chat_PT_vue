@@ -1,11 +1,11 @@
-const apiAdmin= require("@/utils/apiAdmin");
+const apiAdmin= require("@/utils/apiAdminWithoutValidation");
 
 class AdminService {
-    login = async (user) => {
-        console.log(user.username);
+    login = async (admin) => {
+        console.log(admin.username);
         return await apiAdmin.post("/admin_login", {
-            userName: user.userName,
-            password: user.password,
+            userName: admin.userName,
+            password: admin.password,
         });
     };
 }

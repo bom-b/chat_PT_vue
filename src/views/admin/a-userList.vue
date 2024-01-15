@@ -134,6 +134,8 @@
           </tr>
         </thead>
         <tbody style="text-align: left">
+
+          
           <tr v-for="(trainer, index) in filteredItems" :key="index" @click="goToDetailPage(trainer)">
 
             <th style="padding: 30px 10px"></th>
@@ -226,7 +228,7 @@ computed: {
   goToDetailPage(trainer) {
   if (trainer && trainer.userid) {
     console.log(trainer.userid)
-    this.$router.push({ name: 'userDetails', params: { id: trainer.userid } });
+    this.$router.push({ name: 'a_userDetails', params: { id: trainer.userid } });
     
   } else {
     console.log("goPage Error");

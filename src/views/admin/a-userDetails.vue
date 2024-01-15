@@ -27,7 +27,6 @@
   
 
 <script>
-import axios from 'axios';
 export default {
   props: {
     id: String
@@ -42,16 +41,18 @@ export default {
   created() 
   {
 
-    axios.get(`http://localhost/springpt/details/${this.$route.params.id}`)
+    this.$Adminaxios.get(`/MembersDetails/${this.$route.params.id}`)
       .then(resp => {
         this.trainer = resp.data[0];
+        console.log(resp.data);
       })
       .catch(error => {
         console.error("Error fetching user details: ", error);
       });
 
-      axios.get(`http://localhost/springpt/findList/${this.$route.params.id}`)
+      this.$Adminaxios.get(`/MembersFind/${this.$route.params.id}`)
       .then(resp => {
+        console.log(resp.data);
         this.member = resp.data;
       })
       .catch(error => {
@@ -68,7 +69,7 @@ export default {
     {
         if (confirm('회원을 정말 삭제하시겠습니까?')) 
         {
-            axios.delete(`http://localhost/springpt/nordel/${nnum}`)
+          this.$Adminaxios.delete(`/nordel/${nnum}`)
             .then(response => {
             alert(response.data);
             this.$router.push('/a_userList')
@@ -83,7 +84,7 @@ export default {
     {
         if (confirm('회원을 정말 삭제하시겠습니까?')) 
         {
-            axios.delete(`http://localhost/springpt/ptdel/${tnum}`)
+          this.$Adminaxios.delete(`/ptdel/${tnum}`)
             .then(response => {
             alert(response.data);
             this.$router.push('/a_userList')

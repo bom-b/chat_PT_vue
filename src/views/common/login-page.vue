@@ -305,17 +305,17 @@ export default {
     },
     admin_login() {
       // 위 코드 복붙해서 구현해주시면 될거같아요
-      console.log("UserName  : " + this.user.userName);
-      console.log("password : " + this.user.password);
-      if (!this.user.userName) {
+      console.log("UserName  : " + this.admin.userName);
+      console.log("password : " + this.admin.password);
+      if (!this.admin.userName) {
         this.$swal.fire('', '아이디를 입력해주세요.');
         return;
-      } else if (!this.user.password) {
+      } else if (!this.admin.password) {
         this.$swal.fire('', '비밀번호를 입력해주세요.');
         return;
       }
 
-      AdminService.login(this.user)
+      AdminService.login(this.admin)
           .then((response) => {
         if (response.data.token != null) {
           console.log('응답 : ' + response.data);

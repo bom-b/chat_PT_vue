@@ -86,7 +86,7 @@
         <!-- 검색 상자 끝 -->
 
         <!-- 카테고리 선택 -->
-        <div class="col-3">
+        <!-- <div class="col-3">
           <select v-model="selectedCategory" @change="handleCategoryChange">
             <option disabled value="">카테고리 선택</option>
             <option
@@ -97,17 +97,23 @@
               {{ category }}
             </option>
           </select>
-        </div>
+        </div> -->
         <!-- 카테고리 선택 끝 -->
-        <button class="col-2">학습시키기</button>
-        <button class="col-2">삭제</button>
+        <button class="col-2" @click="handleSendJson">학습시키기</button>
+        <button class="col-2" @click="handleDelete">삭제</button>
       </div>
 
       <!-- 수정 데이터 목록 테이블 -->
       <table class="table transparent-table">
         <thead>
           <tr style="border-bottom: none">
-            <th class="col-1"></th>
+            <th class="col-1">
+              <input
+            type="checkbox"
+            @change="handleSelectAllChange"
+            :checked="selectAll"
+          />
+            </th>
             <th class="col-3"></th>
             <th class="col-8"></th>
           </tr>
@@ -121,6 +127,8 @@
                   type="checkbox"
                   role="switch"
                   :id="`checkbox${index + 1}`"
+                  :value="dataRow.edit_request_id"
+                  @change="handleCheckboxChange"
                 />
               </div>
             </td>
@@ -149,7 +157,6 @@
 
 
 <script>
-import axios from 'axios';
 
 export default {
   data() {
@@ -158,6 +165,8 @@ export default {
       items: [], // 검색 대상 항목들
       selectedCategory: "",
       categories: ["판독 전", "판독 완료", "전체 리스트"], // 카테고리 목록
+      checkItems : [],
+      selectAll : false,
     };
   },
   created() {
@@ -171,6 +180,17 @@ export default {
   },
 },
   methods: {
+
+    handleSelectAllChange() {
+      this.selectAll = !this.selectAll;
+      if (this.selectAll) {
+        // 전체 선택
+        this.checkItems = this.filteredItems.map(item => item.edit_request_id);
+      } else {
+        // 전체 해제
+        this.checkItems = [];
+      }
+    },
     handleSearch() {
       // 검색어 변경에 대한 로직 수행
     },
@@ -188,7 +208,7 @@ export default {
       return columnNames[index];
     },
     fetchEditList() {
-  axios.get("http://localhost/springpt/editList")
+    this.$Adminaxios.get("/editList")
     .then(resp => {
       console.log(resp.data[0]); // 데이터 구조 확인
       this.items = resp.data;
@@ -197,11 +217,61 @@ export default {
     .catch(error => {
       console.error("Error fetching edit list: ", error);
     });
-},
-
-
-
-
   },
+  handleCheckboxChange(event) {
+      const checkedId = event.target.value;
+      if (event.target.checked) {
+        this.checkItems.push(checkedId);
+      } else {
+        this.checkItems = this.checkItems.filter(id => id !== checkedId);
+      }
+      // 전체 선택 상태 업데이트
+      this.selectAll = this.checkItems.length === this.filteredItems.length;
+    },
+  // 기존 메서드
+  async handleDelete() {
+    console.log(this.checkItems[0])
+    console.log(this.checkItems.length)
+      if (this.checkItems.length === 0) {
+        alert("삭제할 항목을 선택하세요.");
+        return;
+      }
+      try 
+      {
+        await this.$Adminaxios.post("/deleteEditItems", this.checkItems);
+        this.fetchEditList(); // 데이터 목록을 다시 가져옵니다.
+        this.checkItems = []; // 체크된 항목 배열 초기화
+      } 
+      catch (error) 
+      {
+        console.error("Error deleting items: ", error);
+        alert("항목 삭제에 실패했습니다.");
+      }
+    },
+
+
+    handleSendJson()
+    {
+      if(this.checkItems.length === 0)
+      {
+        alert("전송할 목록을 선택해주세요!");
+        return;
+      }
+    this.$Adminaxios.post("/sendJsonFile" , {editRequestIds: this.checkItems})
+    .then(resp => {
+      console.log("보낸 데이터 : " +  resp.data)
+    })
+    .catch(error => {
+      console.error("응 오류야~", error);
+    });
+    },
+// 나머지 메서드들
+  },
+
+
+
+  
+
+
 };
 </script>
