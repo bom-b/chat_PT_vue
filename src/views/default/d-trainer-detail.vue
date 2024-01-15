@@ -36,12 +36,11 @@
 </template>
 
 <script>
-import Swal from 'sweetalert2';
 export default {
   data() {
     return {
       trainerInfo: {}, // 데이터 객체로 받기
-      trainerId:"",
+      trainerId: "",
     };
   },
   methods: {
@@ -58,7 +57,9 @@ export default {
         this.trainerId = this.$route.params.id;
         console.log("여기입니다 여러분", this.trainerId);
         // 가져온 ID를 사용하여 상세 정보를 요청
-        const response = await this.$axios.get(`/trainerList/${this.trainerId}`);
+        const response = await this.$axios.get(
+          `/trainerList/${this.trainerId}`
+        );
         this.trainerInfo = response.data;
         console.log("리스폰스", response);
         console.log(this.trainerInfo);
@@ -70,11 +71,12 @@ export default {
     async applyPT() {
       try {
         // PT 신청 데이터 준비
-        console.log(this.trainerId)
+        console.log(this.trainerId);
         const requestData = {
-          userId: "사용자ID", // 예시 데이터, 실제 값으로 변경 필요
-          trainerId: this.trainerId, // 트레이너 이름 넣기
-          
+          userId: "", // token인증으로 대체
+          trainerId: this.$route.params.id, // 트레이너 이름 넣기
+          roomId: "",
+          status: "wait",
         };
 
         // PT 신청 API 요청
@@ -82,16 +84,59 @@ export default {
 
         // 성공적인 요청 처리
         console.log("전송 성공:", response.data);
-        Swal.mixin({
-          toast : true,
-          timer:2000,
-          
-        })
+        this.$swal.fire({
+          icon: "success",
+          title: "PT상담이 신청되었습니다!",
+          text: "연락을 기다려주시기 바랍니다.",
+        });
       } catch (e) {
+        this.$swal
+          .fire({
+            icon: "warning",
+            title: "PT상담이 이미 신청 되어 있습니다!",
+            text: "기존 PT상담을 취소 하시겠습니까?",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "기존 PT예약 삭제",
+            cancelButtonText: "아니요, 유지하겠습니다.",
+          })
+          .then((result) => {
+            if (result.value) {
+              const requestData = {
+                userId: "", // token인증으로 대체
+                trainerId: this.$route.params.id, // 트레이너 이름 넣기
+                roomId: "",
+                status: "wait",
+              };
+              try {
+                this.$axios.post("/matchCancle", requestData);
+              } catch (e) {
+                console.log(e);
+              }
+              const Toast = this.$swal.mixin({
+                toast: true,
+                position: "center-center",
+                showConfirmButton: false,
+                timer: 8000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener("mouseenter", this.$swal.stopTimer);
+                  toast.addEventListener("mouseleave", this.$swal.resumeTimer);
+                },
+              });
+
+              Toast.fire({
+                icon: "success",
+                title: "이전 PT상담이 취소 되었습니다.",
+                text: "다시 PT신청 부탁드립니다.",
+              });
+            }
+          });
+
         console.error("전송 실패:", e);
       }
     },
-  
   },
   mounted() {
     this.fetchTrainerDetail();
@@ -108,10 +153,6 @@ export default {
 .card {
   transition: transform 0.6s; /* 애니메이션 지속 시간 설정 */
   transform-origin: center; /* 회전의 중심점을 카드 중앙으로 설정 */
-}
-
-.card:hover {
-  /* animation: spin 0.6s infinite linear; 무한 회전 애니메이션 적용 */
 }
 
 @keyframes spin {
