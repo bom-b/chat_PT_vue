@@ -192,10 +192,10 @@ export default {
         .then((res) => {
           this.recommandCal = res.data.recommandCal
           this.dietList = res.data.dietList
-          console.log(res.data)
+          
           if (res.data.dietList.length === 0) {
             // 데이터 길이가 0이면 알림을 띄우고 함수를 종료합니다.
-            alert('선택한 기간에 대한 데이터가 없습니다.');
+            this.$swal('','선택한 기간에 대한 데이터가 없습니다.','warning');
             this.dataLoaded = true;
             this.hasData = false;
             return;
@@ -266,7 +266,7 @@ export default {
     // 위에 거대한 차트를 만드는 함수
     setupChart(allDates, dailyTotals) {
       if (!this.dataLoaded) return;
-      const canvas = this.$refs.myChart; // Using ref to access the canvas
+      const canvas = this.$refs.myChart; 
       if (!canvas) return;
 
       const ctx = canvas.getContext('2d');
@@ -484,7 +484,7 @@ export default {
 
 /* 사이드바 스타일링 */
 .sidebar {
-  width: 250px;
+  width: 20%;
   border: 2px solid #008136;
   /* 테두리 적용: 두께, 스타일, 색상 */
   color: #000000;

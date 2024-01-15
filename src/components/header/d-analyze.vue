@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       navLinks: [
-        { name: '변화추이', route: '/default/d_a_change' },
+        { name: '변화추이', route: '/default/d_a_change_calory' },
         { name: '영양균형', route: '/default/d_a_balance' },
         { name: '식사기록', route: '/default/d_a_record' }
       ]
