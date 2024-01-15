@@ -14,7 +14,7 @@ export default {
   },
   watch: {
     selectRegion: {
-      immediate: true, // 페이지 로딩 시에도 호출
+   localhost: true, // 페이지 로딩 시에도 호출
       handler: function (newValue, oldValue) {
         // selectRegion이 변경될 때마다 호출되는 로직
         if (oldValue !== newValue) {

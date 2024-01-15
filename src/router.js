@@ -2,12 +2,12 @@ import {createRouter, createWebHistory, RouterView } from "vue-router";
 import store from './store';
 
 /*공통*/
-import Home from "./views/common/main-home.vue";
+import Home from "@/views/common/main-home.vue";
 
 /*에러*/
-import noAuth from "./views/common/errorPages/noAuth-page.vue";
-import noValidity from "./views/common/errorPages/noValidity-page.vue";
-import pageNotFound from "./views/common/errorPages/pageNotFound-page.vue";
+import noAuth from "@/views/common/errorPages/noAuth-page.vue";
+import noValidity from "@/views/common/errorPages/noValidity-page.vue";
+import pageNotFound from "@/views/common/errorPages/pageNotFound-page.vue";
 
 /*비회원 라우터*/
 import nonMemberServiceRoutes from "@/routes/nonMemberServiceRoutes";
@@ -74,7 +74,7 @@ const routes = [
         path: "/admin",
         component: RouterView,
         children: adminRoutes,
-        meta : { headerType: null },
+        meta : { headerType: "admin" },
     },
 
     // 존재하지 않는 페이지

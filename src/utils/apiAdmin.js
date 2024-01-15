@@ -1,13 +1,9 @@
-// axios 요청을 할 때 헤더에 토큰을 실어서 보내도록 함
-// axios 요청이 일어날때 요청을 인터셉트해서 토큰 유효성 검사를 먼저 진행
-// 토큰이 유효하지 않으면 경고창을 띄우기 때문에
-// 개별적으로 토큰이 유효하지 않을때 발생하는 오류를 처리할 필요가 없음.
 const axios = require("axios");
+
+const API_URL = "http://localhost/admin";
 const swal = require("sweetalert2");
 
-const API_URL = "http://localhost/springpt";
-
-const axiosInstance = axios.create({
+const AdminaxiosInstance = axios.create({
     baseURL: API_URL,
     headers: {
         "Content-Type": "application/json",
@@ -15,7 +11,7 @@ const axiosInstance = axios.create({
     withCredentials: true,
 });
 
-axiosInstance.interceptors.request.use(
+AdminaxiosInstance.interceptors.request.use(
     async (config) => {
         const token = localStorage.getItem("jwtToken");
 
@@ -23,7 +19,7 @@ axiosInstance.interceptors.request.use(
 
         // 토큰 유효성 검사
         try {
-            await axios.get(API_URL + '/checkToken', {
+            await axios.get(API_URL + '/checkAdmin', {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
@@ -41,7 +37,6 @@ axiosInstance.interceptors.request.use(
                 });
             window.localStorage.removeItem('jwtToken');
             window.localStorage.removeItem('role');
-            window.localStorage.removeItem('nickname');
             window.localStorage.removeItem('name');
         }
 
@@ -52,6 +47,4 @@ axiosInstance.interceptors.request.use(
     }
 );
 
-module.exports = axiosInstance;
-
-
+module.exports = AdminaxiosInstance;
