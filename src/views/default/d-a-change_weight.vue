@@ -25,7 +25,7 @@
         <!-- 메인 컨텐츠 -->
         <div class="main">
           <div v-if="dataLoaded && hasData" class="chart">
-            <canvas id="myChart"></canvas>
+            <canvas ref="myChart"></canvas>
           </div>
           <img v-else-if="dataLoaded && !hasData" src="../../assets/img/nonochun.png" alt="No data">
           <p v-else>데이터 로딩 중...</p>
@@ -58,11 +58,14 @@ export default {
       // 선택된 주의 끝 날짜
       endOfWeek: '',
       //권장 칼로리 양
-      recommandCal: 0,
       dataLoaded: true,
       hasData: false,
+
       isClickable: true,
+
       target: 0,
+
+      weightList: [],
     }
   },
   components: {
@@ -132,9 +135,9 @@ export default {
       })
         .then((res) => {
           this.target = res.data.targetWeight.target_Weight;
-          console.log(res.data.weightList)
+          this.weightList = res.data.weightList
           if (res.data.weightList.length === 0) {
-            alert('선택한 기간에 대한 데이터가 없습니다.');
+            this.$swal('', '선택한 기간에 대한 데이터가 없습니다.', 'warning');
             this.dataLoaded = true;
             this.hasData = false;
             return;
@@ -142,30 +145,36 @@ export default {
 
           const allDates = this.getAllDates(this.startOfWeek, this.endOfWeek); // 모든 날짜 가져오기
           let dailyWeight = [];
+          let lastValidData = null; // 이전 유효한 데이터를 추적하기 위한 변수
 
-          allDates.forEach(date => {
+          allDates.forEach((date) => {
             const currentDate = new Date(date);
 
             if (currentDate.setHours(0, 0, 0, 0) > today) {
-              // 현재 날짜보다 미래인 경우 데이터를 찍지 않습니다.
-              dailyWeight.push(null);
+              dailyWeight.push(null); // 미래 날짜는 null 처리
             } else {
-              // 서버 데이터에서 해당 날짜에 대한 데이터를 찾습니다.
-              const dataForDate = res.data.weightList.find(item => {
+              let dataForDate = res.data.weightList.find(item => {
                 const itemDate = item.dietLogDate.split(' ')[0]; // 'YYYY-MM-DD' 형식으로 변환
                 return itemDate === date;
               });
 
+              if (dataForDate) {
+                lastValidData = dataForDate.dietLogKg; // 유효한 데이터를 저장
+              } else {
+                dataForDate = { dietLogKg: lastValidData || this.target }; // 유효한 데이터가 없으면 이전 데이터 또는 타겟 무게 사용
+              }
 
-              dailyWeight.push(dataForDate ? dataForDate.dietLogKg : this.target);
+              dailyWeight.push(dataForDate.dietLogKg);
             }
           });
-          console.log("dailyWeight",dailyWeight)
+
           this.hasData = dailyWeight.length > 0;
-          
-          this.setupChart(allDates, dailyWeight);
           this.dataLoaded = true;
-    
+          this.$nextTick(() => {
+            if (this.hasData) {
+              this.setupChart(allDates, dailyWeight);
+            }
+          });
 
           setTimeout(() => this.isClickable = true, 1500);
         })
@@ -174,74 +183,106 @@ export default {
           alert('데이터 로딩 중 오류가 발생했습니다. 오류 로그를 확인하세요.');
           this.dataLoaded = true;
           this.hasData = false;
+        })
+        .finally(() => {
+          this.dataLoaded = true; // 데이터 로딩 완료
+          setTimeout(() => {
+            this.isClickable = true; // 지정된 시간 후 클릭 활성화
+          }, 1500); // 1.5초 동안 클릭 비활성화
+
+
+
         });
     },
 
 
     // 위에 거대한 차트를 만드는 함수
     setupChart(allDates, dailyWeight) {
-  // 차트를 그리기 위한 캔버스 컨텍스트를 가져옵니다.
-  const ctx = document.getElementById('myChart').getContext('2d');
-  if (!ctx) {
-    console.error("차트 컨텍스트를 찾을 수 없습니다.");
-    return;
-  }
+      // 차트를 그리기 위한 캔버스 컨텍스트를 가져옵니다.
+      if (!this.dataLoaded) return;
+      const canvas = this.$refs.myChart; // Using ref to access the canvas
+      if (!canvas) {
+        console.error("Canvas element not found");
+        return;
+      }
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        console.error("Failed to get canvas context");
+        return;
+      }
 
-  // 이전에 생성된 차트가 있다면 제거합니다.
-  if (this.chart) {
-    this.chart.destroy();
-  }
 
-  // 목표 몸무게 데이터를 전체 날짜 배열 길이만큼 생성합니다.
-  const constantData = Array(allDates.length).fill(this.target);
+      if (this.chart) {
+        this.chart.destroy();
+      }
 
-  // 차트를 생성합니다.
-  this.chart = new Chart(ctx, {
-    type: 'line', // 차트 타입
-    data: {
-      labels: allDates, // X축 라벨
-      datasets: [{
-        label: '등록 몸무게',
-        data: dailyWeight, // 등록 몸무게 데이터
-        borderColor: '#008136', // 선 색상
-        borderWidth: 1,
-        fill: false
-      }, {
-        label: '목표 몸무게',
-        data: constantData, // 목표 몸무게 데이터
-        borderColor: '#FF5733', // 선 색상
-        borderWidth: 1,
-        fill: false,
-        pointRadius: 0 // 점 표시 안 함
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true // Y축을 0부터 시작
-        }
-      },
-      plugins: {
-        legend: {
-          display: true, // 범례 표시
-          position: 'top' // 범례 위치
+
+      // 목표 몸무게 데이터를 전체 날짜 배열 길이만큼 생성합니다.
+      const constantData = Array(allDates.length).fill(this.target);
+      let datasets = [];
+      if (this.weightList.length === 0 && this.formatDate(new Date()) === this.startOfWeek) {
+        // 오직 recommandCal 데이터만 차트에 추가
+        datasets.push({
+          label: '목표 몸무게',
+          data: constantData,
+          borderColor: '#FF5733',
+          borderWidth: 1,
+          fill: false,
+          pointRadius: 0,
+        });
+      } else {
+        datasets = [
+          {
+            label: '일일 몸무게',
+            data: dailyWeight,
+            borderColor: '#008136',
+            borderWidth: 1,
+            fill: false,
+          },
+          {
+            label: '목표 몸무게',
+            data: constantData,
+            borderColor: '#FF5733',
+            borderWidth: 1,
+            fill: false,
+            pointRadius: 0,
+          },
+        ];
+      }
+      // 차트를 생성합니다.
+      this.chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: allDates,
+          datasets: datasets,
         },
-        tooltip: {
-          enabled: true, // 툴팁 활성화
-          mode: 'index',
-          intersect: false
-        }
-      },
-      elements: {
-        line: {
-          tension: 0.4 // 선의 곡률
-        }
-      },
-      responsive: true, // 반응형 차트 설정
-      maintainAspectRatio: false // 종횡비 유지 안 함
-    }
-  });
-},
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+            },
+            tooltip: {
+              enabled: true,
+              mode: 'index',
+              intersect: false,
+            },
+          },
+          elements: {
+            line: {
+              tension: 0.4,
+            },
+          },
+          responsive: true,
+          maintainAspectRatio: false,
+        },
+      });
+    },
 
 
     tablechange() {
@@ -278,7 +319,8 @@ export default {
 
     // 초기 데이터 가져오기
 
-    this.fetchData(); // 초기 데이터 로딩
+    this.fetchData(); // 초기 데이터 로딩'
+
   }
 };
 </script>

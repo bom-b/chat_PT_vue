@@ -192,10 +192,10 @@ export default {
         .then((res) => {
           this.recommandCal = res.data.recommandCal
           this.dietList = res.data.dietList
-          console.log(res.data)
+          
           if (res.data.dietList.length === 0) {
             // 데이터 길이가 0이면 알림을 띄우고 함수를 종료합니다.
-            alert('선택한 기간에 대한 데이터가 없습니다.');
+            this.$swal('','선택한 기간에 대한 데이터가 없습니다.','warning');
             this.dataLoaded = true;
             this.hasData = false;
             return;
