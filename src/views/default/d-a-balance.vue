@@ -8,38 +8,120 @@
         <button type="button" class="btn bold" @click="moveWeek(1)">&gt;</button>
       </div>
       <div class="chart-container mt-5">
-        <div class="chart">
+        <div class="chart" v-if="hasData">
           <canvas ref="canvasChart1"></canvas>
         </div>
+        <img v-else-if="!hasData" src="../../assets/img/nonochun.png" alt="No data">
       </div>
       <div class="comment-container">
-        <h2 :class="commentClass">{{ comment }}</h2>
-      </div>
+        <h2 :class="commentClass" v-if="hasData" v-html="formattedComment"></h2>
 
+        <h2 v-else-if="!hasData">이 기간 데이터가 없습니다.</h2>
+
+      </div>
+      <div class="row" v-if="hasData">
+        <div class="col-md-4">
+
+          <div class="card">
+            <span class="badge badge-gold">1등</span>
+            <img src="http://localhost/springpt/images/%EB%88%95%EC%B6%98%EC%8B%9D%EC%9D%B4.png" class="card-img-top"
+              alt="음식1">
+            <div class="card-body" style="text-align: center;">
+              <h5 class="card-title foodname">{{ foodFirst.foodname }}</h5>
+              <span class="weight">100g 기준</span>
+              <ul class="list-unstyled">
+                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i> <span class="card-text ctext"><span v-if="foodFirst.food_dan == 0">단백질 함량 : </span><span
+                  v-else-if="foodFirst.food_tan == 0">탄수화물 함량 : </span><span v-else-if="foodFirst.food_gi == 0">지방 함량 : 
+                </span> <span style="font-size: 1.1rem; font-weight: bold;">{{ (foodFirst.ratio * 100).toFixed(2) }} g</span></span>
+                </li>
+                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i><span>칼로리 : </span> {{ (foodFirst.foodcal * 100 / foodFirst.foodweight).toFixed(2) }}
+                kcal
+               </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 두 번째 카드 -->
+        <div class="col-md-4">
+          <div class="card">
+            <span class="badge badge-silver">2등</span>
+            <img src="http://localhost/springpt/images/%EB%88%95%EC%B6%98%EC%8B%9D%EC%9D%B4.png" class="card-img-top"
+              alt="음식2">
+            <div class="card-body" style="text-align: center;">
+              <h5 class="card-title foodname">{{ foodSecond.foodname }}</h5>
+              <span class="weight">100g 기준</span>          
+              <ul class="list-unstyled">
+                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i> <span class="card-text ctext"><span v-if="foodSecond.food_dan == 0">단백질 함량 : </span><span
+                  v-else-if="foodSecond.food_tan == 0">탄수화물 함량 : </span><span v-else-if="foodSecond.food_gi == 0">지방 함량 : 
+                </span><span style="font-size: 1.1rem; font-weight: bold;"> {{ (foodSecond.ratio * 100).toFixed(2) }} g</span></span>
+                </li>
+                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i><span>칼로리 : </span> {{ (foodSecond.foodcal * 100 / foodSecond.foodweight).toFixed(2) }}
+                kcal
+               </li>
+              </ul>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- 세 번째 카드 -->
+        <div class="col-md-4">
+          <div class="card">
+            <span class="badge badge-bronze">3등</span>
+            <img src="http://localhost/springpt/images/%EB%88%95%EC%B6%98%EC%8B%9D%EC%9D%B4.png" class="card-img-top"
+              alt="음식3">
+            <div class="card-body" style="text-align: center;">
+              <h5 class="card-title foodname">{{ foodThird.foodname }}</h5>
+              <span class="weight">100g 기준</span>
+              <ul class="list-unstyled">
+                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i> <span class="card-text ctext"><span v-if="foodThird.food_dan == 0">단백질 함량 : </span><span
+                  v-else-if="foodThird.food_tan == 0">탄수화물 함량 : </span><span v-else-if="foodThird.food_gi == 0">지방 함량 : 
+                </span> <span style="font-size: 1.1rem; font-weight: bold;">{{ (foodThird.ratio * 100).toFixed(2) }} g</span></span>
+                </li>
+                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i><span>칼로리 : </span> {{ (foodThird.foodcal * 100 / foodThird.foodweight).toFixed(2) }}
+                kcal
+               </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 </template>
 
 <style scoped>
 .comment-container {
+  margin-top: 45px;
+  margin-bottom: 45px;
   padding: 20px;
-  text-align: center;
+  background: #ffffff;
+  display: flex;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* 차트에 그림자 효과 추가 */
+  justify-content: center;
+  align-items: center;
+}
+.my-list-item {
+  padding: 10px 0; /* 상하 패딩 추가 */
+  font-size: 16px; /* 폰트 크기 조정 */
 }
 
-.comment-tan {
-  color: #ffa726; /* 탄수화물에 대한 코멘트 색상 */
+.my-list-item i {
+  width: 25px; /* 아이콘의 너비를 고정 */
+  margin-right: 5px; /* 아이콘과 텍스트 사이의 오른쪽 마진 추가 */
 }
 
-.comment-dan {
-  color: #66bb6a; /* 단백질에 대한 코멘트 색상 */
-}
-
-.comment-gi {
-  color: #42a5f5; /* 지방에 대한 코멘트 색상 */
+.foodname {
+  font-size: 1.6em;
+  font-weight: bold;
 }
 
 .comment-balanced {
-  color: #9e9e9e; /* 균형 잡힌 코멘트 색상 */
+  color: #9e9e9e;
+  /* 균형 잡힌 코멘트 색상 */
 }
 
 h2 {
@@ -59,6 +141,22 @@ h2 {
   /* 버튼 사이의 간격 */
 }
 
+.weight {
+  font-size: 0.8rem;
+  margin-bottom: 45px;
+}
+
+.badge {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  margin-top: 5px;
+
+}
+
+.ctext {
+  margin-top: 15px;
+}
+
 .badge_col {
   background-color: #008136;
   color: white;
@@ -69,14 +167,40 @@ h2 {
 .chart-container {
   background: #ffffff;
   display: flex;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* 차트에 그림자 효과 추가 */
   justify-content: center;
   align-items: center;
+  height: 650px;
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  margin-bottom: 45px;
 }
 
 .chart {
   margin-top: 15px;
   width: 50%;
   /* 차트 컨테이너의 1/3 크기를 가지도록 설정 */
+}
+
+.badge-gold {
+  background-color: #ffd700;
+  /* 금색 */
+}
+
+.badge-silver {
+  background-color: #c0c0c0;
+  /* 은색 */
+}
+
+.badge-bronze {
+  background-color: #cd7f32;
+  /* 동색 */
 }
 </style>
 
@@ -110,6 +234,11 @@ export default {
       charts: [],
       comment: '',
       chooseone: '',
+      hasData: false,
+      // 추천 음식 1,2,3
+      foodFirst: [],
+      foodSecond: [],
+      foodThird: [],
     };
   },
   created() {
@@ -194,14 +323,18 @@ export default {
         this.weeklyAvg_dan = res.data.avgTanDanGi.weeklyAvg_dan;
         this.weeklyAvg_gi = res.data.avgTanDanGi.weeklyAvg_gi;
 
-        this.createChart();
-
+        this.hasData = true;
+        this.$nextTick(() => {
+          this.createChart();
+        });
         this.updateComment();
-        // 이제 안전하게 weeklyAvg_tan, weeklyAvg_dan, weeklyAvg_gi에 접근할 수 있습니다.
+
       } catch (error) {
         // 오류 처리
         console.error('Error fetching data:', error);
-        this.$swal('', '이 기간에 데이터가 없습니다.', 'warning');
+
+        this.hasData = false;
+
       }
 
     },
@@ -215,34 +348,39 @@ export default {
 
       // 가장 낮은 비율을 가진 영양소를 찾습니다.
       const minRatio = Math.min(tanRatio, danRatio, giRatio);
+
+      const highlightStartTag = '<span style = "color: #dd2c00; font-size: 2.0rem">';
+      const highlightEndTag = '</span>';
       if (this.weeklyAvg_tan > this.recommand_tan && this.weeklyAvg_dan > this.recommand_tan && this.weeklyAvg_gi > this.recommand_gi) {
         this.comment = "평소에 너무많은 영양소를 섭취하고 있어요, 먹는 양을 줄여보는 거는 어떠세요??"
         this.chooseone = 'foodcal'
       }
       else if (minRatio === danRatio) {
-        this.comment = "단백질 섭취량이 상대적으로 적어요, 단백질 함량이 많은 음식을 추천해 줄게요";
+        this.comment = ` ${highlightStartTag}단백질${highlightEndTag} 섭취량이 상대적으로 적어요, ${highlightStartTag}단백질${highlightEndTag} 함량이 많은 음식을 추천해드릴게요`;
         this.chooseone = 'food_dan';
       } else if (minRatio === giRatio) {
-        this.comment = "지방 섭취량이 상대적으로 적어요, 지방 함량이 많은 음식을 추천해 줄게요";
+        this.comment = `${highlightStartTag}지방${highlightEndTag} 섭취량이 상대적으로 적어요, ${highlightStartTag}지방${highlightEndTag} 함량이 많은 음식을 추천해드릴게요`;
         this.chooseone = 'food_gi';
       } else if (minRatio === tanRatio) {
-        this.comment = "탄수화물 섭취량이 상대적으로 적어요, 탄수화물 함량이 많은 음식을 추천해 줄게요";
-        this.chooseone = 'food_tan'
+        this.comment = `${highlightStartTag}탄수화물${highlightEndTag} 섭취량이 상대적으로 적어요, ${highlightStartTag}탄수화물${highlightEndTag} 함량이 많은 음식을 추천해드릴게요`;
+        this.chooseone = 'food_tan';
       } else {
         this.comment = "영양소 균형이 잘 맞춰져 있어요, 좋은 식습관을 유지하세요!";
       }
+
       this.fetchfoddData()
     },
     // 2024/01/15 진행중 !!! top 3 영양소 부족한거 뽑아냄!!
-    fetchfoddData(){
+    fetchfoddData() {
       this.$axios.get('/food_top3', {
         params: {
           chooseone: this.chooseone,
         }
       })
         .then((res) => {
-          console.log(this.chooseone)
-          console.log(res.data)
+          this.foodFirst = res.data[0];
+          this.foodSecond = res.data[1];
+          this.foodThird = res.data[2];
 
         })
 
@@ -270,23 +408,23 @@ export default {
                   label: '권장 영양소',
                   data: [this.recommand_tan, this.recommand_dan, this.recommand_gi], // 이 값들은 첫 번째 데이터 세트의 각 항목에 해당하는 값입니다.
                   fill: true,
-                  backgroundColor: 'rgba(255, 99, 132, 0.2)', // 데이터 세트의 배경 색상
-                  borderColor: 'rgb(255, 99, 132)', // 경계선 색상
-                  pointBackgroundColor: 'rgb(255, 99, 132)', // 데이터 포인트의 배경 색상
+                  backgroundColor: 'rgba(35, 164, 26, 0.2)', // 데이터 세트의 배경 색상
+                  borderColor: 'rgb(35, 164, 26)', // 경계선 색상
+                  pointBackgroundColor: 'rgb(35, 164, 26)', // 데이터 포인트의 배경 색상
                   pointBorderColor: '#fff', // 데이터 포인트의 경계선 색상
                   pointHoverBackgroundColor: '#fff', // 호버 시 데이터 포인트의 배경 색상
-                  pointHoverBorderColor: 'rgb(255, 99, 132)' // 호버 시 데이터 포인트의 경계선 색상
+                  pointHoverBorderColor: 'rgb(35, 164, 26)' // 호버 시 데이터 포인트의 경계선 색상
                 },
                 {
                   label: '평균 섭취 영양소',
                   data: [this.weeklyAvg_tan, this.weeklyAvg_dan, this.weeklyAvg_gi], // 이 값들은 두 번째 데이터 세트의 각 항목에 해당하는 값입니다.
                   fill: true,
-                  backgroundColor: 'rgba(54, 162, 235, 0.2)', // 데이터 세트의 배경 색상
-                  borderColor: 'rgb(54, 162, 235)', // 경계선 색상
-                  pointBackgroundColor: 'rgb(54, 162, 235)', // 데이터 포인트의 배경 색상
+                  backgroundColor: 'rgba(220, 91, 229, 0.2)', // 데이터 세트의 배경 색상
+                  borderColor: 'rgb(220, 91, 229)', // 경계선 색상
+                  pointBackgroundColor: 'rgb(220, 91, 229)', // 데이터 포인트의 배경 색상
                   pointBorderColor: '#fff', // 데이터 포인트의 경계선 색상
                   pointHoverBackgroundColor: '#fff', // 호버 시 데이터 포인트의 배경 색상
-                  pointHoverBorderColor: 'rgb(54, 162, 235)' // 호버 시 데이터 포인트의 경계선 색상
+                  pointHoverBorderColor: 'rgb(220, 91, 229)' // 호버 시 데이터 포인트의 경계선 색상
                 }
               ]
             },
@@ -326,18 +464,20 @@ export default {
     formattedEndDate() {
       return this.formatDate(this.endDate);
     },
+    formattedComment() {
+      // comment 내용에 highlight 클래스를 추가하여 스타일을 적용합니다.
+      return this.comment;
+    },
     commentClass() {
-    if (this.comment.includes("탄수화물")) {
-      return 'comment-tan';
-    } else if (this.comment.includes("단백질")) {
-      return 'comment-dan';
-    } else if (this.comment.includes("지방")) {
-      return 'comment-gi';
-    } else {
-      return 'comment-balanced';
-    }
+      if (this.comment.includes('${highlightStartTag}')) {
+        return 'highlight';
+      } else {
+        return 'comment';
+      }
+    },
+
   },
-  },
+
 
   mounted() {
     this.fetchData();
