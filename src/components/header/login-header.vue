@@ -17,7 +17,7 @@
 }
 </style>
 <template>
-    <nav class="navbar navbar-expand-sm fixed-top navbar-light bg-light "
+    <nav class="navbar navbar-expand fixed-top navbar-light bg-light "
         style="min-height: 80px; background-color: white !important;">
         <div class="container-fluid">
             <router-link to="/" class="router-link">

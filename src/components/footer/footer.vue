@@ -1,31 +1,13 @@
 <!-- Footer.vue -->
-
 <template>
   <footer>
     <div class="footer-content">
       <div class="footer-logo">
-        <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
-        <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
       </div>
-      <div class="footer-links">
-        <router-link to="/">ict 01기 D조</router-link>
-      </div>
-      <div class="footer-social">
-        <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
-        <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          <i class="fab fa-twitter"></i>
-        </a>
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          <i class="fab fa-instagram"></i>
-        </a>
-      </div>
+      <strong>Chat_PT</strong>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2023 Your Company. All rights reserved.</p>
+      <p>&copy; CHOONSIX. All rights reserved.</p>
     </div>
   </footer>
 </template>
@@ -41,16 +23,13 @@ export default {
 footer {
   background-color: #efefef;
   color: #727070;
-  padding: 20px 0;
+  padding: 30px 0;
   text-align: center;
+  height: 140px;
 }
 
 .footer-content {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .footer-logo img {
@@ -72,8 +51,9 @@ footer {
 }
 
 .footer-bottom {
-  margin-top: auto;
+  margin-top: 30px;
 }
+
 template {
   min-height: 100%;
 }

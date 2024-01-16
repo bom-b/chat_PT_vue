@@ -50,11 +50,14 @@ a:hover {
   color: #00997b;
 }
 
+#loginbtn-box {
+  margin-left: auto;
+}
 
 /* 모바일 환경에서의 스타일 적용 */
 @media (max-width: 768px) {
-  .btn-login {
-    margin-top: 50px;
+  #loginbtn-box {
+    margin-left: auto;
   }
 }
 
@@ -64,7 +67,7 @@ a:hover {
 </style>
 
 <template>
-  <nav class="navbar navbar-expand-sm fixed-top" style="min-height: 80px;">
+  <nav class="navbar navbar-expand fixed-top" style="min-height: 80px;">
     <div class="container-fluid">
       <router-link to="/" class="router-link">
         <img src="../../assets/img/배경지운 로고.png" alt="" style="width: 50px;">
@@ -74,12 +77,12 @@ a:hover {
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="mynavbar">
-        <ul class="navbar-nav me-auto">
+        <ul class="navbar-nav">
           <li class="nav-item" v-for="link in navLinks" :key="link.name">
             <router-link :to="link.route" class="nav-link" :class="{ activeLink: currentRoute === link.route }">{{ link.name }}</router-link>
           </li>
         </ul>
-        <form class="d-flex">
+        <form id="loginbtn-box" class="d-flex">
           <router-link to="/service/login" class="router-link">
             <button class="btn btn-login btn-signature" type="button">로그인</button>
           </router-link>
