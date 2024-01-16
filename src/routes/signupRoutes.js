@@ -1,4 +1,5 @@
 import Sign_up_main from "@/views/signup/sign_up_main.vue";
+import kakao_sign_up_main from "@/views/signup/kakao_sign_up_main.vue";
 import Sign_up from "@/views/signup/d_signup/sign_up.vue";
 import Sign_up2 from "@/views/signup/d_signup/sign_up2.vue";
 import Sign_up3 from "@/views/signup/d_signup/sign_up3.vue";
@@ -12,6 +13,8 @@ import PT_Sign_Finish from "@/views/signup/pt_signup/pt_sign_finish.vue";
 const adminRoutes = [
     // 회원가입 메인
     {path: "/signUp/sign_up_main", component: Sign_up_main},
+    // 카카오 회원가입 메인
+    {path: "/signUp/kakao_sign_up_main", component: kakao_sign_up_main},
 
     // 일반 회원가입
     {path: "/signUp/sign_up", component: Sign_up},

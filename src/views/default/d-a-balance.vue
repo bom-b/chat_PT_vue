@@ -11,25 +11,41 @@
         <div class="chart">
           <canvas ref="canvasChart1"></canvas>
         </div>
-        <div class="chart">
-          <canvas ref="canvasChart2"></canvas>
-        </div>
-        <div class="chart">
-          <canvas ref="canvasChart3"></canvas>
-        </div>
       </div>
+      <div class="comment-container">
+        <h2 :class="commentClass">{{ comment }}</h2>
+      </div>
+
     </div>
   </main>
 </template>
 
 <style scoped>
-.btn-dark-gray {
-  background-color: #343a40;
-  /* 진한 회색 */
-  color: white;
-  /* 글씨 색상을 흰색으로 설정 */
+.comment-container {
+  padding: 20px;
+  text-align: center;
+}
+
+.comment-tan {
+  color: #ffa726; /* 탄수화물에 대한 코멘트 색상 */
+}
+
+.comment-dan {
+  color: #66bb6a; /* 단백질에 대한 코멘트 색상 */
+}
+
+.comment-gi {
+  color: #42a5f5; /* 지방에 대한 코멘트 색상 */
+}
+
+.comment-balanced {
+  color: #9e9e9e; /* 균형 잡힌 코멘트 색상 */
+}
+
+h2 {
+  font-size: 1.5em;
   font-weight: bold;
-  /* 글씨 굵게 */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .bold {
@@ -51,12 +67,15 @@
 }
 
 .chart-container {
+  background: #ffffff;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: center;
 }
 
 .chart {
-  width: 33%;
+  margin-top: 15px;
+  width: 50%;
   /* 차트 컨테이너의 1/3 크기를 가지도록 설정 */
 }
 </style>
@@ -89,6 +108,8 @@ export default {
       chart_dan: [],
       chart_gi: [],
       charts: [],
+      comment: '',
+      chooseone: '',
     };
   },
   created() {
@@ -124,13 +145,19 @@ export default {
 
       let currentWeekEndDate = this.getCurrentWeekEndDate();
 
-      // 새로운 종료 날짜가 현재 주의 종료 날짜를 초과하지 않도록 함
       if (newEndDate > currentWeekEndDate) {
         return;
       }
 
       this.startDate = newStartDate;
       this.endDate = newEndDate;
+
+      this.fetchData(); // 데이터를 가져온 후에 조건을 검사합니다
+
+      if (this.weeklyAvg_tan === null || this.weeklyAvg_dan === null || this.weeklyAvg_gi === null) {
+        this.$swal('', '해당 기간의 정보가 없습니다', 'warning');
+        return;
+      }
     },
     formatDate(date) {
       let year = date.getFullYear();
@@ -145,133 +172,151 @@ export default {
     },
 
 
-    fetchData() {
-      this.$axios.get('/getRecommandTandangi', {
+    async fetchData() {
+      try {
+        const res = await this.$axios.get('/getRecommandTandangi', {
+          params: {
+            startPeriod: this.formatDate(this.startDate),
+            endPeriod: this.formatDate(this.endDate)
+          }
+        });
+
+        // 서버 응답을 검사하여 데이터가 존재하는지 확인합니다.
+        if (!res.data || !res.data.avgTanDanGi) {
+          throw new Error("데이터가 없습니다.");
+        }
+
+        this.recommand_tan = res.data.recommandTandnagi.p_recommand_tan;
+        this.recommand_dan = res.data.recommandTandnagi.p_recommand_dan;
+        this.recommand_gi = res.data.recommandTandnagi.p_recommand_gi;
+
+        this.weeklyAvg_tan = res.data.avgTanDanGi.weeklyAvg_tan;
+        this.weeklyAvg_dan = res.data.avgTanDanGi.weeklyAvg_dan;
+        this.weeklyAvg_gi = res.data.avgTanDanGi.weeklyAvg_gi;
+
+        this.createChart();
+
+        this.updateComment();
+        // 이제 안전하게 weeklyAvg_tan, weeklyAvg_dan, weeklyAvg_gi에 접근할 수 있습니다.
+      } catch (error) {
+        // 오류 처리
+        console.error('Error fetching data:', error);
+        this.$swal('', '이 기간에 데이터가 없습니다.', 'warning');
+      }
+
+    },
+    updateComment() {
+      if (this.comment) {
+        this.comment = ''
+      }
+      const tanRatio = this.weeklyAvg_tan / this.recommand_tan;
+      const danRatio = this.weeklyAvg_dan / this.recommand_dan;
+      const giRatio = this.weeklyAvg_gi / this.recommand_gi;
+
+      // 가장 낮은 비율을 가진 영양소를 찾습니다.
+      const minRatio = Math.min(tanRatio, danRatio, giRatio);
+      if (this.weeklyAvg_tan > this.recommand_tan && this.weeklyAvg_dan > this.recommand_tan && this.weeklyAvg_gi > this.recommand_gi) {
+        this.comment = "평소에 너무많은 영양소를 섭취하고 있어요, 먹는 양을 줄여보는 거는 어떠세요??"
+        this.chooseone = 'foodcal'
+      }
+      else if (minRatio === danRatio) {
+        this.comment = "단백질 섭취량이 상대적으로 적어요, 단백질 함량이 많은 음식을 추천해 줄게요";
+        this.chooseone = 'food_dan';
+      } else if (minRatio === giRatio) {
+        this.comment = "지방 섭취량이 상대적으로 적어요, 지방 함량이 많은 음식을 추천해 줄게요";
+        this.chooseone = 'food_gi';
+      } else if (minRatio === tanRatio) {
+        this.comment = "탄수화물 섭취량이 상대적으로 적어요, 탄수화물 함량이 많은 음식을 추천해 줄게요";
+        this.chooseone = 'food_tan'
+      } else {
+        this.comment = "영양소 균형이 잘 맞춰져 있어요, 좋은 식습관을 유지하세요!";
+      }
+      this.fetchfoddData()
+    },
+    // 2024/01/15 진행중 !!! top 3 영양소 부족한거 뽑아냄!!
+    fetchfoddData(){
+      this.$axios.get('/food_top3', {
         params: {
-          startPeriod: this.formatDate(this.startDate),
-          endPeriod: this.formatDate(this.endDate)
+          chooseone: this.chooseone,
         }
       })
         .then((res) => {
-          // 권장 탄단지 불러오기
-          this.recommand_tan = res.data.recommandTandnagi.p_recommand_tan
-          this.recommand_dan = res.data.recommandTandnagi.p_recommand_dan
-          this.recommand_gi = res.data.recommandTandnagi.p_recommand_gi
+          console.log(this.chooseone)
+          console.log(res.data)
 
-          this.weeklyAvg_tan = res.data.avgTanDanGi.weeklyAvg_tan
-          this.weeklyAvg_dan = res.data.avgTanDanGi.weeklyAvg_dan
-          this.weeklyAvg_gi = res.data.avgTanDanGi.weeklyAvg_gi
+        })
 
-          this.chart_tan = {
+        .catch((error) => {
+          console.error("Error fetching data: ", error);
+          alert('데이터 로딩 중 오류가 발생했습니다. 오류 로그를 확인하세요.');
 
-            labels: ['일주일 평균 탄수 화물'],
-
-            datasets: [
-              {
-                data: [this.weeklyAvg_tan, this.recommand_tan - this.weeklyAvg_tan],
-                backgroundColor: ['rgba(75, 192, 192, 0.5)', '#FFFFFF'],
-                borderColor: 'rgba(75, 192, 192, 0.5)', // 파란색 계열 테두리
-                borderWidth: 1,
-              },
-
-
-            ],
+        })
+    },
+    // 차트 그리기
+    createChart() {
+      const canvas = this.$refs['canvasChart1'];
+      if (this.chart) {
+        this.chart.destroy();
+      }
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        this.chart
+          = new Chart(ctx, {
+            type: 'radar',
+            data: {
+              labels: ['탄수화물', '단백질', '지방'],
+              datasets: [
+                {
+                  label: '권장 영양소',
+                  data: [this.recommand_tan, this.recommand_dan, this.recommand_gi], // 이 값들은 첫 번째 데이터 세트의 각 항목에 해당하는 값입니다.
+                  fill: true,
+                  backgroundColor: 'rgba(255, 99, 132, 0.2)', // 데이터 세트의 배경 색상
+                  borderColor: 'rgb(255, 99, 132)', // 경계선 색상
+                  pointBackgroundColor: 'rgb(255, 99, 132)', // 데이터 포인트의 배경 색상
+                  pointBorderColor: '#fff', // 데이터 포인트의 경계선 색상
+                  pointHoverBackgroundColor: '#fff', // 호버 시 데이터 포인트의 배경 색상
+                  pointHoverBorderColor: 'rgb(255, 99, 132)' // 호버 시 데이터 포인트의 경계선 색상
+                },
+                {
+                  label: '평균 섭취 영양소',
+                  data: [this.weeklyAvg_tan, this.weeklyAvg_dan, this.weeklyAvg_gi], // 이 값들은 두 번째 데이터 세트의 각 항목에 해당하는 값입니다.
+                  fill: true,
+                  backgroundColor: 'rgba(54, 162, 235, 0.2)', // 데이터 세트의 배경 색상
+                  borderColor: 'rgb(54, 162, 235)', // 경계선 색상
+                  pointBackgroundColor: 'rgb(54, 162, 235)', // 데이터 포인트의 배경 색상
+                  pointBorderColor: '#fff', // 데이터 포인트의 경계선 색상
+                  pointHoverBackgroundColor: '#fff', // 호버 시 데이터 포인트의 배경 색상
+                  pointHoverBorderColor: 'rgb(54, 162, 235)' // 호버 시 데이터 포인트의 경계선 색상
+                }
+              ]
+            },
             options: {
-              // ... 다른 옵션 설정
-              plugins: {
-                afterDraw: function (chart) {
-                  var width = chart.chart.width,
-                    height = chart.chart.height,
-                    ctx = chart.chart.ctx,
-                    type = chart.config.type;
-
-                  if (type === 'doughnut') {
-                    var doughnutCenter = {
-                      x: (width - chart.chartArea.left) / 2 + chart.chartArea.left,
-                      y: (height - chart.chartArea.top) / 2 + chart.chartArea.top
-                    };
-
-                    var fontSize = Math.min(height, width) / 10; // 가운데 텍스트의 폰트 크기를 조절합니다.
-                    ctx.save();
-                    ctx.font = fontSize + 'px sans-serif';
-                    ctx.textBaseline = 'middle';
-                    ctx.textAlign = 'center';
-                    ctx.fillStyle = '#FF0000';
-
-                    // 중앙에 들어갈 텍스트 설정
-                    var text = '중앙 텍스트',
-                      textX = doughnutCenter.x,
-                      textY = doughnutCenter.y;
-
-                    ctx.fillText(text, textX, textY);
-                    ctx.restore();
+              scales: {
+                r: {
+                  pointLabels: {
+                    font: {
+                      size: 30 // Adjust the font size here
+                    },
                   }
+                }
+              },
+            },
+            plugins: {
+              tooltip: {
+                titleFont: {
+                  size: 30 // Adjust the font size for tooltip titles
+                },
+                bodyFont: {
+                  size: 30 // Adjust the font size for tooltip body text
                 }
               }
             },
-          }
-            this.chart_dan = {
-
-              labels: ['일주일 평균 단백질'],
-
-              datasets: [
-                {
-                  data: [this.weeklyAvg_dan, this.recommand_dan - this.weeklyAvg_dan],
-                  backgroundColor: ['rgba(75, 192, 192, 0.5)', '#FFFFFF'],
-                  borderColor: 'rgba(75, 192, 192, 0.5)', // 파란색 계열 테두리
-                  borderWidth: 1,
-                },
-              ],
-            },
-            this.chart_gi = {
-
-              labels: ['일주일 평균 지방'],
-
-              datasets: [
-                {
-                  data: [this.weeklyAvg_gi, this.recommand_gi - this.weeklyAvg_gi],
-                  backgroundColor: ['rgba(75, 192, 192, 0.5)', '#FFFFFF'],
-                  borderColor: 'rgba(75, 192, 192, 0.5)', // 파란색 계열 테두리
-                  borderWidth: 1,
-                },
-              ],
-            },
-            this.createChart('canvasChart1', this.chart_tan);
-            this.createChart('canvasChart2', this.chart_dan);
-            this.createChart('canvasChart3', this.chart_gi);
-            console.log('이제시작', this.weeklyAvg_tan);
-          }).catch(error => {
-            // Handle errors here
-            console.error('Error fetching data:', error);
           });
-    },
-
-    // 차트 그리기
-    createChart(ref, chartData) {
-      const canvas = this.$refs[ref];
-      if (canvas) {
-        const ctx = canvas.getContext('2d');
-        const chart
-          = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-              labels: chartData.labels,
-              datasets: chartData.datasets
-            },
-            options: chartData.options || {}
-          });
-        // Store the chart instance for later use
-        this.charts.push(chart);
       } else {
         console.error('Canvas element not found');
       }
     },
-    beforeDestroy() {
-      this.charts.forEach(chart => {
-        chart.destroy();
-      });
-    },
-    
+
 
   },
   computed: {
@@ -281,6 +326,17 @@ export default {
     formattedEndDate() {
       return this.formatDate(this.endDate);
     },
+    commentClass() {
+    if (this.comment.includes("탄수화물")) {
+      return 'comment-tan';
+    } else if (this.comment.includes("단백질")) {
+      return 'comment-dan';
+    } else if (this.comment.includes("지방")) {
+      return 'comment-gi';
+    } else {
+      return 'comment-balanced';
+    }
+  },
   },
 
   mounted() {
