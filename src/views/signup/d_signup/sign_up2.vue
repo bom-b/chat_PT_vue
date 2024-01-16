@@ -72,7 +72,7 @@ export default {
             </div>
             <div class="d-grid gap-2 mt-4">
                 <!-- "동의함" 버튼 -->
-                <button type="button" class="btn btn-primary btn-lg" @click="proceedToNextPage"
+                <button type="button" class="btn btn-success btn-lg" @click="proceedToNextPage"
                     :disabled="!agreementItems.every(item => item.checked)">동의함</button>
             </div>
         </div>

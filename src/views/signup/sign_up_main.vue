@@ -5,7 +5,7 @@
         <h2 class="mb-5" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="0">가입할 <span
             class="highlight">유형</span>을 선택해주세요.</h2>
         <div class="row">
-          <router-link to="/signUp/sign_up" class="col-6 router-link">
+          <router-link to="/signUp/sign_up_master" class="col-6 router-link">
             <div class="goal-box "
                  style="display: flex; justify-content: space-between; align-items: flex-start;"
                  data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">

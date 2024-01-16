@@ -25,6 +25,7 @@ export default {
 				emailStatus: "",
 			},
 			matchpwd: false,
+			gogonext: false,
 		};
 	},
 	computed: {
@@ -42,30 +43,46 @@ export default {
 		},
 	},
 	watch: {
-		password(newPassword) {
-			if (!newPassword && !this.user.password_Check) {
-				this.matchpwd = false;
-			} else {
-				this.matchpwd = newPassword !== this.user.password_Check;
-			}
+		'user.password': function (newPassword) {
+			this.checkPasswordMatch(newPassword);
 		},
-		password_Check(newPasswordCheck) {
-			if (!this.user.password && !newPasswordCheck) {
-				this.matchpwd = false;
-			} else {
-				this.matchpwd = this.user.password !== newPasswordCheck;
-			}
+		'user.password_Check': function (newPasswordCheck) {
+			this.checkPasswordMatch(newPasswordCheck);
 		},
 	},
 	methods: {
+		regPassword(password) {
+			if (password !== null && password !== undefined && password.trim() !== "") {
+				const reg = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
+				if (password.match(reg)) {
+					return password;
+				} else {
+					return this.$swal("형식오류", "비밀번호는 영문, 숫자, 특수문자를 섞어서 만들어주세요.");
+				}
+			} else {
+				return this.$swal.fire("형식오류", "아이디를 입력해주세요", "warning")
+			}
+		},
+		checkPasswordMatch() {
+			const newPassword = this.user.password || '';
+			const newPasswordCheck = this.user.password_Check || '';
+
+			if (!newPassword && !newPasswordCheck) {
+				this.matchpwd = false;
+			} else {
+				this.matchpwd = newPassword !== newPasswordCheck;
+			}
+		},
+
+
 		// 아이디 정규표현식
-		checkId(id) {
+		regId(id) {
 			if (id !== null && id !== undefined && id.trim() !== "") {
 				const reg = /^[a-zA-Z0-9]+$/;
 				if (id.match(reg)) {
 					return id;
 				} else {
-					return this.$swal("", "영문 숫자로 입력해라");
+					return this.$swal("", "영문 숫자로 입력해주세요...");
 				}
 			} else {
 				return this.$swal.fire("", "아이디를 입력해주세요", "warning")
@@ -78,7 +95,7 @@ export default {
 		async idcheck() {
 			try {
 				const data = {
-					id: this.checkId(this.user.id),
+					id: this.regId(this.user.id),
 				};
 				const response = await this.$axiosWithoutValidation.post(
 					"/signUp/id",
@@ -107,6 +124,15 @@ export default {
 				console.log(e);
 			}
 		},
+		passwordCheck() {
+			try {
+				const password = this.regPassword(this.user.password);
+				password
+
+			} catch (e) {
+				console.log(e);
+			}
+		},
 
 		confirm() {
 			if (this.auth.serverCode != "" && this.auth.clientCode != "" && this.auth.serverCode == this.auth.clientCode) {
@@ -115,8 +141,6 @@ export default {
 				return this.auth.passAuth = 0;
 			}
 		},
-
-
 		// email 중복체크
 		async emailCheck() {
 			try {
@@ -140,7 +164,6 @@ export default {
 						confirmButtonText: "확인",
 						cancelButtonText: "취소",
 					});
-
 					if (result.isConfirmed) {
 						this.showMessage.emailStatus = "메일을 발송 중입니다...";
 						this.sendMail(data);
@@ -176,8 +199,7 @@ export default {
 					password: this.user.password,
 				}
 				if (isValid) {
-					this.$emit("singUp1data", data);
-					this.$swal("", "부모 컴포넌트에 데이터 보내기");
+					this.$emit("nextPage", data);
 				} else {
 					this.$swal("유효하지 않은 경로입니다.");
 				}
@@ -185,9 +207,7 @@ export default {
 			} catch (e) {
 				console.log(e);
 			}
-
 		},
-
 	},
 };
 </script>
@@ -224,8 +244,8 @@ export default {
 					<div class="form-group">
 						<label for="email">이메일:</label>
 						<div class="input-group">
-							<input type="email" class="form-control" id="email" placeholder="이메일을 입력하세요" v-model="user.email"
-								:disabled="inputDisplay.email == 1">
+							<input type="email" class="form-control" id="email" placeholder="이메일을 입력하세요"
+								v-model="user.email" :disabled="inputDisplay.email == 1">
 							<button type="submit" class="btn btn-success">이메일 확인</button>
 						</div>
 						<p>{{ showMessage.emailStatus }}</p>
@@ -236,7 +256,8 @@ export default {
 					<form @submit.prevent="confirm">
 						<div class="mt-5 form-group">
 							<label for="code">인증번호</label>
-							<input v-model="auth.clientCode" :disabled="auth.passAuth === 1" type="text" class="form-control" id="code">
+							<input v-model="auth.clientCode" :disabled="auth.passAuth === 1" type="text"
+								class="form-control" id="code">
 						</div>
 						<div class="noti">
 							<p v-if="auth.passAuth === 1" style="color: rgb(57, 221, 16)">
@@ -252,20 +273,24 @@ export default {
 					</form>
 				</div>
 				<!-- 비밀번호 입력 폼 -->
-				<div class="form-group">
-					<label for="password">비밀번호:</label>
-					<input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요" v-model="user.password" />
-				</div>
-				<div class="form-group">
-					<label for="password_Check">비밀번호 확인:</label>
-					<input type="password" class="form-control" id="password_Check" placeholder="비밀번호를 입력하세요"
-						v-model="user.password_Check" />
-					<div class="noti">
-						<p v-if="matchpwd" style="color: red">
-							비밀번호가 일치하지 않습니다.
-						</p>
+				<div class="mt-5 form-group">
+					<div class="form-group">
+						<label for="password">비밀번호:</label>
+						<input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요"
+							v-model="user.password" />
+					</div>
+					<div class="form-group">
+						<label for="password_Check">비밀번호 확인:</label>
+						<input type="password" class="form-control" id="password_Check" placeholder="비밀번호를 입력하세요"
+							v-model="user.password_Check" />
+						<div class="noti">
+							<p v-if="matchpwd" style="color: red">
+								비밀번호가 일치하지 않습니다.
+							</p>
+						</div>
 					</div>
 				</div>
+				<br />
 				<div>
 					{{ user.id }}<br>
 					{{ user.name }}<br>
@@ -279,8 +304,11 @@ export default {
 						!user.password ||
 						!user.password_Check ||
 						!auth.clientCode ||
-						auth.clientCode === auth.serverCode ||
-						user.password !== user.password_Check">
+						(auth.clientCode != auth.serverCode) ||
+						(inputDisplay.id != 1) ||
+						(inputDisplay.email != 1) ||
+						(auth.passAuth != 1) ||
+						(user.password != user.password_Check)">
 						다음
 					</button>
 				</div>

@@ -1,48 +1,48 @@
 <template>
     <div>
-        <signUp1 @signUp1data="userdata1" />
-        <signUp2 @signUp2data="userdata2" />
-        <signUp3 @signUp3data="userdata3" />
-        <signUp4 @signUp4data="userdata4" />
+        <component :is="page" v-on:nextPage="nextPage"/>
+        <!-- <component v-bind:is="currPage"></component> -->
     </div>
 </template>
-  
 <script>
+import { mapState } from "vuex";
 import signUp1 from "@/views/signup/d_signup/sign_up.vue";
 import signUp2 from "@/views/signup/d_signup/sign_up2.vue";
 import signUp3 from "@/views/signup/d_signup/sign_up3.vue";
 import signUp4 from "@/views/signup/d_signup/sign_up4.vue";
-
 export default {
-    data() {
-        return {
-            page1: null,
-            page2: null,
-            page3: null,
-            page4: null,
-        };
-    },
     components: {
         signUp1,
         signUp2,
         signUp3,
         signUp4,
     },
-
+    data() {
+        return {
+            pages: ['signUp1', 'signUp2', 'signUp3', 'signUp4'],
+            currentPageIndex: 1,
+            sid: 0,
+        };
+    },
+    computed: {
+        ...mapState(['page']),
+        page() {
+            if (this.currentPageIndex == 1) {
+                return signUp1;
+            } else if (this.currentPageIndex == 2) {
+                return signUp2;
+            } else if (this.currentPageIndex == 3) {
+                return signUp3;
+            } else if (this.currentPageIndex == 4) {
+                return signUp4;
+            }
+            return signUp1;
+        }
+    },
     methods: {
-        userdata1(data1) {
-            this.page1 = data1;
-        },
-        userdata2(data2) {
-            this.page1 = data2;
-        },
-        userdata3(data3) {
-            this.page1 = data3;
-        },
-        userdata4(data4) {
-            this.page1 = data4;
-        },
+        nextPage() {
+            this.currentPageIndex++;
+        }
     }
 }
 </script>
-  
