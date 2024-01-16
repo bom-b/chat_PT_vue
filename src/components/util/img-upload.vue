@@ -12,9 +12,35 @@
       <input type="file" ref="fileInput" multiple style="display: none" @change="handleFileInput" />
       <button class="" @click="triggerFileInput">파일 선택</button>
     </div>
-    <div v-for="(image, index) in localUploadedImages" :key="index" class="preview">
-      <img :src="image" alt="Uploaded Preview" />
+    <div class="card" style="width:400px">
+      <div v-for="(image, index) in localUploadedImages" :key="index" class="preview">
+        <img class="card-img-top" :src="image" alt="Uploaded Preview" />
+        <div class="card-body">
+          <div class="select-or-input">
+            <select class="form-select" v-if="!showInputField"
+                    v-model="selectedServing" @change="handleSelectChange"
+            >
+              <option value="serving1">1인분</option>
+              <option value="serving2">2인분</option>
+              <option value="serving3">3인분</option>
+              <option value="serving4">4인분</option>
+              <option value="serving5">5인분</option>
+            </select>
+            <div v-if="showInputField" class="input-container d-flex align-items-center">
+              <input type="text" class="form-control" v-model="userInput" @input="onInput" :size="inputSize">
+              <span class="input-addon ml-2">{{ unit }}</span>
+              <span class="toggle-unit ml-2" @click="toggleUnit">변경</span>
+            </div>
+            <button class="btn btn-secondary" @click="toggleInputField">
+              {{ showInputField ? '선택' : '수정' }}
+            </button>
+          </div>
+          <div class="button-container">
+            <button class="btn btn-danger" @click="removeImage(index)">삭제</button>
+          </div>
+      </div>
     </div>
+  </div>
   </div>
 </template>
 
@@ -36,6 +62,11 @@ export default {
       isDragOver: false,
       localUploadedImages: [...this.uploadedImages],
       uploadedImageHashes: [], // 해시를 저장할 배열 초기화
+      showInputField: false,
+      selectedServing: 'serving1', // 선택된 서빙 옵션
+      userInput: '', // 사용자의 직접 입력
+      unit: '인분', // 현재 단위
+      inputMethod: '', // 입력 방식 ('select', '인분', 'g')
     };
   },
   methods: {
@@ -151,6 +182,53 @@ export default {
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
+    removeImage(index) {
+      // 지정된 인덱스에서 이미지를 제거합니다.
+      this.localUploadedImages.splice(index, 1);
+      this.$emit('image-removed', { index, images: this.localUploadedImages });
+    },
+    toggleInputField() {
+      this.showInputField = !this.showInputField;
+      this.resetInput();
+      if (this.showInputField) {
+        // 수정 버튼을 누르면 selectedServing을 ''로 설정
+        this.selectedServing = '';
+      } else {
+        // 선택 버튼을 누르면 selectedServing을 'serving1'로 설정
+        this.selectedServing = 'serving1';
+      }
+    },
+    // 입력값이 변경될 때 실행되는 함수
+    onInput(event) {
+      // 숫자와 소수점만 허용, 한글 및 기타 문자 차단
+      let inputValue = event.target.value.replace(/[^0-9.]/g, '');
+
+      // 소수점 두 자리까지만 허용
+      if (inputValue.includes('.')) {
+        const parts = inputValue.split('.');
+        if (parts[1].length > 2) {
+          parts[1] = parts[1].substring(0, 2);
+          inputValue = parts.join('.');
+        }
+      }
+      this.userInput = inputValue;
+
+    },
+    setInputMethod(method) {
+      this.inputMethod = method;
+    },
+    handleSelectChange() {
+      this.setInputMethod('select');
+      this.resetInput();
+    },
+    toggleUnit() {
+      this.unit = this.unit === '인분' ? 'g' : '인분';
+      this.setInputMethod(this.unit);
+      this.resetInput();
+    },
+    resetInput() {
+      this.userInput = '';
+    },
   },
 };
 </script>
@@ -160,13 +238,20 @@ button {
   background-color: #e5f5f2;
   color: #085c57;
   border: none;
-  border-radius: 1px;
+  border-radius: 4px;
   padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #bde0dd;
 }
 
 .drag-drop-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 
 .drag-drop {
@@ -174,18 +259,93 @@ button {
   padding: 20px;
   text-align: center;
   cursor: pointer;
+  margin-bottom: 20px;
 }
 
 .drag-over {
   border-color: #2196F3;
 }
 
-.preview {
-  margin-top: 20px;
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
 }
 
-.preview img {
-  max-width: 100%;
-  max-height: 200px;
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
+}
+
+.card img {
+  width: 100%;
+  height: auto;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* 오른쪽 정렬 */
+}
+
+.select-or-input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* 여백 추가 */
+  width: 100%; /* 전체 너비 사용 */
+}
+
+.form-select, .form-control {
+  margin-right: 10px;
+}
+
+
+
+.btn:hover {
+  background-color: #d73833;
+}
+.btn-secondary {
+  background-color: #6c757d; /* Secondary button color */
+  color: white;
+  display: inline-block; /* 추가 */
+  white-space: nowrap; /* 추가 */
+  margin-left: auto; /* 오른쪽 정렬을 위한 자동 마진 */
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  width: 100%; /* 전체 너비 사용 */
+}
+
+.btn-danger {
+  background-color: #dc3545; /* Danger button color */
+}
+
+.form-control {
+  display: inline-block;
+  width: auto; /* 초기 크기 설정 */
+  min-width: 100px; /* 최소 크기 설정 */
+  /* 나머지 스타일 */
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  flex-grow: 1; /* 가능한 모든 공간을 차지하도록 */
+}
+
+.input-addon {
+  margin-left: 2px; /* 인분 텍스트와 인풋창 사이의 간격 줄임 */
+}
+
+.toggle-unit {
+  margin-left: 5px;
+  color: blue;
+  cursor: pointer;
 }
 </style>
+

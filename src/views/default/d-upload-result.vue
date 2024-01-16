@@ -8,40 +8,37 @@
         <div class="category-title-container">
           <h1 class="badge rounded-pill bg-secondary category-name">{{ category }}</h1>
         </div>
-        <div
-            v-for="(e, index) in data"
-            :key="index"
-            draggable="false"
-            class="image-item"
-        >
+        <div v-for="(e, index) in data" :key="index" class="image-item">
           <div class="image-text-container">
             <img :src="imgLink + e.upphotoid + '.jpg'" alt="Uploaded Image" class="uploaded-image"/>
-            <p>음식명 : {{ this.foods[e.foodnum] }} {{e.predictrate}}% <br>
-              양 : {{ e.mass }}<br>
-              칼로리 : 400Kcal<br>
-              탄수화물 : 30g<br>
-              단백질 : 20g<br>
-              지방 : 10g<br>
-            후보1 : {{ this.foods[e.candidate1] }} {{e.candidate1rate}}%
-              후보2 : {{ this.foods[e.candidate2] }} {{e.candidate2rate}}%
-              후보3 : {{ this.foods[e.candidate3] }} {{e.candidate3rate}}%</p>
+            <div>
+              <p>{{ this.foods[e.foodnum] }}</p>
+              <button
+                  class="btn btn-secondary"
+                  data-bs-toggle="popover"
+                  :data-bs-content="popoverContent(e)"
+              >
+                상세보기
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
   </main>
 </template>
 
 <script>
 //import sha256 from 'js-sha256';
 //import EXIF from 'exif-js';
+// 필요한 부트스트랩 컴포넌트만 import
+import { Popover } from 'bootstrap';
 
 export default {
   inject: ['foods'],
   data() {
     return {
-      imgLink : 'http://localhost/springpt/images/upphoto/',
+      imgLink: 'http://localhost/springpt/images/upphoto/',
       categorizedImages: {
         아침: [],
         점심: [],
@@ -52,6 +49,21 @@ export default {
   },
   created() {
     this.getTodayPhoto();
+  },
+  mounted() {
+    this.initializePopovers();
+  },
+  watch: {
+    // 'categorizedImages' 데이터가 변경될 때마다 실행됩니다.
+    categorizedImages: {
+      deep: true, // 중첩된 데이터까지 감시
+      handler() {
+        // 데이터 변경 후 DOM 업데이트가 완료된 후 팝오버를 초기화
+        this.$nextTick(() => {
+          this.initializePopovers();
+        });
+      },
+    },
   },
   methods: {
     getTodayPhoto() {
@@ -73,20 +85,44 @@ export default {
                 candidate1rate: food.candidate1RATE,
                 candidate2rate: food.candidate2RATE,
                 candidate3rate: food.candidate3RATE,
+                // 추가: 각 항목에 showDetails 속성 초기화
+                showDetails: false
               });
             }
-            console.log(this.categorizedImages)
+            console.log(this.categorizedImages);
           })
           .catch(error => {
-            // 오류 처리
             console.error("서버 통신 오류:", error);
           });
-    }
+    },
+    initializePopovers() {
+      const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+      popoverTriggerList.forEach(function (popoverTriggerEl) {
+        return new Popover(popoverTriggerEl, {
+          html: true,
+        });
+      });
+    },
+    popoverContent(e) {
+      const content = `
+      <p>음식명: ${this.foods[e.foodnum]} ${e.predictrate}%</p>
+      <p>양: ${e.mass}g</p>
+      <p>칼로리: 400Kcal</p>
+      <p>탄수화물: 30g</p>
+      <p>단백질: 20g</p>
+      <p>지방: 10g</p>
+      <p>후보1: ${this.foods[e.candidate1]} ${e.candidate1rate}%</p>
+      <p>후보2: ${this.foods[e.candidate2]} ${e.candidate2rate}%</p>
+      <p>후보3: ${this.foods[e.candidate3]} ${e.candidate3rate}%</p>
+    `;
+      return content;
+    },
+
   },
-  computed: {
-  },
+
 };
 </script>
+
 
 <style lang="scss" scoped>
 .image-text-container {
@@ -155,9 +191,6 @@ export default {
   background-color: lightblue; /* 드래그 오버 시 시각적 피드백 */
 }
 
-.uploaded-image {
-  border: 2px solid red; /* 붉은 색 테두리 */
-}
 
 .image-item {
   position: relative;
@@ -207,6 +240,6 @@ export default {
 
 .image-item img {
   max-width: 100%;
-  max-height: 200px;
+  max-height: 100px;
 }
 </style>
