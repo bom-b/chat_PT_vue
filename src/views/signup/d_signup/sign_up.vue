@@ -9,47 +9,44 @@ export default {
 				name: "",
 				email: "",
 				password: "",
+				password_Check: "",
+			},
+			inputDisplay: {
+				id: 0,
+				email: 0,
+			},
+			auth: {
+				passAuth: null,
+				clientCode: null,
+				serverCode: null,
+			},
+			showMessage: {
+				resultmessage: "",
+				emailStatus: "",
 			},
 			matchpwd: false,
-			// 이메일 중복체크
-			checkEmail: null,
-			authCode: "",
-			password_Check: "",
-			isPasswordMismatch: false,
-			inputemail: "white",
-			inputid: "white",
-			whyNotInsert: false,
-			sendmessage: "",
-			serverCode: "",
 		};
 	},
 	computed: {
 		progress() {
-			return this.user.name &&
-				this.user.email &&
-				this.authCode &&
-				this.user.password &&
-				this.user.password === this.password_Check
-				? 25
-				: 0;
-		},
-		isFormValid() {
 			return (
-				this.user.name &&
-				this.user.email &&
-				this.authCode &&
-				this.user.password &&
-				this.user.password === this.password_Check
+				(this.user.id &&
+					this.user.name &&
+					this.user.email &&
+					this.auth.clientCode &&
+					this.user.password &&
+					this.user.password === this.user.password_Check)
+					? 25
+					: 0
 			);
 		},
 	},
-
 	watch: {
 		password(newPassword) {
-			if (!newPassword && !this.password_Check) {
+			if (!newPassword && !this.user.password_Check) {
 				this.matchpwd = false;
 			} else {
-				this.matchpwd = newPassword !== this.password_Check;
+				this.matchpwd = newPassword !== this.user.password_Check;
 			}
 		},
 		password_Check(newPasswordCheck) {
@@ -73,25 +70,16 @@ export default {
 			} else {
 				return this.$swal.fire("", "아이디를 입력해주세요", "warning")
 			}
-
 		},
-		idChange() {
-			this.inputid = "white";
-		},
-		emailChange() {
-			this.inputemail = "white";
-		},
-		// 이메일 칸에 공백 제거하기
 		removeSpaces(email) {
 			return email.trim();
 		},
 		// id 중복체크
-		async IdCheck() {
+		async idcheck() {
 			try {
 				const data = {
 					id: this.checkId(this.user.id),
 				};
-
 				console.log("dataId", data.id);
 				const response = await this.$axiosWithoutValidation.post(
 					"/signUp/id",
@@ -110,7 +98,7 @@ export default {
 						cancelButtonText: "취소",
 					});
 					if (result.isConfirmed) {
-						this.inputid = "gray";
+						this.inputDisplay.id = 1;
 					}
 				} else {
 					this.$swal("", "이미 있는 아이디 입니다.", "warning");
@@ -122,24 +110,24 @@ export default {
 		},
 
 		confirm() {
-			this.finalResults = "";
-			if (!this.isSend) {
-				this.finalResult = "인증번호 요청을 먼저 해주세요.";
-			} else if (this.authCode === "") {
-				this.finalResult = "인증번호를 입력해주세요.";
-			} else if (this.authCode == this.serverCode) {
-				this.isCorrect = true;
+			if (this.auth.serverCode != "" && this.auth.clientCode != "" && this.auth.serverCode == this.auth.clientCode) {
+				return this.auth.passAuth = 1;
 			} else {
-				this.finalResult = "인증번호가 일치하지 않습니다.";
+				return this.auth.passAuth = 0;
 			}
 		},
 
+
 		// email 중복체크
-		async EmailCheck() {
+		async emailCheck() {
 			try {
 				const clearemail = this.removeSpaces(this.user.email);
+				const data = {
+					email: clearemail
+				};
+				console.log(data.email)
 				const response = await this.$axiosWithoutValidation.post(
-					`/signUp/email/${clearemail}`
+					"/signUp/email", data
 				);
 				console.log("email체크", response);
 				// 문자열로 오는 경우 숫자로 변환
@@ -157,8 +145,8 @@ export default {
 					});
 
 					if (result.isConfirmed) {
-						this.inputemail = "gray";
-						this.sendMail();
+						this.showMessage.emailStatus = "메일을 발송 중입니다...";
+						this.sendMail(data);
 					}
 				} else {
 					await this.$swal("이미 사용중인 이메일 입니다.");
@@ -168,34 +156,47 @@ export default {
 			}
 		},
 
-		sendMail() {
-			const data = {
-				email: this.user.email,
-			};
-			this.$axiosWithoutValidation
-				.post("/service/authemail", data)
-				.then((response) => {
-					this.sendmessage =
-						"인증번호가 발송 되었습니다.<br>이메일을 확인해주세요.";
-					this.serverCode = response.data;
-				})
-				.catch(() => {
-					this.goodResult = "";
-					this.badResult =
-						"입력하신 정보와 일치하는 회원이 없습니다.<br>해당 정보를 다시 확인하거나 회원가입을 진행해주세요.";
-				});
+		async sendMail(data) {
+			try {
+				const response = await this.$axiosWithoutValidation.post('/service/authemail', data);
+				console.log("sendMail", response);
+				this.auth.serverCode = response.data;
+				this.showMessage.emailStatus = "메일이 발송되었습니다.";
+				this.inputDisplay.email = 1;
+				console.log(this.inputDisplay.email);
+			}
+			catch (e) {
+				console.log(e)
+				this.showMessage.emailStatus = "메일 발송에 실패 했습니다.";
+			}
+
 		},
 		proceedToNextPage() {
-			const isValid =
-				this.user.name &&
-				this.user.email &&
-				this.authCode &&
-				this.user.password &&
-				this.user.password === this.password_Check;
-			if (isValid) {
-				this.$emit("page1-data", this.user);
-			}
-		},
+    const isValid =
+        this.user.id &&
+        this.user.name &&
+        this.user.email &&
+        this.user.password &&
+        this.user.password_Check &&
+        this.auth.clientCode &&
+        this.auth.clientCode === this.auth.serverCode &&
+        this.user.password === this.user.password_Check;
+
+    const data = {
+        id: this.user.id,
+        name: this.user.name,
+        email: this.user.email,
+        password: this.user.password,
+    }
+
+    if (isValid) {
+        this.$emit("singUp1data", data);
+        this.$swal("", "부모 컴포넌트에 데이터 보내기");
+    } else {
+        this.$swal("유효하지 않은 경로입니다.");
+    }
+},
+
 	},
 };
 </script>
@@ -209,50 +210,56 @@ export default {
 			<div class="login-container">
 				<h2 class="mb-4">회원가입</h2>
 				<!-- 아이디 입력 폼 -->
-				<div class="row mb-3">
-					<label for="id" class="col-sm-2 col-form-label">아이디:</label>
-					<div class="col-sm-8">
-						<div class="input-group">
-							<input type="text" class="form-control" id="id" placeholder="아이디를 입력하세요" v-model="user.id"
-								:style="{ 'background-color': inputid }" @input="idChange" />
-							<button class="w-btn w-btn-gra-anim w-btn-gra3" type="button" @click="IdCheck">
-								아이디 중복확인
-							</button>
+
+				<form @submit.prevent="idcheck">
+					<div class="row mb-3">
+						<label for="id" class="col-sm-2 col-form-label">아이디:</label>
+						<div class="col-sm-8">
+							<div class="input-group">
+								<input type="text" class="form-control" id="id" placeholder="아이디를 입력하세요" v-model="user.id"
+									:disabled="inputDisplay.id == 1">
+								<button class="btn btn-success" type="submit">아이디 중복확인</button>
+							</div>
 						</div>
 					</div>
-				</div>
+				</form>
 				<!-- 이름 입력 폼 -->
 				<div class="form-group">
 					<label for="name">이름:</label>
 					<input type="text" class="form-control" id="name" placeholder="이름을 입력하세요" v-model="user.name" />
 				</div>
 				<!-- 이메일 입력 폼 -->
-				<form @submit.prevent="EmailCheck" class="mt-5">
+				<form @submit.prevent="emailCheck" class="mt-5">
 					<div class="form-group">
 						<label for="email">이메일:</label>
 						<div class="input-group">
 							<input type="email" class="form-control" id="email" placeholder="이메일을 입력하세요" v-model="user.email"
-								:style="{ 'background-color': inputemail }" @input="emailChange" />
-							<button type="submit" class="btn btn-primary">이메일 확인</button>
+								:disabled="inputDisplay.email == 1">
+							<button type="submit" class="btn btn-success">이메일 확인</button>
 						</div>
-						<div>
-							<p></p>
-						</div>
+						<p>{{ showMessage.emailStatus }}</p>
 					</div>
 				</form>
 				<!-- 인증번호 입력 폼 -->
-				<form @submit.prevent="confirm" class="">
-					<div class="form-group">
-						<label for="authCode">인증번호:</label>
-						<div class="input-group">
-							<input type="text" class="form-control" id="authCode" placeholder="인증번호를 입력하세요" v-model="authCode" />
-							<button type="submit" class="btn btn-primary">인증번호 확인</button>
+				<div v-if="inputDisplay.email == 1">
+					<form @submit.prevent="confirm">
+						<div class="mt-5 form-group">
+							<label for="code">인증번호</label>
+							<input v-model="auth.clientCode" :disabled="auth.passAuth === 1" type="text" class="form-control" id="code">
 						</div>
-						<div>
-							<p></p>
+						<div class="noti">
+							<p v-if="auth.passAuth === 1" style="color: rgb(57, 221, 16)">
+								인증되었습니다.
+							</p>
+							<p v-else-if="auth.passAuth === 0" style="color: rgb(231, 14, 14)">
+								인증 번호가 다릅니다.
+							</p>
 						</div>
-					</div>
-				</form>
+						<div class="mt-5" style="text-align: right">
+							<button type="submit" class="mb-2 btn-signature login-btn">인증하기</button>
+						</div>
+					</form>
+				</div>
 				<!-- 비밀번호 입력 폼 -->
 				<div class="form-group">
 					<label for="password">비밀번호:</label>
@@ -261,21 +268,28 @@ export default {
 				<div class="form-group">
 					<label for="password_Check">비밀번호 확인:</label>
 					<input type="password" class="form-control" id="password_Check" placeholder="비밀번호를 입력하세요"
-						v-model="password_Check" />
+						v-model="user.password_Check" />
 					<div class="noti">
 						<p v-if="matchpwd" style="color: red">
 							비밀번호가 일치하지 않습니다.
 						</p>
 					</div>
 				</div>
+				<div>
+					{{ user.id }}<br>
+					{{ user.name }}<br>
+					{{ user.email }}<br>
+					{{ user.password }}<br>
+				</div>
 				<div class="button-container">
-					<button type="button" class="btn btn-primary" @click="proceedToNextPage" :disabled="!user.id ||
+					<button type="button" class="btn btn-success" @click="proceedToNextPage" :disabled="!user.id ||
 						!user.name ||
 						!user.email ||
-						!authCode ||
 						!user.password ||
-						(!password_Check && user.password !== password_Check)
-						">
+						!user.password_Check ||
+						!auth.clientCode ||
+						auth.clientCode === auth.serverCode ||
+						user.password !== user.password_Check">
 						다음
 					</button>
 				</div>
