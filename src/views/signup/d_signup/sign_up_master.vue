@@ -21,7 +21,8 @@ export default {
         return {
             pages: ['signUp1', 'signUp2', 'signUp3', 'signUp4'],
             currentPageIndex: 1,
-            sid: 0,
+            userdata:{
+            }
         };
     },
     computed: {
@@ -40,9 +41,10 @@ export default {
         }
     },
     methods: {
-        nextPage() {
+        nextPage(pagesdata) {
             this.currentPageIndex++;
-        }
+            this.userdata = {...this.userdata, ...pagesdata};
+        },
     }
 }
 </script>

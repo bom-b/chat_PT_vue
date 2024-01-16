@@ -32,10 +32,8 @@ export default {
     },
     methods: {
         proceedToNextPage() {
-            if (this.agreementItems.every((item) => item.checked)) {
-                this.$router.push('/signUp/sign_up3');
-            }
-        },
+            this.$emit("nextPage");
+        }
     },
 };
 </script>

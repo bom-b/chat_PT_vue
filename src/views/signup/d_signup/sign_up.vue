@@ -133,7 +133,6 @@ export default {
 				console.log(e);
 			}
 		},
-
 		confirm() {
 			if (this.auth.serverCode != "" && this.auth.clientCode != "" && this.auth.serverCode == this.auth.clientCode) {
 				return this.auth.passAuth = 1;
@@ -175,7 +174,6 @@ export default {
 				console.log("email 중복 체크 에러", e);
 			}
 		},
-
 		async sendMail(data) {
 			try {
 				const response = await this.$axiosWithoutValidation.post('/service/authemail', data);
@@ -187,7 +185,6 @@ export default {
 				console.log(e)
 				this.showMessage.emailStatus = "메일 발송에 실패 했습니다.";
 			}
-
 		},
 		proceedToNextPage() {
 			try {
@@ -203,7 +200,6 @@ export default {
 				} else {
 					this.$swal("유효하지 않은 경로입니다.");
 				}
-
 			} catch (e) {
 				console.log(e);
 			}
