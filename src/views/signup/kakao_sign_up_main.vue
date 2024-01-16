@@ -2,12 +2,16 @@
   <main>
     <div class="section1400">
       <div id="box">
-        <h5 class="mb-2" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="0"><strong>{{kakaoNickname}}</strong>님 안녕하세요</h5>
-        <h5 class="" style="white-space:nowrap; margin-bottom: 100px;" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="0">카카오 간편가입 완료를 위해 몇가지 정보를 더 알려주세요 🙂</h5>
+        <div id="hello-box" data-aos="fade-in-up" data-aos-duration="1000" data-aos-delay="0">
+          <h5 class="mb-2" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="0">
+            <strong>{{ kakaoNickname || kakaoEmail }}</strong>님 안녕하세요!</h5>
+          <h5 class="" style="white-space:nowrap;" data-aos="fade-in" data-aos-duration="1000"
+              data-aos-delay="0">카카오 간편가입 완료를 위해 몇가지 정보를 더 알려주세요 🙂</h5>
+        </div>
         <h2 class="mb-5" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="0">가입할 <span
             class="highlight">유형</span>을 선택해주세요.</h2>
-        <div class="row">
-          <router-link to="/signUp/kakao" class="col-6 router-link">
+        <div class="row" style="text-align: center; margin: auto;">
+          <router-link to="/signUp/kakao" class="col-6 router-link" style="display: flex; justify-content: center; margin: auto;">
             <div class="goal-box "
                  style="display: flex; justify-content: space-between; align-items: flex-start;"
                  data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
@@ -15,14 +19,17 @@
               <img class="" src="../../../public/assets/img/graphic/normal-user.png" alt="" style="width: 60px;">
             </div>
           </router-link>
-          <router-link to="/signUp/kakao" class="col-6 router-link">
-            <div class="goal-box col-6"
+          <router-link to="/signUp/kakao" class="col-6 router-link" style="display: flex; justify-content: center; margin: auto;">
+            <div class="goal-box"
                  style="display: flex; justify-content: space-between; align-items: flex-start;"
                  data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
               <p class="TheJamsil400" style="display: inline-block;">트레이너회원</p>
               <img class="" src="../../../public/assets/img/graphic/trainer-user.png" alt="" style="width: 60px;">
             </div>
           </router-link>
+        </div>
+        <div id="cancel-box" class="mt-4" style="white-space:nowrap;">
+          <a class="link" @click="disconnectKakao">카카오 정보 제공 철회를 원하시면 클릭해주세요.</a>
         </div>
       </div>
     </div>
@@ -35,6 +42,16 @@ main {
   align-items: center;
 }
 
+#cancel-box {
+  padding-top: 50px;
+}
+
+#hello-box {
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 50px;
+  margin-bottom: 100px;
+}
+
 .goal-box {
   width: 250px;
   height: 150px;
@@ -43,11 +60,11 @@ main {
   padding: 20px;
   color: #000000;
   text-align: left;
-  margin: 10px 50px 50px 10px;
   border: 1px solid #f0f2f1;
   font-size: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
   transition: background-color 0.2s ease;
+  margin: auto;
 }
 
 .highlight {
@@ -57,21 +74,63 @@ main {
 .goal-box:hover {
   background-color: #f0f2f1; /* 마우스를 올릴 때 바뀔 배경색 설정 */
 }
+
+.link {
+  color: #0b5cff;
+}
+
+.link:hover {
+  cursor: pointer;
+}
 </style>
 <script>
 export default {
-  data() {
-    return {
-      kakaoNickname: '',
-    }
-  },
   computed: {
-    newKakaoUserData() {
-      return this.$store.state.newKakaoUserData;
+    kakaoAccessToken() {
+      return this.$store.state.newKakaoUserData.accessToken;
+    },
+    kakaoNickname() {
+      return this.$store.state.newKakaoUserData.nickname;
+    },
+    kakaoEmail() {
+      return this.$store.state.newKakaoUserData.email;
     }
   },
-  created() {
-    this.kakaoNickname = this.$route.query.nickname;
-  },
+  methods: {
+    disconnectKakao() {
+      this.$swal.fire({
+        title: '',
+        text: "카카오 정보 제공을 해제하시겠습니까?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#41b882',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '확인',
+        cancelButtonText: '취소'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const accessToken = this.kakaoAccessToken;
+          const url = 'https://kapi.kakao.com/v1/user/unlink';
+
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'Authorization': 'Bearer ' + accessToken,
+              'Content-type': 'application/x-www-form-urlencoded'
+            }
+          }).then((response) => {
+            if(response.data.id != null){
+              this.$swal.fire('', '성공적으로 연결 해제 되었습니다.', 'success');
+              this.$router.push({path: '/service/login'});
+            } else {
+              this.$swal.fire('', '잠시 후 다시 시도해주세요.', 'warning');
+            }
+          }).catch(() => {
+            this.$swal.fire('', '잠시 후 다시 시도해주세요.', 'warning');
+          });
+        }
+      })
+    }
+  }
 }
 </script>

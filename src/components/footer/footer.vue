@@ -5,20 +5,9 @@
       <div class="footer-logo">
       </div>
       <strong>Chat_PT</strong>
-      <div class="footer-social">
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          <i class="fab fa-twitter"></i>
-        </a>
-        <a href="#" target="_blank" rel="noopener noreferrer">
-          <i class="fab fa-instagram"></i>
-        </a>
-      </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; ict 01기 D조. All rights reserved.</p>
+      <p>&copy; CHOONSIX. All rights reserved.</p>
     </div>
   </footer>
 </template>
@@ -34,7 +23,7 @@ export default {
 footer {
   background-color: #efefef;
   color: #727070;
-  padding: 20px 0;
+  padding: 30px 0;
   text-align: center;
   height: 140px;
 }
@@ -62,7 +51,7 @@ footer {
 }
 
 .footer-bottom {
-  margin-top: auto;
+  margin-top: 30px;
 }
 
 template {
