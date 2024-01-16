@@ -112,7 +112,7 @@
 
 main {
     background-color: #F2F4F7;
-    min-height: calc(100vh - 80px - 200px); /* 화면 최대길이 - 헤더높이 - 풋터높이*/
+    min-height: calc(100vh - 80px - 140px); /* 화면 최대길이 - 헤더높이 - 풋터높이*/
     margin-top: 80px;
 }
 
