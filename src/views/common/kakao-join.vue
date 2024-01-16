@@ -66,7 +66,7 @@ export default {
                 profileImage: response.data.profileImage,
                 accessToken: response.data.accessToken,
               }
-              this.$store.commit('newKakaoUserData', newKakaoUserData);
+              window.localStorage.setItem('newKakaoUserData', JSON.stringify(newKakaoUserData));
               this.$router.push({path: '/signUp/kakao_sign_up_main'});
             }
           })

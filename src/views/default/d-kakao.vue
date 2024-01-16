@@ -20,7 +20,7 @@
             <p class="TheJamsil400 font15" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
                style="color: #00997b; margin-top: 20px; ">어디서나 간편하게 사용해보세요.</p>
             <div id="kakao-plus-btn">
-              <a href="https://pf.kakao.com/_xccVXG">
+              <a @click="openPlusFriend">
                 <!--                    <img class="" src="../../assets/img/QR.png" alt="" style="width: 100px;">-->
                 <img class="" src="../../assets/img/friendadd_large_yellow_rect.png" alt="" style="">
               </a>
@@ -42,7 +42,13 @@
 
 </template>
 <script>
-
+export default {
+  methods: {
+    openPlusFriend() {
+      window.open('https://pf.kakao.com/_CdMBG');
+    },
+  }
+}
 </script>
 <style lang="scss" scoped>
 ::-webkit-scrollbar {

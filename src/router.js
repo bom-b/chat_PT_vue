@@ -142,6 +142,14 @@ router.beforeEach((to, from, next) => {
         }
     }
 
+    // 카카오 회원가입 비정상적 접근 제한
+    if (to.path.startsWith('/signUp/kakao_sign_up_main')) {
+        if(!window.localStorage.getItem('newKakaoUserData')) {
+            next('/error/noValidity'); // 리다이렉트
+            return;
+        }
+    }
+
     next();
 });
 

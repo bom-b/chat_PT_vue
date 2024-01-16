@@ -105,6 +105,16 @@ a {
   text-decoration: none;
 }
 
+/* 모바일 환경에서의 스타일 적용 */
+@media (max-width: 768px) {
+  #left-icon {
+    display: none;
+  }
+  #right-icon {
+    display: none;
+  }
+}
+
 </style>
 <template>
   <main id="mainContainer" style="background-color: #428176;">
