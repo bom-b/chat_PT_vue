@@ -212,7 +212,7 @@ export default {
     text-align: right;
     width: 450px;
     position: absolute;
-    bottom: 0;
+    bottom: 20px;
     right: 0;
   }
 }
@@ -237,7 +237,7 @@ export default {
     text-align: right;
     width: 450px;
     position: absolute;
-    bottom: 0;
+    bottom: 20px;
     right: 0;
   }
 }
@@ -288,7 +288,6 @@ button {
 }
 
 .font35 {
-  //font-size: 3vw;
   font-size: 3.5rem;
   white-space: nowrap;
 }
@@ -312,10 +311,6 @@ button {
     padding: 0px;
   }
 
-  #chun-icon {
-    display: none;
-  }
-
   .description {
     margin-top: 50px;
   }
@@ -329,6 +324,41 @@ button {
     font-size: 16px;
     text-align: center;
   }
+
+  #sec1-title {
+    font-size: 55px;
+    text-align: center;
+  }
+
+  .font35 {
+    font-size: 25px;
+  }
+
+  #sec2-title, #sec3-title {
+    margin-left: 10px;
+  }
+
+  #sec2-sub-title {
+    text-align: left;
+  }
+
+  #section1 {
+    background-image: url('../../assets/img/background/1mobile.png');
+  }
+
+  #section2 {
+    #sec2-icon{
+      width: 350px;
+
+    }
+  }
+
+  #section3 {
+    #sec3-icon{
+      width: 320px;
+    }
+  }
+
 
   #kakao-plus-btn {
     text-align: center;

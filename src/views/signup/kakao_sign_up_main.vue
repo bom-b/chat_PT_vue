@@ -5,13 +5,14 @@
         <div id="hello-box" data-aos="fade-in-up" data-aos-duration="1000" data-aos-delay="0">
           <h5 class="mb-2" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="0">
             <strong>{{ kakaoNickname || kakaoEmail }}</strong>님 안녕하세요!</h5>
-          <h5 class="" style="white-space:nowrap;" data-aos="fade-in" data-aos-duration="1000"
-              data-aos-delay="0">카카오 간편가입 완료를 위해 몇가지 정보를 더 알려주세요 🙂</h5>
+          <h5 class="mt-3" style="white-space:nowrap;" data-aos="fade-in" data-aos-duration="1000"
+              data-aos-delay="0"><span class="kakao-signup-text">카카오 간편가입 완료를 위해</span> 몇가지 정보를 더 알려주세요 🙂</h5>
         </div>
         <h2 class="mb-5" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="0">가입할 <span
             class="highlight">유형</span>을 선택해주세요.</h2>
         <div class="row" style="text-align: center; margin: auto;">
-          <router-link to="/signUp/kakao" class="col-6 router-link" style="display: flex; justify-content: center; margin: auto;">
+          <router-link to="/signUp/kakao" class="col-md-6 col-sm-12 router-link"
+                       style="display: flex; justify-content: center; margin: auto;">
             <div class="goal-box "
                  style="display: flex; justify-content: space-between; align-items: flex-start;"
                  data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
@@ -19,7 +20,8 @@
               <img class="" src="../../../public/assets/img/graphic/normal-user.png" alt="" style="width: 60px;">
             </div>
           </router-link>
-          <router-link to="/signUp/kakao" class="col-6 router-link" style="display: flex; justify-content: center; margin: auto;">
+          <router-link to="/signUp/kakao" class="col-md-6 col-sm-12 router-link"
+                       style="display: flex; justify-content: center; margin: auto;">
             <div class="goal-box"
                  style="display: flex; justify-content: space-between; align-items: flex-start;"
                  data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
@@ -82,18 +84,30 @@ main {
 .link:hover {
   cursor: pointer;
 }
+
+@media (max-width: 768px) {
+  .goal-box {
+    margin-top: 25px;
+  }
+  .kakao-signup-text {
+    display: block;
+  }
+}
 </style>
 <script>
 export default {
   computed: {
+    newKakaoUserData() {
+      return JSON.parse(window.localStorage.getItem('newKakaoUserData'));
+    },
     kakaoAccessToken() {
-      return this.$store.state.newKakaoUserData.accessToken;
+      return this.newKakaoUserData.accessToken || '';
     },
     kakaoNickname() {
-      return this.$store.state.newKakaoUserData.nickname;
+      return this.newKakaoUserData.nickname || '';
     },
     kakaoEmail() {
-      return this.$store.state.newKakaoUserData.email;
+      return this.kakaoUserData.email || '';
     }
   },
   methods: {
@@ -118,19 +132,18 @@ export default {
               'Authorization': 'Bearer ' + accessToken,
               'Content-type': 'application/x-www-form-urlencoded'
             }
-          }).then((response) => {
-            if(response.data.id != null){
-              this.$swal.fire('', '성공적으로 연결 해제 되었습니다.', 'success');
-              this.$router.push({path: '/service/login'});
-            } else {
-              this.$swal.fire('', '잠시 후 다시 시도해주세요.', 'warning');
-            }
+          }).then(() => {
+            this.$swal.fire('', '성공적으로 연결 해제 되었습니다.', 'success');
+            this.$router.push({path: '/service/login'});
+            window.localStorage.removeItem('newKakaoUserData')
           }).catch(() => {
             this.$swal.fire('', '잠시 후 다시 시도해주세요.', 'warning');
+            this.$router.push({path: '/service/login'});
+            window.localStorage.removeItem('newKakaoUserData')
           });
         }
       })
     }
-  }
+  },
 }
 </script>
