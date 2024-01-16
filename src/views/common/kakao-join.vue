@@ -36,6 +36,7 @@ export default {
             // 에러처리
             if (response.data.error === "관리자 로그인 이용 필요") {
               this.$swal.fire('', '관리자 로그인을 이용해주세요.', 'warning');
+              return;
             }
 
             // 로그인 성공
@@ -63,6 +64,7 @@ export default {
                 email: response.data.email,
                 nickname: response.data.nickname,
                 profileImage: response.data.profileImage,
+                accessToken: response.data.accessToken,
               }
               this.$store.commit('newKakaoUserData', newKakaoUserData);
               this.$router.push({path: '/signUp/kakao_sign_up_main'});
