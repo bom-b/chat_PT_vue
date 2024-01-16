@@ -68,7 +68,7 @@ export default {
 				if (id.match(reg)) {
 					return id;
 				} else {
-					return this.$swal("", "아이디에 특수문자를 사용할 수 없습니다.");
+					return this.$swal("", "영문 숫자로 입력해라");
 				}
 			} else {
 				return this.$swal.fire("", "아이디를 입력해주세요", "warning")
@@ -144,7 +144,6 @@ export default {
 				console.log("email체크", response);
 				// 문자열로 오는 경우 숫자로 변환
 				const emailCount = parseInt(response.data);
-
 				if (emailCount < 1) {
 					const result = await Swal.fire({
 						title: "사용 가능한 이메일 입니다.",
@@ -236,16 +235,24 @@ export default {
 								:style="{ 'background-color': inputemail }" @input="emailChange" />
 							<button type="submit" class="btn btn-primary">이메일 확인</button>
 						</div>
+						<div>
+							<p></p>
+						</div>
 					</div>
 				</form>
 				<!-- 인증번호 입력 폼 -->
-				<div class="form-group">
-					<label for="authCode">인증번호:</label>
-					<div class="input-group">
-						<input type="text" class="form-control" id="authCode" placeholder="인증번호를 입력하세요" v-model="authCode" />
-						<button type="submit" class="btn btn-primary">인증번호 확인</button>
+				<form @submit.prevent="confirm" class="">
+					<div class="form-group">
+						<label for="authCode">인증번호:</label>
+						<div class="input-group">
+							<input type="text" class="form-control" id="authCode" placeholder="인증번호를 입력하세요" v-model="authCode" />
+							<button type="submit" class="btn btn-primary">인증번호 확인</button>
+						</div>
+						<div>
+							<p></p>
+						</div>
 					</div>
-				</div>
+				</form>
 				<!-- 비밀번호 입력 폼 -->
 				<div class="form-group">
 					<label for="password">비밀번호:</label>
