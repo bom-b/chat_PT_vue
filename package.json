@@ -46,6 +46,7 @@
     "vue-sweetalert2": "^5.0.5",
     "vue-template-compiler": "^2.7.16",
     "vuedraggable": "^2.24.3",
+    "vuetify": "^3.4.10",
     "vuex": "^4.0.0",
     "vxe-table": "^4.5.17",
     "webstomp-client": "^1.2.6"

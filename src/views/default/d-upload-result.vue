@@ -1,5 +1,5 @@
 <template>
-  <main id="main" class="">
+  <main id="main">
     <div>
       <h1>오늘 섭취한 칼로리 : 3000Kcal</h1>
     </div>
@@ -12,14 +12,55 @@
           <div class="image-text-container">
             <img :src="imgLink + e.upphotoid + '.jpg'" alt="Uploaded Image" class="uploaded-image"/>
             <div>
-              <p>{{ this.foods[e.foodnum] }}</p>
-              <button
-                  class="btn btn-secondary"
-                  data-bs-toggle="popover"
-                  :data-bs-content="popoverContent(e)"
-              >
+              <p>{{ foods[e.foodnum] }}</p>
+              <button class="btn btn-secondary" @click="togglePopover(e, $event)">
                 상세보기
               </button>
+              <div v-if="activePopover === e" class="popover-content" :style="popoverStyle">
+                <div class="close-button-container">
+                  <button class="close-button" @click="closePopover()">&#10006;</button> <!-- X 버튼이 있는 줄 -->
+                </div>
+                <div v-if="!e.editMode">
+                  <p>음식명: {{ foods[e.foodnum] }} {{ e.predictrate }}%</p>
+                  <p>양: {{ e.mass }}g</p>
+                  <p>칼로리: {{ e.foodcal.toFixed(2) }}Kcal</p>
+                  <p>탄수화물: {{ e.food_TAN }}g</p>
+                  <p>단백질: {{ e.food_DAN }}g</p>
+                  <p>지방: {{ e.food_GI }}g</p>
+                  <p>후보1: {{ foods[e.candidate1] }} {{ e.candidate1RATE }}%</p>
+                  <p>후보2: {{ foods[e.candidate2] }} {{ e.candidate2RATE }}%</p>
+                  <p>후보3: {{ foods[e.candidate3] }} {{ e.candidate3RATE }}%</p>
+                  <button class="btn btn-primary" @click="editFood(e)" style="float: right;">수정</button>
+                  <button class="btn btn-danger" @click="deleteFood(e.upphotoid)" style="float: right;">삭제</button>
+                </div>
+                <div v-else>
+                  <div style="display: flex; align-items: center;">
+                    <input type="text" v-model="e.foodName" placeholder="음식명" />
+                    <div style="flex-grow: 1;"></div> <!-- 남은 공간을 채우는 빈 div -->
+                    <button class="btn" @click="resetFoodName(e)" style="float: right;">
+                      <span class="material-icons">sync</span>
+                    </button>
+                  </div>
+                  <div style="display: flex; align-items: center;">
+                    <input type="number" v-model="e.quantity" placeholder="양" /> g
+                    <div style="flex-grow: 1;"></div> <!-- 남은 공간을 채우는 빈 div -->
+                    <button class="btn" @click="resetFoodQuantity(e)" style="float: right;">
+                      <span class="material-icons">sync</span>
+                    </button>
+                  </div>
+
+                  <p>칼로리: {{ e.foodcal.toFixed(2) }}Kcal</p>
+                  <p>탄수화물: {{ e.food_TAN }}g</p>
+                  <p>단백질: {{ e.food_DAN }}g</p>
+                  <p>지방: {{ e.food_GI }}g</p>
+                  <div v-for="candidate in [e.candidate1, e.candidate2, e.candidate3]" :key="candidate">
+                    <input type="radio" :id="candidate" :value="candidate" v-model="e.selectedCandidate" @change="updateFoodName(e, candidate)">
+                    <label :for="candidate">{{ foods[candidate] }}</label>
+                  </div>
+                  <button class="btn btn-danger" @click="cancelEdit(e)" style="float: right;">취소</button>
+                  <button class="btn btn-success" @click="updateFood(e.upphotoid, e)" style="float: right;">저장</button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -29,10 +70,6 @@
 </template>
 
 <script>
-//import sha256 from 'js-sha256';
-//import EXIF from 'exif-js';
-// 필요한 부트스트랩 컴포넌트만 import
-import { Popover } from 'bootstrap';
 
 export default {
   inject: ['foods'],
@@ -45,25 +82,12 @@ export default {
         저녁: [],
         간식: [],
       },
+      activePopover: null,
+      popoverStyle: {},
     };
   },
   created() {
     this.getTodayPhoto();
-  },
-  mounted() {
-    this.initializePopovers();
-  },
-  watch: {
-    // 'categorizedImages' 데이터가 변경될 때마다 실행됩니다.
-    categorizedImages: {
-      deep: true, // 중첩된 데이터까지 감시
-      handler() {
-        // 데이터 변경 후 DOM 업데이트가 완료된 후 팝오버를 초기화
-        this.$nextTick(() => {
-          this.initializePopovers();
-        });
-      },
-    },
   },
   methods: {
     getTodayPhoto() {
@@ -74,20 +98,14 @@ export default {
               if (!this.categorizedImages[food.category]) {
                 this.categorizedImages[food.category] = [];
               }
-              this.categorizedImages[food.category].push({
-                foodnum: food.foodnum,
-                upphotoid: food.upphotoid,
-                mass: food.mass,
-                predictrate: food.predictrate,
-                candidate1: food.candidate1,
-                candidate2: food.candidate2,
-                candidate3: food.candidate3,
-                candidate1rate: food.candidate1RATE,
-                candidate2rate: food.candidate2RATE,
-                candidate3rate: food.candidate3RATE,
-                // 추가: 각 항목에 showDetails 속성 초기화
-                showDetails: false
-              });
+              const extendedFood = {
+                ...food,
+                editMode: false,
+                foodName: this.foods[food.foodnum],
+                quantity: food.mass,
+                selectedCandidate: null
+              };
+              this.categorizedImages[food.category].push(extendedFood);
             }
             console.log(this.categorizedImages);
           })
@@ -95,28 +113,102 @@ export default {
             console.error("서버 통신 오류:", error);
           });
     },
-    initializePopovers() {
-      const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-      popoverTriggerList.forEach(function (popoverTriggerEl) {
-        return new Popover(popoverTriggerEl, {
-          html: true,
-        });
-      });
+    togglePopover(foodItem, event) {
+      this.activePopover = this.activePopover === foodItem ? null : foodItem;
+      if (this.activePopover) {
+        this.calculatePopoverPosition(event.target);
+      }
     },
-    popoverContent(e) {
-      const content = `
-      <p>음식명: ${this.foods[e.foodnum]} ${e.predictrate}%</p>
-      <p>양: ${e.mass}g</p>
-      <p>칼로리: 400Kcal</p>
-      <p>탄수화물: 30g</p>
-      <p>단백질: 20g</p>
-      <p>지방: 10g</p>
-      <p>후보1: ${this.foods[e.candidate1]} ${e.candidate1rate}%</p>
-      <p>후보2: ${this.foods[e.candidate2]} ${e.candidate2rate}%</p>
-      <p>후보3: ${this.foods[e.candidate3]} ${e.candidate3rate}%</p>
-    `;
-      return content;
+    calculatePopoverPosition(button) {
+      const popoverWidth = 300; // 팝오버 너비
+      const popoverHeight = 250; // 팝오버 높이, 필요에 따라 조정
+      const buttonRect = button.getBoundingClientRect();
+      const buttonCenterX = buttonRect.left + (buttonRect.width / 2);
+      const buttonBottomY = buttonRect.bottom + window.scrollY;
+
+      let popoverX, popoverTop;
+      // 가로 위치 계산
+      if (buttonCenterX < window.innerWidth / 2) {
+        popoverX = buttonCenterX;
+      } else {
+        popoverX = buttonCenterX - popoverWidth;
+      }
+
+      // 세로 위치 계산
+      if (buttonBottomY + popoverHeight > window.innerHeight + window.scrollY) {
+        // 화면 아래쪽에 공간 부족 시, 팝오버를 위로
+        popoverTop = buttonRect.top + window.scrollY - popoverHeight;
+      } else {
+        // 공간 충분 시, 팝오버를 아래로
+        popoverTop = buttonBottomY;
+      }
+
+      this.popoverStyle = {
+        left: popoverX + 'px',
+        top: popoverTop + 'px',
+        opacity: 1,
+        transform: 'translateY(10px)',
+        transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
+      };
     },
+
+    editFood(foodItem) {
+      // 음식 편집 모드 활성화
+      foodItem.editMode = true;
+    },
+    updateFoodName(foodItem, candidate) {
+      // 후보 음식을 선택할 때 음식명 업데이트
+      foodItem.foodName = this.foods[candidate];
+    },
+    resetFoodName(foodItem) {
+      // 음식명에 대한 '새로고침' 기능
+      foodItem.foodName = this.foods[foodItem.foodnum];
+    },
+    resetFoodQuantity(foodItem) {
+      // 양에 대한 '새로고침' 기능
+      foodItem.quantity = foodItem.mass;
+    },
+    closePopover() {
+      // 팝오버 닫기 기능
+      this.activePopover = null;
+    },
+    cancelEdit(foodItem) {
+      // 취소 버튼 기능: 편집 모드 해제 및 원래 값으로 복원
+      foodItem.editMode = false;
+      this.resetFoodName(foodItem);
+      this.resetFoodQuantity(foodItem);
+    },
+    updateFood(upphotoid, updatedData) {
+      // 수정된 데이터를 서버에 전송
+      this.$axios.post('/updatePhoto', {
+        upphotoid: upphotoid,
+        ...updatedData
+      })
+          .then(response => {
+            console.log("서버 응답:", response.data);
+            // 성공적인 응답 처리
+          })
+          .catch(error => {
+            console.error("서버 통신 오류:", error);
+          });
+    },
+
+    deleteFood(upphotoid) {
+      console.log('upphotoid : ' + upphotoid);
+      // 서버에 삭제 요청
+      this.$axios.post('/deleteFood', {
+        'upphotoid' : upphotoid
+      })
+          .then(response => {
+            console.log("서버 응답:", response.data);
+            // 성공적인 응답 처리
+          })
+          .catch(error => {
+            console.error("서버 통신 오류:", error);
+          });
+    },
+
+
 
   },
 
@@ -125,6 +217,56 @@ export default {
 
 
 <style lang="scss" scoped>
+.close-button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.close-button {
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px; /* 폰트 크기 조절 */
+  border-radius: 50%;
+  width: 20px; /* 버튼 크기 조절 */
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  padding: 0;
+  margin: 5px;
+}
+.popover-content {
+  position: fixed;
+  z-index: 1000;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+  width: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform-origin: center;
+  animation: popoverGrowShake 0.5s ease-out;
+}
+
+/* 커지면서 흔들리는 효과 */
+@keyframes popoverGrowShake {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  60%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  95% {
+    transform: scale(1) translateY(-5px);
+  }
+}
+
+
+
+
 .image-text-container {
   display: flex;
   align-items: center;

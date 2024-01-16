@@ -16,25 +16,6 @@
       <div v-for="(image, index) in localUploadedImages" :key="index" class="preview">
         <img class="card-img-top" :src="image" alt="Uploaded Preview" />
         <div class="card-body">
-          <div class="select-or-input">
-            <select class="form-select" v-if="!showInputField"
-                    v-model="selectedServing" @change="handleSelectChange"
-            >
-              <option value="serving1">1인분</option>
-              <option value="serving2">2인분</option>
-              <option value="serving3">3인분</option>
-              <option value="serving4">4인분</option>
-              <option value="serving5">5인분</option>
-            </select>
-            <div v-if="showInputField" class="input-container d-flex align-items-center">
-              <input type="text" class="form-control" v-model="userInput" @input="onInput" :size="inputSize">
-              <span class="input-addon ml-2">{{ unit }}</span>
-              <span class="toggle-unit ml-2" @click="toggleUnit">변경</span>
-            </div>
-            <button class="btn btn-secondary" @click="toggleInputField">
-              {{ showInputField ? '선택' : '수정' }}
-            </button>
-          </div>
           <div class="button-container">
             <button class="btn btn-danger" @click="removeImage(index)">삭제</button>
           </div>
@@ -186,48 +167,6 @@ export default {
       // 지정된 인덱스에서 이미지를 제거합니다.
       this.localUploadedImages.splice(index, 1);
       this.$emit('image-removed', { index, images: this.localUploadedImages });
-    },
-    toggleInputField() {
-      this.showInputField = !this.showInputField;
-      this.resetInput();
-      if (this.showInputField) {
-        // 수정 버튼을 누르면 selectedServing을 ''로 설정
-        this.selectedServing = '';
-      } else {
-        // 선택 버튼을 누르면 selectedServing을 'serving1'로 설정
-        this.selectedServing = 'serving1';
-      }
-    },
-    // 입력값이 변경될 때 실행되는 함수
-    onInput(event) {
-      // 숫자와 소수점만 허용, 한글 및 기타 문자 차단
-      let inputValue = event.target.value.replace(/[^0-9.]/g, '');
-
-      // 소수점 두 자리까지만 허용
-      if (inputValue.includes('.')) {
-        const parts = inputValue.split('.');
-        if (parts[1].length > 2) {
-          parts[1] = parts[1].substring(0, 2);
-          inputValue = parts.join('.');
-        }
-      }
-      this.userInput = inputValue;
-
-    },
-    setInputMethod(method) {
-      this.inputMethod = method;
-    },
-    handleSelectChange() {
-      this.setInputMethod('select');
-      this.resetInput();
-    },
-    toggleUnit() {
-      this.unit = this.unit === '인분' ? 'g' : '인분';
-      this.setInputMethod(this.unit);
-      this.resetInput();
-    },
-    resetInput() {
-      this.userInput = '';
     },
   },
 };
