@@ -90,7 +90,7 @@ export default {
 					const result = await Swal.fire({
 						title: "",
 						text: "사용 가능한 아이디입니다. 사용하시겠습니까?",
-						icon: "warning",
+						icon: "question",
 						showCancelButton: true,
 						confirmButtonColor: "#3085d6",
 						cancelButtonColor: "#d33",
@@ -172,30 +172,26 @@ export default {
 
 		},
 		proceedToNextPage() {
-    const isValid =
-        this.user.id &&
-        this.user.name &&
-        this.user.email &&
-        this.user.password &&
-        this.user.password_Check &&
-        this.auth.clientCode &&
-        this.auth.clientCode === this.auth.serverCode &&
-        this.user.password === this.user.password_Check;
+			try {
+				const isValid = 1;
+				const data = {
+					id: this.user.id,
+					name: this.user.name,
+					email: this.user.email,
+					password: this.user.password,
+				}
+				if (isValid) {
+					this.$emit("singUp1data", data);
+					this.$swal("", "부모 컴포넌트에 데이터 보내기");
+				} else {
+					this.$swal("유효하지 않은 경로입니다.");
+				}
 
-    const data = {
-        id: this.user.id,
-        name: this.user.name,
-        email: this.user.email,
-        password: this.user.password,
-    }
+			} catch (e) {
+				console.log(e);
+			}
 
-    if (isValid) {
-        this.$emit("singUp1data", data);
-        this.$swal("", "부모 컴포넌트에 데이터 보내기");
-    } else {
-        this.$swal("유효하지 않은 경로입니다.");
-    }
-},
+		},
 
 	},
 };
