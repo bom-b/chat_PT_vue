@@ -80,7 +80,6 @@ export default {
 				const data = {
 					id: this.checkId(this.user.id),
 				};
-				console.log("dataId", data.id);
 				const response = await this.$axiosWithoutValidation.post(
 					"/signUp/id",
 					data
@@ -125,11 +124,9 @@ export default {
 				const data = {
 					email: clearemail
 				};
-				console.log(data.email)
 				const response = await this.$axiosWithoutValidation.post(
 					"/signUp/email", data
 				);
-				console.log("email체크", response);
 				// 문자열로 오는 경우 숫자로 변환
 				const emailCount = parseInt(response.data);
 				if (emailCount < 1) {
@@ -159,11 +156,9 @@ export default {
 		async sendMail(data) {
 			try {
 				const response = await this.$axiosWithoutValidation.post('/service/authemail', data);
-				console.log("sendMail", response);
 				this.auth.serverCode = response.data;
 				this.showMessage.emailStatus = "메일이 발송되었습니다.";
 				this.inputDisplay.email = 1;
-				console.log(this.inputDisplay.email);
 			}
 			catch (e) {
 				console.log(e)
