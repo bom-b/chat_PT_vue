@@ -12,7 +12,7 @@
         </h2>
         <div class="row" style="text-align: center; margin: auto">
           <router-link
-            to="/signUp/sign_up"
+            to="/signUp/sign_up_master"
             class="col-md-6 col-sm-12 router-link"
             style="display: flex; justify-content: center; margin: auto"
           >
