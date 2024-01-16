@@ -36,8 +36,6 @@ export default {
             // 에러처리
             if (response.data.error === "관리자 로그인 이용 필요") {
               this.$swal.fire('', '관리자 로그인을 이용해주세요.', 'warning');
-              this.user.userName = '';
-              this.user.password = '';
             }
 
             // 로그인 성공
@@ -60,8 +58,14 @@ export default {
 
               // 회원가입 시키러 보내기
             } else {
-              console.log(response.data);
-              this.$router.push({path: '/signUp/kakao_sign_up_main', query: {nickname: response.data.nickname}});
+              const newKakaoUserData = {
+                id: response.data.id,
+                email: response.data.email,
+                nickname: response.data.nickname,
+                profileImage: response.data.profileImage,
+              }
+              this.$store.commit('newKakaoUserData', newKakaoUserData);
+              this.$router.push({path: '/signUp/kakao_sign_up_main'});
             }
           })
           .catch(() => {
