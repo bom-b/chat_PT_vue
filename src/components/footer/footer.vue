@@ -1,18 +1,11 @@
 <!-- Footer.vue -->
-
 <template>
   <footer>
     <div class="footer-content">
       <div class="footer-logo">
-        <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
-        <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
       </div>
-      <div class="footer-links">
-        <router-link to="/">ict 01기 D조</router-link>
-      </div>
+      <strong>Chat_PT</strong>
       <div class="footer-social">
-        <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
-        <img src="https://n.sinaimg.cn/sinacn17/w120h120/20180314/89fc-fyscsmv5911424.gif" alt="Logo" />
         <a href="#" target="_blank" rel="noopener noreferrer">
           <i class="fab fa-facebook-f"></i>
         </a>
@@ -25,7 +18,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2023 Your Company. All rights reserved.</p>
+      <p>&copy; ict 01기 D조. All rights reserved.</p>
     </div>
   </footer>
 </template>
@@ -43,14 +36,11 @@ footer {
   color: #727070;
   padding: 20px 0;
   text-align: center;
+  height: 140px;
 }
 
 .footer-content {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .footer-logo img {
@@ -74,6 +64,7 @@ footer {
 .footer-bottom {
   margin-top: auto;
 }
+
 template {
   min-height: 100%;
 }

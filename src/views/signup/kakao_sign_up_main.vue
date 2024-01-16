@@ -65,6 +65,11 @@ export default {
       kakaoNickname: '',
     }
   },
+  computed: {
+    newKakaoUserData() {
+      return this.$store.state.newKakaoUserData;
+    }
+  },
   created() {
     this.kakaoNickname = this.$route.query.nickname;
   },
