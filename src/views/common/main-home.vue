@@ -97,11 +97,6 @@ export default {
 };
 
 </script>
-<style>
-.nav-item {
-  color: white;
-}
-</style>
 <style lang="scss" scoped>
 ::-webkit-scrollbar {
   display: none;

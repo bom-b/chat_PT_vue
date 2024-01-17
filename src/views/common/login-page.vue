@@ -71,13 +71,19 @@ form {
 }
 
 .login-btn {
-  background-color: #e5f5f2;
+  background-color: #c0e0d6;
   color: #085c57;
   border: none;
   border-radius: 7px;
   padding: 10px 20px;
   height: 42px;
   width: 170px;
+  transition: background-color 0.3s ease, color 0.3s ease ;
+}
+
+.login-btn:hover {
+  background-color: #b0d5c8;
+  transition: background-color 0.3s ease, color 0.3s ease ;
 }
 
 main {
@@ -154,7 +160,7 @@ a {
           <!--     로그인 버튼     -->
           <div class="mt-5" style="text-align: center">
             <div>
-              <button type="submit" class="mb-2 btn-signature login-btn">로그인</button>
+              <button type="submit" class="mb-2 login-btn">로그인</button>
             </div>
             <div>
               <img @click="kakaoLogin" class="kakao-login-btn" src="../../assets/img/kakao_login_medium_narrow.png" alt="">
