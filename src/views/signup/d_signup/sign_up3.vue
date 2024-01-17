@@ -1,70 +1,3 @@
-<template>
-  <main>
-    <div class="progress mt-3">
-      <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
-        aria-valuemin="0" aria-valuemax="100"></div>
-    </div>
-    <div class="container">
-      <h2>키와 몸무게 입력</h2>
-      <div class="input-container">
-        <ul>
-          <li>
-            <label for="sex">성별</label>
-            <div class="btn-group" role="group">
-              <button type="button" class="btn" :class="{ 'btn-male': sex === 'male' }" @click="setSex('male')">
-                <i class="material-icons">male</i>
-              </button>
-              <button type="button" class="btn" :class="{ 'btn-female': sex === 'female' }" @click="setSex('female')">
-                <i class="material-icons">female</i>
-              </button>
-            </div>
-          </li>
-          <li>
-            <label for="age">나이</label>
-            <input class="form-control" type="number" id="age" v-model="age">
-          </li>
-          <li>
-            <label for="height">키(cm)</label>
-            <input class="form-control" type="number" id="height" v-model="height">
-          </li>
-          <li>
-            <label for="weight">몸무게(kg)</label>
-            <input class="form-control" type="number" id="weight" v-model="weight">
-          </li>
-          <li>
-            <label for="bmi"> bmi </label>
-            <div>{{ calculateBMI() }}</div>
-          </li>
-          <div class="image-container">
-            <div v-for="image in images" :key="image.path" :class="{ 'active-image': image.active }">
-              <img :src="image.path" :alt="image.alt" class="image" @click="handleImageClick(image)">
-            </div>
-          </div>
-          <li>
-            <label for="purpose">목적</label>
-            <div class="purpose_list">
-              <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'diet' }" id="diet"
-                @click="setPurpose('diet')"> 다이어트 </button>
-              <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'keep' }" id="keep"
-                @click="setPurpose('keep')"> 체중유지 </button>
-              <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'bulk-up' }" id="bulk-up"
-                @click="setPurpose('bulk-up')"> 벌크업 </button>
-              <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'improve' }" id="improve"
-                @click="setPurpose('improve')"> 식습관 개선 </button>
-            </div>
-
-          </li>
-        </ul>
-      </div>
-      <div class="button-container">
-        <button type="button" class="btn btn-primary" @click="proceedToNextPage"
-          :disabled="!height || !weight || !sex || !purpose">
-          다음
-        </button>
-      </div>
-    </div>
-  </main>
-</template>
 <script>
 export default {
   data() {
@@ -139,8 +72,125 @@ export default {
   },
 };
 </script>
+<template>
+  <main class="main">
+    <div class="container">
+      <div class="progress fixed-top" style="margin-top: 81px">
+        <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
+          aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <div class="container mt-5 pt-2">
+        <h2>키와 몸무게 입력</h2>
+        <div class="input-container">
+          <ul>
+            <li>
+              <label for="sex">성별</label>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn" :class="{ 'btn-male': sex === 'male' }" @click="setSex('male')">
+                  <i class="material-icons">male</i>
+                </button>
+                <button type="button" class="btn" :class="{ 'btn-female': sex === 'female' }" @click="setSex('female')">
+                  <i class="material-icons">female</i>
+                </button>
+              </div>
+            </li>
+            <li>
+              <label for="age">나이</label>
+              <input class="form-control" type="number" id="age" v-model="age">
+            </li>
+            <li>
+              <label for="height">키(cm)</label>
+              <input class="form-control" type="number" id="height" v-model="height">
+            </li>
+            <li>
+              <label for="weight">몸무게(kg)</label>
+              <input class="form-control" type="number" id="weight" v-model="weight">
+            </li>
+            <li>
+              <label for="bmi"> bmi </label>
+              <div>{{ calculateBMI() }}</div>
+            </li>
+            <div class="image-container">
+              <div v-for="image in images" :key="image.path" :class="{ 'active-image': image.active }">
+                <img :src="image.path" :alt="image.alt" class="image" @click="handleImageClick(image)">
+              </div>
+            </div>
+            <li>
+              <label for="purpose">목적</label>
+              <div class="purpose_list">
+                <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'diet' }" id="diet"
+                  @click="setPurpose('diet')"> 다이어트 </button>
+                <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'keep' }" id="keep"
+                  @click="setPurpose('keep')"> 체중유지 </button>
+                <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'bulk-up' }" id="bulk-up"
+                  @click="setPurpose('bulk-up')"> 벌크업 </button>
+                <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'improve' }" id="improve"
+                  @click="setPurpose('improve')"> 식습관 개선 </button>
+              </div>
+
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="button-container">
+        <button type="button" class="btn btn-primary" @click="proceedToNextPage"
+          :disabled="!height || !weight || !sex || !purpose">
+          다음
+        </button>
+      </div>
+    </div>
+  </main>
+</template>
+
 
 <style scoped>
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: auto;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  color: #000000;
+  text-align: left;
+  margin: auto;
+  border: 1px solid #f0f2f1;
+  font-size: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* 그림자 추가 */
+  transition: background-color 0.2s ease;
+}
+
+li {
+  list-style-type: none;
+  /* 기본 마커 제거 */
+  position: relative;
+  /* 하위 요소에 절대 위치 지정을 위함 */
+  padding-left: 30px;
+  /* 이미지와 텍스트 간 거리 조정 */
+}
+
+li::before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  width: 20px;
+  /* 원하는 너비로 설정 */
+  height: 20px;
+  /* 원하는 높이로 설정 */
+  background-image: url('https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/5eeea355389655.59822ff824b72.gif');
+  background-size: cover;
+  /* 이미지가 요소를 완전히 덮도록 설정, 필요에 따라 'contain'으로 변경 가능 */
+  background-repeat: no-repeat;
+  /* 이미지가 반복되지 않도록 설정 */
+  background-position: center;
+  /* 이미지가 요소의 중앙에 위치하도록 설정 */
+}
+
+
 .active-image {
   border: 2px solid red;
 }
@@ -210,5 +260,4 @@ button {
 .selected-purpose {
   background-color: black;
   /* 선택된 목적 버튼에 원하는 스타일을 추가하세요 */
-}
-</style>
+}</style>

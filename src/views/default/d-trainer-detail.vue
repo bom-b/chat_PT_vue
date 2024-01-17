@@ -91,7 +91,7 @@ export default {
         });
       } catch (e) {
         this.$swal
-          .fire({
+        .fire({
             icon: "warning",
             title: "PT상담이 이미 신청 되어 있습니다!",
             text: "기존 PT상담을 취소 하시겠습니까?",

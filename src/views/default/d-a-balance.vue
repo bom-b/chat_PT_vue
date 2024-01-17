@@ -13,12 +13,14 @@
         </div>
         <img v-else-if="!hasData" src="../../assets/img/nonochun.png" alt="No data">
       </div>
-      <div class="comment-container">
-        <h2 :class="commentClass" v-if="hasData" v-html="formattedComment"></h2>
-
-        <h2 v-else-if="!hasData">이 기간 데이터가 없습니다.</h2>
-
+      <div class="comment-container" v-if="hasData">
+        <h2 :class="commentClass" v-html="formattedComment"></h2>
       </div>
+      <div class="comment-container2" v-else-if="!hasData">
+        <h2>이 기간 데이터가 없습니다.</h2>
+      </div>
+      
+
       <div class="row" v-if="hasData">
         <div class="col-md-4">
 
@@ -104,6 +106,17 @@
   justify-content: center;
   align-items: center;
 }
+.comment-container2 {
+  margin-top: 45px;
+  padding: 20px;
+  background: #ffffff;
+  display: flex;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* 차트에 그림자 효과 추가 */
+  justify-content: center;
+  align-items: center;
+}
 .my-list-item {
   padding: 10px 0; /* 상하 패딩 추가 */
   font-size: 16px; /* 폰트 크기 조정 */
@@ -117,11 +130,6 @@
 .foodname {
   font-size: 1.6em;
   font-weight: bold;
-}
-
-.comment-balanced {
-  color: #9e9e9e;
-  /* 균형 잡힌 코멘트 색상 */
 }
 
 h2 {
