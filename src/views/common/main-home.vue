@@ -315,27 +315,31 @@ button {
     margin-top: 50px;
   }
 
+  #more-scroll {
+    bottom: 20%;
+  }
+
   .font25 {
     font-size: 22px;
     text-align: center;
   }
 
   .font15 {
-    font-size: 16px;
+    font-size: 14px;
     text-align: center;
   }
 
   #sec1-title {
-    font-size: 55px;
+    font-size: 40px;
     text-align: center;
   }
 
   .font35 {
-    font-size: 25px;
+    font-size: 20px;
   }
 
   #sec2-title, #sec3-title {
-    margin-left: 10px;
+    margin-left: 3px;
   }
 
   #sec2-sub-title {
@@ -348,14 +352,14 @@ button {
 
   #section2 {
     #sec2-icon{
-      width: 350px;
+      width: 300px;
 
     }
   }
 
   #section3 {
     #sec3-icon{
-      width: 320px;
+      width: 280px;
     }
   }
 
