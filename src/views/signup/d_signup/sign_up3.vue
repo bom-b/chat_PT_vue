@@ -6,7 +6,8 @@ export default {
       weight: '',
       BMI: '',
       sex: '',
-      purpose: '',
+      purpose: 999,
+      activity: 999,
     };
   },
   computed: {
@@ -44,10 +45,6 @@ export default {
     },
   },
   methods: {
-    handleImageClick(image) {
-      // 클릭한 이미지에 따라 특정 동작 수행
-      console.log(`Clicked on image: ${image.alt}`);
-    },
     proceedToNextPage() {
       if (this.height && this.weight && this.sex) {
         this.$router.push('/sign_up4');
@@ -68,6 +65,9 @@ export default {
     },
     setPurpose(purpose) {
       this.purpose = purpose;
+    },
+    setActivity(activity) {
+      this.activity = activity;
     }
   },
 };
@@ -95,7 +95,7 @@ export default {
               </div>
             </li>
             <li>
-              <label for="age">나이</label>
+              <label for="age">나이(만)</label>
               <input class="form-control" type="number" id="age" v-model="age">
             </li>
             <li>
@@ -112,28 +112,39 @@ export default {
             </li>
             <div class="image-container">
               <div v-for="image in images" :key="image.path" :class="{ 'active-image': image.active }">
-                <img :src="image.path" :alt="image.alt" class="image" @click="handleImageClick(image)">
+                <img :src="image.path" :alt="image.alt" class="image">
               </div>
             </div>
             <li>
               <label for="purpose">목적</label>
               <div class="purpose_list">
-                <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'diet' }" id="diet"
-                  @click="setPurpose('diet')"> 다이어트 </button>
-                <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'keep' }" id="keep"
-                  @click="setPurpose('keep')"> 체중유지 </button>
-                <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'bulk-up' }" id="bulk-up"
-                  @click="setPurpose('bulk-up')"> 벌크업 </button>
-                <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'improve' }" id="improve"
-                  @click="setPurpose('improve')"> 식습관 개선 </button>
+                <button class="btn btn-success" :class="{ 'selected-purpose': purpose === 0 }" id="diet"
+                  @click="setPurpose(0)"> 다이어트 </button>
+                <button class="btn btn-success" :class="{ 'selected-purpose': purpose === 1 }" id="keep"
+                  @click="setPurpose(1)"> 체중유지 </button>
+                <button class="btn btn-success" :class="{ 'selected-purpose': purpose === 2 }" id="bulk-up"
+                  @click="setPurpose(2)"> 벌크업 </button>
+                <button class="btn btn-success" :class="{ 'selected-purpose': purpose === 3 }" id="improve"
+                  @click="setPurpose(3)"> 식습관 개선 </button>
               </div>
+            </li>
+            <li>
+              <label for="activity">활동량</label>
+              <div class="purpose_list">
+                <button class="btn btn-success" :class="{ 'selected-purpose': purpose === 0 }" id="diet"
+                  @click="setActivity(0)"> 안 함</button>
+                <button class="btn btn-success" :class="{ 'selected-purpose': purpose === 1 }" id="keep"
+                  @click="setActivity(1)"> 가끔 </button>
+                <button class="btn btn-success" :class="{ 'selected-purpose': purpose === 2 }" id="bulk-up"
+                  @click="setActivity(2)"> 열심 </button>
 
+              </div>
             </li>
           </ul>
         </div>
       </div>
       <div class="button-container">
-        <button type="button" class="btn btn-primary" @click="proceedToNextPage"
+        <button type="button" class="btn btn-success" @click="proceedToNextPage"
           :disabled="!height || !weight || !sex || !purpose">
           다음
         </button>
@@ -260,4 +271,5 @@ button {
 .selected-purpose {
   background-color: black;
   /* 선택된 목적 버튼에 원하는 스타일을 추가하세요 */
-}</style>
+}
+</style>
