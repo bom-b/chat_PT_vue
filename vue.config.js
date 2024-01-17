@@ -3,6 +3,6 @@ module.exports = {
     'axios',
   ],
   devServer: {
-    disableHostCheck: true
+    allowedHosts: 'all'
   },
 };
