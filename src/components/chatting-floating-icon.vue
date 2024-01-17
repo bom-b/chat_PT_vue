@@ -1,12 +1,12 @@
 <template>
-  <transition name="slide-fade">
-    <div v-if="isFloatingBox" class="floatting-box">
+  <transition name="slide-fade" >
+    <div v-if="isFloatingBox" class="floatting-box" style="border: 30px;">
       <component :is="currentComponent" @change-component="handleComponentChange" />
     </div>
   </transition>
   <div class="icon" :class="{active : isFloatingBox, inactive : !isFloatingBox}" @click="doFloating">
-    <img @click="showTemplate('ptSchedule')" v-if="!isFloatingBox" class="icon-img" src="../../public/배경지운%20로고.png" style="" alt="">
-    <img @click="showTemplate('ptSchedule')" v-if="isFloatingBox" class="icon-img" src="../../public/assets/img/graphic/x.png" style="width: 30px; opacity: 0.5;" alt="">
+    <img @click="showTemplate('chatroom')" v-if="!isFloatingBox" class="icon-img" src="../../public/배경지운%20로고.png" style="" alt="">
+    <img @click="showTemplate('chatroom')" v-if="isFloatingBox" class="icon-img" src="../../public/assets/img/graphic/x.png" style="width: 30px; opacity: 0.5;" alt="">
   </div>
 </template>
 <style scoped>
@@ -84,7 +84,7 @@
 </style>
 
 <script>
-import PtSchedule from "@/views/pt/pt-chatroom.vue"; //피티스케쥴로 링크
+import chatroom from "@/views/pt/pt-chatroom.vue"; //채팅룸
 import NextComponent from "@/views/pt/pt-chat.vue"; //피티스케쥴로 링크
 
 
@@ -93,7 +93,7 @@ export default {
   data() {
     return {
       isFloatingBox: false,
-      currentComponent: PtSchedule, // 창 열때 기본페이지 : 피티스케쥴로 되어있음
+      currentComponent: chatroom, // 창 열때 기본페이지 : 피티스케쥴로 되어있음
     }
   },
   methods: {
@@ -113,7 +113,7 @@ export default {
     },
   },
   components: {
-    PtSchedule, 
+    chatroom, 
     NextComponent,
 },
   props: {},
