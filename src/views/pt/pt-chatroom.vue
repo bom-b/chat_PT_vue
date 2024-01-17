@@ -22,13 +22,13 @@
     </div>
     <ul class="list-group">
       <li
-        class="list-group-item list-group-item-action"
-        v-for="item in chatrooms"
-        :key="item.roomId"
-        @click="enterRoom(item.roomId)"
-      >
-        {{ item.roomId }} {{ item.name }}
-      </li>
+      class="list-group-item list-group-item-action"
+      v-for="item in filteredChatrooms"
+      :key="item.roomId"
+      @click="enterRoom(item.roomId)"
+    >
+      {{ item.name }}
+    </li>
     </ul>
   </div>
 </template>
@@ -39,10 +39,17 @@ export default {
     return {
       room_name: "",
       chatrooms: [],
+      localUserName: "", // localStorage에서 가져온 사용자 이름을 저장할 속성
     };
   },
   created() {
+    this.localUserName = localStorage.getItem('name');
     this.findAllRoom();
+  },
+  computed: {
+    filteredChatrooms() {
+      return this.chatrooms.filter(item => item.name !== this.localUserName);
+    }
   },
   methods: {
     findAllRoom() {
