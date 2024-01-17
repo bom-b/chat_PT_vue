@@ -1,15 +1,15 @@
 <template>
   <main id="main">
-    <div>
+    <div class="center-div">
       <h1>오늘 섭취한 칼로리 : 3000Kcal</h1>
     </div>
     <div class="categories">
-      <div v-for="(data, category) in categorizedImages" :key="category">
+      <div v-for="(data, category) in categorizedImages" :key="category" class="category-center">
         <div class="category-title-container">
           <h1 class="badge rounded-pill bg-secondary category-name">{{ category }}</h1>
         </div>
         <div v-for="(e, index) in data" :key="index" class="image-item">
-          <div class="image-text-container">
+          <div class="image-text-container" style="">
             <img :src="imgLink + e.upphotoid + '.jpg'" alt="Uploaded Image" class="uploaded-image"/>
             <div>
               <p>{{ foods[e.foodnum] }}</p>
@@ -179,33 +179,66 @@ export default {
       this.resetFoodQuantity(foodItem);
     },
     updateFood(upphotoid, updatedData) {
-      // 수정된 데이터를 서버에 전송
-      this.$axios.post('/updatePhoto', {
-        upphotoid: upphotoid,
-        ...updatedData
-      })
-          .then(response => {
-            console.log("서버 응답:", response.data);
-            // 성공적인 응답 처리
-          })
-          .catch(error => {
-            console.error("서버 통신 오류:", error);
-          });
-    },
+      // 양 변경 여부 확인
+      const quantityChanged = updatedData.quantity !== updatedData.mass;
 
+      // 음식명 변경 여부 확인
+      const nameChanged = updatedData.foodName !== this.foods[updatedData.foodnum];
+
+      // 양이 변경된 경우 즉시 업데이트
+      if (quantityChanged) {
+        this.$axios.post('/updateQuantity', {
+          upphotoid: upphotoid,
+          newQuantity: updatedData.quantity
+        })
+        .then(response => {
+          console.log("양 업데이트 응답:", response.data);
+        })
+        .catch(error => {
+          console.error("양 업데이트 실패:", error);
+        });
+      }
+
+      // 음식명이 변경된 경우 관리자 검수 요청
+      if (nameChanged) {
+        this.$axios.post('/requestNameChange', {
+          upphotoid: upphotoid,
+          newName: updatedData.foodName
+        })
+            .then(response => {
+              console.log("음식명 변경 요청 응답:", response.data);
+              alert("음식명 변경 요청이 접수되었습니다. 검수 후 업데이트될 예정입니다.");
+            })
+            .catch(error => {
+              console.error("음식명 변경 요청 실패:", error);
+            });
+      }
+
+      // 양이나 이름 중 하나라도 변경되었다면 편집 모드 해제
+      if (quantityChanged || nameChanged) {
+        updatedData.editMode = false;
+      }
+    },
     deleteFood(upphotoid) {
       console.log('upphotoid : ' + upphotoid);
       // 서버에 삭제 요청
       this.$axios.post('/deleteFood', {
         'upphotoid' : upphotoid
       })
-          .then(response => {
-            console.log("서버 응답:", response.data);
-            // 성공적인 응답 처리
-          })
-          .catch(error => {
-            console.error("서버 통신 오류:", error);
-          });
+      .then(response => {
+        console.log("서버 응답:", response.data);
+        // 삭제 성공 시, 클라이언트 측 데이터 업데이트
+        for (const category in this.categorizedImages) {
+          const index = this.categorizedImages[category].findIndex(food => food.upphotoid === upphotoid);
+          if (index !== -1) {
+            this.categorizedImages[category].splice(index, 1);
+            break;
+          }
+        }
+      })
+      .catch(error => {
+        console.error("서버 통신 오류:", error);
+      });
     },
 
 
@@ -217,6 +250,16 @@ export default {
 
 
 <style lang="scss" scoped>
+.category-center {
+  text-align: center;
+  margin: auto;
+  /* 필요에 따라 추가 스타일링을 적용할 수 있습니다. 예를 들어, 너비나 패딩 등 */
+}
+.center-div {
+  margin: auto;
+  width: 50%; /* 또는 원하는 너비 */
+  text-align: center;
+}
 .close-button-container {
   display: flex;
   justify-content: flex-end;
@@ -270,7 +313,7 @@ export default {
 .image-text-container {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 10px; /* 이미지와 텍스트 사이의 간격 */
 }
 
@@ -305,6 +348,7 @@ export default {
   box-sizing: border-box;
   width: 100%; /* 화면 전체 너비 */
   align-items: flex-start; /* 좌측 정렬 */
+  justify-content: center; /* 수평 방향으로 가운데 정렬 */
 }
 
 .category {
