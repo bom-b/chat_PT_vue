@@ -33,6 +33,12 @@
         <!-- 사이드바 -->
       </div>
       <!-- 칼로리 변화표 컨텐츠 -->
+
+      <div class="comment-container" v-if="hasData">
+        <h2 class = "TheJamsil400" v-html="comment"></h2>
+      </div>
+
+
       <div class="trend_container">
         <!-- 칼로리 변화표 내용 -->
         <p style="font-size: 25px; margin-top: 15px;">전일 대비 칼로리 변화표 </p>
@@ -120,8 +126,9 @@ export default {
       isClickable: true,
       last_differ: [],
       dietList: [],
-
+      comment : '',
       charts: [],
+      averageCal: 0,
     }
   },
   components: {
@@ -192,10 +199,10 @@ export default {
         .then((res) => {
           this.recommandCal = res.data.recommandCal
           this.dietList = res.data.dietList
-          
+
           if (res.data.dietList.length === 0) {
             // 데이터 길이가 0이면 알림을 띄우고 함수를 종료합니다.
-            this.$swal('','선택한 기간에 대한 데이터가 없습니다.','warning');
+            this.$swal('', '선택한 기간에 대한 데이터가 없습니다.', 'warning');
             this.dataLoaded = true;
             this.hasData = false;
             return;
@@ -222,6 +229,7 @@ export default {
           });
           this.checkAndLoadData();
 
+          console.log(this.dietList)
           this.hasData = res.data.dietList.length > 0;
           this.$nextTick(() => {
             this.setupChart(allDates, dailyTotals);
@@ -239,7 +247,7 @@ export default {
             this.isClickable = true; // 지정된 시간 후 클릭 활성화
           }, 1500); // 1.5초 동안 클릭 비활성화
           this.last_differ = res.data.last_differ
-
+          this.getComment();
 
         })
 
@@ -256,9 +264,9 @@ export default {
           setTimeout(() => {
             this.isClickable = true; // 지정된 시간 후 클릭 활성화
           }, 1500); // 1.5초 동안 클릭 비활성화
-          
 
-         
+
+
         });
     },
 
@@ -266,7 +274,7 @@ export default {
     // 위에 거대한 차트를 만드는 함수
     setupChart(allDates, dailyTotals) {
       if (!this.dataLoaded) return;
-      const canvas = this.$refs.myChart; 
+      const canvas = this.$refs.myChart;
       if (!canvas) return;
 
       const ctx = canvas.getContext('2d');
@@ -431,6 +439,26 @@ export default {
         this.fetchData();
       }
     },
+    getComment() {
+      let weekly_total = 0.0;
+      this.dietList.forEach((item) => {
+        weekly_total += item.dailyTotal
+      })
+      console.log(weekly_total)
+
+      this.averageCal = weekly_total/this.dietList.length
+      console.log(this.averageCal)
+
+      if(this.averageCal >= this.recommandCal * 1.1){
+        this.comment = '<img src = "../assets/img/graphic/경고.png" style ="width: 40px;height:40px;"> 일주일 평균 칼로리 섭취량이 <span style ="color : red;font-weight:bold">높습니다.</span> 식사량을 <span style="color:blue; font-weight:bold">줄이세요</span>'
+      }else if (this.averageCal <= this.recommandCal * 0.9){
+        this.comment = '<img src = "../assets/img/graphic/경고.png" style ="width: 40px;height:40px;"> 일주일 평균 칼로리 섭취량이 <span style="color:blue;font-weight:bold">적습니다.</span> 식사량을 <span style ="color : red;font-weight:bold">늘리세요</span>'
+      }else{
+        this.comment = '👍일주일 평균 식사량이 적합합니다. 이 상태를 유지하세요👍'
+      }
+
+    }
+
   },
 
 
@@ -463,7 +491,19 @@ export default {
   gap: 20px;
   padding: 20px;
 }
-
+.comment-container {
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding: 20px;
+  background: #ffffff;
+  display: flex;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* 차트에 그림자 효과 추가 */
+  justify-content: center;
+  align-items: center;
+}
 .badge_col {
   background-color: #008136;
 }
