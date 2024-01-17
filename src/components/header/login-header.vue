@@ -1,4 +1,4 @@
-<style>
+<style scoped>
 .container-fluid {
     max-width: 1800px;
     margin: 0 auto;
@@ -37,8 +37,3 @@ export default {
 
 };
 </script>
-<style>
-.login {
-    color: red;
-}
-</style>

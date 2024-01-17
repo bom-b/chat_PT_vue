@@ -17,9 +17,15 @@ nav {
 }
 
 .btn-login {
-  background-color: #e5f5f2;
+  background-color: #c0e0d6;
   color: #085c57;
   border-radius: 15px;
+  transition: background-color 0.3s ease, color 0.3s ease ;
+}
+
+.btn-login:hover {
+  background-color: #b0d5c8;
+  transition: background-color 0.3s ease, color 0.3s ease ;
 }
 
 .profile-img-container {

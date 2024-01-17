@@ -1,4 +1,4 @@
-<style>
+<style scoped>
 @media (max-width: 768px) {
   #hero {
     margin-left: 10px;

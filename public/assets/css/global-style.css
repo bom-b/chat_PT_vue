@@ -19,6 +19,10 @@
     background-color: #00997b;
 }
 
+.c0e0d6 {
+    background-color: #c0e0d6;
+}
+
 /*글자 강조색*/
 .pine_Green_text {
     color: #00997b;
@@ -26,7 +30,7 @@
 
 /*시그니처 버튼*/
 .btn-signature {
-    background-color: #e5f5f2;
+    background-color: #c0e0d6;
     color: #085c57;
     border: none;
     border-radius: 10px;
@@ -37,7 +41,7 @@
 }
 
 .btn-signature:hover {
-    background-color: #b2ebda !important;
+    background-color: #b0d5c8 !important;
     color: #02413b !important;
 }
 
@@ -144,6 +148,13 @@ main {
 .nav-item {
     margin-top: 0 !important;
     margin-bottom: 0 !important;
+}
+
+.router-link {
+    text-decoration: none;
+    /* 밑줄 제거 */
+    color: inherit;
+    /* 기본 링크 색상 유지 */
 }
 
 @media (max-width: 768px) {
