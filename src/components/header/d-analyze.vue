@@ -3,7 +3,7 @@
        style="min-height: 80px; !important;">
     <div class="container-fluid">
       <div class="collapse navbar-collapse" id="mynavbar">
-        <ul class="navbar-nav me-auto">
+        <ul class="navbar-nav me-auto" >
           <li class="nav-item" v-for="link in navLinks" :key="link.name">
             <router-link :to="link.route" class="nav-link" :class="{ activeLink: currentRoute === link.route }">{{ link.name }}</router-link>
           </li>

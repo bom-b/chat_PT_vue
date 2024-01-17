@@ -32,6 +32,9 @@
         </div>
         <!-- 사이드바 -->
       </div>
+      <div class="comment-container" v-if="hasData">
+        <h2 class = "TheJamsil400" v-html="comment"></h2>
+      </div>
 
     </div>
   </main>
@@ -66,6 +69,8 @@ export default {
       target: 0,
 
       weightList: [],
+
+      averageWeight :0,
     }
   },
   components: {
@@ -177,6 +182,8 @@ export default {
           });
 
           setTimeout(() => this.isClickable = true, 1500);
+          this.getComment();
+          console.log(this.weightList)
         })
         .catch((error) => {
           console.error("Error fetching data: ", error);
@@ -299,6 +306,25 @@ export default {
       }
       return dates;
     },
+
+    getComment(){
+      let weekly_total = 0.0;
+      this.weightList.forEach((item) => {
+        weekly_total += item.dietLogKg
+      })
+      console.log(weekly_total)
+
+      this.averageWeight = weekly_total/this.weightList.length
+      console.log(this.averageWeight)
+
+      if(this.averageWeight > this.target * 1.05){
+        this.comment = '<img src = "../assets/img/graphic/경고.png" style ="width: 40px;height:40px;"> 일주일 평균 몸무게가 목표 몸무게 보다 높습니다. <span style ="color:red;font-weight:bold">다이어트</span>를 진행해보세요.'
+      }else if (this.averageWeight <this.target * 0.95){
+        this.comment = '<img src = "../assets/img/graphic/경고.png" style ="width: 40px;height:40px;"> 일주일 평균 몸무게가 목표 몸무게 보다 낮습니다. <span style ="color : red;font-weight:bold">몸에 무리가 가지 않도록 조심하세요</span>'
+      }else{
+        this.comment = '👍목표 몸무게를 잘 유지 하고 있습니다~!!👍'
+      }
+    }
   },
 
 
@@ -364,7 +390,19 @@ export default {
   border-radius: 10px;
   /* 모서리 둥글게 */
 }
-
+.comment-container {
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding: 20px;
+  background: #ffffff;
+  display: flex;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* 차트에 그림자 효과 추가 */
+  justify-content: center;
+  align-items: center;
+}
 .period {
   margin-top: 20px;
   margin-bottom: 20px;
