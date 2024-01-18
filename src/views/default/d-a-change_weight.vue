@@ -312,15 +312,13 @@ export default {
       this.weightList.forEach((item) => {
         weekly_total += item.dietLogKg
       })
-      console.log(weekly_total)
 
       this.averageWeight = weekly_total/this.weightList.length
-      console.log(this.averageWeight)
 
       if(this.averageWeight > this.target * 1.05){
-        this.comment = '<img src = "../assets/img/graphic/경고.png" style ="width: 40px;height:40px;"> 일주일 평균 몸무게가 목표 몸무게 보다 높습니다. <span style ="color:red;font-weight:bold">다이어트</span>를 진행해보세요.'
+        this.comment = '<img src = "../assets/img/graphic/icon4.png" style ="width: 40px;height:40px;"> 일주일 평균 몸무게가 목표 몸무게 보다 높습니다. <span style ="color:red;font-weight:bold">다이어트</span>를 진행해보세요.'
       }else if (this.averageWeight <this.target * 0.95){
-        this.comment = '<img src = "../assets/img/graphic/경고.png" style ="width: 40px;height:40px;"> 일주일 평균 몸무게가 목표 몸무게 보다 낮습니다. <span style ="color : red;font-weight:bold">몸에 무리가 가지 않도록 조심하세요</span>'
+        this.comment = '<img src = "../assets/img/graphic/icon1.png" style ="width: 40px;height:40px;"> 일주일 평균 몸무게가 목표 몸무게 보다 낮습니다. <span style ="color : red;font-weight:bold">몸에 무리가 가지 않도록 조심하세요</span>'
       }else{
         this.comment = '👍목표 몸무게를 잘 유지 하고 있습니다~!!👍'
       }

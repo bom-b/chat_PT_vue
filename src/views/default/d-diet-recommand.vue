@@ -2,7 +2,7 @@
   <div class="main-container">
     <main>
       <div class="loading_div" v-if="isLoading">
-        <div class="spinner-border">
+        <div class="spinner-border" style="color: green;">
         </div>
         <span>추천 정보를 분석 중입니다.</span>
       </div>

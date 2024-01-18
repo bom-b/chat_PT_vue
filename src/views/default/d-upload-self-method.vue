@@ -15,19 +15,27 @@
 
       <div v-if="selectedTab === '아침'">
         아침
-        <imgUpload :max-images="5" :uploaded-images="tabImages.아침" @image-uploaded="updateImages('아침', $event)"/>
+        <imgUpload :max-images="5" :uploaded-images="tabImages.아침"
+                   @image-removed="removeImage('아침', $event)"
+                   @image-uploaded="updateImages('아침', $event)"/>
       </div>
       <div v-if="selectedTab === '점심'">
         점심
-        <imgUpload :max-images="5" :uploaded-images="tabImages.점심" @image-uploaded="updateImages('점심', $event)"/>
+        <imgUpload :max-images="5" :uploaded-images="tabImages.점심"
+                   @image-removed="removeImage('점심', $event)"
+                   @image-uploaded="updateImages('점심', $event)"/>
       </div>
       <div v-if="selectedTab === '저녁'">
         저녁
-        <imgUpload :max-images="5" :uploaded-images="tabImages.저녁" @image-uploaded="updateImages('저녁', $event)"/>
+        <imgUpload :max-images="5" :uploaded-images="tabImages.저녁"
+                   @image-removed="removeImage('저녁', $event)"
+                   @image-uploaded="updateImages('저녁', $event)"/>
       </div>
       <div v-if="selectedTab === '간식'">
         간식
-        <imgUpload :max-images="5" :uploaded-images="tabImages.간식" @image-uploaded="updateImages('간식', $event)"/>
+        <imgUpload :max-images="5" :uploaded-images="tabImages.간식"
+                   @image-removed="removeImage('간식', $event)"
+                   @image-uploaded="updateImages('간식', $event)"/>
       </div>
     </div>
 
@@ -75,7 +83,7 @@ export default {
           formData.append(`${tab}[${index}]`, base64Image);
         });
       });
-
+      console.log("formData : " + formData)
       this.$axios.post('/food_up', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -89,6 +97,9 @@ export default {
       .catch(error => {
         console.error("에러 발생:", error);
       });
+    },
+    removeImage(tab, { index }) {
+      this.tabImages[tab].splice(index, 1);
     },
   }
 };

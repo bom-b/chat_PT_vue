@@ -4,6 +4,18 @@
   max-width: 200px;
 }
 
+
+.checkboxes-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 왼쪽 정렬 */
+  margin-left: 15px; /* 필요에 따라 조절 */
+}
+
+.checkbox-item {
+  margin-bottom: 10px; /* 각 체크박스 사이의 간격 */
+}
+
 .list-profile {
   width: 80px;
 }
@@ -66,98 +78,67 @@
 <template>
   <main>
     <div class="container mt-3">
-      <h5 class="display-5 text-center" style="margin: 20px">
-        수정 데이터 목록
-      </h5>
+      <h5 class="display-5 text-center" style="margin: 20px">수정 데이터 목록</h5>
 
       <div class="row">
-        <!-- 검색 상자 -->
-        <div class="col-3">
+        <div class="col-12 col-md-6">
           <input
             type="text"
             v-model="searchKeyword"
             placeholder="이름을 입력하세요"
             @input="handleSearch"
+            id="search"
           />
-          <div v-if="!filteredItems.length && searchKeyword.length > 0">
-            검색 결과가 없습니다.
-          </div>
         </div>
-        <!-- 검색 상자 끝 -->
-
-        <!-- 카테고리 선택 -->
-        <!-- <div class="col-3">
-          <select v-model="selectedCategory" @change="handleCategoryChange">
-            <option disabled value="">카테고리 선택</option>
-            <option
-              v-for="(category, index) in categories"
-              :key="index"
-              :value="category"
-            >
-              {{ category }}
-            </option>
-          </select>
-        </div> -->
-        <!-- 카테고리 선택 끝 -->
-        <button class="col-2" @click="handleSendJson">학습시키기</button>
-        <button class="col-2" @click="handleDelete">삭제</button>
+        <div class="col-12 col-md-6 text-right">
+          <button class="btn btn-primary" @click="handleSendJson">학습시키기</button>
+          <button class="btn btn-danger" @click="handleDelete">삭제</button>
+        </div>
       </div>
 
-      <!-- 수정 데이터 목록 테이블 -->
-      <table class="table transparent-table">
+      <table class="table transparent-table mt-3">
         <thead>
-          <tr style="border-bottom: none">
+          <tr>
             <th class="col-1">
-              <input
-            type="checkbox"
-            @change="handleSelectAllChange"
-            :checked="selectAll"
-          />
+              <input type="checkbox" @change="handleSelectAllChange" v-model="selectAll" />
             </th>
-            <th class="col-3"></th>
-            <th class="col-8"></th>
+            <th class="col-3">사진</th>
+            <th class="col-8">정보</th>
           </tr>
         </thead>
-        <tbody style="text-align: left">
-          <tr v-for="(dataRow, index) in filteredItems" :key="index">
-            <td class="pt-description">
-              <div class="form-check form-checked">
-                <input
-                  class="form-check-input checkbox1"
-                  type="checkbox"
-                  role="switch"
-                  :id="`checkbox${index + 1}`"
-                  :value="dataRow.edit_request_id"
-                  @change="handleCheckboxChange"
-                />
-              </div>
-            </td>
-            <th style="padding: 30px 10px">
+        <tbody>
+          <tr v-for="(dataRow, index) in filteredItems" :key="dataRow.edit_request_id">
+  <td>
+    <input
+      type="checkbox"
+      :id="`checkbox${index + 1}`"
+      :value="dataRow.edit_request_id"
+      v-model="checkItems"
+    />
+  </td>
+            <td>
               <img
                 :src="dataRow.img_edit"
                 alt=""
                 class="list-profile rounded-circle"
               />
-            </th>
+            </td>
             <td class="pt-description">
-              <p class="TheJamsil400 mb-3">수정 요청 ID : {{ dataRow.edit_request_id }}</p>
-              <p class="TheJamsil400 mb-3">업로드 사진 ID : {{ dataRow.up_photo_id }}</p>
-              <p class="TheJamsil400 mb-3">요청 상태 : {{ dataRow.edit_request_status }}</p>
-              <p class="TheJamsil400 mb-3">수정 코멘트 : {{ dataRow.img_editcomment }}</p>
-              <p class="TheJamsil400 mb-3">수정 전 데이터 : {{ dataRow.before_data }}</p>
-              <p class="TheJamsil400 mb-3">수정 후 데이터 : {{ dataRow.after_data }}</p>
+              <p class="mb-3">수정 요청 ID : {{ dataRow.edit_request_id }}</p>
+              <p class="mb-3">업로드 사진 ID : {{ dataRow.up_photo_id }}</p>
+              <p class="mb-3">요청 상태 : {{ dataRow.edit_request_status }}</p>
+              <p class="mb-3">수정 코멘트 : {{ dataRow.img_editcomment }}</p>
+              <p class="mb-3">수정 전 데이터 : {{ dataRow.before_data }}</p>
+              <p class="mb-3">수정 후 데이터 : {{ dataRow.after_data }}</p>
             </td>
           </tr>
         </tbody>
       </table>
-      <!-- 수정 데이터 목록 테이블 끝 -->
     </div>
   </main>
 </template>
 
-
 <script>
-
 export default {
   data() {
     return {
@@ -165,38 +146,57 @@ export default {
       items: [], // 검색 대상 항목들
       selectedCategory: "",
       categories: ["판독 전", "판독 완료", "전체 리스트"], // 카테고리 목록
-      checkItems : [],
-      selectAll : false,
+      checkItems: [],
+      selectAll: false,
+      delTem: "",
     };
   },
   created() {
     this.fetchEditList();
   },
   computed: {
-  filteredItems() {
-    return this.items.filter((item) => 
-      item.after_data.toLowerCase().includes(this.searchKeyword.toLowerCase())
-    );
+    filteredItems() {
+      return this.items.filter((item) => 
+        item.after_data.toLowerCase().includes(this.searchKeyword.toLowerCase())
+      );
+    },
   },
-},
+
+  watch: {
+    // checkItems 배열을 감시
+    checkItems(newVal) {
+      // 전체 항목이 선택되어 있는지 확인
+      this.selectAll = newVal.length === this.filteredItems.length;
+    }
+  },
+
   methods: {
+    asdfasdf() {
+      this.selectAll = !this.selectAll;
+      console.log(this.selectAll);
+    },
 
     handleSelectAllChange() {
-      this.selectAll = !this.selectAll;
-      if (this.selectAll) {
-        // 전체 선택
-        this.checkItems = this.filteredItems.map(item => item.edit_request_id);
-      } else {
-        // 전체 해제
-        this.checkItems = [];
-      }
-    },
-    handleSearch() {
-      // 검색어 변경에 대한 로직 수행
-    },
-    handleCategoryChange() {
-      // 카테고리 변경에 대한 로직 수행
-    },
+    if (this.selectAll) {
+      this.checkItems = this.filteredItems.map(item => item.edit_request_id);
+    } else {
+      this.checkItems = [];
+    }
+  },
+
+  // 개별 체크박스 변경 처리
+  handleCheckboxChange(event) {
+    const checkedId = event.target.value;
+    if (event.target.checked) {
+      this.checkItems.push(checkedId);
+    } else {
+      this.checkItems = this.checkItems.filter(id => id !== checkedId);
+    }
+
+    // 전체 선택 체크박스 상태 업데이트
+    this.selectAll = this.checkItems.length === this.filteredItems.length;
+  },
+
     getColumnName(index) {
       // 각 열의 데이터에 대한 컬럼명 반환 로직
       const columnNames = [
@@ -208,70 +208,63 @@ export default {
       return columnNames[index];
     },
     fetchEditList() {
-    this.$Adminaxios.get("/editList")
-    .then(resp => {
-      console.log(resp.data[0]); // 데이터 구조 확인
-      this.items = resp.data;
-      console.log("items : " +  this.items)
-    })
-    .catch(error => {
-      console.error("Error fetching edit list: ", error);
-    });
-  },
-  handleCheckboxChange(event) {
-      const checkedId = event.target.value;
-      if (event.target.checked) {
-        this.checkItems.push(checkedId);
-      } else {
-        this.checkItems = this.checkItems.filter(id => id !== checkedId);
-      }
-      // 전체 선택 상태 업데이트
-      this.selectAll = this.checkItems.length === this.filteredItems.length;
+      this.$Adminaxios.get("/editList")
+        .then(resp => {
+          console.log(resp.data[0]); // 데이터 구조 확인
+          if (resp.data) {
+            this.items = resp.data;
+            console.log("items : " +  this.items);
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching edit list: ", error);
+        });
     },
-  // 기존 메서드
-  async handleDelete() {
-    console.log(this.checkItems[0])
-    console.log(this.checkItems.length)
+
+    async handleDelete() {
       if (this.checkItems.length === 0) {
         alert("삭제할 항목을 선택하세요.");
         return;
       }
-      try 
-      {
+      try {
+        // 삭제할 항목의 ID를 서버로 전송
         await this.$Adminaxios.post("/deleteEditItems", this.checkItems);
-        this.fetchEditList(); // 데이터 목록을 다시 가져옵니다.
-        this.checkItems = []; // 체크된 항목 배열 초기화
-      } 
-      catch (error) 
-      {
+
+        // 체크박스 상태를 초기화
+        this.checkItems = [];
+
+        // 전체 선택 체크박스 상태를 초기화
+        this.selectAll = false;
+
+        // 데이터 목록을 다시 가져오기
+        await this.fetchEditList();
+      } catch (error) {
         console.error("Error deleting items: ", error);
         alert("항목 삭제에 실패했습니다.");
       }
     },
+    async handleSendJson() {
+  if (this.checkItems.length === 0) {
+    alert("전송할 목록을 선택해주세요!");
+    return;
+  }
+
+  try {
+    const response = await this.$Adminaxios.post("/sendJsonFile", this.checkItems);
+    console.log("보낸 데이터: ", response.data);
+
+    this.$nextTick(() => {
+        // 최신 데이터를 다시 불러오기
+        this.fetchEditList();
+      });
+
+  } catch (error) {
+    console.error("데이터 전송 오류: ", error);
+    alert("데이터 전송에 실패했습니다.");
+  }
+},
 
 
-    handleSendJson()
-    {
-      if(this.checkItems.length === 0)
-      {
-        alert("전송할 목록을 선택해주세요!");
-        return;
-      }
-    this.$Adminaxios.post("/sendJsonFile" , {editRequestIds: this.checkItems})
-    .then(resp => {
-      console.log("보낸 데이터 : " +  resp.data)
-    })
-    .catch(error => {
-      console.error("응 오류야~", error);
-    });
-    },
-// 나머지 메서드들
   },
-
-
-
-  
-
-
 };
 </script>

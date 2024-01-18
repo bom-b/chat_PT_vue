@@ -90,7 +90,8 @@ router.beforeEach((to, from, next) => {
     store.commit('setHeaderType', headerType); // 스토어의 뮤테이션 호출
 
     // 메인페이지 주소를 호출했을때 로그인이 되어 있다면 각자 메인페이지로 리다이렉트
-    if (to.path === '/') {
+    if (to.path === '/') 
+    {
         const role = window.localStorage.getItem('role');
         if (role === 'NORMAL') {
             next('/default/d_home');
@@ -107,7 +108,8 @@ router.beforeEach((to, from, next) => {
     }
 
     // 'NORMAL' 권한이 필요한 라우트에 대한 접근 제어
-    if (to.path.startsWith('/default')) {
+    if (to.path.startsWith('/default')) 
+    {
         const role = window.localStorage.getItem('role');
         if (role !== 'NORMAL') {
             next('/error/noAuth'); // 리다이렉트
@@ -116,7 +118,8 @@ router.beforeEach((to, from, next) => {
     }
 
     // 'TRAINER' 권한이 필요한 라우트에 대한 접근 제어
-    if (to.path.startsWith('/trainer')) {
+    if (to.path.startsWith('/trainer')) 
+    {
         const role = window.localStorage.getItem('role');
         if (role !== 'TRAINER') {
             next('/error/noAuth'); // 리다이렉트
@@ -125,7 +128,8 @@ router.beforeEach((to, from, next) => {
     }
 
     // 'ADMIN' 권한이 필요한 라우트에 대한 접근 제어
-    if (to.path.startsWith('/admin')) {
+    if (to.path.startsWith('/admin')) 
+    {
         const role = window.localStorage.getItem('role');
         if (role !== 'ADMIN') {
             next('/error/noAuth'); // 리다이렉트
@@ -134,7 +138,8 @@ router.beforeEach((to, from, next) => {
     }
 
     // 로그인한 회원의 유효하지 않은 접근 제어
-    if (to.path.startsWith('/service') || to.path.startsWith('/signUp')) {
+    if (to.path.startsWith('/service') || to.path.startsWith('/signUp')) 
+    {
         const role = window.localStorage.getItem('role');
         if (role) {
             next('/error/noValidity'); // 리다이렉트
