@@ -10,7 +10,7 @@
         </div>
         <h2 class="mb-5" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="0">가입할 <span
             class="highlight">유형</span>을 선택해주세요.</h2>
-        <div class="row" style="text-align: center; margin: auto;">
+        <div class="row" style="text-align: center; margin: auto; padding-bottom: 50px;">
           <router-link to="/signUp/kakao" class="col-md-6 col-sm-12 router-link"
                        style="display: flex; justify-content: center; margin: auto;">
             <div class="goal-box "
