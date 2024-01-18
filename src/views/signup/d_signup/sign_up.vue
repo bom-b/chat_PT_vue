@@ -138,8 +138,8 @@ export default {
     },
     confirm() {
       if (
-        this.auth.serverCode != "" &&
-        this.auth.clientCode != "" &&
+        this.auth.serverCode.trim() != "" && this.auth.serverCode != null && this.auth.serverCode != undefined &&
+        this.auth.clientCode.trim() != "" && this.auth.clientCode != null && this.auth.clientCode != undefined &&
         this.auth.serverCode == this.auth.clientCode
       ) {
         return (this.auth.passAuth = 1);
@@ -328,6 +328,7 @@ export default {
       </div>
       <br />
       <div>
+        <p>test</p>
         {{ user.id }}<br />
         {{ user.name }}<br />
         {{ user.email }}<br />

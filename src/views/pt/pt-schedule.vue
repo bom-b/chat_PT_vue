@@ -79,11 +79,15 @@ export default defineComponent({
         eventClick: this.handleEventClick,
         eventsSet: this.handleEvents,
         drop: true,
-        droppable:true,
+        droppable: true,
+
       },
       currentEvents: [],
       externalEvents: [
-        { title: '나는 오늘부터 지지관계에서 벗어나' },
+        {
+          title: '나는 오늘부터 지지관계에서 벗어나',
+          backgroudColor: "#008000"
+        },
         { title: '춘식이와 나는 한몸으로 일체가 된다' },
         { title: '춘식이에 대한 공격은 나에 대한 공격으로 간주한다.' },
       ],
@@ -212,5 +216,9 @@ b {
   /* the calendar root */
   max-width: 1100px;
   margin: 0 auto;
+}
+
+.fc-event {
+  background-color: green !important;
 }
 </style>
