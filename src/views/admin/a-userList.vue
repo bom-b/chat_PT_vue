@@ -14,6 +14,8 @@
 .transparent-table {
   background-color: #f8f9f8;
   border: none;
+  width: 80%; 
+  margin: auto; 
 }
 
 .transparent-table th,
@@ -74,12 +76,18 @@
     cursor: pointer;
     border: none;
   }
+  .main-container{
+    display: flex;
+  flex-direction: row; /* 가로 방향으로 요소를 배치 */
+  align-items: center; /* Y축 정렬을 중앙으로 */
+  justify-content: space-between;
+  }
 }
 </style>
 
 <template>
   <main>
-    <div class="container mt-3">
+    <div class="container mt-3 main-container">
       <h5 class="display-5 text-center" style="margin: 20px">
         사용자(USER) 목록
       </h5>
@@ -150,12 +158,12 @@
             </td>
             <td class="pt-description">
               <!-- 체크박스 라벨과 입력을 넣으셨던 부분으로 유지합니다. -->
-              <div class="form-check form-switch"  v-if="trainer.userstatus != null && selectedCategory !='회원' " >
+              <div class="form-check form-switch"  v-if="trainer.userstatus != null && selectedCategory !='회원' "
+              style="margin-top: 50px;" >
                 <label
 
                 class="form-check-label"
                 :for="`checkbox${index + 1}`"
-                style="margin: 10px"
                 >승인</label
                 >
                 
@@ -213,16 +221,18 @@ computed: {
 },
 
   methods: {
-    handleSearch() {
-  if (this.searchKeyword.trim()) {
+    handleSearch() 
+    {
+      if (this.searchKeyword.trim()) 
+      {
+        this.items = this.originalItems.filter(item =>
+          item.username.toLowerCase().includes(this.searchKeyword.toLowerCase()));
+      }
+      else 
+      {
 
-    this.items = this.originalItems.filter(item =>
-      item.username.toLowerCase().includes(this.searchKeyword.toLowerCase())
-    );
-  } else {
-
-    this.items = [...this.originalItems];
-  }
+        this.items = [...this.originalItems];
+      }
 },
 
   goToDetailPage(trainer) {
