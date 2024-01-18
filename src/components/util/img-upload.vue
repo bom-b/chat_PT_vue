@@ -14,16 +14,14 @@
         <button @click="triggerFileInput">파일 선택</button>
       </div>
 
-    <div class="card-container">
-      <div v-for="(image, index) in localUploadedImages" :key="index" class="card">
-        <img class="card-img-top" :src="image" alt="Uploaded Preview" />
-        <div class="card-body">
-          <div class="button-container">
-            <button class="btn btn-danger" @click="removeImage(index)">삭제</button>
-          </div>
+      <div class="card-container">
+        <div v-for="(image, index) in localUploadedImages" :key="index" class="card" @click="toggleSelection(index)">
+          <img class="card-img-top" :src="image" alt="Uploaded Preview" />
+          <button v-if="selectedImageIndex === index" class="delete-btn" @click.stop="removeImage(index)">
+            <img src="../../assets/img/휴지통.png" style="width: 30px;">
+          </button>
         </div>
       </div>
-    </div>
     </div>
   </div>
 </template>
@@ -46,14 +44,19 @@ export default {
       isDragOver: false,
       localUploadedImages: [...this.uploadedImages],
       uploadedImageHashes: [], // 해시를 저장할 배열 초기화
-      showInputField: false,
-      selectedServing: 'serving1', // 선택된 서빙 옵션
-      userInput: '', // 사용자의 직접 입력
-      unit: '인분', // 현재 단위
-      inputMethod: '', // 입력 방식 ('select', '인분', 'g')
+      selectedImageIndex: null, // 선택된 이미지의 인덱스
     };
   },
   methods: {
+    toggleSelection(index) {
+      if (this.selectedImageIndex === index) {
+        // 이미 선택된 경우, 선택 해제
+        this.selectedImageIndex = null;
+      } else {
+        // 선택되지 않은 경우, 선택
+        this.selectedImageIndex = index;
+      }
+    },
     highlight() {
       this.isDragOver = true;
     },
@@ -174,6 +177,7 @@ export default {
       // 지정된 인덱스에서 이미지를 제거합니다.
       this.localUploadedImages.splice(index, 1);
       this.$emit('image-removed', { index, images: this.localUploadedImages });
+      this.selectedImageIndex = null; // 선택 해제
     },
   },
 };
@@ -234,12 +238,25 @@ button:hover {
 
 .card {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
+  transition: border 0.3s ease;
   width: 100%;
   max-width: 220px; /* 카드의 최대 너비를 설정 */
   margin-bottom: 20px;
+  position: relative; /* 삭제 버튼을 위한 상대 위치 설정 */
 }
-
+.card.selected {
+  border: 2px solid #085c57; /* 선택된 이미지에 대한 테두리 스타일 */
+}
+.delete-btn {
+  border: gold;
+  position: absolute; /* 삭제 버튼을 카드 상단에 위치시킴 */
+  bottom: -20%; /* 상단에서 10px 떨어진 위치 */
+  left: 80%; /* 오른쪽에서 10px 떨어진 위치 */
+  background: white; /* 배경색 제거 */
+  border: none; /* 테두리 제거 */
+  padding: 0; /* 패딩 제거 */
+  cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+}
 .card:hover {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
 }
@@ -287,9 +304,6 @@ button:hover {
   width: 100%; /* 전체 너비 사용 */
 }
 
-.btn-danger {
-  background-color: #dc3545; /* Danger button color */
-}
 
 .form-control {
   display: inline-block;
