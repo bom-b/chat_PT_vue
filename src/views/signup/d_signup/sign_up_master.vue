@@ -1,6 +1,6 @@
 <template>
     <div>
-        <component :is="page" v-on:nextPage="nextPage"/>
+        <component :is="page" v-on:nextPage="nextPage" />
         <!-- <component v-bind:is="currPage"></component> -->
     </div>
 </template>
@@ -21,7 +21,7 @@ export default {
         return {
             pages: ['signUp1', 'signUp2', 'signUp3', 'signUp4'],
             currentPageIndex: 1,
-            userdata:{
+            userdata: {
             }
         };
     },
@@ -43,7 +43,8 @@ export default {
     methods: {
         nextPage(pagesdata) {
             this.currentPageIndex++;
-            this.userdata = {...this.userdata, ...pagesdata};
+            this.userdata = { ...this.userdata, ...pagesdata };
+            console.log(this.userdata);
         },
     }
 }

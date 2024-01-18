@@ -138,8 +138,8 @@ export default {
     },
     confirm() {
       if (
-        this.auth.serverCode.trim() != "" && this.auth.serverCode != null && this.auth.serverCode != undefined &&
-        this.auth.clientCode.trim() != "" && this.auth.clientCode != null && this.auth.clientCode != undefined &&
+        this.auth.serverCode != "" && this.auth.serverCode != null && this.auth.serverCode != undefined &&
+        this.auth.clientCode != "" && this.auth.clientCode != null && this.auth.clientCode != undefined &&
         this.auth.serverCode == this.auth.clientCode
       ) {
         return (this.auth.passAuth = 1);
@@ -151,32 +151,37 @@ export default {
     async emailCheck() {
       try {
         const clearemail = this.removeSpaces(this.user.email);
-        const data = {
-          email: clearemail,
-        };
-        const response = await this.$axiosWithoutValidation.post(
-          "/signUp/email",
-          data
-        );
-        // 문자열로 오는 경우 숫자로 변환
-        const emailCount = parseInt(response.data);
-        if (emailCount < 1) {
-          const result = await Swal.fire({
-            title: "사용 가능한 이메일 입니다.",
-            text: "계속 진행하시겠습니까?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "확인",
-            cancelButtonText: "취소",
-          });
-          if (result.isConfirmed) {
-            this.showMessage.emailStatus = "메일을 발송 중입니다...";
-            this.sendMail(data);
+        if (clearemail !== null && clearemail !== undefined && clearemail !== "") {
+          const data = {
+            email: clearemail,
+          };
+          const response = await this.$axiosWithoutValidation.post(
+            "/signUp/email",
+            data
+          );
+          // 문자열로 오는 경우 숫자로 변환
+          const emailCount = parseInt(response.data);
+          if (emailCount < 1) {
+            const result = await Swal.fire({
+              title: "사용 가능한 이메일 입니다.",
+              text: "계속 진행하시겠습니까?",
+              icon: "question",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "확인",
+              cancelButtonText: "취소",
+            });
+            if (result.isConfirmed) {
+              this.showMessage.emailStatus = "메일을 발송 중입니다...";
+              this.sendMail(data);
+            }
+          } else {
+            await this.$swal("이미 사용중인 이메일 입니다.");
           }
-        } else {
-          await this.$swal("이미 사용중인 이메일 입니다.");
+        }
+        else {
+          this.$swal("", "이메일을 입력하세요.", "warning")
         }
       } catch (e) {
         console.log("email 중복 체크 에러", e);
