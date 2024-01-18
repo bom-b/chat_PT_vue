@@ -70,8 +70,9 @@
 </template>
 
 <script>
-
+import bootstrap from 'bootstrap'
 export default {
+
   inject: ['foods'],
   data() {
     return {
@@ -89,6 +90,12 @@ export default {
   created() {
     this.getTodayPhoto();
   },
+  mounted() {
+    [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        .forEach(function (popoverTriggerEl) {
+          new bootstrap.Popover(popoverTriggerEl);
+        });
+  },
   methods: {
     getTodayPhoto() {
       this.$axios.get(`/todayPhoto`)
@@ -98,6 +105,12 @@ export default {
               if (!this.categorizedImages[food.category]) {
                 this.categorizedImages[food.category] = [];
               }
+              const weightRatio = food.mass / food.foodweight;
+
+              food.foodcal = parseFloat((food.foodcal * weightRatio).toFixed(2));
+              food.food_TAN = parseFloat((food.food_TAN * weightRatio).toFixed(2));
+              food.food_DAN = parseFloat((food.food_DAN * weightRatio).toFixed(2));
+              food.food_GI = parseFloat((food.food_GI * weightRatio).toFixed(2));
               const extendedFood = {
                 ...food,
                 editMode: false,
@@ -178,6 +191,17 @@ export default {
       this.resetFoodName(foodItem);
       this.resetFoodQuantity(foodItem);
     },
+    // 영양소 계산 메소드
+    calculateNutrients(foodItem, foodData) {
+      const weightRatio = foodItem.quantity / foodData.FOODWEIGHT;
+
+      foodItem.foodcal = parseFloat((foodData.FOODCAL * weightRatio).toFixed(2));
+      foodItem.food_TAN = parseFloat((foodData.FOOD_TAN * weightRatio).toFixed(2));
+      foodItem.food_DAN = parseFloat((foodData.FOOD_DAN * weightRatio).toFixed(2));
+      foodItem.food_GI = parseFloat((foodData.FOOD_GI * weightRatio).toFixed(2));
+
+      console.log(foodItem);
+    },
     updateFood(upphotoid, updatedData) {
       // 양 변경 여부 확인
       const quantityChanged = updatedData.quantity !== updatedData.mass;
@@ -193,17 +217,20 @@ export default {
         })
         .then(response => {
           console.log("양 업데이트 응답:", response.data);
+          updatedData.mass = updatedData.quantity;
+          // 영양소 재계산
+          this.calculateNutrients(updatedData, response.data);
         })
         .catch(error => {
           console.error("양 업데이트 실패:", error);
         });
       }
-
+      console.log("updatedData.foodName : " + updatedData.foodName)
       // 음식명이 변경된 경우 관리자 검수 요청
       if (nameChanged) {
         this.$axios.post('/requestNameChange', {
           upphotoid: upphotoid,
-          newName: updatedData.foodName
+          imgeditcomment: updatedData.foodName
         })
             .then(response => {
               console.log("음식명 변경 요청 응답:", response.data);
