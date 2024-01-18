@@ -2,26 +2,29 @@
   <div class="drag-drop-container">
     <div
       class="drag-drop"
-      @dragover.prevent
+      @dragover.prevent="highlight"
       @dragenter="highlight"
       @dragleave="unhighlight"
       @drop.prevent="handleDrop"
       :class="{ 'drag-over': isDragOver }"
     >
-      <p>이미지를 드래그 앤 드랍하세요 최대 {{maxImages}} 개</p>
-      <input type="file" ref="fileInput" multiple style="display: none" @change="handleFileInput" />
-      <button class="" @click="triggerFileInput">파일 선택</button>
-    </div>
-    <div class="card" style="width:400px">
-      <div v-for="(image, index) in localUploadedImages" :key="index" class="preview">
+      <div class="upload-instructions">
+        <p>이미지를 드래그 앤 드랍하세요 최대 {{ maxImages }} 개</p>
+        <input type="file" ref="fileInput" multiple style="display: none" @change="handleFileInput" />
+        <button @click="triggerFileInput">파일 선택</button>
+      </div>
+
+    <div class="card-container">
+      <div v-for="(image, index) in localUploadedImages" :key="index" class="card">
         <img class="card-img-top" :src="image" alt="Uploaded Preview" />
         <div class="card-body">
           <div class="button-container">
             <button class="btn btn-danger" @click="removeImage(index)">삭제</button>
           </div>
+        </div>
       </div>
     </div>
-  </div>
+    </div>
   </div>
 </template>
 
@@ -65,7 +68,9 @@ export default {
       const files = Array.from(event.dataTransfer.files);
       const remainingSlots = this.maxImages - this.localUploadedImages.length;
       const filesToUpload = files.slice(0, remainingSlots);
-
+      if(remainingSlots < files.length) {
+        this.$swal('', '5장까지만 등록할 수 있습니다.', 'warning');
+      }
       const processedImages = []; // 처리된 이미지들을 저장할 배열
 
       Promise.all(filesToUpload.map((file) => {
@@ -100,7 +105,9 @@ export default {
         console.log("remainingSlots : " + remainingSlots)
         // 남은 슬롯 수에 따라 업로드할 파일을 제한합니다.
         const filesToUpload = files.slice(0, remainingSlots);
-
+        if(remainingSlots < files.length) {
+          this.$swal('', '5장까지만 등록할 수 있습니다.', 'warning');
+        }
         // 처리된 이미지를 저장할 배열을 초기화합니다.
         const processedImages = [];
 
@@ -191,25 +198,45 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 130vh; /* 컨테이너가 전체 너비를 차지하도록 설정 */
+  height: 60vh; /* 뷰포트 높이만큼의 높이를 가지도록 설정 */
+  padding: 10px;
 }
 
 .drag-drop {
   border: 2px dashed #085c57;
-  padding: 20px;
+  padding: 5px;
   text-align: center;
   cursor: pointer;
-  margin-bottom: 20px;
+  width: 100%; /* 전체 너비를 차지하도록 설정 */
+  height: 100%; /* 전체 높이를 차지하도록 설정 */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* 상단 정렬 */
+  align-items: center; /* 가로 방향에서 중앙 정렬 */
+}
+.upload-instructions {
+  text-align: center;
+  padding: 20px;
+}
+.card-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px; /* 카드 컨테이너와 드래그 영역 사이의 간격 추가 */
 }
 
 .drag-over {
   border-color: #2196F3;
 }
 
+
 .card {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
   width: 100%;
-  max-width: 400px;
+  max-width: 220px; /* 카드의 최대 너비를 설정 */
   margin-bottom: 20px;
 }
 
