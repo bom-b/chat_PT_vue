@@ -83,7 +83,7 @@ export default {
           formData.append(`${tab}[${index}]`, base64Image);
         });
       });
-
+      console.log("formData : " + formData)
       this.$axios.post('/food_up', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
