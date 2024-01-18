@@ -20,7 +20,7 @@ export function getEventColor(title) {
 
 
 export const INITIAL_EVENTS = [
-  {
+  { 
     id: createEventId(),
     title: '설정해보세요',
     start: todayStr,
@@ -30,6 +30,8 @@ export const INITIAL_EVENTS = [
     color: getEventColor('아침'), // 색상 함수를 호출하여 색상 지정
   },
   // 여기에 더 많은 이벤트를 추가할 수 있습니다.
+
+
 ];
 
 export function createEventId() 
@@ -37,5 +39,5 @@ export function createEventId()
 
 
 
-  return String(eventGuid++);
+  return eventGuid++;
 }

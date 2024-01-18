@@ -137,35 +137,60 @@ export default defineComponent({
       },
       imagePreview: null, 
       currentEvents: [],
+      
     }
   },
 
   created()
   {
-    // this.fetchEvents();
+    this.fetchEvents();
   },
-
+  mounted() 
+  {
+   
+  },
 
   methods: {
     formatEventDate(dateStr) {
       return dayjs(dateStr).format('YYYY-MM-DD'); // Day.js를 사용하여 날짜 포맷
     },
-    // fetchEvents() {
-    //   this.Authaxios.get('/your-api-endpoint/events') // 이벤트 데이터를 가져올 서버의 API 엔드포인트
-    //     .then(response => {
-    //       const eventsWithColors = response.data.map(event => ({
-    //         ...event,
-    //         color: getEventColor(event.title) // getEventColor 함수를 사용하여 색상 적용
-    //       }));
+    fetchEvents() {
+  this.$axios.get('/myCalendarList')
+    .then(response => {
+      let eventsFromServer = response.data.map(eventData => {
+        // 날짜 형식을 'YYYY-MM-DD'로 변환합니다.
+        let [year, month, day] = eventData.startStr.split('/');
+        year = '20' + year; // 2자리 연도를 4자리로 변환합니다.
+        let startDate = `${year}-${month}-${day}`; // ISO 8601 형식으로 조정합니다.
 
-    //       this.calendarOptions.initialEvents = eventsWithColors; // 색상이 적용된 이벤트 데이터를 calendarOptions에 할당
-    //       // 또는
-    //       this.currentEvents = eventsWithColors; // 현재 이벤트 데이터를 업데이트 (FullCalendar에 직접 바인딩하는 경우)
-    //     })
-    //     .catch(error => {
-    //       console.error('Error fetching events:', error);
-    //     });
-    // },
+        [year, month, day] = eventData.endStr.split('/');
+        year = '20' + year; // 2자리 연도를 4자리로 변환합니다.
+        let endDate = `${year}-${month}-${day}`; // ISO 8601 형식으로 조정합니다.
+
+        return {
+          id: eventData.eventNum,
+          title: eventData.title,
+          start: startDate,
+          end: endDate,
+          color: getEventColor(eventData.title),
+          // 기타 필요한 속성들...
+        };
+      });
+
+      // 이벤트를 캘린더에 추가하기 전에 기존 이벤트를 모두 제거합니다.
+      const calendarApi = this.$refs.fullCalendar.getApi();
+      calendarApi.removeAllEvents(); // 기존 이벤트를 모두 제거합니다.
+
+      // 현재 이벤트를 저장하고 캘린더에 추가합니다.
+      this.currentEvents = eventsFromServer;
+      this.currentEvents.forEach(event => calendarApi.addEvent(event));
+    })
+    .catch(error => {
+      console.error('Error fetching events:', error);
+    });
+}
+,
+
 
   handleWeekendsToggle() 
   {
@@ -240,14 +265,12 @@ export default defineComponent({
     // 새 이벤트 객체 생성
     const newEvent = 
     {
-      id: "ss", // 고유 ID 생성
       title: this.selectedEvent.title,
       start: this.selectedEvent.startStr,
       end: this.selectedEvent.endStr,
       img: this.imagePreview, // 이미지 미리보기 또는 업로드된 이미지 URL
-      color: getEventColor(this.selectedEvent.title) // 이벤트 색상 결정
     };
-    this.$axiosWithoutValidation.post("/inserCalendar" , newEvent)
+    this.$axios.post("/insertCalendar" , newEvent)
     .then(resp=>{
       console.log(resp)
     })
