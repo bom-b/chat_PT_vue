@@ -25,6 +25,44 @@
   }
 }
 
+.chart-section {
+  display: flex;
+  justify-content: space-around; // 간격을 넓힘
+  flex-wrap: wrap;
+  margin: 0
+}
+
+.chart {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px;
+  width: 100%;
+  max-width: 600px; // 차트 최대 너비 증가
+  text-align: center;
+}
+
+.canvas-container {
+  position: relative;
+  height: 0;
+  padding-top: 56.25%; // 16:9 비율 유지
+  margin-bottom: 30px;
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .chart {
+    max-width: 100%; // 모바일 화면에서 최대 너비 조정
+  }
+}
+
 .goal-box {
   width: 200px;
   height: 110px;
@@ -144,7 +182,16 @@
   #mobile-btn {
     display: block;
   }
-
+  .chart {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // 그림자 효과
+  border-radius: 10px; // 둥근 모서리
+  background: #fff; // 배경색
+  padding: 20px;
+  margin: 20px;
+  width: 100%; // 너비 조정
+  max-width: 450px; // 최대 너비 설정
+  text-align: center;
+}
 }
 
 img {
@@ -208,11 +255,9 @@ img {
     <section class="green" style="padding:0 2vw;">
       <div class="section1800" style="height: 300px; padding-top: 50px;">
         <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
-          style="font-size: 20px; color: #00997b;">오늘까지</p>
-        <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
           style="color: #FFFFFF; margin-top: 20px; font-size: 30px;">연속
           <span class="TheJamsil400" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="500"
-            style="color: #FFFFFF; margin-top: 20px; font-size: 50px;">10</span>
+            style="color: #FFFFFF; margin-top: 20px; font-size: 50px;">{{ Consecutive_Dates }}</span>
           일째
         </p>
         <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
@@ -221,8 +266,8 @@ img {
     </section>
 
     <!--  식단 분석  -->
-    <section class="lime-green" style="min-height: 100%; height: auto; padding: 30px;">
-      <div class="section1800">
+    <section class="lime-green" style="min-height: 100%; height: 100; padding: 30px;">
+      <div class="section1800" >
         <div class="row" style="margin-top: 50px; text-align: center; display: flex;">
 
           <div style="margin-bottom: 100px;" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="100">
@@ -230,19 +275,32 @@ img {
             <span id="" class="pine_Green_text TheJamsil400" style="white-space: nowrap; font-size: 1.7rem;">나만의 식습관 맞춤
               리포트</span>
           </div>
+          <div class="chart-section" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="100">
+            <div class="chart">
+              <p class="TheJamsil400" style="white-space: nowrap; font-size: 1.3rem; margin-bottom: 30px;">오늘의 칼로리</p>
+              <div class="canvas-container">
+                <canvas ref="myPieChart"></canvas>
+              </div>
+              <p class="TheJamsil400">칼로리 : {{ currentCal }} / {{
+                recommandCal
+              }} (kcal)</p>
+            </div>
 
-          <div class="col-lg-6 col-sm-6" style="height: 600px; text-align: center;" data-aos="fade-in"
-            data-aos-duration="1000" data-aos-delay="200">
-            <p class="TheJamsil400" style="white-space: nowrap; font-size: 1.3rem; margin-bottom: 30px;">오늘의 칼로리</p>
-            <img src="../../assets/img/메인_칼로리.png" style="max-height: 40%; object-fit: contain; " alt="s">
+            <div class="chart">
+              <p class="TheJamsil400" style="white-space: nowrap; font-size: 1.3rem; margin-bottom: 30px;">오늘의 영양소</p>
+              <div class="canvas-container">
+                <canvas ref="myBarChart"></canvas>
+              </div>
+              <p class="TheJamsil400">탄수화물 : {{ currenttan }} / {{
+                recommand_tan }} (g)</p>
+              <p class="TheJamsil400">단백질 : {{ currentdan }}/ {{
+                recommand_dan
+              }} (g)</p>
+              <p class="TheJamsil400">지방 : {{ currentgi }} / {{ recommand_gi
+              }}
+                (g)</p>
+            </div>
           </div>
-
-          <div class="col-lg-6 col-sm-6" style="height: 600px; text-align: center;" data-aos="fade-in"
-            data-aos-duration="1000" data-aos-delay="300">
-            <p class="TheJamsil400" style="white-space: nowrap; font-size: 1.3rem; margin-bottom: 30px;">오늘의 영양소</p>
-            <img src="../../assets/img/바차트.png" style="max-height: 40%; object-fit: contain; " alt="s">
-          </div>
-
         </div><!-- 사진 등록 -->
       </div>
     </section>
@@ -252,11 +310,180 @@ img {
 <script>
 import MultiImageUploader from '@/components/util/img-upload.vue';
 import DynamicImage from '@/components/util/dynamic-image.vue';
-
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 export default {
   components: {
     MultiImageUploader,
     DynamicImage,
   },
+
+  data() {
+    return {
+      // 기본적인 칼로리 및 영양성분 데이터들
+      recommandCal: 0,
+      recommand_tan: 0,
+      recommand_dan: 0,
+      recommand_gi: 0,
+      currentCal: 0,
+      currenttan: 0,
+      currentdan: 0,
+      currentgi: 0,
+      // 칼로리 차트 데이터 
+      chartData: {
+
+        labels: ['현재 칼로리', '남은 칼로리'],
+
+        datasets: [
+          {
+            data: [0, 0], // 초기 값으로 0을 설정
+            backgroundColor: ['rgba(75, 192, 192, 0.5)', '#FFFFFF'],
+            borderColor: 'rgba(75, 192, 192, 0.5)', // 파란색 계열 테두리
+            borderWidth: 1,
+          },
+        ],
+      },
+      // 영양소 차트 데이터
+      nutrientData: {
+        labels: ['탄수화물', '단백질', '지방'],
+        datasets: [
+          {
+            label: '섭취한 영양소',
+            data: [], // 실제 섭취량 데이터 (추후 업데이트)
+            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+          },
+          {
+            label: '권장 영양소',
+            data: [], // 권장 섭취량 데이터
+            backgroundColor: 'rgba(0, 0, 0, 0)', // 투명한 배경색
+            borderColor: 'rgba(75, 192, 192,0.8 )', // 파란색 계열 테두리
+            borderWidth: 1,
+
+            fill: false, // 내부 채우기 없음
+          }
+        ]
+      },
+    };
+  },
+  mounted() {
+    this.fetchDataAndCreateCharts();
+  },
+
+  methods: {
+    fetchDataAndCreateCharts() {
+      this.$axios.get('/getRecommandDailyTandangi'
+
+      ).then(res => {
+        
+        this.Consecutive_Dates = res.data.Consecutive_Dates.P_COUNT
+
+        // 추천 데이터 등록         
+        this.recommandCal = res.data.recommandTandnagi.p_recommand_cal.toFixed(2);
+        this.recommand_tan = res.data.recommandTandnagi.p_recommand_tan.toFixed(2);
+        this.recommand_dan = res.data.recommandTandnagi.p_recommand_dan.toFixed(2);
+        this.recommand_gi = res.data.recommandTandnagi.p_recommand_gi.toFixed(2);
+        
+        // 차트에 보여질 값 초기화
+        this.currentCal = res.data.totaldaily.dailyTotalCal.toFixed(2);
+        this.currenttan = res.data.totaldaily.dailyTotalTan.toFixed(2);
+        this.currentdan = res.data.totaldaily.dailyTotalDan.toFixed(2);
+        this.currentgi = res.data.totaldaily.dailyTotalGi.toFixed(2);
+
+        // 영양소 차트 데이터 업데이트
+        this.updateNutritionChartData();
+        // 칼로리 차트 데이터 업데이트
+        this.updateCalChartData();
+
+        this.createCharts();
+        this.isLoading = false;
+      })
+        .catch(error => {
+          console.error("에러 발생:", error);
+        });
+
+
+
+
+    },
+    updateCalChartData() {
+      // 남은 칼로리 계산
+      let remainingCal = this.recommandCal - this.currentCal;
+
+      // 차트에 표시할 데이터
+      let chartData = [this.currentCal, Math.abs(remainingCal)];
+
+      // 차트 색상 설정
+      let chartColors = remainingCal < 0 ? ['rgba(75, 192, 192, 0.5)', 'rgba(75, 192, 192, 1.0)'] : ['rgba(75, 192, 192, 0.5)', '#FFFFFF'];
+      // 차트에 표시할 데이터와 라벨
+      let chartLabels = remainingCal < 0 ? ['현재 칼로리', '초과 칼로리'] : ['현재 칼로리', '남은 칼로리'];
+
+      // 데이터셋 업데이트
+      this.chartData.datasets[0].data = chartData;
+      this.chartData.datasets[0].backgroundColor = chartColors;
+
+      // 라벨 업데이트
+      this.chartData.labels = chartLabels;
+      // 차트 다시 그리기
+      this.createCharts();
+
+    },
+    updateNutritionChartData() {
+      this.nutrientData.datasets[0].data = [this.currenttan, this.currentdan, this.currentgi]; // 실제 섭취한 영양소
+      this.nutrientData.datasets[1].data = [this.recommand_tan, this.recommand_dan, this.recommand_gi]; // 권장 영양소
+    },
+    createCharts() {
+
+      // 데이터가 준비된 후에 차트를 생성합니다.
+      this.$nextTick(() => {
+        if (this.myChart) this.myChart.destroy(); // 기존 차트가 있다면 파괴
+        if (this.myNutrientChart) this.myNutrientChart.destroy(); // 기존 영양소 차트가 있다면 파괴
+        this.createCalChart();
+        this.createNutrientChart();
+      });
+    },
+    createCalChart() {
+      this.$nextTick(() => {
+        if (this.myChart) {
+          this.myChart.destroy(); // 이미 생성된 Chart를 파괴
+        }
+        const ctxCal = this.$refs.myPieChart.getContext('2d');
+        this.myChart = new Chart(ctxCal, {
+          type: 'pie',
+          data: this.chartData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+          },
+        });
+      });
+    },
+
+    createNutrientChart() {
+      this.$nextTick(() => {
+        const ctxNutrient = this.$refs.myBarChart.getContext('2d');
+        if (this.myNutrientChart) this.myNutrientChart.destroy();
+        this.myNutrientChart = new Chart(ctxNutrient, {
+          type: 'bar',
+          data: this.nutrientData,
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+              x: {
+                stacked: true, // x축도 쌓아서 표시합니다.
+              }
+            }
+          }
+        });
+      });
+    },
+
+  },
+
+
+
+
 };
 </script>
