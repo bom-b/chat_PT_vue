@@ -28,7 +28,7 @@ export default {
   methods: {
     // 파일명 인코딩용 스크립트
     getImagePath(fileName) {
-      const basePath = 'http://localhost/springpt/images/trainer/';
+      const basePath = process.env.VUE_APP_API_URL + '/images/trainer/';
       const encodedFileName = encodeURIComponent(fileName);
 
       return `${basePath}${encodedFileName}`;
