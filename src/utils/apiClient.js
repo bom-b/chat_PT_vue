@@ -5,8 +5,7 @@
 const axios = require("axios");
 const swal = require("sweetalert2");
 
-const API_URL = "http://www.chatpt.shop:8888/springpt";
-// const API_URL = "http://localhost/springpt";
+const API_URL = process.env.VUE_APP_API_URL;
 
 const axiosInstance = axios.create({
     baseURL: API_URL,
