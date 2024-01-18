@@ -9,7 +9,7 @@ RUN rm package-lock.json || true
 RUN npm install
 RUN npm run build
 
-ENV VUE_APP_API_URL http://localhost/springpt
+ENV VUE_APP_API_URL http://www.chatpt.shop:8888/springpt
 ENV HOST 0.0.0.0
 EXPOSE 3000
 
