@@ -175,7 +175,7 @@ export default {
 }
 
 #section1 {
-  background-image: url('../../assets/img/background/1.png');
+  background-image: url('../../../public/assets/img/background/1.png');
   background-size: cover; /* 배경 이미지를 섹션에 맞게 확대/축소 */
   background-position: center; /* 배경 이미지를 가운데 정렬 */
   color: white;
@@ -188,7 +188,7 @@ export default {
 }
 
 #section2 {
-  background-image: url('../../assets/img/background/2.png');
+  background-image: url('../../../public/assets/img/background/2.png');
   background-size: cover;
   background-position: center;
   color: white;
@@ -213,7 +213,7 @@ export default {
 }
 
 #section3 {
-  background-image: url('../../assets/img/background/3.png');
+  background-image: url('../../../public/assets/img/background/3.png');
   background-size: cover;
   background-position: center;
   color: white;
@@ -342,7 +342,7 @@ button {
   }
 
   #section1 {
-    background-image: url('../../assets/img/background/1mobile.png');
+    background-image: url('../../../public/assets/img/background/1mobile.png');
   }
 
   #section2 {
