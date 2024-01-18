@@ -10,7 +10,7 @@
         >
           가입할 <span class="highlight">유형</span>을 선택해주세요.
         </h2>
-        <div class="row" style="text-align: center; margin: auto">
+        <div class="row" style="text-align: center; margin: auto; padding-bottom: 50px;" >
           <router-link
             to="/signUp/sign_up_master"
             class="col-md-6 col-sm-12 router-link"
