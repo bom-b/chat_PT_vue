@@ -76,6 +76,7 @@ export default {
   inject: ['foods'],
   data() {
     return {
+
       imgLink: 'http://localhost/springpt/images/upphoto/',
       categorizedImages: {
         아침: [],
