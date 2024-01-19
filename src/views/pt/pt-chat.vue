@@ -48,8 +48,8 @@
 </template>
 
 <script>
-// import SockJS from "sockjs-client";
-// import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
+import Stomp from "webstomp-client";
 
 const token = localStorage.getItem("jwtToken");
 const headers = {
@@ -131,51 +131,51 @@ export default {
         }
       });
     },
-    // connect() {
-    //   const sock = new SockJS("http://www.chatpt.shop:8888/springpt/ws-stomp");
-    //   this.ws = Stomp.over(sock);
+    connect() {
+      const sock = new SockJS("http://www.chatpt.shop:8888/springpt/ws-stomp");
+      this.ws = Stomp.over(sock);
 
-    //   const onConnected = () => {
-    //     console.log("웹소켓 연결 성공!!!!");
-    //     this.reconnect = 0; // 연결 성공 시 재연결 시도 횟수 초기화
-    //     this.ws.subscribe(
-    //       `/sub/chat/room/${this.roomId}`,
-    //       (message) => {
-    //         const recv = JSON.parse(message.body);
-    //         console.log("Received message: ", recv);
-    //         this.recvMessage(recv);
-    //       },
-    //       headers
-    //     );
+      const onConnected = () => {
+        console.log("웹소켓 연결 성공!!!!");
+        this.reconnect = 0; // 연결 성공 시 재연결 시도 횟수 초기화
+        this.ws.subscribe(
+          `/sub/chat/room/${this.roomId}`,
+          (message) => {
+            const recv = JSON.parse(message.body);
+            console.log("Received message: ", recv);
+            this.recvMessage(recv);
+          },
+          headers
+        );
 
-    //     this.ws.send(
-    //       "/pub/chat/message",
-    //       JSON.stringify(
-    //         {
-    //           type: "ENTER",
-    //           roomId: this.roomId,
-    //           sender: this.sender,
-    //           message: this.message,
-    //         },
-    //         headers
-    //       )
-    //     );
-    //   };
+        this.ws.send(
+          "/pub/chat/message",
+          JSON.stringify(
+            {
+              type: "ENTER",
+              roomId: this.roomId,
+              sender: this.sender,
+              message: this.message,
+            },
+            headers
+          )
+        );
+      };
 
-    //   const onError = (error) => {
-    //     console.error("Connection error: ", error);
-    //     if (this.reconnect++ < 5) {
-    //       setTimeout(() => {
-    //         console.log("Attempting to reconnect...");
-    //         this.connect();
-    //       }, 10 * 1000);
-    //     } else {
-    //       console.log("Failed to reconnect after 5 attempts.");
-    //     }
-    //   };
+      const onError = (error) => {
+        console.error("Connection error: ", error);
+        if (this.reconnect++ < 5) {
+          setTimeout(() => {
+            console.log("Attempting to reconnect...");
+            this.connect();
+          }, 10 * 1000);
+        } else {
+          console.log("Failed to reconnect after 5 attempts.");
+        }
+      };
 
-    //   this.ws.connect(headers, onConnected, onError);
-    // },
+      this.ws.connect(headers, onConnected, onError);
+    },
     formatTime(timestamp) {
       const date = new Date(timestamp);
       return date.toLocaleTimeString([], {
