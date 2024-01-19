@@ -1,68 +1,56 @@
 <template>
-
-  <section id="hero" class="hero d-flex align-items-center section-bg">
-    <div class="col-12" style="max-width: 1600px; margin: 0 auto">
-      <h1
-        data-aos="fade-in"
-        data-aos-duration="1000"
-        class="TheJamsil400"
-        style="white-space: nowrap; margin: 1vw"
-      >
-        간편하게 이용하는 식단관리 솔루션,<br />Chat PT
-      </h1>
-      <p
-        data-aos="fade-in"
-        data-aos-duration="2000"
-        data-aos-delay="100"
-        class=""
-        style="white-space: nowrap; margin: 1vw; color: #727070"
-      >
-        건강한 식단을 찾고 계신 당신에게
-        <br />
-        맞춤 식단 전문가가 되어 드립니다.
-      </p>
-      <div
-        class="d-flex"
-        data-aos="fade-in"
-        data-aos-duration="2000"
-        data-aos-delay="100"
-      >
-        <a
-          href="shipdan.me/"
-          class=""
-          style="margin: 1vw; text-decoration: none"
-          >자세히 알아보기</a
-        >
-      </div>
-    </div>
-  </section>
-  <!-- End Hero Section -->
-
-  <!--  오늘 어쩌구~ -->
-  <section>
-    <div class="gray" style="min-height: 100%; height: auto; padding: 30px">
-      <div class="section1800">
-        <h3
+  <main>
+    <section id="hero" class="hero d-flex align-items-center section-bg">
+      <div class="col-12" style="max-width: 1600px; margin: 0 auto">
+        <h1
+          data-aos="fade-in"
+          data-aos-duration="1000"
           class="TheJamsil400"
+          style="white-space: nowrap; margin: 1vw"
+        >
+          간편하게 이용하는 식단관리 솔루션,<br />Chat PT
+        </h1>
+        <p
           data-aos="fade-in"
           data-aos-duration="2000"
           data-aos-delay="100"
-        ></h3>
-        <div
-          class="row justify-content-center align-items-center"
-          style="margin-top: 50px; text-align: center"
+          class=""
+          style="white-space: nowrap; margin: 1vw; color: #727070"
         >
+          건강한 식단을 찾고 계신 당신에게
+          <br />
+          맞춤 식단 전문가가 되어 드립니다.
+        </p>
+        <div
+          class="d-flex"
+          data-aos="fade-in"
+          data-aos-duration="2000"
+          data-aos-delay="100"
+        >
+          <a
+            href="shipdan.me/"
+            class=""
+            style="margin: 1vw; text-decoration: none"
+            >자세히 알아보기</a
+          >
+        </div>
+      </div>
+    </section>
+    <!-- End Hero Section -->
 
-          <div
-            class="goal-box col-2"
-            style="
-              display: flex;
-              justify-content: space-between;
-              align-items: flex-start;
-            "
+    <!--  오늘 어쩌구~ -->
+    <section>
+      <div class="gray" style="min-height: 100%; height: auto; padding: 30px">
+        <div class="section1800">
+          <h3
+            class="TheJamsil400"
             data-aos="fade-in"
-            data-aos-duration="1000"
-            data-aos-delay="200"
+            data-aos-duration="2000"
+            data-aos-delay="100"
+          ></h3>
+          <div
+            class="row justify-content-center align-items-center"
+            style="margin-top: 50px; text-align: center"
           >
             <div
               class="goal-box col-2"
@@ -82,7 +70,6 @@
                     src="../../assets/img/time.png"
                     alt=""
                     style="width: 32px"
-
                   /><button class="select_button_menu time_cl">휴무일</button
                   ><br />
                 </router-link>
@@ -164,12 +151,10 @@
           </div>
         </div>
       </div>
-    </div>
     </section>
 
-    <section style="display: flex; justify-content: center;">
+    <section style="display: flex; justify-content: center">
       <div class="chart-section row">
-
         <div class="chart-container">
           <canvas id="myChart1" width="300" height="200"></canvas>
         </div>
@@ -182,92 +167,136 @@
       </div>
     </section>
     <div class="col-12 green" style="height: 80px; margin-bottom: 0"></div>
-
-  <!-- 로딩 스피너 -->
-  <div v-if="isLoading" class="d-flex justify-content-center">
-    <div class="spinner-border" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
-  </div>
-
-  <section class="card-grid" style="width: 650px; margin: auto">
-    <div class="card" v-for="(user, index) in live_data" :key="index">
-      <div
-        class="card-header"
-        :style="{
-          backgroundImage: 'url(' + getImageUrl(user.backgroundImage) + ')',
-        }"
-      ></div>
-      <img
-        :src="getImageUrl(user.nm_PROFILEIMG)"
-        class="card-profile-img"
-        alt="Profile Image"
-      />
-
-      <div class="card-body">
-        <h5 class="card-title">{{ user.name }}</h5>
-        <p>현재 먹은 칼로리 : {{ user.dailyTotalCal }}</p>
-        <p>추천 칼로리 : {{ user.recommandCal }}</p>
+    
+    <div
+      class="info-container p-4 my-4 d-flex align-items-center justify-content-between bg-light border rounded"
+      style="width:890px; margin: auto; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* 그림자 추가 */"
+    >
+      <div class="info-icon mr-3" >
+        <img :src="getImageUrl('배경지운 로고.png')" alt="Info Icon" style="height: 100px; margin: auto;"/>
+      </div>
+      <div class="info-text flex-grow-1">
+        <h4 class="mb-2">관리 회원 | 오늘 식단 요약</h4>
+        <p>관리 회원들의 식단을 확인 할 수 있습니다.</p>
+      </div>
+      <div class="info-text flex-grow-1">
+        <h4 class="mb-2">관리 회원 | 오늘 식단 요약</h4>
+        <p>관리 회원들의 식단을 확인 할 수 있습니다.</p>
       </div>
     </div>
-  </section>
 
-  <!--  -->
-  <section>
-    <div class="card card_plale">
-      <div class="card-header">
-        <div class="faq-tab">
-          <a class="faq-tab-item active">공지사항</a>
-          <!-- 추가 질문 탭들을 필요에 따라 추가 -->
-        </div>
-      </div>
-
-      <div class="card-body">
-        <!-- 나머지 코드는 그대로 유지 -->
-
-        <div class="content-box">
-          <div class="title">
-            <a href="view.html">안녕하세요 이것은 게시판 제목입니다 .</a>
-          </div>
-        </div>
-
-        <div class="content-list">
-          <div class="title">
-            <a href="view.html">게시판에 제목을 입력합니다.</a>
-          </div>
-        </div>
-
-        <div class="content-box">
-          <div class="title">
-            <a href="view.html">이곳에 제목을 입력해주세요.</a>
-          </div>
-        </div>
-
-        <div class="content-box">
-          <div class="title">
-            <a href="view.html">오늘의 날씨는 어떤가요.</a>
-          </div>
-        </div>
-
-        <ul class="number">
-          <li><a href="#">&lt; </a></li>
-          <li><a href="#" class="active">1</a></li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">3</a></li>
-          <li><a href="#">4</a></li>
-          <li><a href="#">&gt; </a></li>
-        </ul>
+    <!-- 로딩 스피너 -->
+    <div
+      v-if="isLoading"
+      class="d-flex justify-content-center"
+      style="height: 150px; border: 60px; margin: 80px; color: #085c5652"
+    >
+      <div class="spinner-border" role="status">
+        <span class="sr-only"> Loading...</span>
       </div>
     </div>
-  </section>
-  <div>
-    <a><img src="../../assets/img/춘식이눕기.png" /></a>
-  </div>
+
+    <section class="card-grid" style="width: 650px; margin: auto">
+      <div class="card" v-for="(user, index) in live_data" :key="index">
+        <div
+          class="card-header"
+          :style="{
+            backgroundImage: 'url(' + getImageUrl(user.backgroundImage) + ')',
+          }"
+        ></div>
+        <img
+          :src="getImageUrl(user.nm_PROFILEIMG)"
+          class="card-profile-img"
+          alt="Profile Image"
+        />
+
+        <div class="card-body">
+          <h5 class="card-title">{{ user.name }}</h5>
+          <p>현재 먹은 칼로리 : {{ user.dailyTotalCal }}</p>
+          <p>추천 칼로리 : {{ user.recommandCal }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!--  -->
+    <section>
+      <div class="card card_plale">
+        <div class="card-header">
+          <div class="faq-tab">
+            <a class="faq-tab-item active">공지사항</a>
+            <!-- 추가 질문 탭들을 필요에 따라 추가 -->
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- 나머지 코드는 그대로 유지 -->
+
+          <div class="content-box">
+            <div class="title">
+              <a href="view.html">안녕하세요 이것은 게시판 제목입니다 .</a>
+            </div>
+          </div>
+
+          <div class="content-list">
+            <div class="title">
+              <a href="view.html">게시판에 제목을 입력합니다.</a>
+            </div>
+          </div>
+
+          <div class="content-box">
+            <div class="title">
+              <a href="view.html">이곳에 제목을 입력해주세요.</a>
+            </div>
+          </div>
+
+          <div class="content-box">
+            <div class="title">
+              <a href="view.html">오늘의 날씨는 어떤가요.</a>
+            </div>
+          </div>
+
+          <ul class="number">
+            <li><a href="#">&lt; </a></li>
+            <li><a href="#" class="active">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">&gt; </a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <div>
+      <a><img src="../../assets/img/춘식이눕기.png" /></a>
+    </div>
+  </main>
 </template>
   
   
-  <script>
+<script>
+import Chart from "chart.js/auto";
+const chartData = [
+  {
+    chartId: "myChart1",
+    filledPercentage: 70,
+    actualValue: 1,
+    title: "신규 신청",
+  },
+  {
+    chartId: "myChart2",
+    filledPercentage: 80,
+    actualValue: 2,
+    title: "새로운 채팅",
+  },
+  {
+    chartId: "myChart3",
+    filledPercentage: 50,
+    actualValue: 3,
+    title: "신규 리뷰",
+  },
+];
 export default {
+  name: "PtHomePage",
   data() {
     return {
       wait_data: [], // PT 상담 예약 리스트 데이터
@@ -278,6 +307,14 @@ export default {
   },
   mounted() {
     this.fetchData();
+    chartData.forEach((data) => {
+      this.createChart(
+        data.chartId,
+        data.filledPercentage,
+        data.actualValue,
+        data.title
+      );
+    });
   },
   computed: {
     // 'live' 상태인 데이터만 필터링
@@ -298,12 +335,11 @@ export default {
           this.wait_data = response.data
             .filter((item) => item.status === "wait")
             .map(this.transformData);
-            this.isLoading = false; // 로딩 완료
+          this.isLoading = false; // 로딩 완료
         })
         .catch((error) => {
           console.error("There was an error fetching the data:", error);
           this.isLoading = false; // 에러 발생 시 로딩 완료
-
         });
     },
     transformData(item) {
@@ -391,6 +427,80 @@ export default {
     getImageUrl(path) {
       return require("@/assets/img/" + path);
     },
+    // [st]차트를 위한 스크립트
+    createChart(chartId, filledPercentage, actualValue, title) {
+      const ctx = document.getElementById(chartId).getContext("2d");
+      new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: [`${actualValue}명`, ""],
+          datasets: [
+            {
+              data: [filledPercentage, 100 - filledPercentage], // 항상 70% 차트
+              backgroundColor: [
+                "rgba(54, 162, 235, 0.6)",
+                "rgba(211, 211, 211, 0.5)",
+              ],
+              borderColor: ["rgba(54, 162, 235, 1)", "rgba(211, 211, 211, 1)"],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          cutout: "50%",
+          responsive: false,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              enabled: false,
+            },
+            title: {
+              display: true,
+              text: title,
+            },
+
+            annotation: {
+              annotations: [
+                {
+                  type: "text",
+                  font: {
+                    size: 14,
+                  },
+                  textAlign: "center",
+                  mode: "point",
+                  x: "50%",
+                  y: "50%",
+                  text: actualValue + "명",
+                },
+              ],
+            },
+          },
+        },
+        plugins: [
+          {
+            beforeDraw: function (chart) {
+              var width = chart.width,
+                height = chart.height,
+                ctx = chart.ctx;
+              ctx.restore();
+              var fontSize = (height / 114).toFixed(2);
+              ctx.font = fontSize + "em sans-serif";
+              ctx.textBaseline = "middle";
+
+              var text = actualValue + "명", // 중앙에 표시할 실제 값
+                textX = Math.round((width - ctx.measureText(text).width) / 2),
+                textY = height / 2 + 15;
+              ctx.fillText(text, textX, textY);
+              ctx.save();
+            },
+          },
+        ],
+      });
+    },
+    // [ed]차트를 위한 스크립트
   },
 };
 
@@ -405,8 +515,6 @@ cards.forEach((card) => {
 
 
 <style scoped>
-
-
 .chart-section {
   width: 100%; /* 부모 컨테이너의 100% 너비를 사용 */
   display: flex;
