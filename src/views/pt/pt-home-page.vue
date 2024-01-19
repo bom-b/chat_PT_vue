@@ -167,21 +167,53 @@
       </div>
     </section>
     <div class="col-12 green" style="height: 80px; margin-bottom: 0"></div>
-    
+
     <div
       class="info-container p-4 my-4 d-flex align-items-center justify-content-between bg-light border rounded"
-      style="width:890px; margin: auto; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* 그림자 추가 */"
+      style="
+        width: 890px;
+        margin: auto;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* 그림자 추가 */
+      "
     >
-      <div class="info-icon mr-3" >
-        <img :src="getImageUrl('배경지운 로고.png')" alt="Info Icon" style="height: 100px; margin: auto;"/>
+      <div class="info-icon mr-3">
+        <img
+          :src="getImageUrl('배경지운 로고.png')"
+          alt="Info Icon"
+          style="height: 100px; margin: auto"
+        />
       </div>
-      <div class="info-text flex-grow-1">
-        <h4 class="mb-2">관리 회원 | 오늘 식단 요약</h4>
-        <p>관리 회원들의 식단을 확인 할 수 있습니다.</p>
-      </div>
-      <div class="info-text flex-grow-1">
-        <h4 class="mb-2">관리 회원 | 오늘 식단 요약</h4>
-        <p>관리 회원들의 식단을 확인 할 수 있습니다.</p>
+      <div class="image-hover-container info-text flex-grow-1">
+        <h4 class="mb-2" style="margin-top: 30px;">오늘 식단 요약 </h4>
+      
+        <p style="margin-top: 30px;">관리 회원들의 식단을 <br> 확인 할 수 있습니다.</p>
+
+        <div class="image-hover-item">
+          <img
+            src="../../assets/img/분류_식단모름card.png"
+            alt="식단모름"
+            class="image-hover-img"
+          />
+          <div class="image-hover-text">식단등록 X</div>
+        </div>
+
+        <div class="image-hover-item">
+          <img
+            src="../../assets/img/분류_적정량card.png"
+            alt="적정량"
+            class="image-hover-img"
+          />
+          <div class="image-hover-text">적정량</div>
+        </div>
+
+        <div class="image-hover-item">
+          <img
+            src="../../assets/img/분류_과식card.png"
+            alt="과식"
+            class="image-hover-img"
+          />
+          <div class="image-hover-text">과식</div>
+        </div>
       </div>
     </div>
 
@@ -720,5 +752,43 @@ body {
   .card-grid {
     grid-template-columns: repeat(1, 1fr); /* 모바일에서는 1열 그리드 */
   }
+}
+</style>
+
+<style scoped>
+.image-hover-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.image-hover-item {
+  position: relative;
+  display: inline-block;
+}
+
+.image-hover-img {
+  height: 120px;
+  transition: opacity 0.3s;
+}
+
+.image-hover-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000000;
+  font-weight: bold;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.image-hover-item:hover .image-hover-img {
+  opacity: 0.3;
+}
+
+.image-hover-item:hover .image-hover-text {
+  opacity: 1;
 }
 </style>
