@@ -12,9 +12,10 @@ module.exports = {
   ],
   devServer: {
     allowedHosts: 'all',
-    ws: false // 여기에 ws 설정을 false로 추가했습니다.
+    webSocketServer: false // 이 부분을 수정했습니다
   },
 };
+
 
 // const webpack = require("webpack");
 // module.exports = {
