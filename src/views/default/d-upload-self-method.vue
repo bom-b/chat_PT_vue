@@ -1,50 +1,45 @@
 <template>
-  <main id="main" class="">
-    <div class="" style="margin: 100px 0 100px 0; text-align: center; ">
+  <main id="main" class="main">
+    <div class="container" style="text-align: center; ">
       <h3 id="plz-up" class="" style=" white-space: nowrap">오늘의 식단을 업로드 해주세요!</h3>
-      <p class="" style=" white-space: nowrap">아침, 점심, 저녁, 간식으로 분류해서 업로드 해주세요.</p>
-        <button class="btn btn-primary" @click="submitImages">제출</button>
       <div class="d-flex justify-content-center">
         <ul class="pagination pagination-lg">
-          <li class="page-item"><a class="page-link" href="#" @click.prevent="selectTab('아침')">아침</a></li>
-          <li class="page-item"><a class="page-link" href="#" @click.prevent="selectTab('점심')">점심</a></li>
-          <li class="page-item"><a class="page-link" href="#" @click.prevent="selectTab('저녁')">저녁</a></li>
-          <li class="page-item"><a class="page-link" href="#" @click.prevent="selectTab('간식')">간식</a></li>
+          <li class="page-item" v-for="tab in ['아침', '점심', '저녁', '간식']" :key="tab">
+            <a class="page-link" :class="{ 'selected-tab': selectedTab === tab }" href="#" @click.prevent="selectTab(tab)">
+              {{ tab }}
+            </a>
+          </li>
         </ul>
       </div>
 
       <div v-if="selectedTab === '아침'">
-        아침
         <imgUpload :max-images="5" :uploaded-images="tabImages.아침"
                    @image-removed="removeImage('아침', $event)"
                    @image-uploaded="updateImages('아침', $event)"/>
       </div>
       <div v-if="selectedTab === '점심'">
-        점심
         <imgUpload :max-images="5" :uploaded-images="tabImages.점심"
                    @image-removed="removeImage('점심', $event)"
                    @image-uploaded="updateImages('점심', $event)"/>
       </div>
       <div v-if="selectedTab === '저녁'">
-        저녁
         <imgUpload :max-images="5" :uploaded-images="tabImages.저녁"
                    @image-removed="removeImage('저녁', $event)"
                    @image-uploaded="updateImages('저녁', $event)"/>
       </div>
       <div v-if="selectedTab === '간식'">
-        간식
         <imgUpload :max-images="5" :uploaded-images="tabImages.간식"
                    @image-removed="removeImage('간식', $event)"
                    @image-uploaded="updateImages('간식', $event)"/>
       </div>
+
+      <button class="btn btn-primary" @click="submitImages">제출</button>
     </div>
 
   </main>
 </template>
 
-<style scoped>
 
-</style>
 <script>
 import ImgUpload from "@/components/util/img-upload.vue";
 
@@ -105,3 +100,78 @@ export default {
 };
 </script>
 
+<style scoped>
+.selected-tab {
+  font-weight: bold;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 40px;
+}
+.main{
+  background-color: white;
+}
+h3 {
+  color: #2a9d8f;
+  margin-bottom: 20px;
+}
+
+p {
+  color: #264653;
+}
+
+.btn-primary {
+  background-color: #2a9d8f;
+  border-color: #2a9d8f;
+}
+
+.btn-primary:hover {
+  background-color: #264653;
+  border-color: #264653;
+}
+
+.pagination-lg .page-link {
+  background-color: #e9f0f5;
+  color: #2a9d8f;
+}
+
+
+imgUpload {
+  border: 2px dashed #2a9d8f;
+  padding: 20px;
+  margin-top: 20px;
+  background-color: white;
+}
+
+.d-flex {
+  margin-top: 20px;
+}
+
+ul.pagination {
+  padding: 0;
+}
+
+.page-item {
+  transition: color 0.3s, background-color 0.3s;
+}
+
+.page-link {
+  background-color: #e9f0f5;
+  color: #2a9d8f;
+  transition: color 0.3s, background-color 0.3s, transform 0.3s;
+  border: none; /* 기본 테두리 제거 */
+}
+
+.page-link:hover {
+  transform: scale(1.05); /* 마우스 오버시 확대 효과 */
+  background-color: #e9f0f5;
+  color: #2a9d8f;
+}
+.page-link:focus {
+  outline: none; /* 클릭시 테두리 제거 */
+  box-shadow: none;
+}
+</style>
