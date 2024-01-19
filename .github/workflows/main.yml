@@ -1,66 +1,57 @@
-name: CI/CD Docker
+name: vue CI/CD Docker
 
-# 트리거를 수행할 브랜치를 지정합니다!!
+# 동작 조건 설정 : master 브랜치에 push 혹은 pull request가 발생할 경우 동작한다.
 on:
   push:
-    branches: [ master ]
-
-# 환경설정
-env:
-  DOCKER_IMAGE: ghcr.io/${{ github.actor }}/chat-pt-vue
-  VERSION: ${{ github.sha }}
-  NAME: go_cicd
-
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+    
+permissions:
+  contents: read
+  packages: write
+  
 jobs:
-  # 빌드 Job
-  build:
-    name: Build
+  # Spring Boot 애플리케이션을 빌드하여 도커허브에 푸시하는 과정
+  build-docker-image:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
-      # github repository에서 checkout
-      - uses: actions/checkout@v2
-      # docker build 수행
-      - name: Set up docker buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v1
-      - name: Cache docker layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ env.VERSION }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-      # GitHub 컨테이너 레지스트리에 로그인 후 빌드 & 푸시
-      - name: Login to ghcr
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: bom-b
-          password: ${{ secrets.GHCR_TOKEN }}
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
-        with:
-          builder: ${{ steps.buildx.outputs.name }}
-          push: true
-          tags: ${{ env.DOCKER_IMAGE }}:latest
-  # 배포 Job
-  deploy:
-    needs: build  # build 후에 실행되도록 정의
-    name: Deploy
-    runs-on: [ self-hosted, label-go ] # AWS ./configure에서 사용할 label명
+    - uses: actions/checkout@v3
+
+    # 1. 프로덕션 빌드 생성
+    - name: Build Docker images
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/chatpt-vue .
+
+    # 2. DockerHub 로그인
+    - name: docker login
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+    # 3. Docker Hub 이미지 푸시
+    - name: docker Hub push
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/chatpt-vue
+
+  # 위 과정에서 푸시한 이미지를 ec2에서 풀받아서 실행시키는 과정 
+  run-docker-image-on-ec2:
+    # build-docker-image (위)과정이 완료되어야 실행됩니다.
+    needs: build-docker-image
+    runs-on: self-hosted
+
     steps:
-      - name: Login to ghcr
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: bom-b
-          password: ${{ secrets.GHCR_TOKEN }}
-      # 3000 -> 80 포트로 수행하도록 지정
-      - name: Docker run
-        run: |
-          docker stop ${{ env.NAME }} && docker rm ${{ env.NAME }} && docker rmi ${{ env.DOCKER_IMAGE }}:latest
-          docker run -d -p 80:3000 --name go_cicd --restart always ${{ env.DOCKER_IMAGE }}:latest
+      # 1. 최신 이미지를 풀받습니다
+      - name: docker pull
+        run: sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/chatpt-vue
+      
+      # 2. 기존의 컨테이너를 중지시킵니다
+      - name: docker stop container
+        run: sudo docker stop vue || true
+
+      # 3. 최신 이미지를 컨테이너화하여 실행시킵니다
+      - name: docker run new container
+        run: sudo docker run --name vue --rm -d -p 80:3000 ${{ secrets.DOCKERHUB_USERNAME }}/chatpt-vue
+
+      # 4. 미사용 이미지를 정리합니다
+      - name: delete old docker image
+        run: sudo docker system prune -f

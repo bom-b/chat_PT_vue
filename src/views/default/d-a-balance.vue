@@ -19,26 +19,32 @@
       <div class="comment-container2" v-else-if="!hasData">
         <h2>이 기간 데이터가 없습니다.</h2>
       </div>
-      
+
 
       <div class="row" v-if="hasData">
         <div class="col-md-4">
 
           <div class="card">
             <span class="badge badge-gold">1등</span>
-            <img :src="`${this.$springBaseURL}/images/%EB%88%95%EC%B6%98%EC%8B%9D%EC%9D%B4.png`" class="card-img-top"
-              alt="음식1">
+            <div class="food-image-wrapper">
+              <img :src="`${this.$springBaseURL}/images/foodMainImages/${foodFirst.foodimg}`"
+                class="card-img-top food-image" alt='1등이미지'>
+            </div>
             <div class="card-body" style="text-align: center;">
               <h5 class="card-title foodname">{{ foodFirst.foodname }}</h5>
               <span class="weight">100g 기준</span>
               <ul class="list-unstyled">
-                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i> <span class="card-text ctext"><span v-if="foodFirst.food_dan == 0">단백질 함량 : </span><span
-                  v-else-if="foodFirst.food_tan == 0">탄수화물 함량 : </span><span v-else-if="foodFirst.food_gi == 0">지방 함량 : 
-                </span> <span style="font-size: 1.1rem; font-weight: bold;">{{ (foodFirst.ratio * 100).toFixed(2) }} g</span></span>
+                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i> <span
+                    class="card-text ctext"><span v-if="foodFirst.food_dan == 0">단백질 함량 : </span><span
+                      v-else-if="foodFirst.food_tan == 0">탄수화물 함량 : </span><span v-else-if="foodFirst.food_gi == 0">지방 함량
+                      :
+                    </span> <span style="font-size: 1.1rem; font-weight: bold;">{{ (foodFirst.ratio * 100).toFixed(2) }}
+                      g</span></span>
                 </li>
-                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i><span>칼로리 : </span> {{ (foodFirst.foodcal * 100 / foodFirst.foodweight).toFixed(2) }}
-                kcal
-               </li>
+                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i><span>칼로리 : </span> {{
+                  (foodFirst.foodcal * 100 / foodFirst.foodweight).toFixed(2) }}
+                  kcal
+                </li>
               </ul>
             </div>
           </div>
@@ -48,19 +54,25 @@
         <div class="col-md-4">
           <div class="card">
             <span class="badge badge-silver">2등</span>
-            <img src="http://localhost/springpt/images/%EB%88%95%EC%B6%98%EC%8B%9D%EC%9D%B4.png" class="card-img-top"
-              alt="음식2">
+            <div class="food-image-wrapper">
+              <img :src="`${this.$springBaseURL}/images/foodMainImages/${foodSecond.foodimg}`"
+                class="card-img-top food-image" alt='2등이미지'>
+            </div>
             <div class="card-body" style="text-align: center;">
               <h5 class="card-title foodname">{{ foodSecond.foodname }}</h5>
-              <span class="weight">100g 기준</span>          
+              <span class="weight">100g 기준</span>
               <ul class="list-unstyled">
-                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i> <span class="card-text ctext"><span v-if="foodSecond.food_dan == 0">단백질 함량 : </span><span
-                  v-else-if="foodSecond.food_tan == 0">탄수화물 함량 : </span><span v-else-if="foodSecond.food_gi == 0">지방 함량 : 
-                </span><span style="font-size: 1.1rem; font-weight: bold;"> {{ (foodSecond.ratio * 100).toFixed(2) }} g</span></span>
+                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i> <span
+                    class="card-text ctext"><span v-if="foodSecond.food_dan == 0">단백질 함량 : </span><span
+                      v-else-if="foodSecond.food_tan == 0">탄수화물 함량 : </span><span v-else-if="foodSecond.food_gi == 0">지방
+                      함량 :
+                    </span><span style="font-size: 1.1rem; font-weight: bold;"> {{ (foodSecond.ratio * 100).toFixed(2) }}
+                      g</span></span>
                 </li>
-                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i><span>칼로리 : </span> {{ (foodSecond.foodcal * 100 / foodSecond.foodweight).toFixed(2) }}
-                kcal
-               </li>
+                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i><span>칼로리 : </span> {{
+                  (foodSecond.foodcal * 100 / foodSecond.foodweight).toFixed(2) }}
+                  kcal
+                </li>
               </ul>
 
             </div>
@@ -71,19 +83,25 @@
         <div class="col-md-4">
           <div class="card">
             <span class="badge badge-bronze">3등</span>
-            <img src="http://localhost/springpt/images/%EB%88%95%EC%B6%98%EC%8B%9D%EC%9D%B4.png" class="card-img-top"
-              alt="음식3">
+            <div class="food-image-wrapper">
+              <img :src="`${this.$springBaseURL}/images/foodMainImages/${foodThird.foodimg}`"
+                class="card-img-top food-image" alt='3등이미지'>
+            </div>
             <div class="card-body" style="text-align: center;">
               <h5 class="card-title foodname">{{ foodThird.foodname }}</h5>
               <span class="weight">100g 기준</span>
               <ul class="list-unstyled">
-                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i> <span class="card-text ctext"><span v-if="foodThird.food_dan == 0">단백질 함량 : </span><span
-                  v-else-if="foodThird.food_tan == 0">탄수화물 함량 : </span><span v-else-if="foodThird.food_gi == 0">지방 함량 : 
-                </span> <span style="font-size: 1.1rem; font-weight: bold;">{{ (foodThird.ratio * 100).toFixed(2) }} g</span></span>
+                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i> <span
+                    class="card-text ctext"><span v-if="foodThird.food_dan == 0">단백질 함량 : </span><span
+                      v-else-if="foodThird.food_tan == 0">탄수화물 함량 : </span><span v-else-if="foodThird.food_gi == 0">지방 함량
+                      :
+                    </span> <span style="font-size: 1.1rem; font-weight: bold;">{{ (foodThird.ratio * 100).toFixed(2) }}
+                      g</span></span>
                 </li>
-                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i><span>칼로리 : </span> {{ (foodThird.foodcal * 100 / foodThird.foodweight).toFixed(2) }}
-                kcal
-               </li>
+                <li class="my-list-item"><i class="fas fa-check-circle text-success"></i><span>칼로리 : </span> {{
+                  (foodThird.foodcal * 100 / foodThird.foodweight).toFixed(2) }}
+                  kcal
+                </li>
               </ul>
             </div>
           </div>
@@ -106,6 +124,7 @@
   justify-content: center;
   align-items: center;
 }
+
 .comment-container2 {
   margin-top: 45px;
   padding: 20px;
@@ -117,14 +136,36 @@
   justify-content: center;
   align-items: center;
 }
+
+.food-image-wrapper {
+  overflow: hidden;
+  width: 90%;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.food-image {
+  width: 100%; /* 또는 width: auto; 를 사용해도 됩니다. */
+  height: 100%; /* 이미지 높이를 컨테이너 높이에 맞춥니다. */
+  object-fit: cover; /* 이미지 비율을 유지하면서 컨테이너에 맞춰 자릅니다. */
+  object-position: center; /* 이미지가 컨테이너 중앙에 위치하도록 합니다. */
+}
+
+
 .my-list-item {
-  padding: 10px 0; /* 상하 패딩 추가 */
-  font-size: 16px; /* 폰트 크기 조정 */
+  padding: 10px 0;
+  /* 상하 패딩 추가 */
+  font-size: 16px;
+  /* 폰트 크기 조정 */
 }
 
 .my-list-item i {
-  width: 25px; /* 아이콘의 너비를 고정 */
-  margin-right: 5px; /* 아이콘과 텍스트 사이의 오른쪽 마진 추가 */
+  width: 25px;
+  /* 아이콘의 너비를 고정 */
+  margin-right: 5px;
+  /* 아이콘과 텍스트 사이의 오른쪽 마진 추가 */
 }
 
 .foodname {
@@ -389,7 +430,7 @@ export default {
           this.foodFirst = res.data[0];
           this.foodSecond = res.data[1];
           this.foodThird = res.data[2];
-
+          console.log(res.data[1])
         })
 
         .catch((error) => {
