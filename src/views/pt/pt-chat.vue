@@ -132,7 +132,7 @@ export default {
       });
     },
     connect() {
-      const sock = new SockJS("http://localhost/springpt/ws-stomp");
+      const sock = new SockJS("http://3.37.155.116/springpt/ws-stomp");
       this.ws = Stomp.over(sock);
 
       const onConnected = () => {
