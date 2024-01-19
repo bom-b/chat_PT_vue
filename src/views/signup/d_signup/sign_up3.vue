@@ -3,11 +3,11 @@ export default {
   data() {
     return {
       user: {
-        age: '',
+        birth: '',
         height: '',
         weight: '',
         bmi: '',
-        sex: '',
+        gender: '',
         purpose: null,
         activity: null,
       }
@@ -15,7 +15,7 @@ export default {
   },
   computed: {
     progress() {
-      if (this.user.height && this.user.weight && this.user.sex && this.user.purpose && this.user.activity) {
+      if (this.user.height && this.user.weight && this.user.gender && this.user.purpose && this.user.activity) {
         return 75;
       } else {
         return 50;
@@ -23,27 +23,11 @@ export default {
     },
     images() {
       return [
-        { path: require('../../../assets/img/ptgogo.png'), alt: 'Image 1', active: this.user.bmi >= 0 && this.user.bmi < 18.5 },
-        { path: require('../../../assets/img/ptgogo.png'), alt: 'Image 2', active: this.user.bmi >= 18.5 && this.user.bmi < 23 },
-        { path: require('../../../assets/img/qrchoon.png'), alt: 'Image 3', active: this.user.bmi >= 23 && this.user.bmi < 25 },
-        { path: require('../../../assets/img/qrchoon.png'), alt: 'Image 4', active: this.user.bmi >= 25 },
+        { path: require('../../../../public/assets/img/bmi/bmi1.png'), alt: 'Image 1', active: this.user.bmi >= 0 && this.user.bmi < 18.5 },
+        { path: require('../../../../public/assets/img/bmi/bmi2.png'), alt: 'Image 2', active: this.user.bmi >= 18.5 && this.user.bmi < 23 },
+        { path: require('../../../../public/assets/img/bmi/bmi3.png'), alt: 'Image 3', active: this.user.bmi >= 23 && this.user.bmi < 25 },
+        { path: require('../../../../public/assets/img/bmi/bmi4.png'), alt: 'Image 4', active: this.user.bmi >= 25 },
       ];
-    },
-    getImagePath() {
-      if (this.user.bmi >= 0 && this.user.bmi < 18.5) {
-        return require('../../../assets/img/ptgogo.png');
-      } else if (this.user.bmi >= 18.5 && this.user.bmi < 23) {
-        // return require('@/assets/정상.png');
-        return require('../../../assets/img/ptgogo.png');
-      } else if (this.user.bmi >= 23 && this.user.bmi < 25) {
-        // return require('@/assets/과체중.png');
-        return require('../../../assets/img/qrchoon.png');
-      } else if (this.user.bmi >= 25) {
-        // return require('@/assets/비만.png');
-        return require('../../../assets/img/qrchoon.png');
-      } else {
-        return require('../../../assets/img/춘식얼굴.png');
-      }
     },
   },
   methods: {
@@ -55,8 +39,8 @@ export default {
         return '';
       }
     },
-    setSex(sex) {
-      this.user.sex = sex;
+    setgender(gender) {
+      this.user.gender = gender;
     },
     setPurpose(purpose) {
       this.user.purpose = purpose;
@@ -68,11 +52,11 @@ export default {
       try {
         const isValid = 1;
         const data = {
-          age: this.user.age,
+          birth: this.user.birth,
           height: this.user.height,
           weight: this.user.weight,
           bmi: this.user.bmi,
-          sex: this.user.sex,
+          gender: this.user.gender,
           purpose: this.user.purpose,
           activity: this.user.activity,
         };
@@ -100,20 +84,21 @@ export default {
         <div class="input-container">
           <ul>
             <li>
-              <label for="user.sex">성별</label>
+              <label for="user.gender">성별</label>
               <div class="btn-group" role="group">
-                <button type="button" class="btn" :class="{ 'btn-male': user.sex === 'male' }" @click="setSex('male')">
+                <button type="button" class="btn" :class="{ 'btn-male': user.gender === 'male' }"
+                  @click="setgender('male')">
                   <i class="material-icons">male</i>
                 </button>
-                <button type="button" class="btn" :class="{ 'btn-female': user.sex === 'female' }"
-                  @click="setSex('female')">
+                <button type="button" class="btn" :class="{ 'btn-female': user.gender === 'female' }"
+                  @click="setgender('female')">
                   <i class="material-icons">female</i>
                 </button>
               </div>
             </li>
             <li>
-              <label for="user.age">나이(만)</label>
-              <input class="form-control" type="number" id="user.age" v-model="user.age">
+              <label for="user.birth">생년월일</label>
+              <input class="form-control" type="date" id="user.birth" v-model="user.birth">
             </li>
             <li>
               <label for="user.height">키(cm)</label>
@@ -127,6 +112,8 @@ export default {
               <label for="user.bmi"> BMI </label>
               <div>{{ calculatebmi() }}</div>
             </li>
+
+
             <div class="image-container">
               <div v-for="image in images" :key="image.path" :class="{ 'active-image': image.active }">
                 <img :src="image.path" :alt="image.alt" class="image">
@@ -154,7 +141,7 @@ export default {
                   @click="setActivity(1)"> 저강도 </button>
                 <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 2 }" id="no2"
                   @click="setActivity(2)"> 중강도 </button>
-                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 2 }" id="no2"
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 3 }" id="no2"
                   @click="setActivity(3)"> 고강도 </button>
               </div>
             </li>
@@ -163,7 +150,7 @@ export default {
       </div>
       <div class="button-container">
         <button type="button" class="btn btn-success" @click="proceedToNextPage"
-          :disabled="!user.age || !user.height || !user.weight || !user.sex || user.purpose === null || user.activity === null || !user.bmi">
+          :disabled="!user.birth || !user.height || !user.weight || !user.gender || user.purpose === null || user.activity === null || !user.bmi">
           다음
         </button>
       </div>
@@ -191,31 +178,6 @@ export default {
   transition: background-color 0.2s ease;
 }
 
-li {
-  list-style-type: none;
-  position: relative;
-  padding-left: 30px;
-}
-
-li::before {
-  content: "";
-  display: inline-block;
-  position: absolute;
-  left: 0;
-  width: 20px;
-  /* 원하는 너비로 설정 */
-  height: 20px;
-  /* 원하는 높이로 설정 */
-  background-image: url('https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/5eeea355389655.59822ff824b72.gif');
-  background-size: cover;
-  /* 이미지가 요소를 완전히 덮도록 설정, 필요에 따라 'contain'으로 변경 가능 */
-  background-repeat: no-repeat;
-  /* 이미지가 반복되지 않도록 설정 */
-  background-position: center;
-  /* 이미지가 요소의 중앙에 위치하도록 설정 */
-}
-
-
 .active-image {
   border: 2px solid red;
 }
@@ -226,11 +188,12 @@ li::before {
   justify-content: center;
   align-items: center;
   margin-top: 20px;
+  max-height: 200px;
 }
 
 .image {
   width: 100px;
-  height: 100px;
+  height: 200px;
   margin: 5px;
   border-radius: 10px;
   cursor: pointer;
@@ -283,10 +246,10 @@ button {
 }
 
 .selected-purpose {
-  background-color: black;
+  background-color: rgb(13, 73, 204);
 }
 
 .selected-activity {
-  background-color: black;
+  background-color: rgb(13, 73, 204);
 }
 </style>

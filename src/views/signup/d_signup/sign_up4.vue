@@ -1,44 +1,58 @@
 <script>
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 export default {
     data() {
         return {
             rating: [],
-            foodnum: '',
             foodList: [],
         };
     },
     computed: {
         progress() {
-            return (this.rating.length) ? 100 : 75; // 개인정보 동의가 완료되면 50%의 진행 상태를 나타냅니다.
+            return (this.rating.length >= 5) ? 100 : 75;
         },
     },
     created() {
-        this.getfoodList(); // getfoodList 메소드를 호출하여 음식 리스트를 가져옵니다.
+        this.getfoodList();
     },
     methods: {
+
         selectFood(food) {
-            if (this.rating.includes(food.foodnum)) {
-                // 이미 선택된 이미지인 경우 선택을 해제합니다.
-                this.rating = this.rating.filter(num => num !== food.foodnum);
+            this.rating = Array.from(this.rating);
+            if (this.rating.includes(food.FOODNUM)) {
+                this.rating = this.rating.filter(num => num !== food.FOODNUM);
             } else {
-                // 선택되지 않은 이미지인 경우 선택을 추가합니다.
                 if (this.rating.length < 5) {
-                    this.rating.push(food.foodnum);
+                    this.rating.push(food.FOODNUM);
+                    console.log(this.rating)
                 } else {
-                    // 이미 5개의 이미지를 선택한 경우 추가적인 선택은 불가능합니다.
-                    this.$swal("5개의 음식 이미지만 선택할 수 있습니다.");
+                    this.$swal("", "5개의 음식 이미지만 선택할 수 있습니다.", "warning");
                 }
             }
         },
-        proceedToNextPage() {
+        async proceedToNextPage() {
             try {
                 const isValid = 1;
                 const data = {
-                    foodnum: this.foodnum,
                     rating: this.rating
                 };
                 if (isValid) {
-                    this.$emit("nextPage", data);
+                    const signup = await Swal.fire({
+                        title: "",
+                        text: "가입하시겠습니까?",
+                        icon: "question",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "확인",
+                        cancelButtonText: "취소",
+                    })
+                    if (signup.isConfirmed) {
+                        this.$emit("nextPage", data);
+                    } else {
+                        this.$swal("", "잘못된 접근입니다.");
+                    }
                 } else {
                     this.$swal("유효하지 않은 경로입니다.");
                 }
@@ -72,25 +86,31 @@ export default {
         <div class="container">
             <br>
             <h2>선호하는 음식 선택 (5개 선택 필수)</h2>
-            <p>음식 추천을 할때 도와드려요</p>
+            <p>음식 추천을 할 때 도와드려요</p>
             <div class="input-container">
-                <ul>
-                    <li v-for="food in foodList" :key="food.foodnum" :class="{ selected: rating.includes(food.foodnum) }">
-                        <img :src="getImagePath(food.FOODIMG)" alt="음식 이미지">
-                        <span>{{ food.FOODNAME }}</span>
+                <ul class="list-group">
+                    <li v-for="food in foodList" :key="food.foodnum"
+                        :class="{ 'list-group-item': true, selected: rating.includes(food.foodnum), row: true }"
+                        @click="selectFood(food)">
+                        <div class="d-flex align-items-center">
+                            <div class="food-image-wrapper">
+                                <img :src="getImagePath(food.FOODIMG)" alt="음식 이미지">
+                            </div>
+                            <span class="ml-3">{{ food.FOODNAME }}</span>
+                        </div>
                     </li>
                 </ul>
             </div>
         </div>
+        <div class="button-container">
+            <button type="button" class="btn btn-success" @click="proceedToNextPage" :disabled="this.rating.length < 5">
+                완료
+            </button>
+        </div>
     </main>
 </template>
 
-
 <style scoped>
-.selected {
-    border: 7px solid green;
-}
-
 li {
     list-style-type: none;
     position: relative;
@@ -98,27 +118,33 @@ li {
 }
 
 li img {
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 150px;
     object-fit: contain;
     object-position: center;
 }
 
-li::before {
-    content: "";
-    display: inline-block;
-    position: absolute;
-    left: 0;
-    width: 20px;
-    /* 원하는 너비로 설정 */
-    height: 20px;
-    /* 원하는 높이로 설정 */
-    background-image: url('../../../assets/img/gif/loading.gif');
-    background-size: cover;
-    /* 이미지가 요소를 완전히 덮도록 설정, 필요에 따라 'contain'으로 변경 가능 */
-    background-repeat: no-repeat;
-    /* 이미지가 반복되지 않도록 설정 */
-    background-position: center;
-    /* 이미지가 요소의 중앙에 위치하도록 설정 */
+.food-image-wrapper {
+    overflow: hidden;
+    width: 250px;
+    height: 160px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+}
+
+.list-group-item {
+    border: none;
+    cursor: pointer;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+}
+
+.selected {
+    background-color: gray;
 }
 </style>
+

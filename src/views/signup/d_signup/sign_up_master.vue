@@ -2,7 +2,6 @@
     <main class="main">
         <div>
             <component :is="page" v-on:nextPage="nextPage" />
-            <!-- <component v-bind:is="currPage"></component> -->
         </div>
     </main>
 </template>
@@ -23,8 +22,8 @@ export default {
         return {
             pages: ['signUp1', 'signUp2', 'signUp3', 'signUp4'],
             currentPageIndex: 1,
-            userdata: {
-            }
+            userdata: {},
+            serverReturn: 0
         };
     },
     computed: {
@@ -40,14 +39,31 @@ export default {
                 return signUp4;
             }
             return signUp1;
-        }
+        },
+
     },
     methods: {
         nextPage(pagesdata) {
+            if (this.currentPageIndex == this.pages.length) {
+                return this.completeSignup;
+            }
             this.currentPageIndex++;
             this.userdata = { ...this.userdata, ...pagesdata };
             console.log(this.userdata);
+
+            if (this.currentPageIndex == this.pages.length) {
+                this.completeSignup();
+            }
         },
+        async completeSignUp() {
+            await this.$axiosWithoutValidation.post("/signUp/completeSignUp", this.userdata)
+                .then(response => {
+                    this.serverReturn = response.data;
+                })
+                .catch(e => {
+                    console.error(e);
+                });
+        }
     }
 }
 </script>

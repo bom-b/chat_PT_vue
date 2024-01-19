@@ -5,10 +5,12 @@ export default {
   data() {
     return {
       user: {
+        nickname: "",
         id: "",
         name: "",
         email: "",
         password: "",
+        role: "NORMAL",
         password_Check: "",
       },
       inputDisplay: {
@@ -210,10 +212,12 @@ export default {
       try {
         const isValid = 1;
         const data = {
+          nickname: this.user.nickname,
           id: this.user.id,
           name: this.user.name,
           email: this.user.email,
           password: this.user.password,
+          role: this.user.role,
         };
         if (isValid) {
           this.$emit("nextPage", data);
@@ -257,6 +261,14 @@ export default {
           <div class="col-sm-7">
             <div class="input-group">
               <input type="text" class="form-control" id="name" placeholder="이름을 입력하세요" v-model="user.name" />
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="nickname" class="col-sm-3 col-form-label">닉네임:</label>
+          <div class="col-sm-7">
+            <div class="input-group">
+              <input type="text" class="form-control" id="nickname" placeholder="닉네임을 입력하세요" v-model="user.nickname" />
             </div>
           </div>
         </div>
@@ -336,14 +348,7 @@ export default {
           </div>
         </div>
       </div>
-      <br />
-      <div>
-        <p>test</p>
-        {{ user.id }}<br />
-        {{ user.name }}<br />
-        {{ user.email }}<br />
-        {{ user.password }}<br />
-      </div>
+
       <div class="button-container">
         <button type="button" class="btn btn-success" @click="proceedToNextPage" :disabled="!user.id ||
           !user.name ||

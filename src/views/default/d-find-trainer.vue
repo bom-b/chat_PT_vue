@@ -14,7 +14,7 @@ export default {
   },
   watch: {
     selectRegion: {
-   localhost: true, // 페이지 로딩 시에도 호출
+      localhost: true, // 페이지 로딩 시에도 호출
       handler: function (newValue, oldValue) {
         // selectRegion이 변경될 때마다 호출되는 로직
         if (oldValue !== newValue) {
@@ -152,9 +152,10 @@ export default {
 </template>
 
 <style scoped>
-.top100{
+.top100 {
   margin-top: 100px;
 }
+
 /**도망가는 버튼 */
 * {
   padding: 0;
@@ -198,36 +199,14 @@ li::marker {
   animation-direction: alternate;
 }
 
-.move2 {
-  animation-duration: 10s;
-  animation-name: slidein2;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-}
-
 @keyframes slidein {
   from {
     margin-left: 100%;
     width: 200%;
   }
 
-  to {
-    margin-left: 0%;
-    width: 100%;
-  }
 }
 
-@keyframes slidein2 {
-  from {
-    margin-left: 0%;
-    width: 100%;
-  }
-
-  to {
-    margin-left: 100%;
-    width: 200%;
-  }
-}
 
 img {
   max-width: 150px;
