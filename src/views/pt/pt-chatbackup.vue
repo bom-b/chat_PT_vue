@@ -108,7 +108,7 @@ export default {
     sendWebSocketMessage(message) {
       // 연결이 없거나 연결 상태가 OPEN이 아니면 새로운 WebSocket 연결을 엽니다.
       if (!this.webSocket || this.webSocket.readyState !== WebSocket.OPEN) {
-        this.webSocket = new WebSocket("ws://localhost/chatptCHAT"); // WebSocket endpoint URL
+        this.webSocket = new WebSocket("ws://3.37.155.116/chatptCHAT"); // WebSocket endpoint URL
 
         // 연결이 열리면 새로운 메시지를 받을 수 있도록 설정합니다.
         this.webSocket.onmessage = (event) => {
