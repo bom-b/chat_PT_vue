@@ -51,7 +51,7 @@ export default {
             this.userdata = { ...this.userdata, ...pagesdata };
             console.log(this.userdata);
 
-            if (this.currentPageIndex == this.pages.length) {
+            if (this.currentPageIndex == 4) {
                 this.completeSignup();
             }
         },
