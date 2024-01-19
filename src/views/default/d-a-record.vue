@@ -54,7 +54,7 @@
   </div>
 
 
-  <div v-if="showEventInputModal" class="modal modalInput">
+  <!-- <div v-if="showEventInputModal" class="modal modalInput">
   <h3 style="color: aliceblue;">이벤트 정보</h3>
   <div>
   <input type="radio" id="breakfast" value="아침" v-model="selectedEvent.title" class="radio-button">
@@ -76,8 +76,13 @@
 <div>
   <button type="button" class="btn2 btn-primary" @click="insertMyCalendar">등록</button>
   <button type="button" class="btn2 btn-success" @click="closeInput">닫기</button>
-</div>
-</div>
+</div> -->
+
+
+
+<!-- </div> -->
+
+
   </div>
 </template>
 
@@ -110,7 +115,6 @@ export default defineComponent({
         },
         initialView: 'dayGridMonth',
         initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
-        editable: true,
         selectable: true,
         selectMirror: true,
         dayMaxEvents: true,
@@ -151,10 +155,12 @@ export default defineComponent({
   },
 
   methods: {
-    formatEventDate(dateStr) {
+    formatEventDate(dateStr) 
+    {
       return dayjs(dateStr).format('YYYY-MM-DD'); // Day.js를 사용하여 날짜 포맷
     },
-    fetchEvents() {
+    fetchEvents() 
+    {
   this.$axios.get('/myCalendarList')
     .then(response => {
       let eventsFromServer = response.data.map(eventData => {
@@ -171,7 +177,7 @@ export default defineComponent({
           id: eventData.eventNum,
           title: eventData.title,
           start: startDate,
-          end: endDate,
+          end: endDate, 
           color: getEventColor(eventData.title),
           // 기타 필요한 속성들...
         };
@@ -188,15 +194,14 @@ export default defineComponent({
     .catch(error => {
       console.error('Error fetching events:', error);
     });
-}
-,
-
+  },
 
   handleWeekendsToggle() 
   {
     this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
   },
-  handleDateSelect(selectInfo) {
+  handleDateSelect(selectInfo) 
+  {
     this.selectedEvent = {
     ...this.selectedEvent, // 기존의 selectedEvent 속성 유지
     img: this.selectedEvent.img,
@@ -214,20 +219,35 @@ export default defineComponent({
         startStr: clickInfo.event.start.toISOString(),
         id: clickInfo.event.id // 이벤트 ID를 저장
       };
-  this.showModal = true;
-  },
-    handleEvents(events) {
+      this.showModal = true;
+    },
+
+    handleEvents(events) 
+    {
       this.currentEvents = events
     },
     deleteEvent(eventId) {
-      let calendarApi = this.$refs.fullCalendar.getApi(); // FullCalendar 인스턴스에 접근
-      let event = calendarApi.getEventById(eventId); // 이벤트 ID로 이벤트 인스턴스를 가져옴
+  let calendarApi = this.$refs.fullCalendar.getApi(); // FullCalendar 인스턴스에 접근
+  let event = calendarApi.getEventById(eventId); // 이벤트 ID로 이벤트 인스턴스를 가져옴
 
-      if (event) {
+  if (event) {
+    let num = event.id;
+    console.log(num);
+
+    // Axios DELETE 요청, num을 URL 경로에 포함
+    this.$axios.delete(`/delteCalendarInfo/${num}`)
+      .then(resp => {
+        console.log(resp);
         event.remove(); // 이벤트가 존재하면 삭제
+        alert("삭제되었습니다.");
         this.showModal = false;
-      }
-    },
+      })
+      .catch(err => {
+        console.error("이벤트 삭제 중 오류 발생", err);
+      });
+  }
+}
+,
 
     handleImageUpload(event) 
     {
@@ -242,15 +262,6 @@ export default defineComponent({
       }
     },
 
-    
-
-
-
-
-
-
-
-
     closeModal()
     {
       this.showModal = false;
@@ -260,32 +271,43 @@ export default defineComponent({
       this.imagePreview = null;
       this.showEventInputModal = false;
     },
-    insertMyCalendar() 
-    {
-    // 새 이벤트 객체 생성
-    const newEvent = 
-    {
-      title: this.selectedEvent.title,
-      start: this.selectedEvent.startStr,
-      end: this.selectedEvent.endStr,
-      img: this.imagePreview, // 이미지 미리보기 또는 업로드된 이미지 URL
-    };
-    this.$axios.post("/insertCalendar" , newEvent)
-    .then(resp=>{
-      console.log(resp)
-    })
-    .catch(err => {console.error(err);})
+  //   insertMyCalendar() {
+  //   // 새 이벤트 객체 생성
+  //   const newEvent = {
+      
+  //     title: this.selectedEvent.title,
+  //     start: this.selectedEvent.startStr,
+  //     end: this.selectedEvent.endStr,
+  //     img: this.imagePreview, // 이미지 미리보기 또는 업로드된 이미지 URL
+  //     // 필요한 추가 데이터...
+  //   };
 
-    // 현재 이벤트 목록에 새 이벤트 추가
-    this.currentEvents.push(newEvent);
+  //   // 서버에 새 이벤트 저장 요청
+  //   this.$axios.post("/insertCalendar", newEvent)
+  //     .then(response => {
+  //       // 성공 응답 처리
+  //       console.log("이벤트가 성공적으로 저장되었습니다.", response);
 
-    // FullCalendar 인스턴스에 새 이벤트 추가
-    const calendarApi = this.$refs.fullCalendar.getApi();
-    calendarApi.addEvent(newEvent);
+  //       // 서버에서 반환된 이벤트 ID로 새 이벤트 객체 업데이트 (예시)
+  //       if (response.data && response.data.eventId) {
+  //         newEvent.id = response.data.eventId;
+  //       }
 
-    // 모달 닫기 및 선택된 이벤트 초기화
-    this.closeInput();
-  },
+  //       // 현재 이벤트 목록에 새 이벤트 추가
+  //       this.currentEvents.push(newEvent);
+
+  //       // FullCalendar 인스턴스에 새 이벤트 추가
+  //       const calendarApi = this.$refs.fullCalendar.getApi();
+  //       calendarApi.addEvent(newEvent);
+
+  //       // 모달 닫기 및 선택된 이벤트 초기화
+  //       this.closeInput();
+  //     })
+  //     .catch(error => {
+  //       // 오류 응답 처리
+  //       console.error("이벤트 저장 중 오류가 발생했습니다.", error);
+  //     });
+  // },
 
 
 
