@@ -33,7 +33,7 @@
         <!-- 사이드바 -->
       </div>
       <div class="comment-container" v-if="hasData">
-        <h2 class = "TheJamsil400" v-html="comment"></h2>
+        <h2 class="TheJamsil400" v-html="comment"></h2>
       </div>
 
     </div>
@@ -70,7 +70,8 @@ export default {
 
       weightList: [],
 
-      averageWeight :0,
+      averageWeight: 0,
+      showChart: true, // 차트를 보여줄지 여부를 조정하는 데이터 속성
     }
   },
   components: {
@@ -141,6 +142,9 @@ export default {
         .then((res) => {
           this.target = res.data.targetWeight.target_Weight;
           this.weightList = res.data.weightList
+          if (!this.showChart) {
+            return;
+          }
           if (res.data.weightList.length === 0) {
             this.$swal('', '선택한 기간에 대한 데이터가 없습니다.', 'warning');
             this.dataLoaded = true;
@@ -307,19 +311,19 @@ export default {
       return dates;
     },
 
-    getComment(){
+    getComment() {
       let weekly_total = 0.0;
       this.weightList.forEach((item) => {
         weekly_total += item.dietLogKg
       })
 
-      this.averageWeight = weekly_total/this.weightList.length
+      this.averageWeight = weekly_total / this.weightList.length
 
-      if(this.averageWeight > this.target * 1.05){
+      if (this.averageWeight > this.target * 1.05) {
         this.comment = '<img src = "../assets/img/graphic/icon4.png" style ="width: 40px;height:40px;"> 일주일 평균 몸무게가 목표 몸무게 보다 높습니다. <span style ="color:red;font-weight:bold">다이어트</span>를 진행해보세요.'
-      }else if (this.averageWeight <this.target * 0.95){
+      } else if (this.averageWeight < this.target * 0.95) {
         this.comment = '<img src = "../assets/img/graphic/icon1.png" style ="width: 40px;height:40px;"> 일주일 평균 몸무게가 목표 몸무게 보다 낮습니다. <span style ="color : red;font-weight:bold">몸에 무리가 가지 않도록 조심하세요</span>'
-      }else{
+      } else {
         this.comment = '👍목표 몸무게를 잘 유지 하고 있습니다~!!👍'
       }
     }
@@ -342,10 +346,15 @@ export default {
     this.endOfWeek = this.selectWeek.endOfWeek;
 
     // 초기 데이터 가져오기
+    if (this.showChart) {
+      this.fetchData(); // 초기 데이터 로딩'
+    }
 
-    this.fetchData(); // 초기 데이터 로딩'
-
-  }
+  },
+  beforeUnmount() {
+    // 페이지 이동 시에 showChart 값을 false로 설정하여 차트를 숨깁니다.
+    this.showChart = false;
+  },
 };
 </script>
 
@@ -388,6 +397,7 @@ export default {
   border-radius: 10px;
   /* 모서리 둥글게 */
 }
+
 .comment-container {
   width: 100%;
   margin-top: 15px;
@@ -401,6 +411,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .period {
   margin-top: 20px;
   margin-bottom: 20px;
