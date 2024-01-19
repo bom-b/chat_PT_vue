@@ -99,13 +99,13 @@ export default {
     },
     computed: {
         progress() {
-            return (this.selectedImages.length == 5) ? 100 : 75; // 개인정보 동의가 완료되면 50%의 진행 상태를 나타냅니다.
+            return (this.selectedImages.length == 5) ? 100 : 75; 
         },
     },
     methods: {
         proceedToNextPage() {
             if (this.selectedImages.length == 5) {
-                this.$router.push('/joinsuccess'); // 이름 입력 페이지로 이동
+                this.$router.push('/joinsuccess'); 
             } else {
                 alert('이미지를 선택해주세요');
             }
