@@ -229,29 +229,31 @@
 
   <div class="col-12 green" style="height: 100px; margin-bottom: 0"></div>
   <!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ   -->
-  target! {{ live_data }}
-  <!-- {{ wait_data }}
-  {{ users }}
-  {{ live_data }} -->
+  <!-- 로딩 스피너 -->
+  <div v-if="isLoading" class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
   <section class="card-grid" style="width: 650px; margin: auto">
     <div class="card" v-for="(user, index) in live_data" :key="index">
-        
-    <div class="card-header" :style="{ backgroundImage: 'url(' + getImageUrl(user.backgroundImage) + ')' }">
-    
-      <img v-if="user.profileImage" :src="user.profileImage" class="card-profile-img" alt="User" />
-    
-      <img v-else src="../../assets/img/기본프로필이미지_원형.png" class="card-profile-img" alt="Default Profile" />
-    </div>
-  
+      <div
+        class="card-header"
+        :style="{
+          backgroundImage: 'url(' + getImageUrl(user.backgroundImage) + ')',
+        }"
+      ></div>
+      <img
+        :src="getImageUrl(user.nm_PROFILEIMG)"
+        class="card-profile-img"
+        alt="Profile Image"
+      />
 
       <div class="card-body">
         <h5 class="card-title">{{ user.name }}</h5>
-        <p class="card-text">{{ user.goal }}</p>
-        <p class="card-text">{{ user.dailyTotal }}</p>
-        <p class="card-text">칼로리: {{ user.dailyTotalCal }}</p>
-        <p class="card-text">탄수화물: {{ user.dailyTotalTan }}</p>
-        <p class="card-text">단백질: {{ user.dailyTotalDan }}</p>
-        <p class="card-text">지방: {{ user.dailyTotalGi }}</p>
+        <p>현재 먹은 칼로리 : {{ user.dailyTotalCal }}</p>
+        <p>추천 칼로리 : {{ user.recommandCal }}</p>
       </div>
     </div>
   </section>
@@ -317,61 +319,10 @@ export default {
       wait_data: [], // PT 상담 예약 리스트 데이터
       live_data: [], // PT 수강중인 회원 목록 데이터
       users: [],
-      dummyusers: [
-        {
-          id: 1,
-          name: "김철수",
-          description: "열정적인 개발자",
-          profileImage: "기본프로필이미지_원형.png",
-          backgroundImage: "분류_과식card.png",
-        },
-        {
-          id: 2,
-          name: "이영희",
-          description: "창의적인 디자이너",
-          profileImage: "기본프로필이미지_원형.png",
-          backgroundImage: "분류_적정량card.png",
-        },
-        {
-          id: 3,
-          name: "박민수",
-          description: "데이터 분석가",
-          profileImage: "",
-          backgroundImage: "분류_적정량card.png",
-        },
-        {
-          id: 4,
-          name: "최유리",
-          description: "마케팅 전문가",
-          profileImage: "",
-          backgroundImage: "분류_식단모름card.png",
-        },
-        {
-          id: 5,
-          name: "장하나",
-          description: "프로젝트 매니저",
-          profileImage: "",
-          backgroundImage: "분류_과식card.png",
-        },
-        {
-          id: 6,
-          name: "김준호",
-          description: "UI/UX 전문가",
-          profileImage: "",
-          backgroundImage: "분류_적정량card.png",
-        },
-        {
-          id: 7,
-          name: "손세라",
-          description: "프론트엔드 개발자",
-          profileImage: "profile7.jpg",
-          backgroundImage: "분류_적정량card.png",
-        },
-      ],
+      isLoading: true, // 데이터 로딩 상태
     };
   },
   mounted() {
-    this.fetchUsers();
     this.fetchData();
   },
   computed: {
@@ -382,19 +333,9 @@ export default {
   },
 
   methods: {
-    fetchUsers() {
-      this.$axios
-        .get("URL_여기에_데이터_소스_입력")
-        .then((response) => {
-          this.users = response.data;
-        })
-        .catch((error) => {
-          console.error("There was an error!USER!", error);
-        });
-    },
     fetchData() {
       this.$axios
-        .get("/pthandleAll2") // API의 URL을 여기에 입력합니다.
+        .get("/pthandleAll2")
         .then((response) => {
           console.log(response.data);
           this.live_data = response.data
@@ -403,13 +344,27 @@ export default {
           this.wait_data = response.data
             .filter((item) => item.status === "wait")
             .map(this.transformData);
+            this.isLoading = false; // 로딩 완료
         })
-
         .catch((error) => {
           console.error("There was an error fetching the data:", error);
+          this.isLoading = false; // 에러 발생 시 로딩 완료
+
         });
     },
     transformData(item) {
+      // 추천 ~ 먹은 칼로리에 따른 이미지
+      let backgroundImage;
+      if (item.dailyTotal === null) {
+        backgroundImage = "분류_식단모름card.png";
+      } else if (
+        Number(item.dailyTotal.dailyTotalCal).toFixed(2) < item.recommandCal
+      ) {
+        backgroundImage = "분류_적정량card.png";
+      } else {
+        backgroundImage = "분류_과식card.png";
+      }
+
       return {
         name: item.name,
         gender: item.gender,
@@ -423,21 +378,27 @@ export default {
         userid: item.userid,
         dailyTotalCal: item.dailyTotal
           ? Number(item.dailyTotal.dailyTotalCal).toFixed(2)
-          : null,
+          : "없음",
         dailyTotalTan: item.dailyTotal
           ? Number(item.dailyTotal.dailyTotalTan).toFixed(2)
           : null,
         dailyTotalDan: item.dailyTotal
           ? Number(item.dailyTotal.dailyTotalDan).toFixed(2)
           : null,
-        dailyTotalGi: item.dailyTotal ? Number(item.dailyTotal.dailyTotalGi).toFixed(2)
+        dailyTotalGi: item.dailyTotal
+          ? Number(item.dailyTotal.dailyTotalGi).toFixed(2)
           : null,
 
-        recommandTan:item.recommandTan.toFixed(2),
-        recommandDan:item.recommandDan.toFixed(2),
-        recommandGi:item.recommandGi.toFixed(2),
-        recommandCal:item.recommandCal.toFixed(2),
-        profileImage:item.profileImage,
+        recommandTan:
+          item.recommandTan != null ? item.recommandTan.toFixed(2) : "",
+        recommandDan:
+          item.recommandDan != null ? item.recommandDan.toFixed(2) : "",
+        recommandGi:
+          item.recommandGi != null ? item.recommandGi.toFixed(2) : "",
+        recommandCal:
+          item.recommandCal != null ? item.recommandCal.toFixed(2) : "",
+        nm_PROFILEIMG: item.nm_PROFILEIMG,
+        backgroundImage,
         // 다른 필요한 필드 변환        // 필요한 추가적인 필드 변환
       };
     },
