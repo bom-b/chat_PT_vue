@@ -17,30 +17,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
-    # 1. Node.js 세팅
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20.10.0'
-        cache: 'npm'
-      
-    # 2. 의존성 설치
-    - name: Install dependencies
-      run: npm install
 
-    # 3. 프로덕션 빌드 생성
+    # 1. 프로덕션 빌드 생성
     - name: Build Docker images
       run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/chatpt-vue .
 
-    # 4. DockerHub 로그인
+    # 2. DockerHub 로그인
     - name: docker login
       uses: docker/login-action@v2
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-    # 5. Docker Hub 이미지 푸시
+    # 3. Docker Hub 이미지 푸시
     - name: docker Hub push
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/chatpt-vue
 
