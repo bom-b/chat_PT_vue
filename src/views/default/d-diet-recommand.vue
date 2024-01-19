@@ -146,7 +146,7 @@
                   <tbody v-else-if="!tablestate">
                     <tr v-for="item in paginatedData2" :key="item.idx">
                       <td>{{ maskName(item.nickname) }}</td>
-                      <td><img :src="`${this.$springBaseURL}/images/foodMainImages/${item.FOODIMG}`" alt="프로필 이미지" class="profile-image"
+                      <td><img :src="`${this.$springBaseURL}/images/foodMainImages/${item.foodimg}`" alt="프로필 이미지" class="profile-image"
                           style="width: 150px; height: 115px;"></td>
                       <td>{{ item.foodname }}</td>
                       <td>{{ item.foodcal.toFixed(2) }} kcal</td>
@@ -307,11 +307,13 @@ export default {
           }
         ]
       },
-
+      showChart: true, // 차트를 보여줄지 여부를 조정하는 데이터 속성
     };
   },
   mounted() {
+    if (this.showChart) {
     this.fetchDataAndCreateCharts();
+  }
   },
   methods: {
     async fetchDataAndCreateCharts() {
@@ -373,7 +375,9 @@ export default {
         this.tablecoment = '회원님과 비슷한 연령대의 다른 회원들이 등록한 음식을 보여드려요'
         this.status = 0
         this.buttonpurpose = '식단 목적이 비슷한 사람 보기'
-
+        if (!this.showChart) {
+        return;
+      }
         // 영양소 차트 데이터 업데이트
         this.updateNutritionChartData();
         // 칼로리 차트 데이터 업데이트
@@ -663,6 +667,10 @@ export default {
       return this.tableinfo.slice(start, end);
     },
 
+  },
+  beforeUnmount() {
+    // 페이지 이동 시에 showChart 값을 false로 설정하여 차트를 숨깁니다.
+    this.showChart = false;
   },
 };
 </script>

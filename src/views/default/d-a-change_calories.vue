@@ -35,7 +35,7 @@
       <!-- 칼로리 변화표 컨텐츠 -->
 
       <div class="comment-container" v-if="hasData">
-        <h2 class = "TheJamsil400" v-html="comment"></h2>
+        <h2 class="TheJamsil400" v-html="comment"></h2>
       </div>
 
 
@@ -126,9 +126,11 @@ export default {
       isClickable: true,
       last_differ: [],
       dietList: [],
-      comment : '',
+      comment: '',
       charts: [],
       averageCal: 0,
+
+      showChart: true, // 차트를 보여줄지 여부를 조정하는 데이터 속성
     }
   },
   components: {
@@ -197,8 +199,12 @@ export default {
         }
       })
         .then((res) => {
+          if (!this.showChart) {
+            return;
+          }
           this.recommandCal = res.data.recommandCal
           this.dietList = res.data.dietList
+          // 차트를 생성할 때 showChart 값이 false이면 생성하지 않도록 합니다.
 
           if (res.data.dietList.length === 0) {
             // 데이터 길이가 0이면 알림을 띄우고 함수를 종료합니다.
@@ -446,14 +452,14 @@ export default {
       })
       console.log(weekly_total)
 
-      this.averageCal = weekly_total/this.dietList.length
+      this.averageCal = weekly_total / this.dietList.length
       console.log(this.averageCal)
 
-      if(this.averageCal >= this.recommandCal * 1.1){
+      if (this.averageCal >= this.recommandCal * 1.1) {
         this.comment = '<img src = "../assets/img/graphic/경고.png" style ="width: 40px;height:40px;"> 일주일 평균 칼로리 섭취량이 <span style ="color : red;font-weight:bold">높습니다.</span> 식사량을 <span style="color:blue; font-weight:bold">줄이세요</span>'
-      }else if (this.averageCal <= this.recommandCal * 0.9){
+      } else if (this.averageCal <= this.recommandCal * 0.9) {
         this.comment = '<img src = "../assets/img/graphic/경고.png" style ="width: 40px;height:40px;"> 일주일 평균 칼로리 섭취량이 <span style="color:blue;font-weight:bold">적습니다.</span> 식사량을 <span style ="color : red;font-weight:bold">늘리세요</span>'
-      }else{
+      } else {
         this.comment = '👍일주일 평균 식사량이 적합합니다. 이 상태를 유지하세요👍'
       }
 
@@ -476,8 +482,14 @@ export default {
     this.selectWeek = currentWeek || this.multiWeeks[0];
     this.startOfWeek = this.selectWeek.startOfWeek;
     this.endOfWeek = this.selectWeek.endOfWeek;
-    this.fetchData();
-  }
+    if (this.showChart) {
+      this.fetchData();
+    }
+  },
+  beforeUnmount() {
+    // 페이지 이동 시에 showChart 값을 false로 설정하여 차트를 숨깁니다.
+    this.showChart = false;
+  },
 };
 </script>
 
@@ -491,6 +503,7 @@ export default {
   gap: 20px;
   padding: 20px;
 }
+
 .comment-container {
   width: 100%;
   margin-top: 15px;
@@ -504,6 +517,7 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .badge_col {
   background-color: #008136;
 }
