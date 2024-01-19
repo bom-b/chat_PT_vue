@@ -1,3 +1,54 @@
+<script>
+export default {
+    data() {
+        return {
+            rating: [],
+            foodnum: '',
+            foodList: [],
+        };
+    },
+    computed: {
+        // progress() {
+        //     return () ? 100 : 75; // 개인정보 동의가 완료되면 50%의 진행 상태를 나타냅니다.
+        // },
+    },
+    created() {
+        this.getfoodList(); // getfoodList 메소드를 호출하여 음식 리스트를 가져옵니다.
+    },
+    methods: {
+        proceedToNextPage() {
+            try {
+                const isValid = 1;
+                const data = {
+                    foodnum: this.foodnum,
+                    rating: this.rating
+                };
+                if (isValid) {
+                    this.$emit("nextPage", data);
+                } else {
+                    this.$swal("유효하지 않은 경로입니다.");
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        },
+        getImagePath(fileName) {
+            const basePath = process.env.VUE_APP_API_URL + '/images/foodMainImages/';
+            const encodedFileName = encodeURIComponent(fileName);
+            return `${basePath}${encodedFileName}`;
+        },
+        async getfoodList() {
+            try {
+                const response = await this.$axiosWithoutValidation.get("/signUp/getfoodList");
+                this.foodList = response.data;
+                console.log("음식 리스트 가져오기", this.foodList);
+            } catch (e) {
+                console.log("음식 리스트 에러", e);
+            }
+        },
+    },
+};
+</script>
 <template>
     <main>
         <div class="progress fixed-top" style="margin-top: 81px;">
@@ -5,60 +56,16 @@
                 aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <div class="container">
+            <br>
             <h2>선호하는 음식 선택 (5개 선택 필수)</h2>
             <p>음식 추천을 할때 도와드려요</p>
             <div class="input-container">
-                <table>
-                    <tr>
-                        <td>
-                            <img src="../../../assets/img/don.jpeg" :class="{ selected: isSelected('don') }"
-                                @click="toggleImageSelection('don')">
-                        </td>
-                        <td>
-                            <img src="../../../assets/img/chicken.jpeg" :class="{ selected: isSelected('chicken') }"
-                                @click="toggleImageSelection('chicken')">
-                        </td>
-                        <td>
-                            <img src="../../../assets/img/fork.jpeg" :class="{ selected: isSelected('fork') }"
-                                @click="toggleImageSelection('fork')">
-                        </td>
-                        <td>
-                            <img src="../../../assets/img/pizza.jpeg" :class="{ selected: isSelected('pizza') }"
-                                @click="toggleImageSelection('pizza')">
-                        </td>
-                        <td>
-                            <img src="../../../assets/img/tang.jpeg" :class="{ selected: isSelected('tang') }"
-                                @click="toggleImageSelection('tang')">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <img src="../../../assets/img/don.jpeg" :class="{ selected: isSelected('don1') }"
-                                @click="toggleImageSelection('don1')">
-                        </td>
-                        <td>
-                            <img src="../../../assets/img/chicken.jpeg" :class="{ selected: isSelected('chicken1') }"
-                                @click="toggleImageSelection('chicken1')">
-                        </td>
-                        <td>
-                            <img src="../../../assets/img/fork.jpeg" :class="{ selected: isSelected('fork1') }"
-                                @click="toggleImageSelection('fork1')">
-                        </td>
-                        <td>
-                            <img src="../../../assets/img/pizza.jpeg" :class="{ selected: isSelected('pizza1') }"
-                                @click="toggleImageSelection('pizza1')">
-                        </td>
-                        <td>
-                            <img src="../../../assets/img/tang.jpeg" :class="{ selected: isSelected('tang1') }"
-                                @click="toggleImageSelection('tang1')">
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="button-container">
-                <button type="button" class="btn btn-primary" @click="proceedToNextPage"
-                    :disabled="selectedImages.length !== 5">다음</button>
+                <ul>
+                    <li v-for="food in foodList" :key="food.foodnum">
+                        <img :src="getImagePath(food.FOODIMG)" alt="음식 이미지">
+                        <span>{{ food.FOODNAME }}</span>
+                    </li>
+                </ul>
             </div>
         </div>
     </main>
@@ -66,7 +73,7 @@
 
 <style scoped>
 .container {
-    margin-top: 100px;
+    margin-top: 95px;
 }
 
 .button-container {
@@ -89,43 +96,3 @@
 
 }
 </style>
-
-<script>
-export default {
-    data() {
-        return {
-            selectedImages: [],
-        };
-    },
-    computed: {
-        progress() {
-            return (this.selectedImages.length == 5) ? 100 : 75; // 개인정보 동의가 완료되면 50%의 진행 상태를 나타냅니다.
-        },
-    },
-    methods: {
-        proceedToNextPage() {
-            if (this.selectedImages.length == 5) {
-                this.$router.push('/joinsuccess'); // 이름 입력 페이지로 이동
-            } else {
-                alert('이미지를 선택해주세요');
-            }
-        },
-        toggleImageSelection(image) {
-            if (this.selectedImages.includes(image)) {
-                this.selectedImages = this.selectedImages.filter(img => img !== image);
-            } else {
-                if (this.selectedImages.length < 5) {
-                    this.selectedImages.push(image);
-                } else {
-                    alert('최대 5개의 이미지를 선택할 수 있습니다!');
-                }
-            }
-        },
-        isSelected(image) {
-            return this.selectedImages.includes(image);
-        },
-
-    },
-
-};
-</script>

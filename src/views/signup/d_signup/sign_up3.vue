@@ -2,17 +2,20 @@
 export default {
   data() {
     return {
-      height: '',
-      weight: '',
-      BMI: '',
-      sex: '',
-      purpose: 999,
-      activity: 999,
+      user: {
+        age: '',
+        height: '',
+        weight: '',
+        bmi: '',
+        sex: '',
+        purpose: null,
+        activity: null,
+      }
     };
   },
   computed: {
     progress() {
-      if (this.height && this.weight && this.sex && this.setActivity && this.setPurpose) {
+      if (this.user.height && this.user.weight && this.user.sex && this.user.purpose && this.user.activity) {
         return 75;
       } else {
         return 50;
@@ -20,22 +23,22 @@ export default {
     },
     images() {
       return [
-        { path: require('../../../assets/img/ptgogo.png'), alt: 'Image 1', active: this.BMI >= 0 && this.BMI < 18.5 },
-        { path: require('../../../assets/img/ptgogo.png'), alt: 'Image 2', active: this.BMI >= 18.5 && this.BMI < 23 },
-        { path: require('../../../assets/img/qrchoon.png'), alt: 'Image 3', active: this.BMI >= 23 && this.BMI < 25 },
-        { path: require('../../../assets/img/qrchoon.png'), alt: 'Image 4', active: this.BMI >= 25 },
+        { path: require('../../../assets/img/ptgogo.png'), alt: 'Image 1', active: this.user.bmi >= 0 && this.user.bmi < 18.5 },
+        { path: require('../../../assets/img/ptgogo.png'), alt: 'Image 2', active: this.user.bmi >= 18.5 && this.user.bmi < 23 },
+        { path: require('../../../assets/img/qrchoon.png'), alt: 'Image 3', active: this.user.bmi >= 23 && this.user.bmi < 25 },
+        { path: require('../../../assets/img/qrchoon.png'), alt: 'Image 4', active: this.user.bmi >= 25 },
       ];
     },
     getImagePath() {
-      if (this.BMI >= 0 && this.BMI < 18.5) {
+      if (this.user.bmi >= 0 && this.user.bmi < 18.5) {
         return require('../../../assets/img/ptgogo.png');
-      } else if (this.BMI >= 18.5 && this.BMI < 23) {
+      } else if (this.user.bmi >= 18.5 && this.user.bmi < 23) {
         // return require('@/assets/정상.png');
         return require('../../../assets/img/ptgogo.png');
-      } else if (this.BMI >= 23 && this.BMI < 25) {
+      } else if (this.user.bmi >= 23 && this.user.bmi < 25) {
         // return require('@/assets/과체중.png');
         return require('../../../assets/img/qrchoon.png');
-      } else if (this.BMI >= 25) {
+      } else if (this.user.bmi >= 25) {
         // return require('@/assets/비만.png');
         return require('../../../assets/img/qrchoon.png');
       } else {
@@ -44,30 +47,44 @@ export default {
     },
   },
   methods: {
-    proceedToNextPage() {
-      if (this.height && this.weight && this.sex) {
-        this.$router.push('/sign_up4');
-      } else {
-        alert('키, 몸무게, 성별을 입력해주세요!');
-      }
-    },
-    calculateBMI() {
-      if (this.height && this.weight) {
-        this.BMI = (this.weight / ((this.height / 100) ** 2)).toFixed(2);
-        return this.BMI;
+    calculatebmi() {
+      if (this.user.height && this.user.weight) {
+        this.user.bmi = (this.user.weight / ((this.user.height / 100) ** 2)).toFixed(2);
+        return this.user.bmi;
       } else {
         return '';
       }
     },
     setSex(sex) {
-      this.sex = sex;
+      this.user.sex = sex;
     },
     setPurpose(purpose) {
-      this.purpose = purpose;
+      this.user.purpose = purpose;
     },
     setActivity(activity) {
-      this.activity = activity;
-    }
+      this.user.activity = activity;
+    },
+    proceedToNextPage() {
+      try {
+        const isValid = 1;
+        const data = {
+          age: this.user.age,
+          height: this.user.height,
+          weight: this.user.weight,
+          bmi: this.user.bmi,
+          sex: this.user.sex,
+          purpose: this.user.purpose,
+          activity: this.user.activity,
+        };
+        if (isValid) {
+          this.$emit("nextPage", data);
+        } else {
+          this.$swal("유효하지 않은 경로입니다.");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
   },
 };
 </script>
@@ -83,31 +100,32 @@ export default {
         <div class="input-container">
           <ul>
             <li>
-              <label for="sex">성별</label>
+              <label for="user.sex">성별</label>
               <div class="btn-group" role="group">
-                <button type="button" class="btn" :class="{ 'btn-male': sex === 'male' }" @click="setSex('male')">
+                <button type="button" class="btn" :class="{ 'btn-male': user.sex === 'male' }" @click="setSex('male')">
                   <i class="material-icons">male</i>
                 </button>
-                <button type="button" class="btn" :class="{ 'btn-female': sex === 'female' }" @click="setSex('female')">
+                <button type="button" class="btn" :class="{ 'btn-female': user.sex === 'female' }"
+                  @click="setSex('female')">
                   <i class="material-icons">female</i>
                 </button>
               </div>
             </li>
             <li>
-              <label for="age">나이(만)</label>
-              <input class="form-control" type="number" id="age" v-model="age">
+              <label for="user.age">나이(만)</label>
+              <input class="form-control" type="number" id="user.age" v-model="user.age">
             </li>
             <li>
-              <label for="height">키(cm)</label>
-              <input class="form-control" type="number" id="height" v-model="height">
+              <label for="user.height">키(cm)</label>
+              <input class="form-control" type="number" id="user.height" v-model="user.height">
             </li>
             <li>
-              <label for="weight">몸무게(kg)</label>
-              <input class="form-control" type="number" id="weight" v-model="weight">
+              <label for="user.weight">몸무게(kg)</label>
+              <input class="form-control" type="number" id="user.weight" v-model="user.weight">
             </li>
             <li>
-              <label for="bmi"> bmi </label>
-              <div>{{ calculateBMI() }}</div>
+              <label for="user.bmi"> BMI </label>
+              <div>{{ calculatebmi() }}</div>
             </li>
             <div class="image-container">
               <div v-for="image in images" :key="image.path" :class="{ 'active-image': image.active }">
@@ -117,25 +135,27 @@ export default {
             <li>
               <label for="purpose">목적</label>
               <div class="purpose_list">
-                <button class="btn btn-success" :class="{ 'selected-purpose': setPurpose === 0 }" id="diet"
-                  @click="purpose(0)"> 다이어트 </button>
-                <button class="btn btn-success" :class="{ 'selected-purpose': setPurpose === 1 }" id="keep"
-                  @click="purpose(1)"> 체중유지 </button>
-                <button class="btn btn-success" :class="{ 'selected-purpose': setPurpose === 2 }" id="bulk-up"
-                  @click="purpose(2)"> 벌크업 </button>
-                <button class="btn btn-success" :class="{ 'selected-purpose': setPurpose === 3 }" id="improve"
-                  @click="purpose(3)"> 식습관 개선 </button>
+                <button class="btn btn-success" :class="{ 'selected-purpose': user.purpose === 0 }" id="diet"
+                  @click="setPurpose(0)"> 다이어트 </button>
+                <button class="btn btn-success" :class="{ 'selected-purpose': user.purpose === 1 }" id="keep"
+                  @click="setPurpose(1)"> 체중유지 </button>
+                <button class="btn btn-success" :class="{ 'selected-purpose': user.purpose === 2 }" id="bulk-up"
+                  @click="setPurpose(2)"> 벌크업 </button>
+                <button class="btn btn-success" :class="{ 'selected-purpose': user.purpose === 3 }" id="improve"
+                  @click="setPurpose(3)"> 식습관 개선 </button>
               </div>
             </li>
             <li>
               <label for="activity">활동량</label>
               <div class="purpose_list">
-                <button class="btn btn-success" :class="{ 'selected-activity': setActivity === 0 }" id="no"
-                  @click="activity(0)"> 안 함</button>
-                <button class="btn btn-success" :class="{ 'selected-activity': setActivity === 1 }" id="no1"
-                  @click="activity(1)"> 가끔 </button>
-                <button class="btn btn-success" :class="{ 'selected-activity': setActivity === 2 }" id="no2"
-                  @click="activity(2)"> 열심 </button>
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 0 }" id=""
+                  @click="setActivity(0)"> 안 함</button>
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 1 }" id="no1"
+                  @click="setActivity(1)"> 저강도 </button>
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 2 }" id="no2"
+                  @click="setActivity(2)"> 중강도 </button>
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 2 }" id="no2"
+                  @click="setActivity(3)"> 고강도 </button>
               </div>
             </li>
           </ul>
@@ -143,7 +163,7 @@ export default {
       </div>
       <div class="button-container">
         <button type="button" class="btn btn-success" @click="proceedToNextPage"
-          :disabled="!height || !weight || !sex || !purpose">
+          :disabled="!user.age || !user.height || !user.weight || !user.sex || user.purpose === null || user.activity === null || !user.bmi">
           다음
         </button>
       </div>
@@ -168,17 +188,13 @@ export default {
   border: 1px solid #f0f2f1;
   font-size: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  /* 그림자 추가 */
   transition: background-color 0.2s ease;
 }
 
 li {
   list-style-type: none;
-  /* 기본 마커 제거 */
   position: relative;
-  /* 하위 요소에 절대 위치 지정을 위함 */
   padding-left: 30px;
-  /* 이미지와 텍스트 간 거리 조정 */
 }
 
 li::before {
