@@ -23,7 +23,7 @@
               <div class="header section1400">
                 <span class="title">마지막으로 등록한 음식</span>
                 <div class="profile-image-wrapper">
-                  <img src="../../assets/img/don.jpeg" alt="프로필 이미지" class="lastfood-image">
+                  <img :src="`${this.$springBaseURL}/images/foodMainImages/${lastfoodimg}`" alt="프로필 이미지" class="lastfood-image">
                 </div>
                 <div class="subtitle"><span style="font-size: 1.7rem;">{{ lastfood }}</span></div>
               </div>
@@ -35,7 +35,10 @@
               <div class="product-item" v-for="item in recommand_fooddata.slice(0, 5)" :key="item.FOODNUM"
                 @click="divclick(item.FOODNUM, item.FOODCAL, item.FOOD_TAN, item.FOOD_DAN, item.FOOD_GI)">
                 <!-- 이미지를 넣을 자리 -->
-                <img src="../../assets/img/don.jpeg" alt="프로필 이미지" class="profile-image">
+                <div class="food-image-wrapper">
+                  <img :src="`${this.$springBaseURL}/images/foodMainImages/${item.FOODIMG}`" alt="프로필 이미지"
+                    class="profile-image food-image">
+                </div>
                 <!-- 음식 설명을 넣을 자리 -->
                 <div class="product-details">
                   <h3>{{ item.FOODNAME }}</h3>
@@ -54,7 +57,10 @@
               <div class="product-item" v-for="item in recommand_fooddata.slice(5, 10)" :key="item.FOODNUM"
                 @click="divclick(item.FOODNUM, item.FOODCAL, item.FOOD_TAN, item.FOOD_DAN, item.FOOD_GI)">
                 <!-- 이미지를 넣을 자리 -->
-                <img src="../../assets/img/don.jpeg" alt="프로필 이미지" class="profile-image">
+                <div class="food-image-wrapper">
+                  <img :src="`${this.$springBaseURL}/images/foodMainImages/${item.FOODIMG}`" alt="프로필 이미지"
+                    class="profile-image food-image">
+                </div>
                 <!-- 음식 설명을 넣을 자리 -->
                 <div class="product-details">
                   <h3>{{ item.FOODNAME }}</h3>
@@ -126,7 +132,7 @@
                   <tbody v-if="tablestate">
                     <tr v-for="item in paginatedData" :key="item.idx">
                       <td>{{ maskName(item[0]) }}</td>
-                      <td><img src="../../assets/img/don.jpeg" alt="프로필 이미지" class="profile-image"
+                      <td><img :src="`${this.$springBaseURL}/images/foodMainImages/${item[3]}`" alt="프로필 이미지" class="profile-image"
                           style="width: 150px; height: 115px;"></td>
                       <td>{{ item[7] }}</td>
                       <td>{{ item[2].toFixed(2) }} kcal</td>
@@ -140,7 +146,7 @@
                   <tbody v-else-if="!tablestate">
                     <tr v-for="item in paginatedData2" :key="item.idx">
                       <td>{{ maskName(item.nickname) }}</td>
-                      <td><img src="../../assets/img/don.jpeg" alt="프로필 이미지" class="profile-image"
+                      <td><img :src="`${this.$springBaseURL}/images/foodMainImages/${item.FOODIMG}`" alt="프로필 이미지" class="profile-image"
                           style="width: 150px; height: 115px;"></td>
                       <td>{{ item.foodname }}</td>
                       <td>{{ item.foodcal.toFixed(2) }} kcal</td>
@@ -194,7 +200,6 @@
                   v-if="selectedCategory">검색</button>
 
                 <button @click="closePanel" class="btn btn-secondary mt-3">닫기</button>
-                <!-- 여기에 사이드 패널 내용을 추가하세요 -->
               </div>
 
             </div>
@@ -227,6 +232,7 @@ export default {
       currentgi: 0,
 
       lastfood: '',
+      lastfoodimg : '',
       recommand_fooddata: [],
 
       FOODCAL: 0,
@@ -313,7 +319,7 @@ export default {
         const res = await this.$axios.get('/food_recommand');
 
         const { recommand_cal, now_cal, recomand_nutrition, now_nutrition, lastfood,
-          recomandfood, userage, age_food_info, purpose_food_info, userpurpose } = res.data;
+          recomandfood, userage, age_food_info, purpose_food_info, userpurpose, lastfoodimage} = res.data;
         // 추천 데이터 등록         
         this.recommandCal = recommand_cal.toFixed(2);
         this.recommand_tan = recomand_nutrition[0].toFixed(2);
@@ -334,7 +340,7 @@ export default {
 
         // 마지막에 먹은 음식
         this.lastfood = lastfood
-
+        this.lastfoodimg =lastfoodimage
         // 유저 나이 정보
         this.userage = userage
 
@@ -356,11 +362,13 @@ export default {
 
         // 연령대 별 최근 올린 음식 25개
         this.age_food_info = age_food_info
+        console.log(this.age_food_info)
         // 목적 별 최근 올린 음식 25개
         this.purpose_food_info = purpose_food_info
 
         // 테이블 전환 초기 설정(연령대 별이 디폴트 값)
         this.tableinfo = age_food_info
+        
         this.tablename = this.ageDecade + "대가 최근에 올린 음식"
         this.tablecoment = '회원님과 비슷한 연령대의 다른 회원들이 등록한 음식을 보여드려요'
         this.status = 0
@@ -370,10 +378,9 @@ export default {
         this.updateNutritionChartData();
         // 칼로리 차트 데이터 업데이트
         this.updateCalChartData();
-
-        console.log(purpose_food_info)
+        
+        
         this.createCharts();
-        console.log(this.recommand_fooddata)
         this.isLoading = false;
       }
       catch (error) {
@@ -687,6 +694,30 @@ export default {
   position: relative;
 }
 
+.food-image-wrapper {
+  overflow: hidden;
+  width: 250px;
+  /* 이미지의 너비를 고정합니다 */
+  height: 160px;
+  /* 이미지의 높이를 고정합니다 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  /* 자동 마진을 통해 중앙 정렬합니다 */
+}
+
+.food-image {
+  width: auto;
+  /* 이미지 원본 비율을 유지합니다 */
+  height: 100%;
+  /* 컨테이너 높이에 맞춰 늘어납니다 */
+  object-fit: cover;
+  /* 이미지가 컨테이너를 넘치지 않게 조정합니다 */
+  object-position: center;
+  /* 이미지 중앙이 컨테이너 중앙에 오도록 합니다 */
+}
+
 .header {
   display: flex;
   align-items: center;
@@ -765,7 +796,7 @@ table.table td {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  padding: 16px;
+
 }
 
 /* 개별 상품 아이템 스타일 */
@@ -888,6 +919,5 @@ table.table td {
   }
 
 
-}
-</style>
+}</style>
 
