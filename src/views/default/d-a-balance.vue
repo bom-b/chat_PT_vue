@@ -26,7 +26,7 @@
 
           <div class="card">
             <span class="badge badge-gold">1등</span>
-            <img :src="`${process.env.VUE_APP_API_URL}/images/%EB%88%95%EC%B6%98%EC%8B%9D%EC%9D%B4.png`" class="card-img-top"
+            <img :src="`${this.$springBaseURL}/images/%EB%88%95%EC%B6%98%EC%8B%9D%EC%9D%B4.png`" class="card-img-top"
               alt="음식1">
             <div class="card-body" style="text-align: center;">
               <h5 class="card-title foodname">{{ foodFirst.foodname }}</h5>

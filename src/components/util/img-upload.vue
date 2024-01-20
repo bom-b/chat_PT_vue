@@ -2,26 +2,27 @@
   <div class="drag-drop-container">
     <div
       class="drag-drop"
-      @dragover.prevent
+      @dragover.prevent="highlight"
       @dragenter="highlight"
       @dragleave="unhighlight"
       @drop.prevent="handleDrop"
       :class="{ 'drag-over': isDragOver }"
     >
-      <p>이미지를 드래그 앤 드랍하세요 최대 {{maxImages}} 개</p>
-      <input type="file" ref="fileInput" multiple style="display: none" @change="handleFileInput" />
-      <button class="" @click="triggerFileInput">파일 선택</button>
-    </div>
-    <div class="card" style="width:400px">
-      <div v-for="(image, index) in localUploadedImages" :key="index" class="preview">
-        <img class="card-img-top" :src="image" alt="Uploaded Preview" />
-        <div class="card-body">
-          <div class="button-container">
-            <button class="btn btn-danger" @click="removeImage(index)">삭제</button>
-          </div>
+      <div class="upload-instructions">
+        <p>이미지를 드래그 앤 드랍하세요 최대 {{ maxImages }} 개</p>
+        <input type="file" ref="fileInput" multiple style="display: none" @change="handleFileInput" />
+        <button @click="triggerFileInput">파일 선택</button>
+      </div>
+
+      <div class="card-container">
+        <div v-for="(image, index) in localUploadedImages" :key="index" class="card" @click="toggleSelection(index)">
+          <img class="card-img-top" :src="image" alt="Uploaded Preview" />
+          <button v-if="selectedImageIndex === index" class="delete-btn" @click.stop="removeImage(index)">
+            <img src="../../assets/img/휴지통.png" style="width: 30px;">
+          </button>
+        </div>
       </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -43,14 +44,19 @@ export default {
       isDragOver: false,
       localUploadedImages: [...this.uploadedImages],
       uploadedImageHashes: [], // 해시를 저장할 배열 초기화
-      showInputField: false,
-      selectedServing: 'serving1', // 선택된 서빙 옵션
-      userInput: '', // 사용자의 직접 입력
-      unit: '인분', // 현재 단위
-      inputMethod: '', // 입력 방식 ('select', '인분', 'g')
+      selectedImageIndex: null, // 선택된 이미지의 인덱스
     };
   },
   methods: {
+    toggleSelection(index) {
+      if (this.selectedImageIndex === index) {
+        // 이미 선택된 경우, 선택 해제
+        this.selectedImageIndex = null;
+      } else {
+        // 선택되지 않은 경우, 선택
+        this.selectedImageIndex = index;
+      }
+    },
     highlight() {
       this.isDragOver = true;
     },
@@ -65,7 +71,9 @@ export default {
       const files = Array.from(event.dataTransfer.files);
       const remainingSlots = this.maxImages - this.localUploadedImages.length;
       const filesToUpload = files.slice(0, remainingSlots);
-
+      if(remainingSlots < files.length) {
+        this.$swal('', '5장까지만 등록할 수 있습니다.', 'warning');
+      }
       const processedImages = []; // 처리된 이미지들을 저장할 배열
 
       Promise.all(filesToUpload.map((file) => {
@@ -100,7 +108,9 @@ export default {
         console.log("remainingSlots : " + remainingSlots)
         // 남은 슬롯 수에 따라 업로드할 파일을 제한합니다.
         const filesToUpload = files.slice(0, remainingSlots);
-
+        if(remainingSlots < files.length) {
+          this.$swal('', '5장까지만 등록할 수 있습니다.', 'warning');
+        }
         // 처리된 이미지를 저장할 배열을 초기화합니다.
         const processedImages = [];
 
@@ -167,6 +177,7 @@ export default {
       // 지정된 인덱스에서 이미지를 제거합니다.
       this.localUploadedImages.splice(index, 1);
       this.$emit('image-removed', { index, images: this.localUploadedImages });
+      this.selectedImageIndex = null; // 선택 해제
     },
   },
 };
@@ -191,28 +202,61 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 130vh; /* 컨테이너가 전체 너비를 차지하도록 설정 */
+  height: 60vh; /* 뷰포트 높이만큼의 높이를 가지도록 설정 */
+  padding: 10px;
 }
 
 .drag-drop {
   border: 2px dashed #085c57;
-  padding: 20px;
+  padding: 5px;
   text-align: center;
   cursor: pointer;
-  margin-bottom: 20px;
+  width: 100%; /* 전체 너비를 차지하도록 설정 */
+  height: 100%; /* 전체 높이를 차지하도록 설정 */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* 상단 정렬 */
+  align-items: center; /* 가로 방향에서 중앙 정렬 */
+}
+.upload-instructions {
+  text-align: center;
+  padding: 20px;
+}
+.card-container {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px; /* 카드 컨테이너와 드래그 영역 사이의 간격 추가 */
 }
 
 .drag-over {
   border-color: #2196F3;
 }
 
+
 .card {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
+  transition: border 0.3s ease;
   width: 100%;
-  max-width: 400px;
+  max-width: 220px; /* 카드의 최대 너비를 설정 */
   margin-bottom: 20px;
+  position: relative; /* 삭제 버튼을 위한 상대 위치 설정 */
 }
-
+.card.selected {
+  border: 2px solid #085c57; /* 선택된 이미지에 대한 테두리 스타일 */
+}
+.delete-btn {
+  border: gold;
+  position: absolute; /* 삭제 버튼을 카드 상단에 위치시킴 */
+  bottom: -20%; /* 상단에서 10px 떨어진 위치 */
+  left: 80%; /* 오른쪽에서 10px 떨어진 위치 */
+  background: white; /* 배경색 제거 */
+  border: none; /* 테두리 제거 */
+  padding: 0; /* 패딩 제거 */
+  cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+}
 .card:hover {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
 }
@@ -260,9 +304,6 @@ button:hover {
   width: 100%; /* 전체 너비 사용 */
 }
 
-.btn-danger {
-  background-color: #dc3545; /* Danger button color */
-}
 
 .form-control {
   display: inline-block;
