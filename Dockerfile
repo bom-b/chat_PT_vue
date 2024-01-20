@@ -15,7 +15,7 @@
 #
 #CMD [ "npm", "run", "serve"]
 
-##### nginx 사용
+##### nginx 사용으로 변경 #####
 # 빌드 스테이지
 FROM node:20.10.0 as builder
 
