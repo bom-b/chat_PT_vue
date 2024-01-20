@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const API_URL = "http://localhost/admin";
+const API_URL = process.env.VUE_APP_ADMIN_API_URL;
 
 const axiosInstance = axios.create({
     baseURL: API_URL,
