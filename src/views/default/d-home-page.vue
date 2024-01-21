@@ -23,6 +23,10 @@
   }
 }
 
+#upload-section {
+  height: 750px;
+}
+
 .chart-section {
   display: flex;
   justify-content: space-around; // 간격을 넓힘
@@ -45,6 +49,7 @@
   height: 0;
   padding-top: 56.25%; // 16:9 비율 유지
   margin-bottom: 30px;
+
   canvas {
     position: absolute;
     top: 0;
@@ -54,12 +59,6 @@
   }
 }
 
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-  .chart {
-    max-width: 100%; // 모바일 화면에서 최대 너비 조정
-  }
-}
 
 .goal-box {
   width: 200px;
@@ -111,10 +110,73 @@
 }
 
 // 모바일 버튼 처음엔 숨기기
-#mobile-btn {
+#mobile-btn-box {
   display: none;
   text-align: center;
   margin-top: 50px;
+}
+
+.mobile-btn {
+  background-color: #00997b;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+
+img {
+  transition: 0.2s ease-out;
+}
+
+.drag-drop-container {
+  width: 900px !important;
+  height: 450px !important;
+}
+
+#changeWeight-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+}
+
+.flex-container {
+  display: flex;
+  align-items: center;
+}
+
+#changeWeight-container .form-group > input {
+  margin-right: 10px;
+}
+
+.q-box {
+  margin-top: 60px;
+  width: 300px;
+  height: 300px;
+  background-color: #ffffff;
+  border-radius: 1px;
+  padding: 20px;
+  color: #000000;
+  text-align: center;
+  border: 1px solid #f0f2f1;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+#weightChart {
+  margin-top: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 40px;
+  width: 700px;
+  height: 300px;
+  background-color: #ffffff;
+  border-radius: 1px;
+  border: 1px solid #f0f2f1;
 }
 
 /* 모바일 환경에서의 스타일 적용 */
@@ -177,23 +239,24 @@
   }
 
   // 대신 모바일 전용 버튼 보여주기
-  #mobile-btn {
+  #mobile-btn-box {
     display: block;
   }
-  .chart {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // 그림자 효과
-  border-radius: 10px; // 둥근 모서리
-  background: #fff; // 배경색
-  padding: 20px;
-  margin: 20px;
-  width: 100%; // 너비 조정
-  max-width: 450px; // 최대 너비 설정
-  text-align: center;
-}
-}
 
-img {
-  transition: 0.2s ease-out;
+  .chart {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // 그림자 효과
+    border-radius: 10px; // 둥근 모서리
+    background: #fff; // 배경색
+    padding: 20px;
+    margin: 20px;
+    width: 100%; // 너비 조정
+    max-width: 450px; // 최대 너비 설정
+    text-align: center;
+  }
+
+  #weightChart {
+    display: none;
+  }
 }
 </style>
 <template>
@@ -205,7 +268,7 @@ img {
         <p data-aos="fade-in" data-aos-duration="1000" class="TheJamsil400" id="hero-title">간편하게 이용하는 식단관리
           솔루션,<br>Chat PT</p>
         <p data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100" class="" id="hero-sub"
-          style="color: #727070;">
+           style="color: #727070;">
           건강한 식단을 찾고 계신 당신에게
           <br>
           맞춤 식단 전문가가 되어 드립니다.
@@ -215,12 +278,12 @@ img {
     <!-- End Hero Section -->
 
     <!--  식단 업로드  -->
-    <section class="ivory" style="padding:0 2vw;">
-      <div class="section1800">
+    <section style="background-color: white;">
+      <div id="upload-section" class="section1800">
         <div class="row " style="margin-top: 100px; margin-bottom:200px; text-align: center;">
 
           <div class="col-lg-4 col-sm-6" style="height: 300px; text-align: left; " data-aos="fade-in"
-            data-aos-duration="1000" data-aos-delay="200">
+               data-aos-duration="1000" data-aos-delay="200">
             <video id="mobile-food-icon" class="video" autoplay loop muted playsinline style="object-fit: contain;">
               <source src="../../assets/img/changeable_diet_minified.mp4" type="video/mp4">
               Your browser does not support the video tag.
@@ -228,7 +291,7 @@ img {
             <div style="text-align: center; padding-left: 20px;">
               <!--              <img id="web-food-icon" src="../../assets/img/graphic/taco%201.png"-->
               <!--                   style="margin-left: 20px; object-fit: contain;">-->
-              <DynamicImage id="web-food-icon" />
+              <DynamicImage id="web-food-icon"/>
               <!--              <img src="/assets/img/graphic/taco%201.png" style="max-height: 80%; object-fit: contain;">-->
             </div>
           </div>
@@ -237,12 +300,50 @@ img {
             <h3 id="plz-up" class="TheJamsil400" style=" white-space: nowrap">오늘의 식단을 업로드 해주세요!</h3>
             <p class="pine_Green_text" style=" white-space: nowrap">사진을 전부 등록 해주시면 저희가 분류해드릴게요.</p>
             <div id="MultiImageUploader">
-              <MultiImageUploader />
+              <MultiImageUploader/>
             </div>
-            <div id="mobile-btn">
-              <button class="" @click="triggerFileInput">파일 선택</button>
+            <div id="mobile-btn-box">
+              <button class="mobile-btn" @click="triggerFileInput">파일 선택</button>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!--  체중 기록  -->
+    <section class="ivory" style="padding:0 2vw; height: 650px">
+      <div id="" class="section1800" style="padding-top: 50px;">
+        <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="1000" data-aos-delay=""
+           style="color: #787c79; font-size: 20px;">혹시 체중에 변화가 있으신가요?
+        </p>
+        <p class="mt-1 TheJamsil400" data-aos="fade-in" data-aos-duration="1000" data-aos-delay=""
+           style="font-size: 30px; color: black;">오늘의 체중을 기록해주세요</p>
+        <div id="changeWeight-container" style="margin: 100px;" data-aos="fade-in" data-aos-duration="2000"
+             data-aos-delay="">
+          <div class="flex-container">
+            <div id="weightChart" class="mt-5">
+              <canvas id="myWeight"></canvas>
+            </div>
+            <div class="q-box"
+                 style=""
+                 data-aos="fade-in" data-aos-duration="100" data-aos-delay="">
+              <img src="../../../public/assets/img/graphic/icon2.png" alt="" style="width: 100px;">
+              <form @submit.prevent="changeWeight" class="mt-3">
+                <div class="form-group flex-container" style="justify-content: center;">
+                  <input v-model="changeWeightInfo.weight" type="text" class="form-control" id="weight"
+                         style="width: 120px; text-align: right">
+                  <span>KG</span>
+                </div>
+                <div class="mt-5" style="text-align: center;">
+                  <button type="submit" class="mb-2 btn-signature login-btn">기록하기</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4">
+          <p id="bad-result" class="mt-5" style="color:#1e6b7b;" v-html="changeWeightInfo.goodResult"></p>
+          <p id="bad-result" class="mt-5" style="color:darkred;" v-html="changeWeightInfo.badResult"></p>
         </div>
       </div>
     </section>
@@ -251,19 +352,19 @@ img {
     <section class="green" style="padding:0 2vw;">
       <div class="section1800" style="height: 300px; padding-top: 50px;">
         <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
-          style="color: #FFFFFF; margin-top: 20px; font-size: 30px;">연속
+           style="color: #FFFFFF; margin-top: 20px; font-size: 30px;">연속
           <span class="TheJamsil400" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="500"
-            style="color: #FFFFFF; margin-top: 20px; font-size: 50px;">{{ Consecutive_Dates }}</span>
+                style="color: #FFFFFF; margin-top: 20px; font-size: 50px;">{{ Consecutive_Dates }}</span>
           일째
         </p>
         <p class="TheJamsil400" data-aos="fade-in" data-aos-duration="2000" data-aos-delay=""
-          style="margin-top: 10px; font-size: 20px; color: #00997b;">업로드 중입니다 😊</p>
+           style="margin-top: 10px; font-size: 20px; color: #00997b;">업로드 중입니다 😊</p>
       </div>
     </section>
 
     <!--  식단 분석  -->
     <section class="lime-green" style="min-height: 100%; height: 100; padding: 30px;">
-      <div class="section1800"  >
+      <div class="section1800">
         <div class="row" style="margin-top: 50px; text-align: center; display: flex;">
 
           <div style="margin-bottom: 100px;" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="100">
@@ -278,8 +379,8 @@ img {
                 <canvas ref="myPieChart"></canvas>
               </div>
               <p class="TheJamsil400">칼로리 : {{ currentCal }} / {{
-                recommandCal
-              }} (kcal)</p>
+                  recommandCal
+                }} (kcal)</p>
             </div>
 
             <div class="chart">
@@ -288,12 +389,14 @@ img {
                 <canvas ref="myBarChart"></canvas>
               </div>
               <p class="TheJamsil400">탄수화물 : {{ currenttan }} / {{
-                recommand_tan }} (g)</p>
+                  recommand_tan
+                }} (g)</p>
               <p class="TheJamsil400">단백질 : {{ currentdan }}/ {{
-                recommand_dan
-              }} (g)</p>
-              <p class="TheJamsil400">지방 : {{ currentgi }} / {{ recommand_gi
-              }}
+                  recommand_dan
+                }} (g)</p>
+              <p class="TheJamsil400">지방 : {{ currentgi }} / {{
+                  recommand_gi
+                }}
                 (g)</p>
             </div>
           </div>
@@ -306,7 +409,8 @@ img {
 <script>
 import MultiImageUploader from '@/components/util/img-upload.vue';
 import DynamicImage from '@/components/util/dynamic-image.vue';
-import { Chart, registerables } from 'chart.js';
+import {Chart, registerables} from 'chart.js';
+
 Chart.register(...registerables);
 export default {
   components: {
@@ -316,6 +420,13 @@ export default {
 
   data() {
     return {
+      changeWeightInfo: {
+        myWeightChart: '',
+        weight: '',
+        goodResult: '',
+        badResult: '',
+      },
+
       // 기본적인 칼로리 및 영양성분 데이터들
       recommandCal: 0,
       recommand_tan: 0,
@@ -364,6 +475,7 @@ export default {
   },
   mounted() {
     if (this.showChart) {
+      this.fetchData(); // 초기 데이터 로딩
       this.fetchDataAndCreateCharts();
     }
   },
@@ -371,9 +483,8 @@ export default {
   methods: {
     fetchDataAndCreateCharts() {
       this.$axios.get('/getRecommandDailyTandangi'
-
       ).then(res => {
-        
+
         this.Consecutive_Dates = res.data.Consecutive_Dates.P_COUNT
 
         // 추천 데이터 등록         
@@ -381,7 +492,7 @@ export default {
         this.recommand_tan = res.data.recommandTandnagi.p_recommand_tan.toFixed(2);
         this.recommand_dan = res.data.recommandTandnagi.p_recommand_dan.toFixed(2);
         this.recommand_gi = res.data.recommandTandnagi.p_recommand_gi.toFixed(2);
-        
+
         // 차트에 보여질 값 초기화
         this.currentCal = res.data.totaldaily.dailyTotalCal.toFixed(2);
         this.currenttan = res.data.totaldaily.dailyTotalTan.toFixed(2);
@@ -389,8 +500,8 @@ export default {
         this.currentgi = res.data.totaldaily.dailyTotalGi.toFixed(2);
 
         if (!this.showChart) {
-        return;
-      }
+          return;
+        }
 
         // 영양소 차트 데이터 업데이트
         this.updateNutritionChartData();
@@ -400,11 +511,9 @@ export default {
         this.createCharts();
         this.isLoading = false;
       })
-        .catch(error => {
-          console.error("에러 발생:", error);
-        });
-
-
+          .catch(error => {
+            console.error("에러 발생:", error);
+          });
 
 
     },
@@ -460,7 +569,6 @@ export default {
         });
       });
     },
-
     createNutrientChart() {
       this.$nextTick(() => {
         const ctxNutrient = this.$refs.myBarChart.getContext('2d');
@@ -482,15 +590,133 @@ export default {
         });
       });
     },
+    changeWeight() {
+      if (this.changeWeightInfo.weight === '') {
+        this.changeWeightInfo.goodResult = '';
+        this.changeWeightInfo.badResult = '체중을 입력해주세요.';
+        return;
+      } else if (isNaN(this.changeWeightInfo.weight)) {
+        this.changeWeightInfo.goodResult = '';
+        this.changeWeightInfo.badResult = '숫자만 입력해주세요.';
+        return;
+      } else if (this.changeWeightInfo.weight < 0) {
+        this.changeWeightInfo.goodResult = '';
+        this.changeWeightInfo.badResult = '0보다 큰 수를 입력해주세요.';
+        return;
+      }
 
+      this.$axios.post('/changeWeight', {weight: this.changeWeightInfo.weight})
+          .then(() => {
+            this.changeWeightInfo.goodResult = '성공적으로 반영되었습니다.';
+            this.changeWeightInfo.badResult = '';
+            this.fetchData();
+          }).catch(() => {
+        this.changeWeightInfo.badResult = '잠시 후 다시 시도해주세요..'
+      })
+    },
+    // 몸무게 차트 그리기
+    fetchData() {
+
+      // 시작날짜는 오늘에서 -6일
+      let startPeriod = new Date();
+      startPeriod.setDate(startPeriod.getDate() - 6);
+
+      // 마지막날짜는 오늘
+      let endPeriod = new Date();
+
+      // 날짜를 yyyy-mm-dd 형식의 문자열로 변환
+      startPeriod = `${startPeriod.getFullYear()}-${startPeriod.getMonth() + 1}-${startPeriod.getDate()}`;
+      endPeriod = `${endPeriod.getFullYear()}-${endPeriod.getMonth() + 1}-${endPeriod.getDate()}`;
+
+
+      this.$axios.get('/diet_weight_analysis', {
+        params: {
+          startPeriod: startPeriod,
+          endPeriod: endPeriod
+        }
+      })
+          .then((res) => {
+            this.setupChart(res.data);
+          })
+    },
+    // 몸무게 차트 그리기
+    setupChart(res) {
+      let data = res
+
+      // 기존 차트 인스턴스가 존재하면 파괴
+      if (this.changeWeightInfo.myWeightChart) {
+        this.changeWeightInfo.myWeightChart.destroy();
+        this.changeWeightInfo.myWeightChart = null;
+      }
+
+      let ctx = document.getElementById('myWeight').getContext('2d');
+
+      let today = new Date();
+      let labels = Array.from({length: 7}, (_, i) => {
+        let date = new Date(today);
+        date.setDate(today.getDate() - (6 - i));
+        let month = (date.getMonth() + 1).toString().padStart(2, '0');
+        let day = date.getDate().toString().padStart(2, '0');
+        return `${month}-${day}`;
+      });
+
+      let dataset = [];
+      let prevData = null;
+      labels.forEach(label => {
+        let index = data.weightList.findIndex(item => {
+          let date = new Date(item.dietLogDate);
+          let month = (date.getMonth() + 1).toString().padStart(2, '0');
+          let day = date.getDate().toString().padStart(2, '0');
+          return `${month}-${day}` === label;
+        });
+
+        if (index !== -1) {
+          prevData = data.weightList[index].dietLogKg;
+        }
+        dataset.push(prevData);
+      });
+
+      let goals = Array(labels.length).fill(data.targetWeight.target_Weight); // 목표 체중
+
+      let lastWeight  = dataset[dataset.length - 1] // 오늘 체중
+      console.log("마지막 몸무게",lastWeight)
+
+      this.changeWeightInfo.myWeightChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: '기록한 체중',
+            data: dataset,
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1,
+            spanGaps: true
+          },
+            {
+              label: '목표 체중',
+              data: goals,
+              fill: false,
+              borderColor: 'rgb(255, 99, 132)',
+              tension: 0.1,
+            }]
+        },
+        options: {
+          scales: {
+            y: {
+              min: lastWeight - 10,
+              max: lastWeight + 10
+            }
+          }
+        }
+      });
+    },
   },
-  
+
   beforeUnmount() {
     // 페이지 이동 시에 showChart 값을 false로 설정하여 차트를 숨기도록 할 수 있습니다.
     this.showChart = false;
   },
-
-
 
 
 };

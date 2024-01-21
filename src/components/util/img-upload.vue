@@ -9,7 +9,7 @@
       :class="{ 'drag-over': isDragOver }"
     >
       <div class="upload-instructions">
-        <p>이미지를 드래그 앤 드랍하세요 최대 {{ maxImages }} 개</p>
+        <p>이미지를 드래그 앤 드랍하세요 (최대 {{ maxImages }} 개)</p>
         <input type="file" ref="fileInput" multiple style="display: none" @change="handleFileInput" />
         <button @click="triggerFileInput">파일 선택</button>
       </div>
