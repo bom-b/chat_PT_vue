@@ -23,7 +23,7 @@
               <div class="header section1400">
                 <span class="title">마지막으로 등록한 음식</span>
                 <div class="profile-image-wrapper">
-                  <img :src="`${this.$springBaseURL}/images/foodMainImages/${lastfoodimg}`" alt="프로필 이미지" class="lastfood-image">
+                  <img :src="`${this.$springBaseURL}/images/foodMainImages/${lastfoodimage}`" alt="프로필 이미지" class="lastfood-image">
                 </div>
                 <div class="subtitle"><span style="font-size: 1.7rem;">{{ lastfood }}</span></div>
               </div>
@@ -232,7 +232,7 @@ export default {
       currentgi: 0,
 
       lastfood: '',
-      lastfoodimg : '',
+      lastfoodimage : '',
       recommand_fooddata: [],
 
       FOODCAL: 0,
@@ -342,7 +342,7 @@ export default {
 
         // 마지막에 먹은 음식
         this.lastfood = lastfood
-        this.lastfoodimg =lastfoodimage
+        this.lastfoodimage =lastfoodimage
         // 유저 나이 정보
         this.userage = userage
 
