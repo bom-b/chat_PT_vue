@@ -80,7 +80,7 @@ export default {
           aria-valuemin="0" aria-valuemax="100"></div>
       </div>
       <div class="container mt-5 pt-2">
-        <h2>키와 몸무게 입력</h2>
+        <h2>정확한 판단을 위해 정보를 입력해주세요.</h2>
         <div class="input-container">
           <ul>
             <li>
@@ -114,11 +114,18 @@ export default {
             </li>
 
 
+            <!-- 
             <div class="image-container">
               <div v-for="image in images" :key="image.path" :class="{ 'active-image': image.active }">
                 <img :src="image.path" :alt="image.alt" class="image">
               </div>
+            </div> -->
+            <div class="carousel">
+              <div v-for="image in images" :key="image.path" class="carousel__face">
+                <img :src="image.path" :alt="image.alt" :class="{ 'active-image': image.active }">
+              </div>
             </div>
+
             <li>
               <label for="purpose">목적</label>
               <div class="purpose_list">
@@ -160,6 +167,49 @@ export default {
 
 
 <style scoped>
+/* .carousel {
+  perspective: 10000px;
+  transform-style: preserve-3d;
+  animation: spin 10s infinite linear;
+}
+
+.carousel__face {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  line-height: 200px;
+  color: white;
+  text-align: center;
+  font-size: 40px;
+}
+
+.carousel__face:nth-child(1) {
+  transform: rotateY(0deg) translateZ(288px);
+}
+
+.carousel__face:nth-child(2) {
+  transform: rotateY(60deg) translateZ(288px);
+}
+
+.carousel__face:nth-child(3) {
+  transform: rotateY(120deg) translateZ(288px);
+}
+
+.carousel__face:nth-child(4) {
+  transform: rotateY(180deg) translateZ(288px);
+}
+
+
+@keyframes spin {
+  from {
+    transform: rotateY(0deg);
+  }
+
+  to {
+    transform: rotateY(1turn);
+  }
+} */
+
 .main {
   display: flex;
   justify-content: center;
@@ -182,14 +232,17 @@ export default {
   border: 2px solid red;
 }
 
-.image-container {
+.image-container .image {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   margin-top: 20px;
   max-height: 200px;
+  max-width: 100%;
+  height: auto;
 }
+
 
 .image {
   width: 100px;

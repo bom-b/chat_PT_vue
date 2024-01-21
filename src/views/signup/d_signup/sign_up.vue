@@ -12,7 +12,7 @@ export default {
         password: "",
         role: "NORMAL",
         password_Check: "",
-        roadAddress: "",
+        region: "",
       },
       inputDisplay: {
         id: 0,
@@ -100,9 +100,7 @@ export default {
             extraRoadAddr = ' (' + extraRoadAddr + ')';
           }
           // 우편번호와 주소 정보를 해당 필드에 넣는다.
-          this.user.roadAddress = roadAddr;
-          // document.getElementById("roadAddress").value = roadAddr;
-          // roadAddr = this.roadAddress
+          this.user.region = roadAddr;
         }
       }).open();
 
@@ -263,7 +261,7 @@ export default {
     </div>
     <div class="container">
       <div class="login-container">
-        <h2 class="mb-4">회원가입</h2>
+        <h2 class="mb-4">일반 회원가입</h2>
         <!-- 아이디 입력 폼 -->
         <form @submit.prevent="idcheck">
           <div class="row mb-3">
@@ -280,11 +278,11 @@ export default {
           </div>
         </form>
         <div class="row mb-3">
-          <label for="roadAddress" class="col-sm-3 col-form-label">주소:</label>
+          <label for="region" class="col-sm-3 col-form-label">주소:</label>
           <div class="col-sm-7">
             <div class="input-group">
-              <input type="text" class="form-control" id="roadAddress" placeholder="도로명주소" readonly @click="search"
-                v-model="user.roadAddress">
+              <input type="text" class="form-control" id="region" placeholder="도로명주소" readonly @click="search"
+                v-model="user.region">
             </div>
           </div>
         </div>
@@ -389,7 +387,7 @@ export default {
           !user.password ||
           !user.password_Check ||
           !auth.clientCode ||
-          !user.roadAddress ||
+          !user.region ||
           auth.clientCode != auth.serverCode ||
           inputDisplay.id != 1 ||
           inputDisplay.email != 1 ||

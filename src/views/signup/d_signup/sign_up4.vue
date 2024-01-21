@@ -6,6 +6,7 @@ export default {
         return {
             rating: [],
             foodList: [],
+
         };
     },
     computed: {
@@ -17,11 +18,11 @@ export default {
         this.getfoodList();
     },
     methods: {
-
         selectFood(food) {
             this.rating = Array.from(this.rating);
             if (this.rating.includes(food.FOODNUM)) {
                 this.rating = this.rating.filter(num => num !== food.FOODNUM);
+                console.log("셀렉푸드if", this.rating);
             } else {
                 if (this.rating.length < 5) {
                     this.rating.push(food.FOODNUM);
@@ -37,6 +38,9 @@ export default {
                 const data = {
                     rating: this.rating
                 };
+                // let jsonData = JSON.stringify(data);
+                // console.log(jsonData);
+                // console.log(typeof (jsonData));
                 if (isValid) {
                     const signup = await Swal.fire({
                         title: "",
@@ -146,5 +150,10 @@ li img {
 .selected {
     background-color: gray;
 }
-</style>
 
+.selected-food {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+</style>
