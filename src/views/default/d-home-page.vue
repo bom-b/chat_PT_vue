@@ -263,7 +263,7 @@ img {
 
     <!--  식단 분석  -->
     <section class="lime-green" style="min-height: 100%; height: 100; padding: 30px;">
-      <div class="section1800" >
+      <div class="section1800"  >
         <div class="row" style="margin-top: 50px; text-align: center; display: flex;">
 
           <div style="margin-bottom: 100px;" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="100">
@@ -359,10 +359,13 @@ export default {
           }
         ]
       },
+      showChart: true, // 차트를 보여줄지 여부를 조정하는 데이터 속성
     };
   },
   mounted() {
-    this.fetchDataAndCreateCharts();
+    if (this.showChart) {
+      this.fetchDataAndCreateCharts();
+    }
   },
 
   methods: {
@@ -384,6 +387,10 @@ export default {
         this.currenttan = res.data.totaldaily.dailyTotalTan.toFixed(2);
         this.currentdan = res.data.totaldaily.dailyTotalDan.toFixed(2);
         this.currentgi = res.data.totaldaily.dailyTotalGi.toFixed(2);
+
+        if (!this.showChart) {
+        return;
+      }
 
         // 영양소 차트 데이터 업데이트
         this.updateNutritionChartData();
@@ -476,6 +483,11 @@ export default {
       });
     },
 
+  },
+  
+  beforeUnmount() {
+    // 페이지 이동 시에 showChart 값을 false로 설정하여 차트를 숨기도록 할 수 있습니다.
+    this.showChart = false;
   },
 
 
