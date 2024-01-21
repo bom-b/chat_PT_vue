@@ -7,13 +7,24 @@
           type="text"
           class="search-input"
           v-model="room_name"
-          placeholder="회원 이름 검색"
+          @input="filterChatrooms"
+          placeholder="회원 이름 검색 & 바로 연결"
         />
       </div>
     </div>
     <ul class="chatroom-list">
+      <!-- 회원 리스트가 한 명뿐인 경우 자동으로 연결 -->
       <li
         class="chatroom-item"
+        v-if="filteredChatrooms.length === 1"
+        @click="enterRoom(filteredChatrooms[0].roomId)"
+      >
+        {{ filteredChatrooms[0].name }}
+      </li>
+      <!-- 그 외의 경우 리스트로 표시 -->
+      <li
+        class="chatroom-item"
+        v-else
         v-for="item in filteredChatrooms"
         :key="item.roomId"
         @click="enterRoom(item.roomId)"
@@ -31,31 +42,42 @@ export default {
       room_name: "",
       chatrooms: [],
       localUserName: "", // localStorage에서 가져온 사용자 이름을 저장할 속성
+      filteredChatrooms: [], // 필터링된 채팅방 목록
     };
   },
   created() {
     this.localUserName = localStorage.getItem('name');
     this.findAllRoom();
   },
-  computed: {
-    filteredChatrooms() {
-      return this.chatrooms.filter(item => item.name !== this.localUserName);
-    }
-  },
   methods: {
     findAllRoom() {
+      // 채팅방 목록을 가져옵니다.
       this.$axios.get("/chat/rooms").then((response) => {
         this.chatrooms = response.data;
+        // 페이지 로딩 시 기존 채팅방을 필터링합니다.
+        this.filterChatrooms();
       });
+    },
+    filterChatrooms() {
+      // 검색어를 사용하여 채팅방을 필터링합니다.
+      this.filteredChatrooms = this.chatrooms.filter((item) => {
+        return item.name.includes(this.room_name);
+      });
+      
+      // 회원 리스트가 한 명뿐이면 자동으로 연결
+      if (this.filteredChatrooms.length === 1) {
+        this.enterRoom(this.filteredChatrooms[0].roomId);
+      }
     },
     enterRoom(roomId) {
       localStorage.setItem("wschat.roomId", roomId);
-
       this.$emit("change-component", "NextComponentName");
     },
   },
 };
 </script>
+
+
 
 <style scoped>
 [v-cloak] {

@@ -10,7 +10,7 @@
     "
   >
     <div>
-      <h2>{{ room.name }}</h2>
+      <h2 style="color: azure;">🔙 </h2>
     </div>
     <ul class="list-group" ref="chatList">
       <li
@@ -28,10 +28,6 @@
       </li>
     </ul>
     <div class="input-group" style="background-color: unset">
-      <div class="input-group-prepend">
-        <label class="input-group-text" style="border: 0"> ➕ </label>
-        <!--✔️ -->
-      </div>
       <input
         type="text"
         class="form-control"
@@ -76,7 +72,7 @@ export default {
   async created() {
     this.roomId = localStorage.getItem("wschat.roomId");
     this.sender = localStorage.getItem("name");
-    
+
     await this.connect();
     await this.findRoom();
     await this.loadPreviousMessages();
@@ -96,7 +92,7 @@ export default {
       });
     },
 
-    recvMessage(recv) {
+    async recvMessage(recv) {
       // 메시지 배열의 끝에 새 메시지 추가
       this.messages.push({
         type: recv.type,
@@ -112,35 +108,73 @@ export default {
     async connect() {
       const sock = new SockJS("http://www.chatpt.shop:8888/springpt/ws-stomp");
       this.ws = Stomp.over(sock);
+
       await new Promise((resolve, reject) => {
-        this.ws.connect(headers, () => {
-          console.log("웹소켓 연결 성공");
-          this.ws.subscribe(
-            `/sub/chat/room/${this.roomId}`,
-            message => {
-              const recv = JSON.parse(message.body);
-              this.recvMessage(recv);
-            },
-            headers
-          );
-          resolve();
-        }, error => {
-          console.error("Connection error: ", error);
-          if (this.reconnect++ < 5) {
-            setTimeout(this.connect, 10000);
-          } else {
-            console.log("Failed to reconnect after 5 attempts.");
-            reject();
+        this.ws.connect(
+          headers,
+          () => {
+            console.log("웹소켓 연결 성공");
+
+            this.ws.subscribe(
+              `/sub/chat/room/${this.roomId}`,
+              (message) => {
+                const recv = JSON.parse(message.body);
+                this.recvMessage(recv);
+              },
+              headers
+            );
+
+            // 사용자가 방에 입장했다는 메시지를 전송
+            this.sendEnterMessage();
+
+            resolve();
+          },
+          (error) => {
+            console.error("Connection error: ", error);
+            if (this.reconnect++ < 5) {
+              setTimeout(this.connect, 10000);
+            } else {
+              console.log("Failed to reconnect after 5 attempts.");
+              reject();
+            }
           }
-        });
+        );
       });
     },
+
+    sendEnterMessage() {
+      if (this.ws && this.ws.connected) {
+        const enterMessage = {
+          type: "ENTER",
+          roomId: this.roomId,
+          sender: this.sender,
+          message: "",
+        };
+        this.ws.send(
+          "/pub/chat/message",
+          JSON.stringify(enterMessage),
+          headers
+        );
+      }
+    },
     formatTime(timestamp) {
-      const date = new Date(timestamp);
-      return date.toLocaleTimeString([], {
+      const messageDate = new Date(timestamp);
+      const now = new Date();
+      let options = {
         hour: "2-digit",
         minute: "2-digit",
-      });
+      };
+
+      // 현재 날짜와 메시지 날짜가 다르면 월과 일도 포함
+      if (messageDate.toDateString() !== now.toDateString()) {
+        options = {
+          ...options,
+          month: "2-digit",
+          day: "2-digit",
+        };
+      }
+
+      return messageDate.toLocaleTimeString("ko-KR", options);
     },
     findRoom() {
       // API 주소는 해당 프로젝트의 실제 백엔드 주소에 따라 달라집니다.
@@ -183,7 +217,6 @@ export default {
         this.message = "";
       }
     },
-    
   },
   // 스크롤 위치 이동을 위함
 };
@@ -214,7 +247,7 @@ export default {
 
 .list-group {
   max-height: 600px; /* 채팅창 높이 */
-  height: 90%;
+  height: 85%;
   overflow-y: auto; /* 스크롤바 */
   scroll-behavior: smooth;
   background-color: white; /* 채팅창 배경색 */
@@ -243,9 +276,9 @@ export default {
 .input-group {
   background-color: transparent; /* 투명 배경 */
   border: none; /* 테두리 없음 */
-  transition: transform 0.5s ease; /* 호버 애니메이션 효과 */
+  transition: transform 0.3s ease; /* 호버 애니메이션 효과 */
   background-color: #f4f4f4; /* 입력창 배경 */
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .input-group:hover {
