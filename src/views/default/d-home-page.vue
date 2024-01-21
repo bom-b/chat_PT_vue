@@ -1,14 +1,12 @@
 <style lang="scss" scoped>
 #hero {
   height: 350px;
-  background-image: url('../../assets/img/어두운 배경.png');
-  /* 이미지 파일 경로를 설정하세요 */
+  background-image: url('../../../public/assets/img/background/어두운 배경.png');
+  background-repeat: no-repeat;
   background-size: cover;
-  /* 배경 이미지를 섹션에 맞게 확대/축소 */
   background-position: center;
-  /* 배경 이미지를 가운데 정렬 */
-  color: white;
-  /* 텍스트 색상을 설정하세요 (배경 이미지에 대한 대비를 높이기 위해) */
+  //background-attachment: fixed; /* 스크롤을 내려도 이미지는 고정 */
+  color: white; /* 텍스트 색상을 설정하세요 (배경 이미지에 대한 대비를 높이기 위해) */
   text-align: left;
 
   #hero-title {
@@ -212,11 +210,9 @@ img {
           <br>
           맞춤 식단 전문가가 되어 드립니다.
         </p>
-        <!--        <div class="d-flex" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100">-->
-        <!--          <a href="shipdan.me/" class="" id="hero-sub" style="color: cornflowerblue;">자세히 알아보기</a>-->
-        <!--        </div>-->
       </div>
-    </section><!-- End Hero Section -->
+    </section>
+    <!-- End Hero Section -->
 
     <!--  식단 업로드  -->
     <section class="ivory" style="padding:0 2vw;">
