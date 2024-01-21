@@ -30,7 +30,7 @@
 
 /*시그니처 버튼*/
 .btn-signature {
-    background-color: #c0e0d6;
+    background-color: #e5f5f2;
     color: #085c57;
     border: none;
     border-radius: 10px;
@@ -41,7 +41,7 @@
 }
 
 .btn-signature:hover {
-    background-color: #b0d5c8 !important;
+    background-color: #bde0dd !important;
     color: #02413b !important;
 }
 
