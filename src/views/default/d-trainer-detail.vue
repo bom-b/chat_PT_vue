@@ -3,7 +3,7 @@
     <div class="section1800">
       <div
         v-if="Object.keys(trainerInfo).length"
-        class="card mx-auto"
+        class="card mx-auto card-container"
         style="width: 18rem"
       >
         <!-- 카드 이미지 -->
@@ -31,6 +31,12 @@
           <!-- 기타 수상 내역도 추가할 수 있습니다. -->
         </ul>
       </div>
+      <div class="detail-description">
+      <!-- 여기에 상세 설명 내용을 넣습니다. -->
+      <h2>트레이너 상세 정보</h2>
+      <p>여기에 트레이너에 대한 추가적인 설명이나 정보를 넣을 수 있습니다.</p>
+      <!-- 더 많은 내용 추가 가능 -->
+    </div>
     </div>
   </main>
 </template>
