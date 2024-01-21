@@ -101,9 +101,9 @@ export default {
           }
           // 우편번호와 주소 정보를 해당 필드에 넣는다.
           this.user.region = roadAddr;
+          console.log(this.user.region);
         }
       }).open();
-
     },
     regId(id) {
       if (id !== null && id !== undefined && id.trim() !== "") {
@@ -240,6 +240,7 @@ export default {
           email: this.user.email,
           password: this.user.password,
           role: this.user.role,
+          region: this.user.region
         };
         if (isValid) {
           this.$emit("nextPage", data);
@@ -388,6 +389,7 @@ export default {
           !user.password_Check ||
           !auth.clientCode ||
           !user.region ||
+          !user.nickname ||
           auth.clientCode != auth.serverCode ||
           inputDisplay.id != 1 ||
           inputDisplay.email != 1 ||
@@ -402,6 +404,7 @@ export default {
 </template>
 <style scoped>
 .main {
+  margin-top: 200px;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -6,7 +6,6 @@ export default {
         return {
             rating: [],
             foodList: [],
-
         };
     },
     computed: {
@@ -19,28 +18,26 @@ export default {
     },
     methods: {
         selectFood(food) {
-            this.rating = Array.from(this.rating);
-            if (this.rating.includes(food.FOODNUM)) {
-                this.rating = this.rating.filter(num => num !== food.FOODNUM);
-                console.log("셀렉푸드if", this.rating);
+            const index = this.rating.indexOf(food.FOODNUM);
+            if (index !== -1) {
+                this.rating.splice(index, 1);
+                console.log("음식 제거", this.rating);
             } else {
                 if (this.rating.length < 5) {
                     this.rating.push(food.FOODNUM);
-                    console.log(this.rating)
+                    console.log("음식 추가", this.rating);
                 } else {
                     this.$swal("", "5개의 음식 이미지만 선택할 수 있습니다.", "warning");
                 }
             }
         },
+
         async proceedToNextPage() {
             try {
                 const isValid = 1;
                 const data = {
                     rating: this.rating
                 };
-                // let jsonData = JSON.stringify(data);
-                // console.log(jsonData);
-                // console.log(typeof (jsonData));
                 if (isValid) {
                     const signup = await Swal.fire({
                         title: "",
@@ -55,7 +52,7 @@ export default {
                     if (signup.isConfirmed) {
                         this.$emit("nextPage", data);
                     } else {
-                        this.$swal("", "잘못된 접근입니다.");
+                        this.$swal("", "다시 골라주세요.");
                     }
                 } else {
                     this.$swal("유효하지 않은 경로입니다.");
@@ -82,28 +79,35 @@ export default {
 };
 </script>
 <template>
-    <main>
+    <main class="main">
         <div class="progress fixed-top" style="margin-top: 81px;">
             <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
                 aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-        <div class="container">
-            <br>
+        <div class="container main">
             <h2>선호하는 음식 선택 (5개 선택 필수)</h2>
             <p>음식 추천을 할 때 도와드려요</p>
-            <div class="input-container">
-                <ul class="list-group">
-                    <li v-for="food in foodList" :key="food.foodnum"
-                        :class="{ 'list-group-item': true, selected: rating.includes(food.foodnum), row: true }"
-                        @click="selectFood(food)">
-                        <div class="d-flex align-items-center">
-                            <div class="food-image-wrapper">
-                                <img :src="getImagePath(food.FOODIMG)" alt="음식 이미지">
-                            </div>
-                            <span class="ml-3">{{ food.FOODNAME }}</span>
+            <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div v-for="(food, index) in foodList" :key="food.foodnum"
+                        :class="{ 'carousel-item': true, active: index === 0 }">
+                        <img :src="getImagePath(food.FOODIMG)" class="d-block mx-auto w-100" :alt="food.FOODNAME"
+                            @click="selectFood(food)">
+                        <div class="carousel-caption d-md-block">
+                            <h5>{{ food.FOODNAME }}</h5>
                         </div>
-                    </li>
-                </ul>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
             </div>
         </div>
         <div class="button-container">
@@ -115,45 +119,31 @@ export default {
 </template>
 
 <style scoped>
-li {
-    list-style-type: none;
-    position: relative;
-    padding-left: 30px;
+.main {
+    margin-top: 100px;
 }
 
-li img {
-    width: 200px;
-    height: 150px;
-    object-fit: contain;
-    object-position: center;
+img {
+    min-width: 300px !important;
+    min-height: 200px !important;
+    max-width: 300px !important;
+    max-height: 200px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    border-radius: 20px !important;
 }
 
-.food-image-wrapper {
-    overflow: hidden;
-    width: 250px;
-    height: 160px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
+.carousel-control-prev,
+.carousel-control-next {
+    /* background-color: green; */
+    /* 원하는 색상으로 변경하세요 */
 }
 
-.list-group-item {
-    border: none;
-    cursor: pointer;
+.carousel-control-prev-icon {
+    background-image: url(../../../assets/img/icon/arrow-left-short.svg);
 }
 
-.list-group-item:hover {
-    background-color: #f8f9fa;
-}
-
-.selected {
-    background-color: gray;
-}
-
-.selected-food {
-    margin-top: 20px;
-    font-size: 18px;
-    font-weight: bold;
+.carousel-control-next-icon {
+    background-image: url(../../../assets/img/icon/arrow-right-short.svg);
 }
 </style>

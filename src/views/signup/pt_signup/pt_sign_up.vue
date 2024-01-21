@@ -5,14 +5,12 @@ export default {
 	data() {
 		return {
 			user: {
-				nickname: "",
 				id: "",
 				name: "",
 				email: "",
 				password: "",
 				role: "TRAINER",
 				password_Check: "",
-				region: "",
 				isverified: 0,
 			},
 			inputDisplay: {
@@ -83,29 +81,7 @@ export default {
 				this.matchpwd = newPassword !== newPasswordCheck;
 			}
 		},
-		search() {
-			new window.daum.Postcode({
-				oncomplete: (data) => {
-					var roadAddr = data.roadAddress; // 도로명 주소 변수
-					var extraRoadAddr = ''; // 참고 항목 변수
-					// 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
-					if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-						extraRoadAddr += data.bname;
-					}
-					// 건물명이 있고, 공동주택일 경우 추가한다.
-					if (data.buildingName !== '' && data.apartment === 'Y') {
-						extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-					}
-					// 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
-					if (extraRoadAddr !== '') {
-						extraRoadAddr = ' (' + extraRoadAddr + ')';
-					}
-					// 우편번호와 주소 정보를 해당 필드에 넣는다.
-					this.user.region = roadAddr;
-				}
-			}).open();
 
-		},
 		regId(id) {
 			if (id !== null && id !== undefined && id.trim() !== "") {
 				const reg = /^[a-zA-Z0-9]+$/;
@@ -235,7 +211,6 @@ export default {
 			try {
 				const isValid = 1;
 				const data = {
-					nickname: this.user.nickname,
 					id: this.user.id,
 					name: this.user.name,
 					email: this.user.email,
@@ -278,30 +253,13 @@ export default {
 						</div>
 					</div>
 				</form>
-				<div class="row mb-3">
-					<label for="region" class="col-sm-3 col-form-label">주소:</label>
-					<div class="col-sm-7">
-						<div class="input-group">
-							<input type="text" class="form-control" id="region" placeholder="도로명주소" readonly @click="search"
-								v-model="user.region">
-						</div>
-					</div>
-				</div>
+
 				<!-- 이름 입력 폼 -->
 				<div class="row mb-3">
 					<label for="name" class="col-sm-3 col-form-label">이름:</label>
 					<div class="col-sm-7">
 						<div class="input-group">
 							<input type="text" class="form-control" id="name" placeholder="이름을 입력하세요" v-model="user.name" />
-						</div>
-					</div>
-				</div>
-				<div class="row mb-3">
-					<label for="nickname" class="col-sm-3 col-form-label">닉네임:</label>
-					<div class="col-sm-7">
-						<div class="input-group">
-							<input type="text" class="form-control" id="nickname" placeholder="닉네임을 입력하세요"
-								v-model="user.nickname" />
 						</div>
 					</div>
 				</div>
@@ -389,7 +347,6 @@ export default {
 					!user.password ||
 					!user.password_Check ||
 					!auth.clientCode ||
-					!user.region ||
 					auth.clientCode != auth.serverCode ||
 					inputDisplay.id != 1 ||
 					inputDisplay.email != 1 ||
