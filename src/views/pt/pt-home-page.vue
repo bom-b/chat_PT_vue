@@ -1,15 +1,16 @@
 <template>
-  <main>
+  <main style="user-select: none">
     <section id="hero" class="hero d-flex align-items-center section-bg">
       <div class="col-12" style="max-width: 1600px; margin: 0 auto">
-        <h1
+        <div
           data-aos="fade-in"
           data-aos-duration="1000"
           class="TheJamsil400"
           style="white-space: nowrap; margin: 1vw"
         >
-          간편하게 이용하는 식단관리 솔루션,<br />Chat PT
-        </h1>
+          <h1>간편하게 관리하는 회원 식단 관리 솔루션</h1>
+          <h2>Chat PT</h2>
+        </div>
         <p
           data-aos="fade-in"
           data-aos-duration="2000"
@@ -89,7 +90,7 @@
               <p class="TheJamsil400" style="display: inline-block">
                 <router-link to="/trainer/pt_members" class="router-link">
                   <img
-                    class=""
+                    class=""  
                     src="../../assets/img/user_icon.png"
                     alt=""
                     style="width: 32px"
@@ -112,14 +113,6 @@
             >
               <p class="TheJamsil400" style="display: inline-block">
                 <router-link to="/trainer/pt_chat" class="router-link">
-                  <img
-                    class=""
-                    src="../../assets/img/chat.png"
-                    alt=""
-                    style="width: 32px"
-                  /><button class="select_button_menu chat_cl" ref="#">
-                    채팅방_수정중(이성한)</button
-                  ><br />
                 </router-link>
               </p>
             </div>
@@ -184,9 +177,12 @@
         />
       </div>
       <div class="image-hover-container info-text flex-grow-1">
-        <h4 class="mb-2" style="margin-top: 30px;">오늘 식단 요약 </h4>
-      
-        <p style="margin-top: 30px;">관리 회원들의 식단을 <br> 확인 할 수 있습니다.</p>
+        <h4 class="mb-2" style="margin-top: 30px">오늘 식단 요약</h4>
+
+        <p style="margin-top: 30px">
+          관리 회원들의 식단을 <br />
+          확인 할 수 있습니다.
+        </p>
 
         <div class="image-hover-item">
           <img

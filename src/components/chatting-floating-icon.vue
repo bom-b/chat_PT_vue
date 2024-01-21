@@ -50,12 +50,15 @@
 }
 
 .floatting-box {
+  display: flex; /* flexbox 사용 */
   position: fixed;
   bottom: 90px;
   right: 20px;
-  width: 390px;
-  height: 690px;
-  background-color: #f5f5f5;
+  height: 100%; /* 전체 높이 */
+  width: 100%; /* 전체 너비 */
+  max-width: 390px;
+  max-height: 690px;
+  background-color: #00000000;
   border-radius: 30px;
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.4);
   cursor: pointer;
@@ -81,7 +84,34 @@
   transform: translate3d(0, 20px, 0);
   opacity: 0;
 }
+
+@media (max-width: 768px) {
+  .icon {
+    bottom: 10px;
+    right: 10px;
+    width: 50px;
+    height: 50px;
+  }
+
+  .icon.inactive:hover {
+    width: 70px;
+    height: 70px;
+  }
+
+  .icon-img {
+    width: 30px;
+  }
+
+  .floatting-box {
+    bottom: 80px; /* 모바일 환경에서 위치 조정 */
+    right: 10px; /* 모바일 환경에서 위치 조정 */
+    width: 90%; /* 화면 너비에 맞게 조정 */
+    max-width: 360px; /* 최대 너비 설정 */
+    max-height: 600px; /* 최대 높이 설정 */
+  }
+}
 </style>
+
 
 <script>
 import chatroom from "@/views/pt/pt-chatroom.vue"; //채팅룸

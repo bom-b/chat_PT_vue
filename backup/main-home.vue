@@ -1,6 +1,6 @@
 <template>
   <main_header/>
-  <div class="scroll-container">
+  <div class="scroll-container"  style="user-select: none" >
     <!--  섹션1  -->
     <div class="scroll-area" style="position: relative; display: flex; justify-content: center; align-items: center;">
       <img class="background-img" src="/assets/img/background/1.png" alt="" style="">

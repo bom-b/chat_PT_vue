@@ -2,7 +2,12 @@
   <div
     class="container"
     v-cloak
-    style="background-color: #003a2452; height: 690px; border-radius: 30px"
+    style="
+      background-color: #003a2452;
+      height: 100%; /* 전체 높이 */
+      width: 100%; /* 전체 너비 */
+      border-radius: 30px;
+    "
   >
     <div>
       <h2>{{ room.name }}</h2>
@@ -68,34 +73,100 @@ export default {
       reconnect: 0,
     };
   },
-  created() {
+  async created() {
     this.roomId = localStorage.getItem("wschat.roomId");
     this.sender = localStorage.getItem("name");
-    this.findRoom();
-    this.loadPreviousMessages();
-    this.connect();
+    
+    await this.connect();
+    await this.findRoom();
+    await this.loadPreviousMessages();
+    this.scrollToBottom();
+  },
+  mounted() {
+    //스크롤 위치를 위함
+    this.scrollToBottom();
   },
   methods: {
+    scrollToBottom() {
+      this.$nextTick(() => {
+        const chatList = this.$refs.chatList;
+        if (chatList) {
+          chatList.scrollTop = chatList.scrollHeight;
+        }
+      });
+    },
+
+    recvMessage(recv) {
+      // 메시지 배열의 끝에 새 메시지 추가
+      this.messages.push({
+        type: recv.type,
+        sender: recv.type === "ENTER" ? "[알림]" : recv.sender,
+        message: recv.message,
+        logdate: recv.logdate, // 시간도 추가
+        animation: "fade-in",
+      });
+
+      // 새 메시지가 추가된 후 스크롤을 아래로
+      this.scrollToBottom();
+    },
+    async connect() {
+      const sock = new SockJS("http://www.chatpt.shop:8888/springpt/ws-stomp");
+      this.ws = Stomp.over(sock);
+      await new Promise((resolve, reject) => {
+        this.ws.connect(headers, () => {
+          console.log("웹소켓 연결 성공");
+          this.ws.subscribe(
+            `/sub/chat/room/${this.roomId}`,
+            message => {
+              const recv = JSON.parse(message.body);
+              this.recvMessage(recv);
+            },
+            headers
+          );
+          resolve();
+        }, error => {
+          console.error("Connection error: ", error);
+          if (this.reconnect++ < 5) {
+            setTimeout(this.connect, 10000);
+          } else {
+            console.log("Failed to reconnect after 5 attempts.");
+            reject();
+          }
+        });
+      });
+    },
+    formatTime(timestamp) {
+      const date = new Date(timestamp);
+      return date.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    },
     findRoom() {
       // API 주소는 해당 프로젝트의 실제 백엔드 주소에 따라 달라집니다.
       this.$axios
         .get(`http://www.chatpt.shop:8888/springpt/chat/room/${this.roomId}`)
         .then((response) => {
           this.room = response.data;
+          this.scrollToBottom();
         });
     },
     loadPreviousMessages() {
       this.$axios
-        .get(`http://www.chatpt.shop:8888/springpt/chat/rooms/${this.roomId}/messages`)
+        .get(
+          `http://www.chatpt.shop:8888/springpt/chat/rooms/${this.roomId}/messages`
+        )
         .then((response) => {
           // logdate를 기준으로 오름차순 정렬
           this.messages = response.data.sort(
             (a, b) => new Date(a.logdate) - new Date(b.logdate)
           );
+          this.scrollToBottom();
         })
         .catch((error) => {
           console.error("Error loading previous messages: ", error);
         });
+      this.scrollToBottom();
     },
     sendMessage() {
       if (this.ws && this.ws.connected) {
@@ -112,78 +183,9 @@ export default {
         this.message = "";
       }
     },
-
-    recvMessage(recv) {
-      // 메시지 배열의 끝에 새 메시지 추가
-      this.messages.push({
-        type: recv.type,
-        sender: recv.type === "ENTER" ? "[알림]" : recv.sender,
-        message: recv.message,
-        logdate: recv.logdate, // 시간도 추가
-        animation: "fade-in",
-      });
-
-      // 새 메시지가 추가된 후 스크롤을 아래로
-      this.$nextTick(() => {
-        if (this.$refs.chatList) {
-          const chatList = this.$refs.chatList;
-          chatList.scrollTop = chatList.scrollHeight;
-        }
-      });
-    },
-    connect() {
-      const sock = new SockJS("http://www.chatpt.shop:8888/springpt/ws-stomp");
-      this.ws = Stomp.over(sock);
-
-      const onConnected = () => {
-        console.log("웹소켓 연결 성공!!!!");
-        this.reconnect = 0; // 연결 성공 시 재연결 시도 횟수 초기화
-        this.ws.subscribe(
-          `/sub/chat/room/${this.roomId}`,
-          (message) => {
-            const recv = JSON.parse(message.body);
-            console.log("Received message: ", recv);
-            this.recvMessage(recv);
-          },
-          headers
-        );
-
-        this.ws.send(
-          "/pub/chat/message",
-          JSON.stringify(
-            {
-              type: "ENTER",
-              roomId: this.roomId,
-              sender: this.sender,
-              message: this.message,
-            },
-            headers
-          )
-        );
-      };
-
-      const onError = (error) => {
-        console.error("Connection error: ", error);
-        if (this.reconnect++ < 5) {
-          setTimeout(() => {
-            console.log("Attempting to reconnect...");
-            this.connect();
-          }, 10 * 1000);
-        } else {
-          console.log("Failed to reconnect after 5 attempts.");
-        }
-      };
-
-      this.ws.connect(headers, onConnected, onError);
-    },
-    formatTime(timestamp) {
-      const date = new Date(timestamp);
-      return date.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    },
+    
   },
+  // 스크롤 위치 이동을 위함
 };
 </script>
 
@@ -197,7 +199,6 @@ export default {
 
   border-radius: 10px; /* 모서리 둥글게 */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6); /* 그림자 효과 */
-  max-width: 600px; /* 최대 너비 설정 */
   margin: 20px auto; /* 중앙 정렬 */
   padding: 20px; /* 내부 여백 */
 }
@@ -213,7 +214,9 @@ export default {
 
 .list-group {
   max-height: 600px; /* 채팅창 높이 */
+  height: 90%;
   overflow-y: auto; /* 스크롤바 */
+  scroll-behavior: smooth;
   background-color: white; /* 채팅창 배경색 */
   border: 1px solid #eaeaea; /* 테두리 */
   border-radius: 10px; /* 모서리 둥글게 */
@@ -242,6 +245,7 @@ export default {
   border: none; /* 테두리 없음 */
   transition: transform 0.5s ease; /* 호버 애니메이션 효과 */
   background-color: #f4f4f4; /* 입력창 배경 */
+  margin-bottom: 40px;
 }
 
 .input-group:hover {
