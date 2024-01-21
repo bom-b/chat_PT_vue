@@ -679,7 +679,14 @@ export default {
       let goals = Array(labels.length).fill(data.targetWeight.target_Weight); // 목표 체중
 
       let lastWeight  = dataset[dataset.length - 1] // 오늘 체중
-      console.log("마지막 몸무게",lastWeight)
+
+      let minY = lastWeight - 10;
+      let maxY = lastWeight + 10;
+
+      if (lastWeight == null) {
+        minY = goals - 10;
+        maxY = goals + 10;
+      }
 
       this.changeWeightInfo.myWeightChart = new Chart(ctx, {
         type: 'line',
@@ -704,8 +711,8 @@ export default {
         options: {
           scales: {
             y: {
-              min: lastWeight - 10,
-              max: lastWeight + 10
+              min: minY,
+              max: maxY,
             }
           }
         }
