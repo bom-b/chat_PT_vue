@@ -25,7 +25,7 @@
           <button class="nav-button prev" @click="showPreviousFood">&lt;</button>
     <img
       v-if="selectedEvent.foodDetails.length > 0 && selectedEvent.foodDetails[currentFoodIndex].foodImgs"
-      :src="`${this.$springBaseURL}/images/foodMainImages/${selectedEvent.foodDetails[currentFoodIndex].foodImgs}`"
+      :src="`${this.$s3BaseURL}/food_main_images/${selectedEvent.foodDetails[currentFoodIndex].foodImgs}`"
       alt="Event image"
       class="img-event" style="width: 300px; height: 300px;"
     />
