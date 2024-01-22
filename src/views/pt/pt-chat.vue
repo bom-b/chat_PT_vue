@@ -5,9 +5,7 @@
       border-radius: 30px;
     "
   >
-    <div>
-      <h2 @click="goback()">🔙 </h2>
-    </div>
+    <img class="rotatable-image" src="../../assets/img/icon/backtothe.png" alt="back_icon" @click="goback()" style="height: 50px; margin-bottom: 2px;" >
     <ul class="list-group" ref="chatList">
       <li
         class="list-group-item"
@@ -387,6 +385,18 @@ export default {
   to {
     opacity: 1;
     transform: translateZ(0);
+  }
+}
+.rotatable-image:hover {
+  animation: rotateImage 0.3s forwards;
+}
+
+@keyframes rotateImage {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 
