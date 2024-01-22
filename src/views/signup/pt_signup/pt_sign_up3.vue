@@ -329,6 +329,7 @@ export default {
       awards: [
         { name: '', rank: '' }
       ],
+      // awards: [],
       region: "",
       starttime: '',
       endtime: '',
@@ -364,7 +365,8 @@ export default {
     handleMainImageUpload(event) {
       const file = event.target.files[0];
       const imageObject = {
-        url: URL.createObjectURL(file),
+        name: "",
+        url: FileReader.createObjectURL(file),
       };
       this.mainImage = imageObject;
     },
@@ -408,7 +410,8 @@ export default {
     },
     addContest() {
       if (this.awards.length < 5) {
-        this.awards.push({ name: '', rank: '' });
+        // this.awards.push({ name: '', rank: '' });
+        this.awards.push();
       } else {
         alert('수상 경력은 최대 5개까지만 가능합니다.');
       }
@@ -474,6 +477,7 @@ export default {
           starttime: this.starttime,
           endtime: this.endtime,
           mainimage: this.mainImage,
+          gym: this.gym,
 
         };
         if (isValid) {

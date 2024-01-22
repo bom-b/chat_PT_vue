@@ -50,7 +50,22 @@ export default {
   },
   methods: {
     proceedToNextPage() {
-      this.$emit("nextPage");
+      try {
+        const isValid = 1;
+        const data = {
+          nm_profileimg: this.nm_profileimg
+
+        };
+        if (isValid) {
+          this.$emit("nextPage", data)
+        } else {
+          this.$swal("유효하지 않은 경로입니다.");
+        }
+
+      } catch (e) {
+        console.log(e);
+      }
+
     },
     onFileChange(e) {
       if (e.target.files.length === 0) return;
@@ -126,6 +141,11 @@ export default {
 </template>
 
 <style scoped>
+img {
+  max-width: 100px;
+  max-height: 100px;
+}
+
 .main {
   display: flex;
   justify-content: center;

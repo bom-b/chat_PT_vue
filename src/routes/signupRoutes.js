@@ -10,7 +10,7 @@ import PT_Sign_Up from "@/views/signup/pt_signup/pt_sign_up.vue";
 import PT_Sign_Up2 from "@/views/signup/pt_signup/pt_sign_up2.vue";
 import PT_Sign_Up3 from "@/views/signup/pt_signup/pt_sign_up3.vue";
 // import PT_Sign_Finish from "@/views/signup/pt_signup/pt_sign_finish.vue";
-import PT_Sign_up_master from "@/views/signup/pt_signup/pt_sign_up_matser.vue";
+import PT_Sign_up_master from "@/views/signup/pt_signup/pt_sign_up_master.vue";
 
 const adminRoutes = [
     // 회원가입 메인
