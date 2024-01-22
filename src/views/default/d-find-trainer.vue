@@ -10,7 +10,7 @@
           <div class="carousel__item">
             <a :href="`/default/d_trainer_detail/${slide.memberVO.id}`">
               <div class="card" style="width:100%;">
-                <img :src="`${this.$springBaseURL}/images/trainer/${slide.mainimage}`" style="width: 100%;" />
+                <img :src="`${this.$s3BaseURL}/trainer/profile_img/${slide.mainimage}`" style="width: 100%;" />
 
                 <div class="container">
                   <h4><b>{{ slide.memberVO.name }}</b></h4>
@@ -47,12 +47,12 @@
           <li v-for="(trainer, idx) in myRegionTrainer" :key="idx" class="card2">
 
             <div class="image-container">
-              <img :src="`${this.$springBaseURL}/images/trainer/${trainer.mainimage}`" alt="Profile Picture">
+              <img :src="`${this.$s3BaseURL}/trainer/profile_img/${trainer.mainimage}`" alt="Profile Picture">
             </div>
             <div class="info">
               <div class="card-title">
                 <span class="title-content">{{ trainer.memberVO.name }} || <span style="font-size: 1.1rem;">{{
-                  trainer.region }}</span></span>
+                  trainer.region }} ({{ trainer.gym }})</span></span>
               </div>
               <table class="mt-4 trainer-info-table">
                 <tr>

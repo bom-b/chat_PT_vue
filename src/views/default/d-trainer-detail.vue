@@ -1,53 +1,102 @@
 <template>
-  <main style="margin-top: 125px">
-    <div class="section1800">
-      <div v-if="Object.keys(trainerInfo).length" class="card mx-auto card-container" style="width: 18rem">
-        <!-- 카드 이미지 -->
-        <img :src="`${this.$springBaseURL}/images/trainer/${trainerInfo.mainimage}`" class="card-img-top" alt="Trainer Image" />
-        <!-- 카드 본문 -->
-        <div class="card-body">
-          <h5 class="card-title">{{ trainerInfo.memberVO.name }}</h5>
-          <p class="card-text">{{ trainerInfo.trainerintro }}</p>
-        </div>
-        <!-- 신청 및 기능 -->
-        <div class="card-body">
-          <button class="card-btn" @click="applyPT">PT 신청 🏋️‍♀️</button>
-        </div>
+  <main class="trainer-profile" :class="{ 'large-screen': isLargeScreen }">
+    <!-- 트레이너 정보 섹션 -->
+    <section class="trainer-info">
+      <div class="profile-image">
+        <img
+          :src="`${this.$s3BaseURL}/trainer/profile_img/${trainerInfo.mainimage}`"
+          alt="Trainer Image"
+        />
       </div>
-      <div class="detail-description">
-        <!-- 여기에 상세 설명 내용을 넣습니다. -->
-        <h2>소개말</h2>
-        <p>{{ trainerInfo.trainercomment }}</p>
-        <h2>수상경력</h2>
-        <ul>
-          <li>{{ trainerInfo.awards1 }}</li>
-          <li>{{ trainerInfo.awards2 }}</li>
-          <li>{{ trainerInfo.awards3 }}</li>
-          <li>{{ trainerInfo.awards4 }}</li>
-          <li>{{ trainerInfo.awards5 }}</li>
-        </ul>
-        <h2>사진</h2>
-        <img :src="`${this.$springBaseURL}/images/trainer/${trainerInfo.subimage1}`" alt="Profile Picture">
-        <img :src="`${this.$springBaseURL}/images/trainer/${trainerInfo.subimage2}`" alt="Profile Picture">
-        <h2>근무 위치</h2>
-        <div ref="map" style="width:100%;height:400px;"></div>
-
-        <!-- 더 많은 내용 추가 가능 -->
-
+      <div class="info-content">
+        <h3>
+          <b>{{ trainerInfo.memberVO.name }}</b> 트레이너
+        </h3>
+        <p>{{ trainerInfo.trainerintro }}</p>
+        <button class="apply-btn" @click="applyPT">PT 신청 🏋️‍♀️</button>
       </div>
-    </div>
+    </section>
+
+    <!-- 상세 설명 섹션 -->
+    <section class="detail-description">
+      <h2>소개말</h2>
+      <p>{{ trainerInfo.trainercomment }}</p>
+      <h2>수상경력</h2>
+      <div class="awards-grid">
+        <div class="award-card" v-if="trainerInfo.awards1">
+          <i class="award-icon"></i>
+          <span>{{ trainerInfo.awards1 }}</span>
+        </div>
+        <div class="award-card" v-if="trainerInfo.awards2">
+          <i class="award-icon"></i>
+          <span>{{ trainerInfo.awards2 }}</span>
+        </div>
+        <div class="award-card" v-if="trainerInfo.awards3">
+          <i class="award-icon"></i>
+          <span>{{ trainerInfo.awards3 }}</span>
+        </div>
+        <div class="award-card" v-if="trainerInfo.awards4">
+          <i class="award-icon"></i>
+          <span>{{ trainerInfo.awards4 }}</span>
+        </div>
+        <div class="award-card" v-if="trainerInfo.awards5">
+          <i class="award-icon"></i>
+          <span>{{ trainerInfo.awards5 }}</span>
+        </div>
+        <!-- 이하 동일한 구조로 awards3, awards4, awards5에 대해서도 적용 -->
+      </div>
+    </section>
+
+    <!-- 사진 갤러리 -->
+    <section class="gallery">
+      <img
+        :src="`${this.$s3BaseURL}/trainer/profile_img/${trainerInfo.subimage1}`"
+        alt="Profile Picture"
+      />
+      <img
+        :src="`${this.$s3BaseURL}/trainer/profile_img/${trainerInfo.subimage2}`"
+        alt="Profile Picture"
+      />
+    </section>
+
+    <!-- 지도 섹션 -->
+    <section class="map-container" style="z-index: 0">
+      <h2>헬스장 위치 : {{ trainerInfo.region }}</h2>
+      <div ref="map" class="map"></div>
+    </section>
   </main>
 </template>
 
 
 <script>
+import { ref, onMounted } from "vue";
+
 export default {
+  setup() {
+    const isAnimated = ref(false);
+
+    onMounted(() => {
+      isAnimated.value = true;
+    });
+
+    return {
+      isAnimated,
+    };
+  },
   data() {
     return {
-      trainerInfo: {}, // 데이터 객체로 받기
+      trainerInfo: {
+        memberVO: {},
+      }, // 데이터 객체로 받기
       trainerId: "",
     };
   },
+  computed: {
+    isLargeScreen() {
+      return window.innerWidth >= 1200; // 1200px을 기준으로 큰 화면 여부 판단
+    },
+  },
+
   methods: {
     // 트레이너 디테일 가져오기
     async fetchTrainerDetail() {
@@ -66,7 +115,6 @@ export default {
           // 주소 정보가 로드되면 지도를 초기화합니다.
           this.loadKakaoMap();
         }
-        
       } catch (e) {
         console.log("여기가 에러", e);
       }
@@ -123,7 +171,6 @@ export default {
                   icon: "warning",
                   title: "PT신청중에 있습니다!",
                   text: "PT선생님 변경은 기존 선생님과 상의 후 진행하시기 바랍니다.",
-
                 });
               }
               const Toast = this.$swal.mixin({
@@ -151,12 +198,15 @@ export default {
     },
     loadKakaoMap() {
       // 카카오 맵 스크립트가 이미 로드되었는지 확인
+      console.log("kakao!");
+      console.log(this.trainerInfo.memberVO);
       if (window.kakao && window.kakao.maps) {
         this.initMap();
       } else {
-        const script = document.createElement('script');
+        const script = document.createElement("script");
         script.onload = () => kakao.maps.load(this.initMap);
-        script.src = 'https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=70d88945f74f6081525a7affb6e243ec&libraries=services';
+        script.src =
+          "https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=70d88945f74f6081525a7affb6e243ec&libraries=services";
         document.head.appendChild(script);
       }
     },
@@ -164,7 +214,7 @@ export default {
       const mapContainer = this.$refs.map;
       const mapOption = {
         center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
+        level: 3, // 지도의 확대 레벨
       };
 
       // 지도를 생성합니다
@@ -178,139 +228,138 @@ export default {
           const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
           const marker = new kakao.maps.Marker({
             map: map,
-            position: coords
+            position: coords,
           });
 
           const infowindow = new kakao.maps.InfoWindow({
-            content: '<div style="width:150px;text-align:center;padding:6px 0;">근무위치</div>'
+            content: `<div style="width:150px;text-align:center;padding:6px 0;">${this.trainerInfo.gym}</div>`,
           });
           infowindow.open(map, marker);
 
           // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
           map.setCenter(coords);
+
+          // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+          map.setCenter(coords);
+          map.setZoomable(true); // 지도의 마우스 휠, 모바일 터치를 이용한 확대, 축소 기능을 막는다.
+          map.setLevel(3); // 지도 객체 함수 호출을 통한 확대, 축소는 동작한다.
+          var zoomControl = new kakao.maps.ZoomControl(); // 아래와 같이 옵션을 입력하지 않아도 된다
+          map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT); // 지도 오른쪽에 줌 컨트롤이 표시되도록 지도에 컨트롤을 추가한다.
         }
       });
-    }
+    },
   },
   mounted() {
     this.fetchTrainerDetail();
     this.$nextTick(() => {
       this.loadKakaoMap();
     });
-
   },
 };
 </script>
 
 
-
 <style scoped>
-.section1800 {
-  margin-top: 80px;
-}
-
-.card {
-  transition: transform 0.6s;
-  /* 애니메이션 지속 시간 설정 */
-  transform-origin: center;
-  /* 회전의 중심점을 카드 중앙으로 설정 */
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* 기본 스타일 설정 */
-.section1800 {
-  margin-top: 80px;
+.trainer-profile {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding: 20px;
+}
+
+.trainer-info {
+  display: flex;
+  gap: 20px;
   align-items: center;
 }
 
-.card {
-  width: 18rem;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+.profile-image img {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
 }
 
-.card:hover {
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+.info-content h1 {
+  font-size: 2rem;
+  color: #007bff;
 }
 
-.card-img-top {
+.apply-btn {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.apply-btn:hover {
+  background-color: #218838;
+}
+
+.detail-description,
+.gallery,
+.map-container {
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  background-color: white;
+}
+
+.gallery img {
   width: 100%;
   height: auto;
+  margin-bottom: 15px;
 }
 
-.card-body {
+.map {
+  width: 100%;
+  height: 400px;
+}
+
+/* 대형 화면에서의 레이아웃 변경 */
+@media (min-width: 1200px) {
+  .trainer-profile {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .trainer-info,
+  .detail-description,
+  .gallery,
+  .map-container {
+    width: 48%; /* 화면의 절반 크기로 조정 */
+    margin: 1%; /* 간격 조정 */
+  }
+  .awards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.award-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
   padding: 15px;
-}
-
-.card-title {
-  color: #007bff;
-  /* 강렬한 색상으로 제목 강조 */
-  font-weight: bold;
-}
-
-.card-text {
-  color: #343a40;
-}
-
-.list-group-item {
-  font-size: 0.9rem;
-}
-
-/* 버튼 스타일 */
-.card-btn {
-  display: inline-block;
-  padding: 10px 20px;
-  margin-bottom: 10px;
-  border: none;
-  border-radius: 25px;
-  background-color: #28a745;
-  /* 진한 녹색 배경 */
-  color: white;
   text-align: center;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s, transform 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.card-btn:hover {
-  cursor: pointer;
-  background-color: #218838;
-  /* 호버시 색상 변경 */
-  transform: translateY(-2px);
-  /*호버시 약간 위로 이동 */
+.award-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* 아이콘 애니메이션 */
-.card-btn:after {
-  content: "";
-  display: inline-block;
-  margin-left: 5px;
-  transition: transform 0.3s;
+.award-icon {
+  display: block;
+  margin: 0 auto 10px;
+  /* 아이콘 스타일링을 위한 CSS 코드 추가 */
 }
 
-.card-btn:hover:after {
-  transform: rotate(20deg);
-  /* 호버시 아이콘 회전 */
 }
-
-/* 특별한 호버 효과는 제거 */
-/* .card:hover {
-    transform: scale(1.03);
-} */
-
-/* @keyframes spin은 현재 사용하지 않으므로 제거 */
 </style>
-
-
-  

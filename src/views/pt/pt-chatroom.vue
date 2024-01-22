@@ -3,32 +3,16 @@
     <div class="header">
       <h3>PT 회원 채팅 리스트</h3>
       <div class="search-box">
-        <input
-          type="text"
-          class="search-input"
-          v-model="room_name"
-          @input="filterChatrooms"
-          placeholder="회원 이름 검색 & 바로 연결"
-        />
+        <input type="text" class="search-input" v-model="room_name" @input="filterChatrooms" placeholder="회원 이름 검색 & 바로 연결"/>
       </div>
     </div>
     <ul class="chatroom-list">
       <!-- 회원 리스트가 한 명뿐인 경우 자동으로 연결 -->
-      <li
-        class="chatroom-item"
-        v-if="filteredChatrooms.length === 1"
-        @click="enterRoom(filteredChatrooms[0].roomId)"
-      >
+      <li class="chatroom-item" v-if="filteredChatrooms.length === 1" @click="enterRoom(filteredChatrooms[0].roomId)">
         {{ filteredChatrooms[0].name }}
       </li>
       <!-- 그 외의 경우 리스트로 표시 -->
-      <li
-        class="chatroom-item"
-        v-else
-        v-for="item in filteredChatrooms"
-        :key="item.roomId"
-        @click="enterRoom(item.roomId)"
-      >
+      <li class="chatroom-item" v-else v-for="item in filteredChatrooms" :key="item.roomId" @click="enterRoom(item.roomId)">
         {{ item.name }}
       </li>
     </ul>

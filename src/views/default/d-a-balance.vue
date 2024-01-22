@@ -27,7 +27,7 @@
           <div class="card">
             <span class="badge badge-gold">1등</span>
             <div class="food-image-wrapper">
-              <img :src="`${this.$springBaseURL}/images/foodMainImages/${foodFirst.foodimg}`"
+              <img :src="`${this.$s3BaseURL}/food_main_images/${foodFirst.foodimg}`"
                 class="card-img-top food-image" alt='1등이미지'>
             </div>
             <div class="card-body" style="text-align: center;">
@@ -55,7 +55,7 @@
           <div class="card">
             <span class="badge badge-silver">2등</span>
             <div class="food-image-wrapper">
-              <img :src="`${this.$springBaseURL}/images/foodMainImages/${foodSecond.foodimg}`"
+              <img :src="`${this.$s3BaseURL}/food_main_images/${foodSecond.foodimg}`"
                 class="card-img-top food-image" alt='2등이미지'>
             </div>
             <div class="card-body" style="text-align: center;">
@@ -84,7 +84,7 @@
           <div class="card">
             <span class="badge badge-bronze">3등</span>
             <div class="food-image-wrapper">
-              <img :src="`${this.$springBaseURL}/images/foodMainImages/${foodThird.foodimg}`"
+              <img :src="`${this.$s3BaseURL}/food_main_images/${foodThird.foodimg}`"
                 class="card-img-top food-image" alt='3등이미지'>
             </div>
             <div class="card-body" style="text-align: center;">

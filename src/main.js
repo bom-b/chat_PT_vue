@@ -28,10 +28,14 @@ app.use(router);
 app.use(store);
 app.use(VueSweetalert2, sweetalertOptions);
 
+// 웹사이트 베이스 주소
 app.config.globalProperties.$vueBaseURL = 'http://www.chatpt.shop';
 
 // 개발환경과 배포환경에서 동적으로 바뀌는 베이스 주소
 app.config.globalProperties.$springBaseURL = process.env.VUE_APP_API_URL;
+
+// s3 베이스 주소 (사진을 불러올때 사용)
+app.config.globalProperties.$s3BaseURL = 'https://chat-pt.s3.ap-northeast-2.amazonaws.com';
 
 // axios 전역변수 등록. 헤더에 토큰값을 적재하기 위해서 해당 $axios를 사용해야함.
 // axios 요청이 일어날때 토큰의 유효성 검사도 함께 진행.

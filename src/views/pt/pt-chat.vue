@@ -1,17 +1,11 @@
 <template>
-  <div
-    class="container"
-    v-cloak
-    style="
-      background-color: #003a2452;
+  <div class="container" v-cloak style=" background-color: #003a2452;
       height: 100%; /* 전체 높이 */
       width: 100%; /* 전체 너비 */
       border-radius: 30px;
     "
   >
-    <div>
-      <h2 style="color: azure;">🔙 </h2>
-    </div>
+    <img class="rotatable-image" src="../../assets/img/icon/backtothe.png" alt="back_icon" @click="goback()" style="height: 50px; margin-bottom: 2px;" >
     <ul class="list-group" ref="chatList">
       <li
         class="list-group-item"
@@ -71,8 +65,11 @@ export default {
   },
   async created() {
     this.roomId = localStorage.getItem("wschat.roomId");
-    this.sender = localStorage.getItem("name");
-
+    if(localStorage.getItem("name") == null){
+      this.sender = localStorage.getItem("nickname");
+    } else {
+      this.sender = localStorage.getItem("name")
+    }
     await this.connect();
     await this.findRoom();
     await this.loadPreviousMessages();
@@ -217,6 +214,10 @@ export default {
         this.message = "";
       }
     },
+    goback() {
+      this.$emit("change-component", "chatroom");
+    },
+    //
   },
   // 스크롤 위치 이동을 위함
 };
@@ -384,6 +385,18 @@ export default {
   to {
     opacity: 1;
     transform: translateZ(0);
+  }
+}
+.rotatable-image:hover {
+  animation: rotateImage 0.3s forwards;
+}
+
+@keyframes rotateImage {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 
