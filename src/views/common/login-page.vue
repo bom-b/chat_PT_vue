@@ -207,18 +207,6 @@ a {
             </div>
           </div>
 
-          <!-- 회원가입 / 아이디 비번 찾기-->
-          <div class="mt-5">
-            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
-               href="/service/find_id">
-              아이디 찾기
-            </a>
-            <span> | </span>
-            <a class="mt-2 icon-link icon-link-hover" style="--bs-link-hover-color-rgb: 25, 135, 84;"
-               href="/service/find_pw">
-              비밀번호 찾기
-            </a>
-          </div>
         </form>
 
       </div>

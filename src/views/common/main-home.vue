@@ -60,16 +60,15 @@
           시작해보세요!</p>
 
         <router-link to="/signUp/sign_up_main" class="router-link">
-          <button class="mb-3 btn-signature" type="button" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="200">이메일로
+          <button class="mb-3 btn-signature" type="button" data-aos="fade-in" data-aos-duration="2000"
+                  data-aos-delay="200">이메일로
             가입하기
           </button>
         </router-link>
         <br/>
 
-        <router-link to="/default/d_kakao" class="router-link">
-          <img id="kakao-btn" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="200"
-               src="/assets/img/graphic/kakao_login_kor.png">
-        </router-link>
+        <img @click="kakaoLogin" id="kakao-btn" data-aos="fade-in" data-aos-duration="2000" data-aos-delay="200"
+             src="/assets/img/graphic/kakao_login_kor.png">
 
       </div>
     </div>
@@ -93,6 +92,19 @@ export default {
         video.playbackRate = 0.7;
       }
     },
+    kakaoLogin() {
+      const REST_API_KEY = 'aa7e1b658afaea7d32248761c5aed3ef';
+      const REDIRECT_URI = this.$vueBaseURL + '/service/kakaojoin';
+
+      // 새 창의 크기
+      const width = 500;
+      const height = 800;
+
+      // 새 창의 옵션
+      const windowFeatures = `width=${width},height=${height},resizable=yes,scrollbars=yes,status=yes`;
+      window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`, 'kakaoLogin', windowFeatures;
+
+    }
   },
 };
 
@@ -257,8 +269,8 @@ export default {
   z-index: -1000;
 }
 
-.router-link {
-  //pointer-events: auto; /* Ensure that pointer events are not disabled */
+#kakao-btn:hover {
+  cursor: pointer;
 }
 
 button {
@@ -346,14 +358,14 @@ button {
   }
 
   #section2 {
-    #sec2-icon{
+    #sec2-icon {
       width: 300px;
 
     }
   }
 
   #section3 {
-    #sec3-icon{
+    #sec3-icon {
       width: 280px;
     }
   }
