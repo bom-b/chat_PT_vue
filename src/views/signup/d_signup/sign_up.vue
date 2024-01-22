@@ -5,11 +5,14 @@ export default {
   data() {
     return {
       user: {
+        nickname: "",
         id: "",
         name: "",
         email: "",
         password: "",
+        role: "NORMAL",
         password_Check: "",
+        region: "",
       },
       inputDisplay: {
         id: 0,
@@ -79,8 +82,29 @@ export default {
         this.matchpwd = newPassword !== newPasswordCheck;
       }
     },
-
-    // 아이디 정규표현식
+    search() {
+      new window.daum.Postcode({
+        oncomplete: (data) => {
+          var roadAddr = data.roadAddress; // 도로명 주소 변수
+          var extraRoadAddr = ''; // 참고 항목 변수
+          // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+          if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+            extraRoadAddr += data.bname;
+          }
+          // 건물명이 있고, 공동주택일 경우 추가한다.
+          if (data.buildingName !== '' && data.apartment === 'Y') {
+            extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+          }
+          // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+          if (extraRoadAddr !== '') {
+            extraRoadAddr = ' (' + extraRoadAddr + ')';
+          }
+          // 우편번호와 주소 정보를 해당 필드에 넣는다.
+          this.user.region = roadAddr;
+          console.log(this.user.region);
+        }
+      }).open();
+    },
     regId(id) {
       if (id !== null && id !== undefined && id.trim() !== "") {
         const reg = /^[a-zA-Z0-9]+$/;
@@ -93,36 +117,41 @@ export default {
         return this.$swal.fire("", "아이디를 입력해주세요", "warning");
       }
     },
-    removeSpaces(email) {
-      return email.trim();
+    removeSpaces(data) {
+      return data.trim();
     },
     // id 중복체크
     async idcheck() {
       try {
-        const data = {
-          id: this.regId(this.user.id),
-        };
-        const response = await this.$axiosWithoutValidation.post(
-          "/signUp/id",
-          data
-        );
-        const checkedId = parseInt(response.data);
-        if (checkedId < 1) {
-          const result = await Swal.fire({
-            title: "",
-            text: "사용 가능한 아이디입니다. 사용하시겠습니까?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "확인",
-            cancelButtonText: "취소",
-          });
-          if (result.isConfirmed) {
-            this.inputDisplay.id = 1;
+        const clearid = this.removeSpaces(this.user.id);
+        if (clearid !== null && clearid !== undefined && clearid !== "") {
+          const data = {
+            id: this.regId(this.user.id),
+          };
+          const response = await this.$axiosWithoutValidation.post(
+            "/signUp/id",
+            data
+          );
+          const checkedId = parseInt(response.data);
+          if (checkedId < 1) {
+            const result = await Swal.fire({
+              title: "",
+              text: "사용 가능한 아이디입니다. 사용하시겠습니까?",
+              icon: "question",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "확인",
+              cancelButtonText: "취소",
+            });
+            if (result.isConfirmed) {
+              this.inputDisplay.id = 1;
+            }
+          } else {
+            this.$swal("", "이미 있는 아이디 입니다.", "warning");
           }
         } else {
-          this.$swal("", "이미 있는 아이디 입니다.", "warning");
+          this.$swal("", "아이디를 입력하세요.", "warning")
         }
       } catch (e) {
         console.log(e);
@@ -138,8 +167,8 @@ export default {
     },
     confirm() {
       if (
-        this.auth.serverCode != "" &&
-        this.auth.clientCode != "" &&
+        this.auth.serverCode != "" && this.auth.serverCode != null && this.auth.serverCode != undefined &&
+        this.auth.clientCode != "" && this.auth.clientCode != null && this.auth.clientCode != undefined &&
         this.auth.serverCode == this.auth.clientCode
       ) {
         return (this.auth.passAuth = 1);
@@ -151,32 +180,37 @@ export default {
     async emailCheck() {
       try {
         const clearemail = this.removeSpaces(this.user.email);
-        const data = {
-          email: clearemail,
-        };
-        const response = await this.$axiosWithoutValidation.post(
-          "/signUp/email",
-          data
-        );
-        // 문자열로 오는 경우 숫자로 변환
-        const emailCount = parseInt(response.data);
-        if (emailCount < 1) {
-          const result = await Swal.fire({
-            title: "사용 가능한 이메일 입니다.",
-            text: "계속 진행하시겠습니까?",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "확인",
-            cancelButtonText: "취소",
-          });
-          if (result.isConfirmed) {
-            this.showMessage.emailStatus = "메일을 발송 중입니다...";
-            this.sendMail(data);
+        if (clearemail !== null && clearemail !== undefined && clearemail !== "") {
+          const data = {
+            email: clearemail,
+          };
+          const response = await this.$axiosWithoutValidation.post(
+            "/signUp/email",
+            data
+          );
+          // 문자열로 오는 경우 숫자로 변환
+          const emailCount = parseInt(response.data);
+          if (emailCount < 1) {
+            const result = await Swal.fire({
+              title: "사용 가능한 이메일 입니다.",
+              text: "계속 진행하시겠습니까?",
+              icon: "question",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "확인",
+              cancelButtonText: "취소",
+            });
+            if (result.isConfirmed) {
+              this.showMessage.emailStatus = "메일을 발송 중입니다...";
+              this.sendMail(data);
+            }
+          } else {
+            await this.$swal("이미 사용중인 이메일 입니다.");
           }
-        } else {
-          await this.$swal("이미 사용중인 이메일 입니다.");
+        }
+        else {
+          this.$swal("", "이메일을 입력하세요.", "warning")
         }
       } catch (e) {
         console.log("email 중복 체크 에러", e);
@@ -200,10 +234,13 @@ export default {
       try {
         const isValid = 1;
         const data = {
+          nickname: this.user.nickname,
           id: this.user.id,
           name: this.user.name,
           email: this.user.email,
           password: this.user.password,
+          role: this.user.role,
+          region: this.user.region
         };
         if (isValid) {
           this.$emit("nextPage", data);
@@ -225,7 +262,7 @@ export default {
     </div>
     <div class="container">
       <div class="login-container">
-        <h2 class="mb-4">회원가입</h2>
+        <h2 class="mb-4">일반 회원가입</h2>
         <!-- 아이디 입력 폼 -->
         <form @submit.prevent="idcheck">
           <div class="row mb-3">
@@ -241,12 +278,29 @@ export default {
             </div>
           </div>
         </form>
+        <div class="row mb-3">
+          <label for="region" class="col-sm-3 col-form-label">주소:</label>
+          <div class="col-sm-7">
+            <div class="input-group">
+              <input type="text" class="form-control" id="region" placeholder="도로명주소" readonly @click="search"
+                v-model="user.region">
+            </div>
+          </div>
+        </div>
         <!-- 이름 입력 폼 -->
         <div class="row mb-3">
           <label for="name" class="col-sm-3 col-form-label">이름:</label>
           <div class="col-sm-7">
             <div class="input-group">
               <input type="text" class="form-control" id="name" placeholder="이름을 입력하세요" v-model="user.name" />
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="nickname" class="col-sm-3 col-form-label">닉네임:</label>
+          <div class="col-sm-7">
+            <div class="input-group">
+              <input type="text" class="form-control" id="nickname" placeholder="닉네임을 입력하세요" v-model="user.nickname" />
             </div>
           </div>
         </div>
@@ -326,13 +380,7 @@ export default {
           </div>
         </div>
       </div>
-      <br />
-      <div>
-        {{ user.id }}<br />
-        {{ user.name }}<br />
-        {{ user.email }}<br />
-        {{ user.password }}<br />
-      </div>
+
       <div class="button-container">
         <button type="button" class="btn btn-success" @click="proceedToNextPage" :disabled="!user.id ||
           !user.name ||
@@ -340,6 +388,8 @@ export default {
           !user.password ||
           !user.password_Check ||
           !auth.clientCode ||
+          !user.region ||
+          !user.nickname ||
           auth.clientCode != auth.serverCode ||
           inputDisplay.id != 1 ||
           inputDisplay.email != 1 ||
@@ -354,6 +404,7 @@ export default {
 </template>
 <style scoped>
 .main {
+  margin-top: 200px;
   display: flex;
   justify-content: center;
   align-items: center;

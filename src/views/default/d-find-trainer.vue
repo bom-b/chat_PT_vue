@@ -9,15 +9,15 @@
         <Slide v-for="slide in bestTrainerList" :key="slide">
           <div class="carousel__item">
             <a :href="`/default/d_trainer_detail/${slide.memberVO.id}`">
-            <div class="card" style="width:100%;">
-              <img :src="`${this.$springBaseURL}/images/trainer/${slide.mainimage}`" style="width: 100%;" />
+              <div class="card" style="width:100%;">
+                <img :src="`${this.$springBaseURL}/images/trainer/${slide.mainimage}`" style="width: 100%;" />
 
-              <div class="container">
-                <h4><b>{{ slide.memberVO.name }}</b></h4>
-                <p>{{ slide.region }}</p>
+                <div class="container">
+                  <h4><b>{{ slide.memberVO.name }}</b></h4>
+                  <p>{{ slide.region }}</p>
+                </div>
+
               </div>
-
-            </div>
             </a>
           </div>
         </Slide>
@@ -442,4 +442,5 @@ a:active {
 .detail-button:hover {
   background-color: #067a6e;
   /* 마우스 호버 시 버튼의 배경 색상을 변경합니다. */
-}</style>
+}
+</style>

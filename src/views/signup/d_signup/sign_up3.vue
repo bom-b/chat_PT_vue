@@ -2,73 +2,73 @@
 export default {
   data() {
     return {
-      height: '',
-      weight: '',
-      BMI: '',
-      sex: '',
-      purpose: '',
+      user: {
+        birth: '',
+        height: '',
+        weight: '',
+        bmi: '',
+        gender: '',
+        purpose: null,
+        activity: null,
+      }
     };
   },
   computed: {
     progress() {
-      if (this.height && this.weight && this.sex) {
+      if (this.user.height && this.user.weight && this.user.gender && this.user.purpose && this.user.activity) {
         return 75;
       } else {
         return 50;
       }
     },
-    // 이미지 데이터 배열
     images() {
       return [
-        { path: require('../../../assets/img/ptgogo.png'), alt: 'Image 1', active: this.BMI >= 0 && this.BMI < 18.5 },
-        { path: require('../../../assets/img/ptgogo.png'), alt: 'Image 2', active: this.BMI >= 18.5 && this.BMI < 23 },
-        { path: require('../../../assets/img/qrchoon.png'), alt: 'Image 3', active: this.BMI >= 23 && this.BMI < 25 },
-        { path: require('../../../assets/img/qrchoon.png'), alt: 'Image 4', active: this.BMI >= 25 },
+        { path: require('../../../../public/assets/img/bmi/bmi1.png'), alt: 'Image 1', active: this.user.bmi >= 0 && this.user.bmi < 18.5 },
+        { path: require('../../../../public/assets/img/bmi/bmi2.png'), alt: 'Image 2', active: this.user.bmi >= 18.5 && this.user.bmi < 23 },
+        { path: require('../../../../public/assets/img/bmi/bmi3.png'), alt: 'Image 3', active: this.user.bmi >= 23 && this.user.bmi < 25 },
+        { path: require('../../../../public/assets/img/bmi/bmi4.png'), alt: 'Image 4', active: this.user.bmi >= 25 },
       ];
-    },
-    getImagePath() {
-      if (this.BMI >= 0 && this.BMI < 18.5) {
-        return require('../../../assets/img/ptgogo.png');
-      } else if (this.BMI >= 18.5 && this.BMI < 23) {
-        // return require('@/assets/정상.png');
-        return require('../../../assets/img/ptgogo.png');
-      } else if (this.BMI >= 23 && this.BMI < 25) {
-        // return require('@/assets/과체중.png');
-        return require('../../../assets/img/qrchoon.png');
-      } else if (this.BMI >= 25) {
-        // return require('@/assets/비만.png');
-        return require('../../../assets/img/qrchoon.png');
-      } else {
-        return require('../../../assets/img/춘식얼굴.png'); // or provide a default image path
-      }
     },
   },
   methods: {
-    handleImageClick(image) {
-      // 클릭한 이미지에 따라 특정 동작 수행
-      console.log(`Clicked on image: ${image.alt}`);
-    },
-    proceedToNextPage() {
-      if (this.height && this.weight && this.sex) {
-        this.$router.push('/sign_up4');
-      } else {
-        alert('키, 몸무게, 성별을 입력해주세요!');
-      }
-    },
-    calculateBMI() {
-      if (this.height && this.weight) {
-        this.BMI = (this.weight / ((this.height / 100) ** 2)).toFixed(2);
-        return this.BMI;
+    calculatebmi() {
+      if (this.user.height && this.user.weight) {
+        this.user.bmi = (this.user.weight / ((this.user.height / 100) ** 2)).toFixed(2);
+        return this.user.bmi;
       } else {
         return '';
       }
     },
-    setSex(sex) {
-      this.sex = sex;
+    setgender(gender) {
+      this.user.gender = gender;
     },
     setPurpose(purpose) {
-      this.purpose = purpose;
-    }
+      this.user.purpose = purpose;
+    },
+    setActivity(activity) {
+      this.user.activity = activity;
+    },
+    proceedToNextPage() {
+      try {
+        const isValid = 1;
+        const data = {
+          birth: this.user.birth,
+          height: this.user.height,
+          weight: this.user.weight,
+          bmi: this.user.bmi,
+          gender: this.user.gender,
+          purpose: this.user.purpose,
+          activity: this.user.activity,
+        };
+        if (isValid) {
+          this.$emit("nextPage", data);
+        } else {
+          this.$swal("유효하지 않은 경로입니다.");
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
   },
 };
 </script>
@@ -80,61 +80,84 @@ export default {
           aria-valuemin="0" aria-valuemax="100"></div>
       </div>
       <div class="container mt-5 pt-2">
-        <h2>키와 몸무게 입력</h2>
+        <h2>정확한 판단을 위해 정보를 입력해주세요.</h2>
         <div class="input-container">
           <ul>
             <li>
-              <label for="sex">성별</label>
+              <label for="user.gender">성별</label>
               <div class="btn-group" role="group">
-                <button type="button" class="btn" :class="{ 'btn-male': sex === 'male' }" @click="setSex('male')">
+                <button type="button" class="btn" :class="{ 'btn-male': user.gender === 'male' }"
+                  @click="setgender('male')">
                   <i class="material-icons">male</i>
                 </button>
-                <button type="button" class="btn" :class="{ 'btn-female': sex === 'female' }" @click="setSex('female')">
+                <button type="button" class="btn" :class="{ 'btn-female': user.gender === 'female' }"
+                  @click="setgender('female')">
                   <i class="material-icons">female</i>
                 </button>
               </div>
             </li>
             <li>
-              <label for="age">나이</label>
-              <input class="form-control" type="number" id="age" v-model="age">
+              <label for="user.birth">생년월일</label>
+              <input class="form-control" type="date" id="user.birth" v-model="user.birth">
             </li>
             <li>
-              <label for="height">키(cm)</label>
-              <input class="form-control" type="number" id="height" v-model="height">
+              <label for="user.height">키(cm)</label>
+              <input class="form-control" type="number" id="user.height" v-model="user.height">
             </li>
             <li>
-              <label for="weight">몸무게(kg)</label>
-              <input class="form-control" type="number" id="weight" v-model="weight">
+              <label for="user.weight">몸무게(kg)</label>
+              <input class="form-control" type="number" id="user.weight" v-model="user.weight">
             </li>
             <li>
-              <label for="bmi"> bmi </label>
-              <div>{{ calculateBMI() }}</div>
+              <label for="user.bmi"> BMI </label>
+              <div>{{ calculatebmi() }}</div>
             </li>
+
+
+            <!-- 
             <div class="image-container">
               <div v-for="image in images" :key="image.path" :class="{ 'active-image': image.active }">
-                <img :src="image.path" :alt="image.alt" class="image" @click="handleImageClick(image)">
+                <img :src="image.path" :alt="image.alt" class="image">
+              </div>
+            </div> -->
+            <div class="carousel">
+              <div v-for="image in images" :key="image.path" class="carousel__face">
+                <img :src="image.path" :alt="image.alt" :class="{ 'active-image': image.active }">
               </div>
             </div>
+
             <li>
               <label for="purpose">목적</label>
               <div class="purpose_list">
-                <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'diet' }" id="diet"
-                  @click="setPurpose('diet')"> 다이어트 </button>
-                <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'keep' }" id="keep"
-                  @click="setPurpose('keep')"> 체중유지 </button>
-                <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'bulk-up' }" id="bulk-up"
-                  @click="setPurpose('bulk-up')"> 벌크업 </button>
-                <button class="btn btn-primary" :class="{ 'selected-purpose': purpose === 'improve' }" id="improve"
-                  @click="setPurpose('improve')"> 식습관 개선 </button>
+                <button class="btn btn-success" :class="{ 'selected-purpose': user.purpose === 0 }" id="diet"
+                  @click="setPurpose(0)"> 다이어트 </button>
+                <button class="btn btn-success" :class="{ 'selected-purpose': user.purpose === 1 }" id="keep"
+                  @click="setPurpose(1)"> 체중유지 </button>
+                <button class="btn btn-success" :class="{ 'selected-purpose': user.purpose === 2 }" id="bulk-up"
+                  @click="setPurpose(2)"> 벌크업 </button>
+                <button class="btn btn-success" :class="{ 'selected-purpose': user.purpose === 3 }" id="improve"
+                  @click="setPurpose(3)"> 식습관 개선 </button>
               </div>
-
+            </li>
+            <li>
+              <label for="activity">활동량</label>
+              <div class="purpose_list">
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 0 }" id=""
+                  @click="setActivity(0)"> 안 함</button>
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 1 }" id="no1"
+                  @click="setActivity(1)"> 저강도 </button>
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 2 }" id="no2"
+                  @click="setActivity(2)"> 중강도 </button>
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 3 }" id="no2"
+                  @click="setActivity(3)"> 고강도 </button>
+              </div>
             </li>
           </ul>
         </div>
       </div>
       <div class="button-container">
-        <button type="button" class="btn btn-primary" @click="proceedToNextPage"
-          :disabled="!height || !weight || !sex || !purpose">
+        <button type="button" class="btn btn-success" @click="proceedToNextPage"
+          :disabled="!user.birth || !user.height || !user.weight || !user.gender || user.purpose === null || user.activity === null || !user.bmi">
           다음
         </button>
       </div>
@@ -144,6 +167,49 @@ export default {
 
 
 <style scoped>
+/* .carousel {
+  perspective: 10000px;
+  transform-style: preserve-3d;
+  animation: spin 10s infinite linear;
+}
+
+.carousel__face {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  line-height: 200px;
+  color: white;
+  text-align: center;
+  font-size: 40px;
+}
+
+.carousel__face:nth-child(1) {
+  transform: rotateY(0deg) translateZ(288px);
+}
+
+.carousel__face:nth-child(2) {
+  transform: rotateY(60deg) translateZ(288px);
+}
+
+.carousel__face:nth-child(3) {
+  transform: rotateY(120deg) translateZ(288px);
+}
+
+.carousel__face:nth-child(4) {
+  transform: rotateY(180deg) translateZ(288px);
+}
+
+
+@keyframes spin {
+  from {
+    transform: rotateY(0deg);
+  }
+
+  to {
+    transform: rotateY(1turn);
+  }
+} */
+
 .main {
   display: flex;
   justify-content: center;
@@ -159,53 +225,28 @@ export default {
   border: 1px solid #f0f2f1;
   font-size: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  /* 그림자 추가 */
   transition: background-color 0.2s ease;
 }
-
-li {
-  list-style-type: none;
-  /* 기본 마커 제거 */
-  position: relative;
-  /* 하위 요소에 절대 위치 지정을 위함 */
-  padding-left: 30px;
-  /* 이미지와 텍스트 간 거리 조정 */
-}
-
-li::before {
-  content: "";
-  display: inline-block;
-  position: absolute;
-  left: 0;
-  width: 20px;
-  /* 원하는 너비로 설정 */
-  height: 20px;
-  /* 원하는 높이로 설정 */
-  background-image: url('https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/5eeea355389655.59822ff824b72.gif');
-  background-size: cover;
-  /* 이미지가 요소를 완전히 덮도록 설정, 필요에 따라 'contain'으로 변경 가능 */
-  background-repeat: no-repeat;
-  /* 이미지가 반복되지 않도록 설정 */
-  background-position: center;
-  /* 이미지가 요소의 중앙에 위치하도록 설정 */
-}
-
 
 .active-image {
   border: 2px solid red;
 }
 
-.image-container {
+.image-container .image {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   margin-top: 20px;
+  max-height: 200px;
+  max-width: 100%;
+  height: auto;
 }
+
 
 .image {
   width: 100px;
-  height: 100px;
+  height: 200px;
   margin: 5px;
   border-radius: 10px;
   cursor: pointer;
@@ -258,6 +299,10 @@ button {
 }
 
 .selected-purpose {
-  background-color: black;
-  /* 선택된 목적 버튼에 원하는 스타일을 추가하세요 */
-}</style>
+  background-color: rgb(13, 73, 204);
+}
+
+.selected-activity {
+  background-color: rgb(13, 73, 204);
+}
+</style>
