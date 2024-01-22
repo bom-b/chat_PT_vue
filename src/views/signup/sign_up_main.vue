@@ -2,65 +2,32 @@
   <main>
     <div class="section1400">
       <div id="box">
-        <h2
-          class="mb-5"
-          data-aos="fade-in"
-          data-aos-duration="1000"
-          data-aos-delay="0"
-        >
+        <h2 class="mb-5" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="0">
           가입할 <span class="highlight">유형</span>을 선택해주세요.
         </h2>
-        <div class="row" style="text-align: center; margin: auto; padding-bottom: 50px;" >
-          <router-link
-            to="/signUp/sign_up_master"
-            class="col-md-6 col-sm-12 router-link"
-            style="display: flex; justify-content: center; margin: auto"
-          >
-            <div
-              class="goal-box"
-              style="
+        <div class="row" style="text-align: center; margin: auto; padding-bottom: 50px;">
+          <router-link to="/signUp/sign_up" class="col-md-6 col-sm-12 router-link"
+            style="display: flex; justify-content: center; margin: auto">
+            <div class="goal-box" style="
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-start;
-              "
-              data-aos="fade-in"
-              data-aos-duration="1000"
-              data-aos-delay="200"
-            >
+              " data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
               <p class="TheJamsil400" style="display: inline-block">일반회원</p>
-              <img
-                class=""
-                src="../../../public/assets/img/graphic/normal-user.png"
-                alt=""
-                style="width: 60px"
-              />
+              <img class="" src="../../../public/assets/img/graphic/normal-user.png" alt="" style="width: 60px" />
             </div>
           </router-link>
-          <router-link
-            to="/signUp/pt_sign_up"
-            class="col-md-6 col-sm-12 router-link"
-            style="display: flex; justify-content: center; margin: auto"
-          >
-            <div
-              class="goal-box"
-              style="
+          <router-link to="/signUp/pt_sign_up" class="col-md-6 col-sm-12 router-link"
+            style="display: flex; justify-content: center; margin: auto">
+            <div class="goal-box" style="
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-start;
-              "
-              data-aos="fade-in"
-              data-aos-duration="1000"
-              data-aos-delay="200"
-            >
+              " data-aos="fade-in" data-aos-duration="1000" data-aos-delay="200">
               <p class="TheJamsil400" style="display: inline-block">
                 트레이너회원
               </p>
-              <img
-                class=""
-                src="../../../public/assets/img/graphic/trainer-user.png"
-                alt=""
-                style="width: 60px"
-              />
+              <img class="" src="../../../public/assets/img/graphic/trainer-user.png" alt="" style="width: 60px" />
             </div>
           </router-link>
         </div>
@@ -86,7 +53,8 @@ main {
   margin: auto;
   border: 1px solid #f0f2f1;
   font-size: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  /* 그림자 추가 */
   transition: background-color 0.2s ease;
 }
 
@@ -95,7 +63,8 @@ main {
 }
 
 .goal-box:hover {
-  background-color: #f0f2f1; /* 마우스를 올릴 때 바뀔 배경색 설정 */
+  background-color: #f0f2f1;
+  /* 마우스를 올릴 때 바뀔 배경색 설정 */
 }
 
 @media (max-width: 768px) {

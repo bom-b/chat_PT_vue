@@ -1,69 +1,75 @@
 <template>
   <main id="main">
     <div class="center-div">
-      <h1>오늘 섭취한 칼로리 : 3000Kcal</h1>
+      <input type="date"  v-model="selectedDate" @change="getTodayPhoto">
+      <h1>오늘 섭취한 칼로리 : {{ totalCalories }}Kcal</h1>
     </div>
     <div class="categories">
-      <div v-for="(data, category) in categorizedImages" :key="category" class="category-center">
-        <div class="category-title-container">
-          <h1 class="badge rounded-pill bg-secondary category-name">{{ category }}</h1>
-        </div>
-        <div v-for="(e, index) in data" :key="index" class="image-item">
-          <div class="image-text-container" style="">
-            <img :src="imgLink + e.upphotoid + '.jpg'" alt="Uploaded Image" class="uploaded-image"/>
-            <div>
-              <p>{{ foods[e.foodnum] }}</p>
-              <button class="btn btn-secondary" @click="togglePopover(e, $event)">
-                상세보기
-              </button>
-              <div v-if="activePopover === e" class="popover-content" :style="popoverStyle">
-                <div class="close-button-container">
-                  <button class="close-button" @click="closePopover()">&#10006;</button> <!-- X 버튼이 있는 줄 -->
-                </div>
-                <div v-if="!e.editMode">
-                  <p>음식명: {{ foods[e.foodnum] }} {{ e.predictrate }}%</p>
-                  <p>양: {{ e.mass }}g</p>
-                  <p>칼로리: {{ e.foodcal.toFixed(2) }}Kcal</p>
-                  <p>탄수화물: {{ e.food_TAN }}g</p>
-                  <p>단백질: {{ e.food_DAN }}g</p>
-                  <p>지방: {{ e.food_GI }}g</p>
-                  <p>후보1: {{ foods[e.candidate1] }} {{ e.candidate1RATE }}%</p>
-                  <p>후보2: {{ foods[e.candidate2] }} {{ e.candidate2RATE }}%</p>
-                  <p>후보3: {{ foods[e.candidate3] }} {{ e.candidate3RATE }}%</p>
-                  <button class="btn btn-primary" @click="editFood(e)" style="float: right;">수정</button>
-                  <button class="btn btn-danger" @click="deleteFood(e.upphotoid)" style="float: right;">삭제</button>
-                </div>
-                <div v-else>
-                  <div style="display: flex; align-items: center;">
-                    <input type="text" v-model="e.foodName" placeholder="음식명" />
-                    <div style="flex-grow: 1;"></div> <!-- 남은 공간을 채우는 빈 div -->
-                    <button class="btn" @click="resetFoodName(e)" style="float: right;">
-                      <span class="material-icons">sync</span>
-                    </button>
+      <div class="categories" v-if="hasData">
+        <div v-for="(data, category) in filteredCategorizedImages" :key="category" class="category-center">
+          <div class="category-title-container">
+            <h1 class="badge rounded-pill bg-secondary category-name">{{ category }}</h1>
+          </div>
+          <div v-for="(e, index) in data" :key="index" class="image-item">
+            <div class="image-text-container" style="">
+              <img :src="imgLink + e.upphotoid + '.jpg'" alt="Uploaded Image" class="uploaded-image"/>
+              <div>
+                <p>{{ foods[e.foodnum] }}</p>
+                <button class="btn btn-secondary" @click="togglePopover(e, $event)">
+                  상세보기
+                </button>
+                <div v-if="activePopover === e" class="popover-content" :style="popoverStyle">
+                  <div class="close-button-container">
+                    <button class="close-button" @click="closePopover()">&#10006;</button> <!-- X 버튼이 있는 줄 -->
                   </div>
-                  <div style="display: flex; align-items: center;">
-                    <input type="number" v-model="e.quantity" placeholder="양" /> g
-                    <div style="flex-grow: 1;"></div> <!-- 남은 공간을 채우는 빈 div -->
-                    <button class="btn" @click="resetFoodQuantity(e)" style="float: right;">
-                      <span class="material-icons">sync</span>
-                    </button>
+                  <div v-if="!e.editMode">
+                    <p>음식명: {{ foods[e.foodnum] }} {{ e.predictrate }}%</p>
+                    <p>양: {{ e.mass }}g</p>
+                    <p>칼로리: {{ e.foodcal.toFixed(2) }}Kcal</p>
+                    <p>탄수화물: {{ e.food_TAN }}g</p>
+                    <p>단백질: {{ e.food_DAN }}g</p>
+                    <p>지방: {{ e.food_GI }}g</p>
+                    <p>후보1: {{ foods[e.candidate1] }} {{ e.candidate1RATE }}%</p>
+                    <p>후보2: {{ foods[e.candidate2] }} {{ e.candidate2RATE }}%</p>
+                    <p>후보3: {{ foods[e.candidate3] }} {{ e.candidate3RATE }}%</p>
+                    <button class="btn btn-primary" @click="editFood(e)" style="float: right;">수정</button>
+                    <button class="btn btn-danger" @click="deleteFood(e.upphotoid)" style="float: right;">삭제</button>
                   </div>
+                  <div v-else>
+                    <div style="display: flex; align-items: center;">
+                      <input type="text" v-model="e.foodName" placeholder="음식명" />
+                      <div style="flex-grow: 1;"></div> <!-- 남은 공간을 채우는 빈 div -->
+                      <button class="btn" @click="resetFoodName(e)" style="float: right;">
+                        <span class="material-icons">sync</span>
+                      </button>
+                    </div>
+                    <div style="display: flex; align-items: center;">
+                      <input type="number" v-model="e.quantity" placeholder="양" /> g
+                      <div style="flex-grow: 1;"></div> <!-- 남은 공간을 채우는 빈 div -->
+                      <button class="btn" @click="resetFoodQuantity(e)" style="float: right;">
+                        <span class="material-icons">sync</span>
+                      </button>
+                    </div>
 
-                  <p>칼로리: {{ e.foodcal.toFixed(2) }}Kcal</p>
-                  <p>탄수화물: {{ e.food_TAN }}g</p>
-                  <p>단백질: {{ e.food_DAN }}g</p>
-                  <p>지방: {{ e.food_GI }}g</p>
-                  <div v-for="candidate in [e.candidate1, e.candidate2, e.candidate3]" :key="candidate">
-                    <input type="radio" :id="candidate" :value="candidate" v-model="e.selectedCandidate" @change="updateFoodName(e, candidate)">
-                    <label :for="candidate">{{ foods[candidate] }}</label>
+                    <p>칼로리: {{ e.foodcal.toFixed(2) }}Kcal</p>
+                    <p>탄수화물: {{ e.food_TAN }}g</p>
+                    <p>단백질: {{ e.food_DAN }}g</p>
+                    <p>지방: {{ e.food_GI }}g</p>
+                    <div v-for="candidate in [e.candidate1, e.candidate2, e.candidate3]" :key="candidate">
+                      <input type="radio" :id="candidate" :value="candidate" v-model="e.selectedCandidate" @change="updateFoodName(e, candidate)">
+                      <label :for="candidate">{{ foods[candidate] }}</label>
+                    </div>
+                    <button class="btn btn-danger" @click="cancelEdit(e)" style="float: right;">취소</button>
+                    <button class="btn btn-success" @click="updateFood(e.upphotoid, e)" style="float: right;">저장</button>
                   </div>
-                  <button class="btn btn-danger" @click="cancelEdit(e)" style="float: right;">취소</button>
-                  <button class="btn btn-success" @click="updateFood(e.upphotoid, e)" style="float: right;">저장</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div v-else class="no-data-message">
+        결과가 없습니다.
       </div>
     </div>
   </main>
@@ -76,6 +82,7 @@ export default {
   inject: ['foods'],
   data() {
     return {
+
       imgLink: 'http://localhost/springpt/images/upphoto/',
       categorizedImages: {
         아침: [],
@@ -85,10 +92,12 @@ export default {
       },
       activePopover: null,
       popoverStyle: {},
+      selectedDate: null, // 선택된 날짜
     };
   },
   created() {
-    this.getTodayPhoto();
+    this.selectedDate = new Date().toISOString().substr(0, 10);
+    this.getTodayPhoto(); // 초기 날짜로 사진을 가져옵니다.
   },
   mounted() {
     [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
@@ -96,9 +105,36 @@ export default {
           new bootstrap.Popover(popoverTriggerEl);
         });
   },
+  computed: {
+    totalCalories() {
+      let total = 0;
+      for (const category in this.categorizedImages) {
+        for (const item of this.categorizedImages[category]) {
+          total += item.foodcal;
+        }
+      }
+      return total.toFixed(2); // 소수점 두 자리로 반올림
+    },
+    filteredCategorizedImages() {
+      const filtered = {};
+      for (const [category, data] of Object.entries(this.categorizedImages)) {
+        if (data.length > 0) {
+          filtered[category] = data;
+        }
+      }
+      return filtered;
+    },
+    hasData() {
+      return Object.values(this.filteredCategorizedImages).some(category => category.length > 0);
+    },
+  },
+  hasData() {
+    return Object.values(this.categorizedImages).some(category => category.length > 0);
+  },
   methods: {
     getTodayPhoto() {
-      this.$axios.get(`/todayPhoto`)
+      this.categorizedImages = { 아침: [], 점심: [], 저녁: [], 간식: [] };
+      this.$axios.get(`/todayPhoto?date=${this.selectedDate}`)
           .then(response => {
             console.log("서버 응답:", response.data);
             for (const food of response.data) {
@@ -134,7 +170,7 @@ export default {
     },
     calculatePopoverPosition(button) {
       const popoverWidth = 300; // 팝오버 너비
-      const popoverHeight = 250; // 팝오버 높이, 필요에 따라 조정
+      const popoverHeight = 450; // 팝오버 높이, 필요에 따라 조정
       const buttonRect = button.getBoundingClientRect();
       const buttonCenterX = buttonRect.left + (buttonRect.width / 2);
       const buttonBottomY = buttonRect.bottom + window.scrollY;
@@ -277,6 +313,11 @@ export default {
 
 
 <style lang="scss" scoped>
+.no-data-message {
+  text-align: center;
+  margin-top: 20px;
+}
+
 .category-center {
   text-align: center;
   margin: auto;
