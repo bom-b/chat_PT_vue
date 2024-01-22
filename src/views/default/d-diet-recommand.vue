@@ -344,7 +344,7 @@ export default {
         this.lastfood = lastfood
         this.lastfoodimage =lastfoodimage
 
-        console.log('마지막으로 먹은 음식 사진 : ',this.lastfoodimage)
+        console.log('전체데이터 : ',res.data)
         // 유저 나이 정보
         this.userage = userage
 
