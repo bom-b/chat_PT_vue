@@ -8,7 +8,9 @@
                               찍은 시간을 확인해서 자동으로 분류할 수 있어요<br>
       (아침 : 04:00~10:30, 점심 : 10:30~15:00, 저녁 : 17:00~21:00) <br>
         나머지 시간은 간식시간이에요!</p>
-
+      <div class="date-picker">
+        <input type="date" v-model="selectedDate">
+      </div>
       <button data-bs-toggle="modal" data-bs-target="#myModal"
               class="btn btn-primary" @click="submitClassification">분류</button>
       <p>(시간 정보가 없으면 간식으로 분류)</p>
@@ -72,7 +74,12 @@ export default {
         저녁: [],
         간식: [],
       },
+      selectedDate: null, // 추가된 날짜 데이터
     };
+  },
+  created() {
+    // 컴포넌트가 생성될 때 오늘 날짜로 초기화
+    this.selectedDate = new Date().toISOString().substring(0, 10);
   },
   methods: {
     updateImages(tab, newImages) {
@@ -100,7 +107,10 @@ export default {
           formData.append(`${tab}[${index}]`, base64Image);
         });
       });
-
+// 선택된 날짜를 formData에 추가
+      if (this.selectedDate) {
+        formData.append('date', this.selectedDate);
+      }
       this.$axios.post('/food_up', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -162,5 +172,13 @@ export default {
 </script>
 
 <style scoped>
+.date-picker {
+  margin-bottom: 20px;
+}
 
+.date-picker input[type="date"] {
+  padding: 10px;
+  border: 1px solid #2a9d8f;
+  border-radius: 5px;
+}
 </style>
