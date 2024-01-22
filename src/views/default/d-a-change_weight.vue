@@ -35,6 +35,9 @@
       <div class="comment-container" v-if="hasData">
         <h2 class="TheJamsil400" v-html="comment"></h2>
       </div>
+      <div class="comment-container" v-else>
+        <h2 class="TheJamsil400">이 기간 데이터가 없습니다.</h2>
+      </div>
 
     </div>
   </main>
@@ -146,7 +149,6 @@ export default {
             return;
           }
           if (res.data.weightList.length === 0) {
-            this.$swal('', '선택한 기간에 대한 데이터가 없습니다.', 'warning');
             this.dataLoaded = true;
             this.hasData = false;
             return;
