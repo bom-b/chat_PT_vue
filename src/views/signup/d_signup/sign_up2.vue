@@ -21,8 +21,6 @@ export default {
         { text: "개인정보 수집에 동의합니다", detail: "", checked: false },
       ],
       agreeAll: false,
-      uploadedImages: [],
-      // uploadedImages: "",
       nm_profileimg: null,
       imageUrl: require("../../../assets/img/defaultImage.jpeg")
     };
@@ -54,10 +52,9 @@ export default {
         const isValid = 1;
         const data = {
           nm_profileimg: this.nm_profileimg
-
         };
         if (isValid) {
-          this.$emit("nextPage", data)
+          this.$emit("nextPage", data);
         } else {
           this.$swal("유효하지 않은 경로입니다.");
         }
@@ -73,7 +70,6 @@ export default {
       let reader = new FileReader();
       reader.onload = e => {
         this.imageUrl = e.target.result;
-        console.log("여긴URL", this.imageUrl);
       };
       reader.readAsDataURL(this.nm_profileimg);
       console.log("이게 프로필이미지", this.nm_profileimg);

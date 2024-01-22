@@ -25,7 +25,8 @@ export default {
             pages: ['signUp1', 'signUp2', 'signUp3', 'signUp4'],
             currentPageIndex: 1,
             userdata: {},
-            serverReturn: 0
+            serverReturn: 0,
+            serverimageReturn: 0
         };
     },
     computed: {
@@ -61,6 +62,7 @@ export default {
             try {
                 let data = this.userdata;
                 let jsonData = JSON.stringify(data);
+                let imageFile = this.userdata.nm_profileimg;
                 await this.$axiosWithoutValidation.post("/signUp/completeSignUp", jsonData)
                     .then(async response => {
                         this.serverReturn = response.data;
@@ -85,6 +87,20 @@ export default {
                         } else {
                             this.$swal("", "경로이상", "warning");
                         }
+                        let formData = new FormData();
+                        formData.append('image', imageFile);
+                        await this.$axiosWithoutValidation.post("/s3upload", formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                        }).then(imageResponse => {
+                            this.serverimageReturn = imageResponse.data;
+                            if (this.serverimageReturn > 0) {
+                                console.log("이미지 aws에 저장");
+                            }
+                        }).catch(imageError => {
+                            console.error("이미지 업로드 에러", imageError);
+                        });
                     })
                     .catch(e => {
                         console.error("부모에러", e);
