@@ -9,7 +9,9 @@
         />
       </div>
       <div class="info-content">
-        <h1>{{ trainerInfo.name }}</h1>
+        <h3>
+          <b>{{ trainerInfo.memberVO.name }}</b> 트레이너
+        </h3>
         <p>{{ trainerInfo.trainerintro }}</p>
         <button class="apply-btn" @click="applyPT">PT 신청 🏋️‍♀️</button>
       </div>
@@ -20,13 +22,29 @@
       <h2>소개말</h2>
       <p>{{ trainerInfo.trainercomment }}</p>
       <h2>수상경력</h2>
-      <ul>
-        <li>{{ trainerInfo.awards1 }}</li>
-        <li>{{ trainerInfo.awards2 }}</li>
-        <li>{{ trainerInfo.awards3 }}</li>
-        <li>{{ trainerInfo.awards4 }}</li>
-        <li>{{ trainerInfo.awards5 }}</li>
-      </ul>
+      <div class="awards-grid">
+        <div class="award-card" v-if="trainerInfo.awards1">
+          <i class="award-icon"></i>
+          <span>{{ trainerInfo.awards1 }}</span>
+        </div>
+        <div class="award-card" v-if="trainerInfo.awards2">
+          <i class="award-icon"></i>
+          <span>{{ trainerInfo.awards2 }}</span>
+        </div>
+        <div class="award-card" v-if="trainerInfo.awards3">
+          <i class="award-icon"></i>
+          <span>{{ trainerInfo.awards3 }}</span>
+        </div>
+        <div class="award-card" v-if="trainerInfo.awards4">
+          <i class="award-icon"></i>
+          <span>{{ trainerInfo.awards4 }}</span>
+        </div>
+        <div class="award-card" v-if="trainerInfo.awards5">
+          <i class="award-icon"></i>
+          <span>{{ trainerInfo.awards5 }}</span>
+        </div>
+        <!-- 이하 동일한 구조로 awards3, awards4, awards5에 대해서도 적용 -->
+      </div>
     </section>
 
     <!-- 사진 갤러리 -->
@@ -42,8 +60,8 @@
     </section>
 
     <!-- 지도 섹션 -->
-    <section class="map-container">
-      <h2>헬스장 위치 : {{ trainerInfo.gym }}</h2>
+    <section class="map-container" style="z-index: 0">
+      <h2>헬스장 위치 : {{ trainerInfo.region }}</h2>
       <div ref="map" class="map"></div>
     </section>
   </main>
@@ -51,10 +69,25 @@
 
 
 <script>
+import { ref, onMounted } from "vue";
+
 export default {
+  setup() {
+    const isAnimated = ref(false);
+
+    onMounted(() => {
+      isAnimated.value = true;
+    });
+
+    return {
+      isAnimated,
+    };
+  },
   data() {
     return {
-      trainerInfo: {}, // 데이터 객체로 받기
+      trainerInfo: {
+        memberVO: {},
+      }, // 데이터 객체로 받기
       trainerId: "",
     };
   },
@@ -166,7 +199,7 @@ export default {
     loadKakaoMap() {
       // 카카오 맵 스크립트가 이미 로드되었는지 확인
       console.log("kakao!");
-      console.log(this.trainerInfo.gym);
+      console.log(this.trainerInfo.memberVO);
       if (window.kakao && window.kakao.maps) {
         this.initMap();
       } else {
@@ -199,7 +232,7 @@ export default {
           });
 
           const infowindow = new kakao.maps.InfoWindow({
-            content: `<div style="width:150px;text-align:center;padding:6px 0;">${this.trainerInfo.gym}</div>`
+            content: `<div style="width:150px;text-align:center;padding:6px 0;">${this.trainerInfo.gym}</div>`,
           });
           infowindow.open(map, marker);
 
@@ -303,5 +336,30 @@ export default {
     width: 48%; /* 화면의 절반 크기로 조정 */
     margin: 1%; /* 간격 조정 */
   }
+  .awards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.award-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.award-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.award-icon {
+  display: block;
+  margin: 0 auto 10px;
+  /* 아이콘 스타일링을 위한 CSS 코드 추가 */
+}
+
 }
 </style>
