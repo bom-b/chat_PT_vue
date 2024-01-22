@@ -52,7 +52,7 @@
             <div class="info">
               <div class="card-title">
                 <span class="title-content">{{ trainer.memberVO.name }} || <span style="font-size: 1.1rem;">{{
-                  trainer.region }}</span></span>
+                  trainer.region }} ({{ trainer.gym }})</span></span>
               </div>
               <table class="mt-4 trainer-info-table">
                 <tr>
