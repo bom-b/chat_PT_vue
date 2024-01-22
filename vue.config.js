@@ -12,7 +12,8 @@ module.exports = {
   ],
   devServer: {
     allowedHosts: 'all',
-    webSocketServer: false // 이 부분을 수정했습니다
+    webSocketServer: false, // 이 부분을 수정했습니다
+    overlay: false // ESLint 경고를 끄기 위한 옵션
   },
 };
 
