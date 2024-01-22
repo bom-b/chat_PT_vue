@@ -139,6 +139,8 @@ export default {
     handleComponentChange(componentName) {
       if (componentName === "NextComponentName") {
         this.currentComponent = NextComponent;
+      } else {
+        this.currentComponent = chatroom;
       }
     },
   },

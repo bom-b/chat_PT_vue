@@ -1,16 +1,12 @@
 <template>
-  <div
-    class="container"
-    v-cloak
-    style="
-      background-color: #003a2452;
+  <div class="container" v-cloak style=" background-color: #003a2452;
       height: 100%; /* 전체 높이 */
       width: 100%; /* 전체 너비 */
       border-radius: 30px;
     "
   >
     <div>
-      <h2 style="color: azure;">🔙 </h2>
+      <h2 @click="goback()">🔙 </h2>
     </div>
     <ul class="list-group" ref="chatList">
       <li
@@ -71,8 +67,11 @@ export default {
   },
   async created() {
     this.roomId = localStorage.getItem("wschat.roomId");
-    this.sender = localStorage.getItem("name");
-
+    if(localStorage.getItem("name") == null){
+      this.sender = localStorage.getItem("nickname");
+    } else {
+      this.sender = localStorage.getItem("name")
+    }
     await this.connect();
     await this.findRoom();
     await this.loadPreviousMessages();
@@ -217,6 +216,10 @@ export default {
         this.message = "";
       }
     },
+    goback() {
+      this.$emit("change-component", "chatroom");
+    },
+    //
   },
   // 스크롤 위치 이동을 위함
 };
