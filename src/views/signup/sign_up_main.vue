@@ -2,7 +2,7 @@
   <main>
     <div class="section1400">
       <div id="box">
-        <h2 class="mb-5" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="0">
+        <h2 id="title" class="mb-5" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="0">
           가입할 <span class="highlight">유형</span>을 선택해주세요.
         </h2>
         <div class="row" style="text-align: center; margin: auto; padding-bottom: 50px;">
@@ -30,6 +30,12 @@
               <img class="" src="../../../public/assets/img/graphic/trainer-user.png" alt="" style="width: 60px" />
             </div>
           </router-link>
+        </div>
+        <div id="kakao-box" data-aos="fade-in" data-aos-duration="1000" data-aos-delay="0">
+          <p id="title" class="mb-4" style="color: #525f5e">
+            간편하게 가입하고 로그인해보세요.
+          </p>
+          <img @click="kakaoLogin" class="kakao-login-btn" src="../../assets/img/kakao_login_medium_narrow.png" alt="">
         </div>
       </div>
     </div>
@@ -67,10 +73,46 @@ main {
   /* 마우스를 올릴 때 바뀔 배경색 설정 */
 }
 
+.kakao-login-btn:hover {
+  cursor: pointer;
+}
+
+#kakao-box {
+  margin-top: 100px;
+}
+
 @media (max-width: 768px) {
   .goal-box {
     margin-top: 25px;
   }
+
+  #title {
+    margin-top: 30px;
+  }
+
+  #kakao-box {
+    margin-top: 0px;
+    margin-bottom: 60px;
+  }
+
 }
 </style>
-<script setup></script>
+<script>
+export default {
+  methods: {
+    kakaoLogin() {
+      const REST_API_KEY = 'aa7e1b658afaea7d32248761c5aed3ef';
+      const REDIRECT_URI = this.$vueBaseURL + '/service/kakaojoin';
+
+      // 새 창의 크기
+      const width = 500;
+      const height = 800;
+
+      // 새 창의 옵션
+      const windowFeatures = `width=${width},height=${height},resizable=yes,scrollbars=yes,status=yes`;
+      window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`, 'kakaoLogin', windowFeatures;
+
+    }
+  }
+}
+</script>
