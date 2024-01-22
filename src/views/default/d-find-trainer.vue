@@ -57,7 +57,7 @@
               <table class="mt-4 trainer-info-table">
                 <tr>
                   <td class="pine_Green_text" style="font-size: 1.25rem; font-weight: bold;">간단 자기 소개 : </td>
-                  <td>{{ trainer.trainercomment }}</td>
+                  <td>{{ trainer.trainerintro }}</td>
                 </tr>
                 <tr>
                   <td class="pine_Green_text" style="font-size: 1.25rem; font-weight: bold;">상담 가능 시간 : </td>
