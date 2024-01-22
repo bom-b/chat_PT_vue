@@ -41,3 +41,4 @@ export function createEventId()
 
   return eventGuid++;
 }
+

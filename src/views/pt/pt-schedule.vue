@@ -22,6 +22,7 @@
           <ul>
             <li v-for='event in currentEvents' :key='event.id'>
               <b>{{ event.startStr }}</b>
+              <b>{{ event.endStr }}</b>
               <i>{{ event.title }}</i>
             </li>
           </ul>
@@ -29,10 +30,11 @@
       </div>
       <div class='demo-app-main'>
         <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref='fullCalendar'>
-          <template v-slot:eventContent='arg'>
-            <b>{{ arg.timeText }}</b>
-            <i>{{ arg.event.title }}</i>
-          </template>
+        <template v-slot:eventContent='arg'>
+          <b>{{ formatTime(arg.event.start) }}</b> <!-- 이벤트 시작 시간 포맷팅 -->
+          <b>{{ formatTime(arg.event.end) }}</b> <!-- 이벤트 시작 시간 포맷팅 -->
+          <i>{{ arg.event.title }}</i> <!-- 이벤트 제목 -->
+        </template>
         </FullCalendar>
       </div>
     </div>
@@ -44,13 +46,10 @@ import { defineComponent } from 'vue';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin, { ThirdPartyDraggable } from '@fullcalendar/interaction';
+import interactionPlugin from '@fullcalendar/interaction';
 import dragula from 'dragula';
 import 'dragula/dist/dragula.css';
 
-function createEventId() {
-  return String(Date.now());
-}
 
 export default defineComponent({
   components: {
@@ -58,6 +57,7 @@ export default defineComponent({
   },
   data() {
     return {
+      allEvents: [],
       calendarOptions: {
         plugins: [
           dayGridPlugin,
@@ -94,7 +94,59 @@ export default defineComponent({
       drake: null,
     };
   },
+
+  created() 
+  {
+    this.fetchData();
+  },
+
+
   methods: {
+
+    formatTime(date) {
+    if (!date) {
+      return '';
+    }
+    let d = new Date(date);
+    let hours = d.getHours();
+    let minutes = d.getMinutes();
+    let ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // 시간이 '0'이면 '12'로 변경
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    let strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+  },
+
+  async fetchData() { 
+  this.$axios.get("/getMyPtList")
+    .then(response => {
+      // 데이터를 변환하여 이벤트 배열을 생성합니다.
+      const events = response.data.map(eventData => {
+        // 날짜와 시간을 결합합니다. 'T'는 ISO 8601 형식을 위해 사용됩니다.
+        console.log(eventData)
+        const start = eventData.PTDATE + 'T' + eventData.PTSTARTTIME;
+        const end = eventData.PTDATE + 'T' + eventData.PTENDTIME;
+
+        console.log("start : " +start)
+        console.log("end : " +end)
+        // FullCalendar의 이벤트 객체를 반환합니다.
+        return {
+          id: eventData.SCNUM,
+          title: eventData.TITLE,
+          start: start,
+          end: end,
+        };
+      });
+
+      // 변환된 이벤트를 allEvents 배열에 추가합니다.
+      this.allEvents.push(...events);
+    })
+    .catch(error => {
+      console.error("Error fetching data:", error);
+    });
+},
+
     handleDateSelect(selectInfo) {
       let title = prompt('일정을 적어주세요');
       let calendarApi = selectInfo.view.calendar;
@@ -103,11 +155,10 @@ export default defineComponent({
 
       if (title) {
         calendarApi.addEvent({
-          id: createEventId(),
+          id: "1",
           title,
           start: selectInfo.startStr,
           end: selectInfo.endStr,
-          allDay: selectInfo.allDay,
         });
       }
     },
@@ -143,20 +194,6 @@ export default defineComponent({
         });
       });
 
-      new ThirdPartyDraggable(containerEl, {
-        itemSelector: '.external-event',
-        mirrorSelector: '.gu-mirror',
-        eventData: (eventEl) => {
-          return {
-            title: eventEl.innerText,
-          };
-        },
-      });
-
-      const calendarApi = this.$refs.fullCalendar.getApi();
-      this.externalEvents.forEach((event) => {
-        calendarApi.addEvent(event);
-      });
     },
   },
   mounted() {
