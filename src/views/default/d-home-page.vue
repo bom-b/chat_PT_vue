@@ -391,7 +391,7 @@ img {
               <p class="TheJamsil400">탄수화물 : {{ currenttan }} / {{
                   recommand_tan
                 }} (g)</p>
-              <p class="TheJamsil400">단백질 : {{ currentdan }}/ {{
+              <p class="TheJamsil400">단백질 : {{ currentdan }} / {{
                   recommand_dan
                 }} (g)</p>
               <p class="TheJamsil400">지방 : {{ currentgi }} / {{
