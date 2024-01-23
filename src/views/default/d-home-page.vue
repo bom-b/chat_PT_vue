@@ -31,7 +31,8 @@
   display: flex;
   justify-content: space-around; // 간격을 넓힘
   flex-wrap: wrap;
-  margin: 0
+  margin: 0;
+  padding-top: 5px;
 }
 
 .chart {
@@ -40,7 +41,7 @@
   padding: 20px;
   margin: 20px;
   width: 100%;
-  max-width: 600px; // 차트 최대 너비 증가
+  max-width: 700px; // 차트 최대 너비 증가
   text-align: center;
 }
 
@@ -432,6 +433,7 @@ export default {
       recommand_tan: 0,
       recommand_dan: 0,
       recommand_gi: 0,
+      
       currentCal: 0,
       currenttan: 0,
       currentdan: 0,
@@ -481,9 +483,10 @@ export default {
   },
 
   methods: {
-    fetchDataAndCreateCharts() {
-      this.$axios.get('/getRecommandDailyTandangi'
-      ).then(res => {
+    async fetchDataAndCreateCharts() {
+      try{
+      const res = await this.$axios.get('/getRecommandDailyTandangi')
+      
 
         this.Consecutive_Dates = res.data.Consecutive_Dates.P_COUNT
 
@@ -493,11 +496,15 @@ export default {
         this.recommand_dan = res.data.recommandTandnagi.p_recommand_dan.toFixed(2);
         this.recommand_gi = res.data.recommandTandnagi.p_recommand_gi.toFixed(2);
 
+        if(res.data.totaldaily){
+          this.currentCal = res.data.totaldaily.dailyTotalCal.toFixed(2);
+          this.currenttan = res.data.totaldaily.dailyTotalTan.toFixed(2);
+          this.currentdan = res.data.totaldaily.dailyTotalDan.toFixed(2);
+          this.currentgi = res.data.totaldaily.dailyTotalGi.toFixed(2);
+        }
         // 차트에 보여질 값 초기화
-        this.currentCal = res.data.totaldaily.dailyTotalCal.toFixed(2);
-        this.currenttan = res.data.totaldaily.dailyTotalTan.toFixed(2);
-        this.currentdan = res.data.totaldaily.dailyTotalDan.toFixed(2);
-        this.currentgi = res.data.totaldaily.dailyTotalGi.toFixed(2);
+        
+
 
         if (!this.showChart) {
           return;
@@ -510,10 +517,13 @@ export default {
 
         this.createCharts();
         this.isLoading = false;
-      })
-          .catch(error => {
+      }
+          catch(error){
+
             console.error("에러 발생:", error);
-          });
+          }
+            
+          
 
 
     },
