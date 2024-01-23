@@ -12,9 +12,9 @@
           </div>
           <div v-for="(e, index) in data" :key="index" class="image-item">
             <div class="image-text-container" style="">
-              <img :src="imgLink + e.upphotoid + '.jpg'" alt="Uploaded Image" class="uploaded-image"/>
+              <img :src="`${this.$s3BaseURL}/user_upload_food/${e.upphotoid}.jpg`" alt="Uploaded Image" class="uploaded-image"/>
               <div>
-                <p>{{ foods[e.foodnum] }}</p>
+                <p>{{ e.foodName }}</p>
                 <button class="btn btn-secondary" @click="togglePopover(e, $event)">
                   상세보기
                 </button>
@@ -132,35 +132,56 @@ export default {
     return Object.values(this.categorizedImages).some(category => category.length > 0);
   },
   methods: {
-    getTodayPhoto() {
+    async getTodayPhoto() {
       this.categorizedImages = { 아침: [], 점심: [], 저녁: [], 간식: [] };
-      this.$axios.get(`/todayPhoto?date=${this.selectedDate}`)
-          .then(response => {
-            console.log("서버 응답:", response.data);
-            for (const food of response.data) {
-              if (!this.categorizedImages[food.category]) {
-                this.categorizedImages[food.category] = [];
-              }
-              const weightRatio = food.mass / food.foodweight;
+      try {
+        const response = await this.$axios.get(`/todayPhoto?date=${this.selectedDate}`);
+        console.log("서버 응답:", response.data);
+        for (const food of response.data) {
+          if (!this.categorizedImages[food.category]) {
+            this.categorizedImages[food.category] = [];
+          }
+          const weightRatio = food.mass / food.foodweight;
 
-              food.foodcal = parseFloat((food.foodcal * weightRatio).toFixed(2));
-              food.food_TAN = parseFloat((food.food_TAN * weightRatio).toFixed(2));
-              food.food_DAN = parseFloat((food.food_DAN * weightRatio).toFixed(2));
-              food.food_GI = parseFloat((food.food_GI * weightRatio).toFixed(2));
-              const extendedFood = {
-                ...food,
-                editMode: false,
-                foodName: this.foods[food.foodnum],
-                quantity: food.mass,
-                selectedCandidate: null
-              };
-              this.categorizedImages[food.category].push(extendedFood);
-            }
-            console.log(this.categorizedImages);
-          })
-          .catch(error => {
-            console.error("서버 통신 오류:", error);
-          });
+          food.foodcal = parseFloat((food.foodcal * weightRatio).toFixed(2));
+          food.food_TAN = parseFloat((food.food_TAN * weightRatio).toFixed(2));
+          food.food_DAN = parseFloat((food.food_DAN * weightRatio).toFixed(2));
+          food.food_GI = parseFloat((food.food_GI * weightRatio).toFixed(2));
+
+          let foodName = "";
+          if(food.foodnum == -1){
+            // 비동기 함수 호출 시 await 사용
+            foodName = await this.getRequestFoodName(food.upphotoid);
+            console.log("foodName : " + foodName)
+          } else {
+            foodName = this.foods[food.foodnum];
+          }
+          console.log("이게?이게? : " + foodName)
+          const extendedFood = {
+            ...food,
+            editMode: false,
+            foodName: foodName,
+            originalFoodName: foodName, // 원래 음식명
+            quantity: food.mass,
+            selectedCandidate: null
+          };
+
+          this.categorizedImages[food.category].push(extendedFood);
+        }
+        console.log(this.categorizedImages);
+      } catch (error) {
+        console.error("서버 통신 오류:", error);
+      }
+    },
+    async getRequestFoodName(upphotoid){
+      try {
+        const response = await this.$axios.get(`/getRequestFoodName?upphotoid=${upphotoid}`);
+        console.log("response.data : " + response.data)
+        return response.data;
+      } catch (error) {
+        console.error("서버 통신 오류:", error);
+        return ""; // 오류 발생 시 빈 문자열 반환
+      }
     },
     togglePopover(foodItem, event) {
       this.activePopover = this.activePopover === foodItem ? null : foodItem;
@@ -211,7 +232,7 @@ export default {
     },
     resetFoodName(foodItem) {
       // 음식명에 대한 '새로고침' 기능
-      foodItem.foodName = this.foods[foodItem.foodnum];
+      foodItem.foodName = foodItem.originalFoodName;
     },
     resetFoodQuantity(foodItem) {
       // 양에 대한 '새로고침' 기능
@@ -243,7 +264,7 @@ export default {
       const quantityChanged = updatedData.quantity !== updatedData.mass;
 
       // 음식명 변경 여부 확인
-      const nameChanged = updatedData.foodName !== this.foods[updatedData.foodnum];
+      const nameChanged = updatedData.foodName !== updatedData.originalFoodName;
 
       // 양이 변경된 경우 즉시 업데이트
       if (quantityChanged) {
@@ -264,13 +285,19 @@ export default {
       console.log("updatedData.foodName : " + updatedData.foodName)
       // 음식명이 변경된 경우 관리자 검수 요청
       if (nameChanged) {
+        if(updatedData.selectedCandidate == null){
+          updatedData.selectedCandidate = -1;
+        }
         this.$axios.post('/requestNameChange', {
           upphotoid: upphotoid,
-          imgeditcomment: updatedData.foodName
+          imgeditcomment: updatedData.foodName,
+          before : updatedData.foodnum,
+          after :updatedData.selectedCandidate
         })
             .then(response => {
               console.log("음식명 변경 요청 응답:", response.data);
-              alert("음식명 변경 요청이 접수되었습니다. 검수 후 업데이트될 예정입니다.");
+              this.$swal("음식명 변경 요청이 접수되었습니다. 검수 후 업데이트될 예정입니다.");
+              this.getTodayPhoto();
             })
             .catch(error => {
               console.error("음식명 변경 요청 실패:", error);
