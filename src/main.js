@@ -19,6 +19,9 @@ import "xe-utils";
 import vxetable from "vxe-table";
 import "vxe-table/lib/style.css";
 import 'sweetalert2/dist/sweetalert2.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css'; // 아이콘
+
+import 'swiper/swiper-bundle.css';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';

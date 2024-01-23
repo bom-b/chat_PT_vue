@@ -4,21 +4,17 @@ export default {
     return {
       agreementItems: [
         {
-          text: "내 모습 그대로 당당하게",
-          detail: "사진, 나이, 자기소개를 사실대로 올려 주세요.",
+          detail: "이용약관 동의",
           checked: false,
         },
         {
-          text: "안전을 최우선으로",
-          detail: "상대방을 잘 모르는 상태에서 개인 정보를 알려주지마세요.",
+          detail: "개인정보수집이용",
           checked: false,
         },
         {
-          text: "매너 있는 대화",
-          detail: "whswndqkerh tlvdms akszma whswnddmf vygusg",
+          detail: "만 14세 이상입니다.",
           checked: false,
         },
-        { text: "개인정보 수집에 동의합니다", detail: "", checked: false },
       ],
       agreeAll: false,
       nm_profileimg: null,
@@ -91,13 +87,13 @@ export default {
         <img v-if="imageUrl" :src="this.imageUrl" alt="일반회원 이미지" />
       </div>
       <div class="container mt-5 pt-2">
-        <h2 class="text-center mb-4">개인정보 동의</h2>
+        <!-- <h2 class="text-center mb-4">개인정보 동의</h2> -->
         <div class="accordion" id="agreementAccordion">
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
               <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
                 aria-expanded="true" aria-controls="collapseOne">
-                약관 동의
+                꼭 읽어보세요!
               </button>
             </h2>
             <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
@@ -146,7 +142,7 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 66%;
+  width: 55%;
   height: auto;
   background-color: #ffffff;
   border-radius: 10px;
@@ -160,40 +156,10 @@ img {
   /* 그림자 추가 */
   transition: background-color 0.2s ease;
 }
-
-.upload-container,
-.contest-container {
-  background-color: #fff;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+.accordion-button:not(.collapsed) {
+  background-color: #67c23a;
 }
 
-.upload-container {
-  display: flex;
-  /* 요소들을 가로로 배치합니다 */
-  align-items: center;
-  justify-content: center;
-}
 
-.main-image-container {
-  width: 200px;
-  height: 200px;
-  border: 5px #743b15be;
-  margin-right: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  margin-bottom: 10px;
 
-}
-
-.main-image-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 </style>

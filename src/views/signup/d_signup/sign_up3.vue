@@ -10,12 +10,13 @@ export default {
         gender: '',
         purpose: null,
         activity: null,
+        target_weight: '',
       }
     };
   },
   computed: {
     progress() {
-      if (this.user.height && this.user.weight && this.user.gender && this.user.purpose && this.user.activity) {
+      if (this.user.height && this.user.weight && this.user.gender && this.user.purpose && this.user.activity && this.user.target_weight) {
         return 75;
       } else {
         return 50;
@@ -109,6 +110,10 @@ export default {
               <input class="form-control" type="number" id="user.weight" v-model="user.weight">
             </li>
             <li>
+              <label for="user.weight">목표 체중</label>
+              <input class="form-control" type="number" id="user.target_weight" v-model="user.target_weight">
+            </li>
+            <li>
               <label for="user.bmi"> BMI </label>
               <div>{{ calculatebmi() }}</div>
             </li>
@@ -157,7 +162,7 @@ export default {
       </div>
       <div class="button-container">
         <button type="button" class="btn btn-success" @click="proceedToNextPage"
-          :disabled="!user.birth || !user.height || !user.weight || !user.gender || user.purpose === null || user.activity === null || !user.bmi">
+          :disabled="!user.birth || !user.height || !user.weight || !user.gender || !user.target_weight || user.purpose === null || user.activity === null || !user.bmi">
           다음
         </button>
       </div>
