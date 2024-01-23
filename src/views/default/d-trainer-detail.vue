@@ -16,13 +16,17 @@
         <button class="apply-btn" @click="applyPT">PT 신청 🏋️‍♀️</button>
       </div>
     </section>
-
-    <!-- 상세 설명 섹션 -->
+    <!-- 소개말 섹션 -->
     <section class="detail-description">
       <h2>소개말</h2>
       <p>{{ trainerInfo.trainercomment }}</p>
+    </section>
+
+    <!-- 상세 설명 섹션 -->
+    <section class="detail-description">
+      
       <h2>수상경력</h2>
-      <div class="awards-grid">
+     <div class="awards-grid">
         <div class="award-card" v-if="trainerInfo.awards1">
           <i class="award-icon"></i>
           <span>{{ trainerInfo.awards1 }}</span>
@@ -48,9 +52,17 @@
     </section>
 
     <!-- 사진 갤러리 -->
+     <!-- 경로 : 
+        ${this.$springBaseURL}/images/trainer/${slide.mainimage}
+        ${this.$springBaseURL}/trainer/awards_img/${slide.mainimage}
+       -->
     <section class="gallery">
       <img
         :src="`${this.$springBaseURL}/images/trainer/${trainerInfo.subimage1}`"
+        alt="Profile Picture"
+      />
+      <img
+        :src="`${this.$springBaseURL}/images/trainer/awards_img/${trainerInfo.subimage1}`"
         alt="Profile Picture"
       />
       <img
@@ -264,7 +276,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
+  gap: 10px;
   padding: 20px;
 }
 
@@ -308,6 +320,7 @@ export default {
   padding: 15px;
   border-radius: 10px;
   background-color: white;
+  margin: auto;
 }
 
 .gallery img {
@@ -337,29 +350,28 @@ export default {
     margin: 1%; /* 간격 조정 */
   }
   .awards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 10px;
-}
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
 
-.award-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
-}
+  .award-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
 
-.award-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+  .award-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
 
-.award-icon {
-  display: block;
-  margin: 0 auto 10px;
-  /* 아이콘 스타일링을 위한 CSS 코드 추가 */
-}
-
+  .award-icon {
+    display: block;
+    margin: 0 auto 10px;
+    /* 아이콘 스타일링을 위한 CSS 코드 추가 */
+  }
 }
 </style>
