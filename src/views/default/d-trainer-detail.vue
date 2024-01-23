@@ -4,7 +4,7 @@
     <section class="trainer-info">
       <div class="profile-image">
         <img
-          :src="`${this.$springBaseURL}/images/trainer/${trainerInfo.mainimage}`"
+          :src="`${this.$s3BaseURL}/trainer/profile_img/${trainerInfo.mainimage}`"
           alt="Trainer Image"
         />
       </div>
@@ -58,15 +58,15 @@
        -->
     <section class="gallery">
       <img
-        :src="`${this.$springBaseURL}/images/trainer/${trainerInfo.subimage1}`"
+        :src="`${this.$s3BaseURL}/trainer/profile_img/${trainerInfo.subimage1}`"
         alt="Profile Picture"
       />
       <img
-        :src="`${this.$springBaseURL}/images/trainer/awards_img/${trainerInfo.subimage1}`"
+        :src="`${this.$s3BaseURL}/images/trainer/awards_img/${trainerInfo.subimage1}`"
         alt="Profile Picture"
       />
       <img
-        :src="`${this.$springBaseURL}/images/trainer/${trainerInfo.subimage2}`"
+        :src="`${this.$s3BaseURL}/trainer/profile_img/${trainerInfo.subimage2}`"
         alt="Profile Picture"
       />
     </section>

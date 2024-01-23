@@ -23,7 +23,7 @@
               <div class="header section1400">
                 <span class="title">마지막으로 등록한 음식</span>
                 <div class="profile-image-wrapper">
-                  <img :src="`${this.$springBaseURL}/images/foodMainImages/${lastfoodimage}`" alt="프로필 이미지" class="lastfood-image">
+                  <img :src="`${this.$s3BaseURL}/food_main_images/${lastfoodimage}`" alt="프로필 이미지" class="lastfood-image">
                 </div>
                 <div class="subtitle"><span style="font-size: 1.7rem;">{{ lastfood }}</span></div>
               </div>
@@ -36,7 +36,7 @@
                 @click="divclick(item.FOODNUM, item.FOODCAL, item.FOOD_TAN, item.FOOD_DAN, item.FOOD_GI)">
                 <!-- 이미지를 넣을 자리 -->
                 <div class="food-image-wrapper">
-                  <img :src="`${this.$springBaseURL}/images/foodMainImages/${item.FOODIMG}`" alt="프로필 이미지"
+                  <img :src="`${this.$s3BaseURL}/food_main_images/${item.FOODIMG}`" alt="프로필 이미지"
                     class="profile-image food-image">
                 </div>
                 <!-- 음식 설명을 넣을 자리 -->
@@ -58,7 +58,7 @@
                 @click="divclick(item.FOODNUM, item.FOODCAL, item.FOOD_TAN, item.FOOD_DAN, item.FOOD_GI)">
                 <!-- 이미지를 넣을 자리 -->
                 <div class="food-image-wrapper">
-                  <img :src="`${this.$springBaseURL}/images/foodMainImages/${item.FOODIMG}`" alt="프로필 이미지"
+                  <img :src="`${this.$s3BaseURL}/food_main_images/${item.FOODIMG}`" alt="프로필 이미지"
                     class="profile-image food-image">
                 </div>
                 <!-- 음식 설명을 넣을 자리 -->
@@ -132,7 +132,7 @@
                   <tbody v-if="tablestate">
                     <tr v-for="item in paginatedData" :key="item.idx">
                       <td>{{ maskName(item[0]) }}</td>
-                      <td><img :src="`${this.$springBaseURL}/images/foodMainImages/${item[3]}`" alt="프로필 이미지" class="profile-image"
+                      <td><img :src="`${this.$s3BaseURL}/food_main_images/${item[3]}`" alt="프로필 이미지" class="profile-image"
                           style="width: 150px; height: 115px;"></td>
                       <td>{{ item[7] }}</td>
                       <td>{{ item[2].toFixed(2) }} kcal</td>
@@ -146,7 +146,7 @@
                   <tbody v-else-if="!tablestate">
                     <tr v-for="item in paginatedData2" :key="item.idx">
                       <td>{{ maskName(item.nickname) }}</td>
-                      <td><img :src="`${this.$springBaseURL}/images/foodMainImages/${item.foodimg}`" alt="프로필 이미지" class="profile-image"
+                      <td><img :src="`${this.$s3BaseURL}/food_main_images/${item.foodimg}`" alt="프로필 이미지" class="profile-image"
                           style="width: 150px; height: 115px;"></td>
                       <td>{{ item.foodname }}</td>
                       <td>{{ item.foodcal.toFixed(2) }} kcal</td>
