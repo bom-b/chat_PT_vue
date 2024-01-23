@@ -24,9 +24,8 @@
 
     <!-- 상세 설명 섹션 -->
     <section class="detail-description">
-      
       <h2>수상경력</h2>
-     <div class="awards-grid">
+      <div class="awards-grid">
         <div class="award-card" v-if="trainerInfo.awards1">
           <i class="award-icon"></i>
           <span>{{ trainerInfo.awards1 }}</span>
@@ -52,7 +51,7 @@
     </section>
 
     <!-- 사진 갤러리 -->
-     <!-- 경로 : 
+    <!-- 경로 : 
         ${this.$springBaseURL}/images/trainer/${slide.mainimage}
         ${this.$springBaseURL}/trainer/awards_img/${slide.mainimage}
        -->
@@ -62,7 +61,7 @@
         alt="Profile Picture"
       />
       <img
-        :src="`${this.$s3BaseURL}/images/trainer/awards_img/${trainerInfo.subimage1}`"
+        :src="`${this.$s3BaseURL}/trainer/awards_img/${trainerInfo.subimage1}`"
         alt="Profile Picture"
       />
       <img
@@ -324,9 +323,9 @@ export default {
 }
 
 .gallery img {
-  width: 100%;
+  width: 185px;
   height: auto;
-  margin-bottom: 15px;
+  margin: 15px;
 }
 
 .map {
@@ -351,16 +350,26 @@ export default {
   }
   .awards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
+    text-align: center;
+    vertical-align:middle;
     gap: 10px;
   }
 
   .award-card {
-    border: 1px solid #ddd;
+    border: none;
+    background-color: #efefefaf;
     border-radius: 8px;
-    padding: 15px;
+    padding-bottom: 15px;
     text-align: center;
+    vertical-align:middle;
+
+    align-items: center;
     transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    height: 90%;
+    margin: auto;
   }
 
   .award-card:hover {
