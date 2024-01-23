@@ -109,7 +109,7 @@ export default {
         // 남은 슬롯 수에 따라 업로드할 파일을 제한합니다.
         const filesToUpload = files.slice(0, remainingSlots);
         if(remainingSlots < files.length) {
-          this.$swal('', '5장까지만 등록할 수 있습니다.', 'warning');
+          this.$swal('', this.maxImages + '장까지만 등록할 수 있습니다.', 'warning');
         }
         // 처리된 이미지를 저장할 배열을 초기화합니다.
         const processedImages = [];
@@ -184,6 +184,9 @@ export default {
 </script>
 
 <style scoped>
+
+
+
 button {
   background-color: #e5f5f2;
   color: #085c57;
@@ -203,11 +206,12 @@ button:hover {
   flex-direction: column;
   align-items: center;
   width: 130vh;
-  height: 60vh;
+  min-height: 60vh; /* 최소 높이를 원래 설정한 높이로 지정 */
+  max-height: none; /* 최대 높이는 제한 없음 */
   padding: 10px;
-  border-radius: 10px; /* 둥근 모서리 추가 */
-  background: linear-gradient(145deg, #e6e6e6, #ffffff); /* 그라디언트 배경 추가 */
-  box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff; /* 네오모피즘 스타일 적용 */
+  border-radius: 10px;
+  background-color: mintcream;
+  box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff;
   margin-bottom: 30px;
 }
 
@@ -240,26 +244,30 @@ button:hover {
   text-align: center;
   padding: 20px;
 }
+
 .card-container {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap; /* 다음 줄로 넘어가도록 설정 */
   gap: 20px;
   justify-content: center;
-  margin-top: 20px; /* 카드 컨테이너와 드래그 영역 사이의 간격 추가 */
-}
-
-.drag-over {
-  border-color: #2196F3;
+  align-items: start; /* 위에서 아래로 정렬 */
+  margin-top: 20px;
 }
 .card {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: all 0.3s ease;
-  width: 100%;
+  width: calc(100% / var(--num-of-images) - 16px); /* 이미지 개수에 따라 너비 조정 */
   max-width: 220px; /* 카드의 최대 너비를 설정 */
   margin-bottom: 20px;
-  position: relative; /* 삭제 버튼을 위한 상대 위치 설정 */
-  border-radius: 8px; /* 카드에 둥근 모서리 추가 */
+  position: relative;
+  border-radius: 8px;
 }
+
+
+.drag-over {
+  border-color: #2196F3;
+}
+
 .card.selected {
   border: 2px solid #085c57; /* 선택된 이미지에 대한 테두리 스타일 */
 }

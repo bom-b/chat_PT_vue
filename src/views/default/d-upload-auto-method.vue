@@ -1,39 +1,43 @@
-
-
 <template>
   <main id="main" class="main">
+    <div class="loading_div" v-if="isLoading">
+      <div class="spinner-border" style="color: green;">
+      </div>
+      <span>음식 이미지를 분석 중입니다.</span>
+    </div>
+    <div v-else>
     <div class="row">
       <div class="col-3"></div>
-    <div class="container col-6" style="margin: 100px 0 100px 0; text-align: center;">
-      <h3 id="plz-up" class="" style=" white-space: nowrap">식단을 한 번에 업로드 해주세요
-        <i
-            class="fas fa-info-circle"
-            data-bs-toggle="tooltip"
-            data-bs-placement="top"
-            title="찍은 시간을 확인해서 자동으로 분류할 수 있어요
+      <div class="container col-6" style="margin: 100px 0 100px 0; text-align: center;">
+        <h3 id="plz-up" class="" style=" white-space: nowrap">식단을 한 번에 업로드 해주세요
+          <i
+              class="fas fa-info-circle"
+              data-bs-toggle="tooltip"
+              data-bs-placement="top"
+              title="찍은 시간을 확인해서 자동으로 분류할 수 있어요
       (아침 : 04:00~10:30, 점심 : 10:30~15:00, 저녁 : 17:00~21:00)
         나머지 시간은 간식시간이에요!"
-            ref="info"
-        ></i>
-      </h3>
-      <!-- 날짜 선택기와 분류 버튼을 포함하는 컨테이너 -->
-      <div class="main-container">
+              ref="info"
+          ></i>
+        </h3>
         <!-- 날짜 선택기와 분류 버튼을 포함하는 컨테이너 -->
-        <div class="date-and-classify-container">
-          <div class="date-picker">
-            <input type="date" v-model="selectedDate">
+        <div class="main-container">
+          <!-- 날짜 선택기와 분류 버튼을 포함하는 컨테이너 -->
+          <div class="date-and-classify-container">
+            <div class="date-picker">
+              <input class="datedate" type="date" v-model="selectedDate">
+            </div>
+            <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary" @click="submitClassification">분류</button>
           </div>
-          <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary" @click="submitClassification">분류</button>
         </div>
-      </div>
         <!-- imgUpload 영역 -->
         <div class="imgUploadDiv">
           <imgUpload :max-images="20" @image-uploaded="printImages($event)"/>
         </div>
 
 
-      <div class="col-3"></div>
-    </div>
+        <div class="col-3"></div>
+      </div>
 
     </div>
     <!-- 부트스트랩 모달 -->
@@ -49,15 +53,20 @@
 
           <!-- Modal Body -->
           <div class="modal-body">
-            <div v-for="(images, category) in tabImages" :key="category">
+            <div v-for="(images, category) in tabImages" :key="category" class="category-container"
+                 @drop="drop($event, category)" @dragover.prevent>
               <h5>{{ category }}</h5>
               <div class="d-flex flex-wrap">
-                <div v-for="(image, index) in images" :key="index" class="m-2">
-                  <img :src="image" alt="Uploaded Preview" class="img-thumbnail" style="width: 100px; height: 100px;">
+                <div v-for="(image, index) in images" :key="index" class="m-2" draggable="true"
+                     @dragstart="dragStart($event, image, category)">
+                  <img :src="image.src" alt="Uploaded Preview" class="img-thumbnail" style="width: 100px; height: 100px;">
+                  <p>{{ image.time || '시간 데이터 없음' }}</p>
                 </div>
               </div>
             </div>
           </div>
+
+
 
           <!-- Modal Footer -->
           <div class="modal-footer">
@@ -68,7 +77,7 @@
         </div>
       </div>
     </div>
-
+    </div>
   </main>
 </template>
 
@@ -93,6 +102,7 @@ export default {
         간식: [],
       },
       selectedDate: null, // 추가된 날짜 데이터
+      isLoading: false,
     };
   },
   mounted() {
@@ -105,14 +115,31 @@ export default {
     this.selectedDate = new Date().toISOString().substring(0, 10);
   },
   methods: {
-    updateImages(tab, newImages) {
-      console.log("이미지가 tabImages로 들어 옴 " )
-      this.tabImages[tab].push(...newImages);
+    dragStart(event, image, category) {
+      event.dataTransfer.setData('image-info', JSON.stringify({ image, category }));
+    },
+
+    drop(event, newCategory) {
+      event.preventDefault();
+      const data = JSON.parse(event.dataTransfer.getData('image-info'));
+      const { image, category } = data;
+
+      // 기존 카테고리에서 이미지 제거
+      this.tabImages[category] = this.tabImages[category].filter(img => img.src !== image.src);
+
+      // 새 카테고리에 이미지 추가
+      if (!this.tabImages[newCategory]) {
+        this.tabImages[newCategory] = [];
+      }
+      this.tabImages[newCategory].push(image);
     },
     printImages(newImages){
       newImages.forEach(async base64Image => {
-        const category = await this.extractExifData(base64Image);
-        this.tabImages[category].push(base64Image);
+        const { category, time } = await this.extractExifData(base64Image);
+        if (!this.tabImages[category]) {
+          this.tabImages[category] = []; // 배열 초기화
+        }
+        this.tabImages[category].push({ src: base64Image, time });
       });
     },
     submitClassification(){
@@ -120,17 +147,18 @@ export default {
       this.isModalVisible = true;
     },
     submitImages() {
+      this.isLoading = true;
       const formData = new FormData();
       // tabImages 객체에 있는 각 탭별로 이미지 데이터를 순회
       Object.keys(this.tabImages).forEach(tab => {
         // 해당 탭에 있는 모든 이미지에 대해 순회
-        this.tabImages[tab].forEach((base64Image, index) => {
+        this.tabImages[tab].forEach((image, index) => {
           // 각 이미지를 formData에 추가
           // 키는 '탭이름[인덱스]' 형식이며, 값은 Base64 인코딩된 이미지 데이터
-          formData.append(`${tab}[${index}]`, base64Image);
+          formData.append(`${tab}[${index}]`, image.src);
         });
       });
-// 선택된 날짜를 formData에 추가
+      // 선택된 날짜를 formData에 추가
       if (this.selectedDate) {
         formData.append('date', this.selectedDate);
       }
@@ -142,9 +170,12 @@ export default {
           .then(response => {
             console.log("서버 응답:", response);
             // 서버 응답 후 라우팅
+            this.isLoading = false;
             this.$router.push('/default/d_upload_result');
           })
           .catch(error => {
+            this.isLoading = false;
+            this.$swal("분석 실패!");
             console.error("에러 발생:", error);
           });
     },
@@ -156,33 +187,32 @@ export default {
       return new Promise((resolve, reject) => {
         // Blob 객체를 사용하여 EXIF 데이터 추출
         EXIF.getData(blob, () => {
-          let label;
+          let category = '간식';
+
           try {
             const photoTakenDate = EXIF.getAllTags(blob)["DateTimeOriginal"];
-            if (!photoTakenDate) {
-              label = '간식'; // EXIF 데이터가 없는 경우 '간식'으로 분류
-              resolve(label);
-              return;
+            let time = '시간 데이터 없음'; // 기본값 설정
+            if (photoTakenDate) {
+              // "2020:11:10 12:12:45" 형식의 문자열에서 시간과 분을 추출
+              const timePart = photoTakenDate.split(' ')[1];
+              const [hours, minutes] = timePart.split(':').map(Number);
+              const totalMinutes = hours * 60 + minutes; // 총 분으로 변환
+
+              time = `${hours}시${minutes}분`;
+
+              // 시간대에 따라 라벨을 할당
+              // 아침 : 04:00~10:30, 점심 : 10:30~15:00, 저녁 : 17:00~21:00, 나머지 시간은 간식
+              if (totalMinutes >= 240 && totalMinutes < 630) {
+                category = '아침';
+              } else if (totalMinutes >= 630 && totalMinutes < 900) {
+                category = '점심';
+              } else if (totalMinutes >= 1020 && totalMinutes < 1260) {
+                category = '저녁';
+              } else {
+                category = '간식'; // 기타 시간대는 '간식'으로 분류
+              }
             }
-
-            // "2020:11:10 12:12:45" 형식의 문자열에서 시간과 분을 추출
-            const timePart = photoTakenDate.split(' ')[1];
-            const [hours, minutes] = timePart.split(':').map(Number);
-            const totalMinutes = hours * 60 + minutes; // 총 분으로 변환
-
-            // 시간대에 따라 라벨을 할당
-            // 아침 : 04:00~10:30, 점심 : 10:30~15:00, 저녁 : 17:00~21:00, 나머지 시간은 간식
-            if (totalMinutes >= 240 && totalMinutes < 630) {
-              label = '아침';
-            } else if (totalMinutes >= 630 && totalMinutes < 900) {
-              label = '점심';
-            } else if (totalMinutes >= 1020 && totalMinutes < 1260) {
-              label = '저녁';
-            } else {
-              label = '간식'; // 기타 시간대는 '간식'으로 분류
-            }
-
-            resolve(label);
+            resolve({ category, time});
           } catch (error) {
             reject("EXIF 데이터 처리 중 오류 발생");
           }
@@ -195,6 +225,24 @@ export default {
 </script>
 
 <style scoped>
+.loading_div {
+  margin-top: 300px;
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+}
+.category-container {
+  width: 100%; /* 너비 고정 */
+  min-height: 150px; /* 최소 높이 설정 */
+  margin-bottom: 20px; /* 하단 마진 */
+  border: 1px solid #ccc; /* 테두리 */
+  padding: 10px; /* 내부 여백 */
+  background-color: #f8f9fa; /* 배경 색상 */
+}
+
+
 .container {
   display: flex; /* Flex 컨테이너로 설정 */
   flex-direction: column; /* 자식 요소들을 세로 방향으로 정렬 */
@@ -210,7 +258,19 @@ export default {
 }
 
 .btn-primary {
-  padding: 10px 20px;
+  background-color: #45a049;
+  border: none; /* 테두리 제거 */
+  color: white; /* 텍스트 색상 */
+  padding: 10px 20px; /* 내부 여백 */
+  border-radius: 5px; /* 둥근 모서리 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+  transition: all 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+.btn-primary:hover {
+  background-color: #45a049;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* 호버 시 그림자 증가 */
+  transform: translateY(-2px); /* 위로 약간 이동 */
 }
 
 .main-container {
@@ -226,10 +286,13 @@ export default {
 }
 
 .date-picker input[type="date"] {
-  padding: 10px;
   border: 1px solid #2a9d8f;
   border-radius: 5px;
   margin-right: 10px; /* 오른쪽 여백 추가 */
+}
+.datedate{
+  padding: 10px;
+  margin-top: 20px;
 }
 
 .main {
