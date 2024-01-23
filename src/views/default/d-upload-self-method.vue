@@ -1,8 +1,12 @@
 <template>
   <main id="main" class="main">
     <!-- 날짜 선택 입력 필드 추가 -->
-
-    <div class="container" style="text-align: center; ">
+    <div class="loading_div" v-if="isLoading">
+      <div class="spinner-border" style="color: green;">
+      </div>
+      <span>음식 이미지를 분석 중입니다.</span>
+    </div>
+    <div class="container" style="text-align: center; " v-else>
       <h3 id="plz-up" class="" style=" white-space: nowrap">식단을 업로드 해주세요!</h3>
       <div class="d-flex justify-content-center">
         <ul class="pagination pagination-lg">
@@ -62,6 +66,7 @@ export default {
         간식: [],
       },
       selectedDate: null, // 추가된 날짜 데이터
+      isLoading: false,
     };
   },
   created() {
@@ -78,6 +83,7 @@ export default {
       this.tabImages[tab].push(...newImages);
     },
     submitImages() {
+      this.isLoading = true;
       const formData = new FormData();
       // tabImages 객체에 있는 각 탭별로 이미지 데이터를 순회
       Object.keys(this.tabImages).forEach(tab => {
@@ -103,6 +109,7 @@ export default {
       .then(response => {
         console.log("서버 응답:", response);
         // 서버 응답 후 라우팅
+        this.isLoading = false;
         this.$router.push('/default/d_upload_result');
       })
       .catch(error => {
@@ -117,15 +124,28 @@ export default {
 </script>
 
 <style scoped>
+.loading_div {
+  margin-top: 300px;
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+}
+
 /* 날짜 선택 입력 필드 스타일링 */
 .date-picker {
   margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  align-items: center; /* 세로축에서 중앙 정렬 */
+  width: 100%; /* 전체 너비 사용 */
 }
-
 .date-picker input[type="date"] {
   padding: 10px;
   border: 1px solid #2a9d8f;
   border-radius: 5px;
+
 }
 
 .selected-tab {
@@ -163,6 +183,10 @@ p {
 .pagination-lg .page-link {
   background-color: #e9f0f5;
   color: #2a9d8f;
+  font-size: 3rem; /* 폰트 크기 증가 */
+  padding: 1.5rem 2.5rem; /* 패딩 증가 (세로, 가로) */
+  margin-right: 15px; /* 각 탭 사이의 여백 증가 */
+  border-radius: 0.5rem; /* 둥근 모서리 반경 증가 */
 }
 
 
@@ -178,11 +202,15 @@ imgUpload {
 }
 
 ul.pagination {
+  display: flex;
+  justify-content: center; /* 가운데 정렬 */
   padding: 0;
+  margin: 20px 0; /* 상하 여백 추가 */
 }
 
 .page-item {
   transition: color 0.3s, background-color 0.3s;
+  margin-right: 10px; /* 각 탭 사이의 여백 */
 }
 
 .page-link {

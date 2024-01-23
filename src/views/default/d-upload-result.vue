@@ -1,8 +1,11 @@
 <template>
   <main id="main">
+    <div class="container-xl">
     <div class="center-div">
+      <h1>{{ formatSelectedDate(selectedDate) }} 칼로리 : {{ totalCalories }}Kcal</h1>
+    </div>
+    <div class="date-picker">
       <input type="date"  v-model="selectedDate" @change="getTodayPhoto">
-      <h1>오늘 섭취한 칼로리 : {{ totalCalories }}Kcal</h1>
     </div>
     <div class="categories">
       <div class="categories" v-if="hasData">
@@ -12,7 +15,10 @@
           </div>
           <div v-for="(e, index) in data" :key="index" class="image-item">
             <div class="image-text-container" style="">
-              <img :src="`${this.$s3BaseURL}/user_upload_food/${e.upphotoid}.jpg`" alt="Uploaded Image" class="uploaded-image"/>
+              <img :src="`${this.$s3BaseURL}/user_upload_food/${e.upphotoid}.jpg`"
+                   alt="Uploaded Image"
+                   class="uploaded-image"
+              />
               <div>
                 <p>{{ e.foodName }}</p>
                 <button class="btn btn-secondary" @click="togglePopover(e, $event)">
@@ -72,6 +78,7 @@
         결과가 없습니다.
       </div>
     </div>
+    </div>
   </main>
 </template>
 
@@ -106,6 +113,7 @@ export default {
         });
   },
   computed: {
+
     totalCalories() {
       let total = 0;
       for (const category in this.categorizedImages) {
@@ -132,8 +140,12 @@ export default {
     return Object.values(this.categorizedImages).some(category => category.length > 0);
   },
   methods: {
+    formatSelectedDate(dateString) {
+      const date = new Date(dateString);
+      return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+    },
     async getTodayPhoto() {
-      this.categorizedImages = { 아침: [], 점심: [], 저녁: [], 간식: [] };
+      this.categorizedImages = {아침: [], 점심: [], 저녁: [], 간식: []};
       try {
         const response = await this.$axios.get(`/todayPhoto?date=${this.selectedDate}`);
         console.log("서버 응답:", response.data);
@@ -149,14 +161,13 @@ export default {
           food.food_GI = parseFloat((food.food_GI * weightRatio).toFixed(2));
 
           let foodName = "";
-          if(food.foodnum == -1){
+          if (food.foodnum == -1) {
             // 비동기 함수 호출 시 await 사용
             foodName = await this.getRequestFoodName(food.upphotoid);
             console.log("foodName : " + foodName)
           } else {
             foodName = this.foods[food.foodnum];
           }
-          console.log("이게?이게? : " + foodName)
           const extendedFood = {
             ...food,
             editMode: false,
@@ -173,7 +184,7 @@ export default {
         console.error("서버 통신 오류:", error);
       }
     },
-    async getRequestFoodName(upphotoid){
+    async getRequestFoodName(upphotoid) {
       try {
         const response = await this.$axios.get(`/getRequestFoodName?upphotoid=${upphotoid}`);
         console.log("response.data : " + response.data)
@@ -272,27 +283,27 @@ export default {
           upphotoid: upphotoid,
           newQuantity: updatedData.quantity
         })
-        .then(response => {
-          console.log("양 업데이트 응답:", response.data);
-          updatedData.mass = updatedData.quantity;
-          // 영양소 재계산
-          this.calculateNutrients(updatedData, response.data);
-        })
-        .catch(error => {
-          console.error("양 업데이트 실패:", error);
-        });
+            .then(response => {
+              console.log("양 업데이트 응답:", response.data);
+              updatedData.mass = updatedData.quantity;
+              // 영양소 재계산
+              this.calculateNutrients(updatedData, response.data);
+            })
+            .catch(error => {
+              console.error("양 업데이트 실패:", error);
+            });
       }
       console.log("updatedData.foodName : " + updatedData.foodName)
       // 음식명이 변경된 경우 관리자 검수 요청
       if (nameChanged) {
-        if(updatedData.selectedCandidate == null){
+        if (updatedData.selectedCandidate == null) {
           updatedData.selectedCandidate = -1;
         }
         this.$axios.post('/requestNameChange', {
           upphotoid: upphotoid,
           imgeditcomment: updatedData.foodName,
-          before : updatedData.foodnum,
-          after :updatedData.selectedCandidate
+          before: updatedData.foodnum,
+          after: updatedData.selectedCandidate
         })
             .then(response => {
               console.log("음식명 변경 요청 응답:", response.data);
@@ -313,24 +324,23 @@ export default {
       console.log('upphotoid : ' + upphotoid);
       // 서버에 삭제 요청
       this.$axios.post('/deleteFood', {
-        'upphotoid' : upphotoid
+        'upphotoid': upphotoid
       })
-      .then(response => {
-        console.log("서버 응답:", response.data);
-        // 삭제 성공 시, 클라이언트 측 데이터 업데이트
-        for (const category in this.categorizedImages) {
-          const index = this.categorizedImages[category].findIndex(food => food.upphotoid === upphotoid);
-          if (index !== -1) {
-            this.categorizedImages[category].splice(index, 1);
-            break;
-          }
-        }
-      })
-      .catch(error => {
-        console.error("서버 통신 오류:", error);
-      });
+          .then(response => {
+            console.log("서버 응답:", response.data);
+            // 삭제 성공 시, 클라이언트 측 데이터 업데이트
+            for (const category in this.categorizedImages) {
+              const index = this.categorizedImages[category].findIndex(food => food.upphotoid === upphotoid);
+              if (index !== -1) {
+                this.categorizedImages[category].splice(index, 1);
+                break;
+              }
+            }
+          })
+          .catch(error => {
+            console.error("서버 통신 오류:", error);
+          });
     },
-
 
 
   },
@@ -340,6 +350,19 @@ export default {
 
 
 <style lang="scss" scoped>
+.date-picker {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  align-items: center; /* 세로축에서 중앙 정렬 */
+  width: 100%; /* 전체 너비 사용 */
+}
+.date-picker input[type="date"] {
+  padding: 10px;
+  border: 1px solid #2a9d8f;
+  border-radius: 5px;
+
+}
 .no-data-message {
   text-align: center;
   margin-top: 20px;
@@ -350,11 +373,13 @@ export default {
   margin: auto;
   /* 필요에 따라 추가 스타일링을 적용할 수 있습니다. 예를 들어, 너비나 패딩 등 */
 }
+
 .center-div {
   margin: auto;
   width: 50%; /* 또는 원하는 너비 */
   text-align: center;
 }
+
 .close-button-container {
   display: flex;
   justify-content: flex-end;
@@ -374,6 +399,7 @@ export default {
   padding: 0;
   margin: 5px;
 }
+
 .popover-content {
   position: fixed;
   z-index: 1000;
@@ -403,8 +429,6 @@ export default {
 }
 
 
-
-
 .image-text-container {
   display: flex;
   align-items: center;
@@ -422,12 +446,14 @@ export default {
   flex-basis: auto; /* 필요에 따라 조정 가능 */
   /* 추가적인 스타일링 */
 }
+
 .category-name {
   flex-shrink: 0; /* 카테고리 이름의 크기가 줄어들지 않도록 설정 */
   margin-right: 20px; /* 이름과 이미지 사이의 간격을 설정 */
   font-size: 24px;
 
 }
+
 #app {
   width: 100%;
   height: 100vh; /* 뷰포트 높이 전체를 사용 */
@@ -468,6 +494,7 @@ export default {
   align-items: stretch;
 
 }
+
 .over {
   background-color: lightblue; /* 드래그 오버 시 시각적 피드백 */
 }
@@ -477,6 +504,14 @@ export default {
   position: relative;
   flex-shrink: 0; /* 이미지 크기가 줄어들지 않도록 설정 */
   display: inline-block; /* 또는 필요에 따라 다른 디스플레이 속성 사용 */
+  max-width: 100%;
+  max-height: 100px;
+  transition: transform 1s ease; /* 확대 효과를 부드럽게 */
+}
+
+.image-item:hover img {
+  transform: scale(2); /* 3배 확대 */
+  cursor: pointer; /* 마우스 오버시 커서 변경 */
 }
 
 .delete-button {
@@ -488,9 +523,9 @@ export default {
   border: none;
   cursor: pointer;
   font-size: 12px; /* 폰트 크기 조정 */
-  width: 20px;     /* 버튼 너비 */
-  height: 20px;    /* 버튼 높이 */
-  padding: 0;      /* 패딩 제거 또는 조정 */
+  width: 20px; /* 버튼 너비 */
+  height: 20px; /* 버튼 높이 */
+  padding: 0; /* 패딩 제거 또는 조정 */
   border-radius: 50%; /* 원형 버튼을 원한다면 추가 */
 }
 
