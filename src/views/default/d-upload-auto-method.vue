@@ -1,25 +1,41 @@
 
 
 <template>
-  <main id="main" class="">
-    <div class="" style="margin: 100px 0 100px 0; text-align: center;">
-      <h3 id="plz-up" class="" style=" white-space: nowrap">오늘의 식단을 한 번에 업로드 해주세요</h3>
-      <p class="" style=" white-space: nowrap">
-                              찍은 시간을 확인해서 자동으로 분류할 수 있어요<br>
-      (아침 : 04:00~10:30, 점심 : 10:30~15:00, 저녁 : 17:00~21:00) <br>
-        나머지 시간은 간식시간이에요!</p>
-      <div class="date-picker">
-        <input type="date" v-model="selectedDate">
+  <main id="main" class="main">
+    <div class="row">
+      <div class="col-3"></div>
+    <div class="container col-6" style="margin: 100px 0 100px 0; text-align: center;">
+      <h3 id="plz-up" class="" style=" white-space: nowrap">식단을 한 번에 업로드 해주세요
+        <i
+            class="fas fa-info-circle"
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="찍은 시간을 확인해서 자동으로 분류할 수 있어요
+      (아침 : 04:00~10:30, 점심 : 10:30~15:00, 저녁 : 17:00~21:00)
+        나머지 시간은 간식시간이에요!"
+            ref="info"
+        ></i>
+      </h3>
+      <!-- 날짜 선택기와 분류 버튼을 포함하는 컨테이너 -->
+      <div class="main-container">
+        <!-- 날짜 선택기와 분류 버튼을 포함하는 컨테이너 -->
+        <div class="date-and-classify-container">
+          <div class="date-picker">
+            <input type="date" v-model="selectedDate">
+          </div>
+          <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary" @click="submitClassification">분류</button>
+        </div>
       </div>
-      <button data-bs-toggle="modal" data-bs-target="#myModal"
-              class="btn btn-primary" @click="submitClassification">분류</button>
-      <p>(시간 정보가 없으면 간식으로 분류)</p>
-    </div>
-    <div>
-      <imgUpload :max-images="20" @image-uploaded="printImages($event)"/>
-    </div>
+        <!-- imgUpload 영역 -->
+        <div class="imgUploadDiv">
+          <imgUpload :max-images="20" @image-uploaded="printImages($event)"/>
+        </div>
 
 
+      <div class="col-3"></div>
+    </div>
+
+    </div>
     <!-- 부트스트랩 모달 -->
     <div class="modal fade" id="myModal">
       <div class="modal-dialog modal-xl">
@@ -60,6 +76,8 @@
 <script>
 import ImgUpload from "@/components/util/img-upload.vue";
 import EXIF from 'exif-js';
+import { Tooltip } from 'bootstrap'
+
 export default {
   components: {
     ImgUpload
@@ -76,6 +94,11 @@ export default {
       },
       selectedDate: null, // 추가된 날짜 데이터
     };
+  },
+  mounted() {
+    new Tooltip(document.body, {
+      selector: "[data-bs-toggle='tooltip']",
+    })
   },
   created() {
     // 컴포넌트가 생성될 때 오늘 날짜로 초기화
@@ -172,13 +195,47 @@ export default {
 </script>
 
 <style scoped>
-.date-picker {
-  margin-bottom: 20px;
+.container {
+  display: flex; /* Flex 컨테이너로 설정 */
+  flex-direction: column; /* 자식 요소들을 세로 방향으로 정렬 */
+  align-items: center; /* 가로 축에서 중앙 정렬 */
+  justify-content: center; /* 세로 축에서 중앙 정렬 */
+  width: 100%; /* 컨테이너의 너비를 화면 너비에 맞춤 */
+  max-width: 130vh; /* 최대 너비 설정 */
+  margin: auto; /* 자동 마진을 사용하여 수평 중앙 정렬 */
+  height: auto; /* 높이 자동으로 설정 */
+}
+
+.imgUploadDiv {
+}
+
+.btn-primary {
+  padding: 10px 20px;
+}
+
+.main-container {
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  align-items: center; /* 세로축에서 중앙 정렬 */
+  width: 100%; /* 전체 너비 사용 */
+}
+
+.date-and-classify-container {
+  display: flex; /* Flex 컨테이너로 설정 */
+  align-items: center; /* 자식 요소를 세로축 중앙에 배치 */
 }
 
 .date-picker input[type="date"] {
   padding: 10px;
   border: 1px solid #2a9d8f;
   border-radius: 5px;
+  margin-right: 10px; /* 오른쪽 여백 추가 */
+}
+
+.main {
+  background-color: white;
+}
+.date-picker {
+  margin-bottom: 20px;
 }
 </style>

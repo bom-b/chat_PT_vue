@@ -202,13 +202,17 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 130vh; /* 컨테이너가 전체 너비를 차지하도록 설정 */
-  height: 60vh; /* 뷰포트 높이만큼의 높이를 가지도록 설정 */
+  width: 130vh;
+  height: 60vh;
   padding: 10px;
+  border-radius: 10px; /* 둥근 모서리 추가 */
+  background: linear-gradient(145deg, #e6e6e6, #ffffff); /* 그라디언트 배경 추가 */
+  box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff; /* 네오모피즘 스타일 적용 */
+  margin-bottom: 30px;
 }
 
 .drag-drop {
-  border: 2px dashed #085c57;
+  border: none;
   padding: 5px;
   text-align: center;
   cursor: pointer;
@@ -218,7 +222,20 @@ button:hover {
   flex-direction: column;
   justify-content: flex-start; /* 상단 정렬 */
   align-items: center; /* 가로 방향에서 중앙 정렬 */
+  transition: transform 0.3s ease; /* 애니메이션 효과 추가 */
 }
+
+.drag-drop:hover {
+  transform: translateY(-5px); /* 호버 시 약간 위로 이동 */
+}
+
+.upload-instructions {
+  text-align: center;
+  padding: 20px;
+  color: #333; /* 텍스트 색상 조정 */
+  font-weight: bold; /* 텍스트 굵게 */
+}
+
 .upload-instructions {
   text-align: center;
   padding: 20px;
@@ -234,15 +251,14 @@ button:hover {
 .drag-over {
   border-color: #2196F3;
 }
-
-
 .card {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: border 0.3s ease;
+  transition: all 0.3s ease;
   width: 100%;
   max-width: 220px; /* 카드의 최대 너비를 설정 */
   margin-bottom: 20px;
   position: relative; /* 삭제 버튼을 위한 상대 위치 설정 */
+  border-radius: 8px; /* 카드에 둥근 모서리 추가 */
 }
 .card.selected {
   border: 2px solid #085c57; /* 선택된 이미지에 대한 테두리 스타일 */
@@ -264,68 +280,23 @@ button:hover {
 .card img {
   width: 100%;
   height: auto;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
+  border-radius: 8px; /* 이미지에도 둥근 모서리 적용 */
 }
 
-.card-body {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end; /* 오른쪽 정렬 */
-}
-
-.select-or-input {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px; /* 여백 추가 */
-  width: 100%; /* 전체 너비 사용 */
-}
-
-.form-select, .form-control {
-  margin-right: 10px;
-}
-
-
-
-.btn:hover {
-  background-color: #d73833;
-}
-.btn-secondary {
-  background-color: #6c757d; /* Secondary button color */
+button {
+  background-color: #4CAF50; /* 버튼 색상 변경 */
   color: white;
-  display: inline-block; /* 추가 */
-  white-space: nowrap; /* 추가 */
-  margin-left: auto; /* 오른쪽 정렬을 위한 자동 마진 */
-}
-
-.button-container {
-  display: flex;
-  justify-content: flex-end; /* 오른쪽 정렬 */
-  width: 100%; /* 전체 너비 사용 */
-}
-
-
-.form-control {
-  display: inline-block;
-  width: auto; /* 초기 크기 설정 */
-  min-width: 100px; /* 최소 크기 설정 */
-  /* 나머지 스타일 */
-}
-
-.input-container {
-  display: flex;
-  align-items: center;
-  flex-grow: 1; /* 가능한 모든 공간을 차지하도록 */
-}
-
-.input-addon {
-  margin-left: 2px; /* 인분 텍스트와 인풋창 사이의 간격 줄임 */
-}
-
-.toggle-unit {
-  margin-left: 5px;
-  color: blue;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* 버튼 그림자 추가 */
 }
+
+button:hover {
+  background-color: #45a049; /* 버튼 호버 색상 변경 */
+}
+
 </style>
 
