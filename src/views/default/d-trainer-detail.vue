@@ -55,19 +55,24 @@
         ${this.$springBaseURL}/images/trainer/${slide.mainimage}
         ${this.$springBaseURL}/trainer/awards_img/${slide.mainimage}
        -->
+    <!-- 팝업 창 -->
+    <div class="image-popup" v-if="popupImage" @click="hidePopup">
+      <img
+        :src="`${this.$s3BaseURL}/trainer/awards_img/${popupImage}`"
+        alt="Enlarged Image"
+      />
+    </div>
     <section class="gallery">
+      <h3>갤러리</h3><p> 클릭 시 확대 됩니다</p>
       <img
-        :src="`${this.$s3BaseURL}/trainer/profile_img/${trainerInfo.subimage1}`"
+        v-for="(image, index) in [trainerInfo.subimage1, trainerInfo.subimage2]"
+        :key="index"
+        :src="`${this.$s3BaseURL}/trainer/awards_img/${image}`"
         alt="Profile Picture"
+        @click="showPopup(image)"
       />
-      <img
-        :src="`${this.$s3BaseURL}/trainer/awards_img/${trainerInfo.subimage1}`"
-        alt="Profile Picture"
-      />
-      <img
-        :src="`${this.$s3BaseURL}/trainer/profile_img/${trainerInfo.subimage2}`"
-        alt="Profile Picture"
-      />
+
+     
     </section>
 
     <!-- 지도 섹션 -->
@@ -96,6 +101,8 @@ export default {
   },
   data() {
     return {
+      popupImage: null, // 팝업 이미지 URL
+
       trainerInfo: {
         memberVO: {},
       }, // 데이터 객체로 받기
@@ -109,6 +116,12 @@ export default {
   },
 
   methods: {
+    showPopup(image) {
+      this.popupImage = image;
+    },
+    hidePopup() {
+      this.popupImage = null;
+    },
     // 트레이너 디테일 가져오기
     async fetchTrainerDetail() {
       try {
@@ -326,8 +339,13 @@ export default {
   width: 185px;
   height: auto;
   margin: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* 부드러운 변화를 위한 transition 추가 */
+  cursor: pointer; /* 마우스 커서를 포인터로 변경 */
 }
-
+.gallery img:hover {
+  transform: scale(1.05); /* 이미지를 약간 확대 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* 그림자 효과 추가 */
+}
 .map {
   width: 100%;
   height: 400px;
@@ -352,7 +370,7 @@ export default {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(25%, 1fr));
     text-align: center;
-    vertical-align:middle;
+    vertical-align: middle;
     gap: 10px;
   }
 
@@ -362,7 +380,7 @@ export default {
     border-radius: 8px;
     padding-bottom: 15px;
     text-align: center;
-    vertical-align:middle;
+    vertical-align: middle;
 
     align-items: center;
     transition: transform 0.3s, box-shadow 0.3s;
@@ -381,6 +399,23 @@ export default {
     display: block;
     margin: 0 auto 10px;
     /* 아이콘 스타일링을 위한 CSS 코드 추가 */
+  }
+  .image-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    cursor: pointer; /* 팝업 창을 클릭 가능하게 만듦 */
+  }
+
+  .image-popup img {
+    max-width: 80vw;
+    max-height: 80vh;
   }
 }
 </style>
