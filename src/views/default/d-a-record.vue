@@ -132,6 +132,8 @@ export default defineComponent({
       const startDate = eventData.startStr;
       const endDate = eventData.startStr;
 
+      console.log(startDate);
+
   return {
     id: eventData.eventNum,
     title: eventData.title,

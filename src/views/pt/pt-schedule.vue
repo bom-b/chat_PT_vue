@@ -1,33 +1,5 @@
 <template>
   <main>
-    <div class='demo-app' data-aos="fade-in" data-aos-duration="2000" data-aos-delay="">
-      <div class='demo-app-sidebar'>
-        <div class='demo-app-sidebar-section'>
-          <h2>회원 스케줄 관리</h2>
-          <ul>
-            <li v-for='(event, index) in externalEvents' :key='index' class='external-event' :draggable='true'
-              :data-event='JSON.stringify(event)'>
-              {{ event.title }}
-            </li>
-          </ul>
-        </div>
-        <div class='demo-app-sidebar-section'>
-          <label>
-            <input type='checkbox' :checked='calendarOptions.weekends' @change='handleWeekendsToggle' />
-            주말 on/off
-          </label>
-        </div>
-        <div class='demo-app-sidebar-section'>
-          <h2>일정 ({{ currentEvents.length }})</h2>
-          <ul>
-            <li v-for='event in currentEvents' :key='event.id'>
-              <b>{{ event.startStr }}</b>
-              <b>{{ event.endStr }}</b>
-              <i>{{ event.title }}</i>
-            </li>
-          </ul>
-        </div>
-      </div>
       <div class='demo-app-main'>
         <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref='fullCalendar'>
         <template v-slot:eventContent='arg'>
@@ -35,9 +7,10 @@
           <b>{{ formatTime(arg.event.end) }}</b> <!-- 이벤트 시작 시간 포맷팅 -->
           <i>{{ arg.event.title }}</i> <!-- 이벤트 제목 -->
         </template>
+        
         </FullCalendar>
       </div>
-    </div>
+    
   </main>
 </template>
 
@@ -47,6 +20,7 @@ import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import { INITIAL_EVENTS } from "./event-utils";
 import dragula from 'dragula';
 import 'dragula/dist/dragula.css';
 
@@ -87,10 +61,17 @@ export default defineComponent({
     };
   },
 
-  created() 
-  {
+  created() {
     this.fetchData();
+    // INITIAL_EVENTS를 allEvents에 추가합니다.
+    this.allEvents.push(...INITIAL_EVENTS);
   },
+
+  mounted() {
+    this.initCalendar();
+    this.updateCalendarEvents(); // 초기 이벤트 추가를 위해 호출
+  },
+
 
 
   methods: {
@@ -110,36 +91,51 @@ export default defineComponent({
     return strTime;
   },
 
-  async fetchData() { 
-  this.$axios.get("/getMyPtList")
-    .then(response => {
-      // 데이터를 변환하여 이벤트 배열을 생성합니다.
-      const events = response.data.map(eventData => {
-        // 날짜와 시간을 결합합니다. 'T'는 ISO 8601 형식을 위해 사용됩니다.
-        console.log(eventData)
-        const start = eventData.PTDATE + 'T' + eventData.PTSTARTTIME;
-        const end = eventData.PTDATE + 'T' + eventData.PTENDTIME;
+  async fetchData() {
+  try {
+    const response = await this.$axios.get("/getMyPtList");
+    const events = response.data.map(eventData => {
+      let startDate = new Date(eventData.ptstart);
+      let endDate = new Date(startDate.getTime() + 3 * 60 * 60 * 1000); // 3시간 추가
 
-        console.log("start : " +start)
-        console.log("end : " +end)
-        // FullCalendar의 이벤트 객체를 반환합니다.
-        return {
-          id: eventData.SCNUM,
-          title: eventData.TITLE,
-          start: start,
-          end: end,
-        };
-      });
+      let startFormatted = startDate.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식으로 변환
+      let endFormatted = endDate.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식으로 변환
 
-      // 변환된 이벤트를 allEvents 배열에 추가합니다.
-      this.allEvents.push(...events);
-    })
-    .catch(error => {
-      console.error("Error fetching data:", error);
+      let startTime = startDate.toISOString().split('T')[1]; // 'YYYY-MM-DD' 형식으로 변환
+      let endTime = endDate.toISOString().split('T')[1];
+      console.log(startFormatted, endFormatted);
+      console.log(startTime, endTime);
+
+      return {
+        timeZoneStart:"",
+        timeZoneEnd:"",
+        id: eventData.scnum,
+        title: eventData.title,
+        start: startDate,
+        end: endDate,
+      };
     });
+
+    this.allEvents.push(...events);
+    console.log("ALL EVENTS : " + this.allEvents);
+    this.updateCalendarEvents();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
 },
 
-    handleDateSelect(selectInfo) {
+updateCalendarEvents() {
+  this.$nextTick(() => {
+    if (this.$refs.fullCalendar) {
+      const calendarApi = this.$refs.fullCalendar.getApi();
+      calendarApi.removeAllEvents();
+      this.allEvents.forEach(event => console.log(event));
+    } else {
+      console.error("FullCalendar 참조가 존재하지 않습니다.");
+    }
+  });
+},
+  handleDateSelect(selectInfo) {
       let title = prompt('일정을 적어주세요');
       let calendarApi = selectInfo.view.calendar;
 
@@ -188,9 +184,7 @@ export default defineComponent({
 
     },
   },
-  mounted() {
-    this.initCalendar();
-  },
+
 });
 </script>
 
