@@ -344,7 +344,7 @@ export default {
   computed: {
     progress() {
       let count = 0;
-      const totalFields = 6; // 총 필드 수
+      const totalFields = 7; // 총 필드 수
 
       if (this.mainImage) count++;
       if (this.region) count++;

@@ -26,7 +26,8 @@ export default {
             currentPageIndex: 1,
             userdata: {},
             serverReturn: 0,
-            serverimageReturn: 0
+            serverimageReturn: 0,
+            nm_profileimg: ''
         };
     },
     computed: {
@@ -44,6 +45,31 @@ export default {
             return signUp1;
         },
 
+
+    },
+    mounted() {
+        console.log(`          _____                   _____                   _____            _____                            _____            _____          
+%c         /\\    \\                 /\\    \\                 /\\    \\          /\\    \\                          /\\    \\          /\\    \\         
+        /::\\    \\               /::\\____\\               /::\\    \\        /::\\    \\                        /::\\    \\        /::\\    \\        
+       /::::\\    \\             /:::/    /              /::::\\    \\       \\:::\\    \\                      /::::\\    \\       \\:::\\    \\       
+      /::::::\\    \\           /:::/    /              /::::::\\    \\       \\:::\\    \\                    /::::::\\    \\       \\:::\\    \\      
+     /:::/\\:::\\    \\         /:::/    /              /:::/\\:::\\    \\       \\:::\\    \\                  /:::/\\:::\\    \\       \\:::\\    \\     
+    /:::/  \\:::\\    \\       /:::/____/              /:::/__\\:::\\    \\       \\:::\\    \\                /:::/__\\:::\\    \\       \\:::\\    \\    
+   /:::/    \\:::\\    \\     /::::\\    \\             /::::\\   \\:::\\    \\      /::::\\    \\              /::::\\   \\:::\\    \\      /::::\\    \\   
+  /:::/    / \\:::\\    \\   /::::::\\    \\   _____   /::::::\\   \\:::\\    \\    /::::::\\    \\            /::::::\\   \\:::\\    \\    /::::::\\    \\  
+ /:::/    /   \\:::\\    \\ /:::/\\:::\\    \\ /\\    \\ /:::/\\:::\\   \\:::\\    \\  /:::/\\:::\\    \\          /:::/\\:::\\   \\:::\\____\\  /:::/\\:::\\    \\ 
+/:::/____/     \\:::\\____/:::/  \\:::\\    /::\\____/:::/  \\:::\\   \\:::\\____\\/:::/  \\:::\\____\\        /:::/  \\:::\\   \\:::|    |/:::/  \\:::\\____\\
+\\:::\\    \\      \\::/    \\::/   \\:::\\  /:::/    \\::/    \\:::\\  /:::/    /:::/    \\::/    /        \\::/    \\:::\\  /:::|____/:::/    \\::/    /
+ \\:::\\    \\      \\/____/ \\/____/\\:::\\/:::/    / \\/____/ \\:::\\/:::/    /:::/    / \\/____/          \\/_____/\\:::\\/:::/    /:::/    / \\/____/ 
+  \\:::\\    \\                     \\::::::/    /           \\::::::/    /:::/    /                            \\::::::/    /:::/    /          
+   \\:::\\    \\                     \\::::/    /             \\::::/    /:::/    /                              \\::::/    /:::/    /           
+    \\:::\\    \\                    /:::/    /              /:::/    /\\::/    /                                \\::/____/\\::/    /            
+     \\:::\\    \\                  /:::/    /              /:::/    /  \\/____/                                  ~~       \\/____/             
+      \\:::\\    \\                /:::/    /              /:::/    /                                                                         
+       \\:::\\____\\              /:::/    /              /:::/    /                                                                          
+        \\::/    /              \\::/    /               \\::/    /                                                                           
+         \\/____/                \\/____/                 \\/____/                                                                            
+                                                                                                                                            `, "color:green");
     },
     methods: {
         nextPage: async function (pagesdata) {
@@ -51,6 +77,7 @@ export default {
             console.log(this.userdata);
 
             if (this.currentPageIndex == 4) {
+
                 await this.completeSignUp();
             }
 
@@ -60,10 +87,11 @@ export default {
         },
         async completeSignUp() {
             try {
+                // 헤더에 multipart 넣으면
+                // [org.springframework.web.HttpMediaTypeNotSupportedException: Content-Type 'multipart/form-data;boundary=----WebKitFormBoundaryHcOITiBsskT3iN2R;charset=UTF-8' is not supported]
+                // 오류발생
                 let data = this.userdata;
-                let jsonData = JSON.stringify(data);
-                let imageFile = this.userdata.nm_profileimg;
-                await this.$axiosWithoutValidation.post("/signUp/completeSignUp", jsonData)
+                await this.$axiosWithoutValidation.post("/signUp/completeSignUp", data)
                     .then(async response => {
                         this.serverReturn = response.data;
                         console.log("*********" + this.serverReturn);
@@ -87,20 +115,6 @@ export default {
                         } else {
                             this.$swal("", "경로이상", "warning");
                         }
-                        let formData = new FormData();
-                        formData.append('image', imageFile);
-                        await this.$axiosWithoutValidation.post("/s3upload", formData, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data',
-                            },
-                        }).then(imageResponse => {
-                            this.serverimageReturn = imageResponse.data;
-                            if (this.serverimageReturn > 0) {
-                                console.log("이미지 aws에 저장");
-                            }
-                        }).catch(imageError => {
-                            console.error("이미지 업로드 에러", imageError);
-                        });
                     })
                     .catch(e => {
                         console.error("부모에러", e);

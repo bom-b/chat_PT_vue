@@ -110,6 +110,10 @@ export default {
                 </button>
             </div>
         </div>
+        <div>
+            <p>선택한 음식들</p>
+            {{ rating }}
+        </div>
         <div class="button-container">
             <button type="button" class="btn btn-success" @click="proceedToNextPage" :disabled="this.rating.length < 5">
                 완료
