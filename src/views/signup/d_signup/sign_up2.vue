@@ -47,7 +47,7 @@ export default {
       try {
         const isValid = 1;
         const data = {
-          nm_profileimg: this.nm_profileimg
+          nm_profileimg: this.imageUrl
         };
         if (isValid) {
           this.$emit("nextPage", data);

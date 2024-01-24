@@ -27,7 +27,8 @@ export default {
             userdata: {},
             serverReturn: 0,
             serverimageReturn: 0,
-            nm_profileimg: ''
+            nm_profileimg: '',
+            formData: new FormData(),
         };
     },
     computed: {
@@ -87,11 +88,25 @@ export default {
         },
         async completeSignUp() {
             try {
-                // 헤더에 multipart 넣으면
-                // [org.springframework.web.HttpMediaTypeNotSupportedException: Content-Type 'multipart/form-data;boundary=----WebKitFormBoundaryHcOITiBsskT3iN2R;charset=UTF-8' is not supported]
-                // 오류발생
-                let data = this.userdata;
-                await this.$axiosWithoutValidation.post("/signUp/completeSignUp", data)
+                for (const key in this.userdata) {
+                    const value = this.userdata[key];
+
+                    if (value instanceof File) {
+                        // 파일인 경우
+                        this.formData.append(key, value);
+                    } else if (Array.isArray(value)) {
+                        // 배열인 경우
+                        for (let i = 0; i < value.length; i++) {
+                            this.formData.append(`${key}[${i}]`, value[i]);
+                        }
+                    } else {
+                        // 일반 데이터인 경우
+                        this.formData.append(key, value);
+                    }
+                }
+                
+
+                await this.$axiosWithoutValidation.post("/signUp/completeSignUp", this.formData)
                     .then(async response => {
                         this.serverReturn = response.data;
                         console.log("*********" + this.serverReturn);

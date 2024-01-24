@@ -13,6 +13,7 @@ export default {
         role: "NORMAL",
         password_Check: "",
         region: "",
+        kakaocode: "",
       },
       inputDisplay: {
         id: 0,
@@ -243,7 +244,8 @@ export default {
           email: this.user.email,
           password: this.user.password,
           role: this.user.role,
-          region: this.user.region
+          region: this.user.region,
+          kakaocode: this.user.kakaocode,
         };
         if (isValid) {
           this.$emit("nextPage", data);
@@ -276,7 +278,11 @@ export default {
         <section>
           <form @submit.prevent="idcheck">
             <div class="row mb-3">
-              <label for="id" class="col-sm-3 col-form-label">아이디:</label>
+              <label for="id" class="col-sm-3 col-form-label">
+                <span style="color:red;">
+                  *
+                </span>
+                아이디:</label>
               <div class="col-sm-7">
                 <div class="input-group">
                   <input type="text" class="form-control" id="id" placeholder="아이디를 입력하세요" v-model="user.id"
@@ -290,7 +296,10 @@ export default {
           </form>
           <!-- 지역 -->
           <div class="row mb-3">
-            <label for="region" class="col-sm-3 col-form-label">주소:</label>
+            <label for="region" class="col-sm-3 col-form-label">
+              <span style="color:red;">
+                *
+              </span>주소:</label>
             <div class="col-sm-7">
               <div class="input-group">
                 <input type="text" class="form-control" id="region" placeholder="도로명주소" readonly @click="search"
@@ -300,7 +309,10 @@ export default {
           </div>
           <!-- 이름 입력 폼 -->
           <div class="row mb-3">
-            <label for="name" class="col-sm-3 col-form-label">이름:</label>
+            <label for="name" class="col-sm-3 col-form-label">
+              <span style="color:red;">
+                *
+              </span>이름:</label>
             <div class="col-sm-7">
               <div class="input-group">
                 <input type="text" class="form-control" id="name" placeholder="이름을 입력하세요" v-model="user.name" />
@@ -309,7 +321,10 @@ export default {
           </div>
           <!-- 닉네임 -->
           <div class="row mb-3">
-            <label for="nickname" class="col-sm-3 col-form-label">닉네임:</label>
+            <label for="nickname" class="col-sm-3 col-form-label">
+              <span style="color:red;">
+                *
+              </span>닉네임:</label>
             <div class="col-sm-7">
               <div class="input-group">
                 <input type="text" class="form-control" id="nickname" placeholder="닉네임을 입력하세요" v-model="user.nickname" />
@@ -319,7 +334,10 @@ export default {
           <!-- 이메일 입력 폼 -->
           <form @submit.prevent="emailCheck" class="mt-5">
             <div class="row mb-3">
-              <label for="email" class="col-sm-3 col-form-label">이메일:</label>
+              <label for="email" class="col-sm-3 col-form-label">
+                <span style="color:red;">
+                  *
+                </span>이메일:</label>
               <div class="col-sm-7">
                 <div class="input-group">
                   <input type="email" class="form-control" id="email" placeholder="이메일을 입력하세요" v-model="user.email"
@@ -341,6 +359,7 @@ export default {
                 </p>
               </div>
             </div>
+
           </form>
           <!-- 인증번호 입력 폼 -->
           <div v-if="inputDisplay.email == 1">
@@ -368,7 +387,10 @@ export default {
           <!-- 비밀번호 입력 폼 -->
           <div>
             <div class="row mb-3">
-              <label for="password" class="col-sm-3 col-form-label">비밀번호:</label>
+              <label for="password" class="col-sm-3 col-form-label">
+                <span style="color:red;">
+                  *
+                </span>비밀번호:</label>
               <div class="col-sm-7">
                 <div class="input-group">
                   <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요"
@@ -377,7 +399,10 @@ export default {
               </div>
             </div>
             <div class="row mb-3">
-              <label for="password_Check" class="col-sm-3 col-form-label">비밀번호 확인:</label>
+              <label for="password_Check" class="col-sm-3 col-form-label">
+                <span style="color:red;">
+                  *
+                </span>비밀번호 확인:</label>
               <div class="col-sm-7">
                 <div class="input-group">
                   <input type="password" class="form-control" id="password_Check" placeholder="비밀번호를 입력하세요"
@@ -389,6 +414,15 @@ export default {
               <p v-if="matchpwd" style="color: red">
                 비밀번호가 일치하지 않습니다.
               </p>
+            </div>
+            <div class="row mb-3">
+              <label for="name" class="col-sm-4 col-form-label">카카오채널 연동코드:</label>
+              <div class="col-sm-6">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="kakaocode" placeholder="카카오채널에서 발급받아주세요."
+                    v-model="user.kakaocode" />
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -437,7 +471,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60%;
+  width: 65%;
   height: 100%;
   background-color: #ffffff;
   border-radius: 10px;
