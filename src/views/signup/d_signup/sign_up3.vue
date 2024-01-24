@@ -189,9 +189,10 @@ export default {
                   </text><text>
                     <textPath xlink:href="#curvetxt4">비만</textPath>
                   </text></g>
+                  <!-- 여기서 to 앞 값 고치기 -->
                   <line x1="140" y1="140" x2="80" y2="140" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)">
                   <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 140 140"
-                    to="170 140 140" dur="1s" fill="freeze" repeatCount="1"></animateTransform>
+                    to="70 140 140" dur="1s" fill="freeze" repeatCount="1"></animateTransform>
                 </line>
                 <!-- <line x1="140" y1="140" x2="65" y2="140" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)">
                   <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 140 140"
