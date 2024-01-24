@@ -11,7 +11,9 @@ export default {
         purpose: null,
         activity: null,
         target_weight: '',
-      }
+      },
+      // 기본값
+      arrowXpoint: 90,
     };
   },
   computed: {
@@ -22,19 +24,20 @@ export default {
         return 50;
       }
     },
-    images() {
-      return [
-        { path: require('../../../../public/assets/img/bmi/bmi1.png'), alt: 'Image 1', active: this.user.bmi >= 0 && this.user.bmi < 18.5 },
-        { path: require('../../../../public/assets/img/bmi/bmi2.png'), alt: 'Image 2', active: this.user.bmi >= 18.5 && this.user.bmi < 23 },
-        { path: require('../../../../public/assets/img/bmi/bmi3.png'), alt: 'Image 3', active: this.user.bmi >= 23 && this.user.bmi < 25 },
-        { path: require('../../../../public/assets/img/bmi/bmi4.png'), alt: 'Image 4', active: this.user.bmi >= 25 },
-      ];
-    },
   },
+  watch: {
+    arrowXpoint: function (newVal, oldVal) {
+      const line = this.$refs.arrowLine;
+      line.setAttribute('from', `${oldVal} 140 140`);
+    }
+  },
+
+
   methods: {
     calculatebmi() {
       if (this.user.height && this.user.weight) {
         this.user.bmi = (this.user.weight / ((this.user.height / 100) ** 2)).toFixed(2);
+        this.arrowXpoint = this.user.bmi;
         return this.user.bmi;
       } else {
         return '';
@@ -115,7 +118,7 @@ export default {
             </li>
             <li>
               <label for="user.bmi"> BMI </label>
-              <div>{{ calculatebmi() }}</div>
+              <!-- <div>{{ calculatebmi() }}</div> -->
             </li>
 
 
@@ -131,24 +134,23 @@ export default {
                   <path id="curvetxt3" d="M95 3 A140 140, 0, 0, 1, 284 140" style="fill: #none;"></path>
                   <path id="curvetxt4" d="M235.4 33 A140 140, 0, 0, 1, 284 140" style="fill: #none;"></path>
                 </defs>
-                <path d="M0 140 A140 140, 0, 0, 1, 6.9 96.7 L140 140 Z" fill="#bc2020"></path>
-                <path d="M6.9 96.7 A140 140, 0, 0, 1, 12.1 83.1 L140 140 Z" fill="#d38888"></path>
-                <path d="M12.1 83.1 A140 140, 0, 0, 1, 22.6 63.8 L140 140 Z" fill="#ffe400"></path>
+                <path
+                  d="M0 140 A140 140, 0, 0, 1, 6.9 96.7 A140 140, 0, 0, 1, 12.1 83.1 A140 140, 0, 0, 1, 22.6 63.8 L140 140 Z"
+                  fill="#1E90FF"></path>
                 <path d="M22.6 63.8 A140 140, 0, 0, 1, 96.7 6.9 L140 140 Z" fill="#008137"></path>
                 <path d="M96.7 6.9 A140 140, 0, 0, 1, 169.1 3.1 L140 140 Z" fill="#ffe400"></path>
                 <path d="M169.1 3.1 A140 140, 0, 0, 1, 233.7 36 L140 140 Z" fill="#d38888"></path>
                 <path d="M233.7 36 A140 140, 0, 0, 1, 273.1 96.7 L140 140 Z" fill="#bc2020"></path>
                 <path d="M273.1 96.7 A140 140, 0, 0, 1, 280 140 L140 140 Z" fill="#8a0101"></path>
                 <path d="M45 140 A90 90, 0, 0, 1, 230 140 Z" fill="#fff"></path>
-                <circle cx="140" cy="140" r="5" fill="#666"></circle>
-                <g style="paint-order: stroke;stroke: #fff;stroke-width: 2px;"><text x="25" y="111"
-                    transform="rotate(-72, 25, 111)">16</text><text x="30" y="96"
-                    transform="rotate(-66, 30, 96)">17</text><text x="35" y="83"
-                    transform="rotate(-57, 35, 83)">18.5</text><text x="97" y="29"
-                    transform="rotate(-18, 97, 29)">25</text><text x="157" y="20"
-                    transform="rotate(12, 157, 20)">30</text><text x="214" y="45"
-                    transform="rotate(42, 214, 45)">35</text><text x="252" y="95"
-                    transform="rotate(72, 252, 95)">40</text></g>
+                <circle cx="140" cy="140" r="10" fill="#666"></circle>
+                <g style="paint-order: stroke;stroke: #fff;stroke-width: 2px;">
+                  <text x="25" y="111" transform="rotate(-57, 10, 83)">18.5</text>
+                  <text x="97" y="29" transform="rotate(-18, 97, 29)">25</text>
+                  <text x="157" y="20" transform="rotate(12, 157, 20)">30</text>
+                  <text x="214" y="45" transform="rotate(42, 214, 45)">35</text>
+                  <text x="252" y="95" transform="rotate(72, 252, 95)">40</text>
+                </g>
                 <g style="font-size: 14px;"><text>
                     <textPath xlink:href="#curvetxt1">저체중</textPath>
                   </text><text>
@@ -158,13 +160,13 @@ export default {
                   </text><text>
                     <textPath xlink:href="#curvetxt4">비만</textPath>
                   </text></g>
-                  <!-- 여기서 to 앞 값 고치기 -->
-                  <line x1="140" y1="140" x2="80" y2="140" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)">
-                  <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 140 140"
-                    to="70 140 140" dur="1s" fill="freeze" repeatCount="1"></animateTransform>
+                <!-- 여기서 to 앞 값 고치기 -->
+                <line ref="arrowLine" x1="140" y1="140" x2="80" y2="140" stroke="#666" stroke-width="2"
+                  marker-end="url(#arrowhead)">
+                  <animateTransform attributeName="transform" attributeType="XML" type="rotate" :from="'0 140 140'"
+                    :to="arrowXpoint + ' 140 140'" dur="2s" fill="freeze" repeatCount="1"></animateTransform>
                 </line>
 
-                
 
                 <text x="100" y="120" style="font-size: 30px;font-weight:bold;color:#000;">{{ calculatebmi() }}</text>
               </g>
@@ -331,4 +333,5 @@ button {
 .selected-activity {
   background-color: rgb(255, 255, 255);
   color: #00997b;
-}</style>
+}
+</style>
