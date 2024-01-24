@@ -30,7 +30,7 @@
                 selectedEvent.foodDetails.length > 0 &&
                 selectedEvent.foodDetails[currentFoodIndex].img
               "
-              :src="`${this.$springBaseURL}/images/foodMainImages/${selectedEvent.foodDetails[currentFoodIndex].img}`"
+              :src="`${this.$s3BaseURL}/food_main_images/${selectedEvent.foodDetails[currentFoodIndex].img}`"
               alt="Event image"
               class="img-event"
               style="width: 300px; height: 300px"
