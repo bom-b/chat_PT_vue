@@ -1,128 +1,116 @@
 <template>
-    <div class="user-edit-form">
-      <form
-        @submit.prevent="updateUserInfo"
-        class="form-container"      >
-        <h2 class="form-title">회원 정보 수정</h2>
-        <div class="form-row">
-          <!-- :src="getImageUrl(user.nm_PROFILEIMG)" -->
+  <div class="user-edit-form">
+    <form @submit.prevent="updateUserInfo" class="form-container">
+      <h2 class="form-title">회원 정보 수정</h2>
+      <div class="form-row">
+        <!-- :src="getImageUrl(user.nm_PROFILEIMG)" -->
 
-          <div class="form-group form-row">
-            <h1 for="name">이성한, 29</h1>
-          </div>
-          <div>
-            <img
-              :src="previewImage"
-              alt="Profile Preview"
-              class="profile-image"
-              @click="openImagePicker"
-            />
-            <input
-              ref="profileImageInput"
-              @change="handleImageChange"
-              type="file"
-              id="profileImage"
-              class="form-input"
-              style="display: none"
-            />
-            <p>* 프로필 이미지 : 클릭 시 수정</p>
-          </div>
+        <div class="form-group form-row">
+          <h1 for="name">이성한, 29</h1>
+        </div>
+        <div>
+          <img
+            :src="`${this.$s3BaseURL}/normal_user/profile_img/${foodFirst.foodimg}`"
+            alt="Profile Preview"
+            class="profile-image"
+            @click="openImagePicker"
+          />
+          <input
+            ref="profileImageInput"
+            @change="handleImageChange"
+            type="file"
+            id="profileImage"
+            class="form-input"
+            style="display: none"
+          />
+          <p>* 프로필 이미지 : 클릭 시 수정</p>
+        </div>
 
-          <div class="form-group">
-            <div class="input-container">
-              <div>
-                <h4 style="margin-right: 5px; padding: 6px">아이디</h4>
-              </div>
-              <div class="input-field">
-                <input
-                  disable
-                  readonly
-                  v-model="userInfo.ID"
-                  type="id"
-                  id="id"
-                  class="form-input"
-                />
-                <label for="id" :class="{ 'label-active': activeLabels.ID }"
-                  >더미 아이디지롱</label
-                >
-              </div>
+        <div class="form-group">
+          <div class="input-container">
+            <div>
+              <h4 style="margin-right: 5px; padding: 6px">아이디</h4>
             </div>
-          </div>
-
-          <div class="form-group">
-            <div class="input-container">
-              <div>
-                <h4 style="margin-right: 5px; padding: 6px">패스워드</h4>
-              </div>
-              <div class="input-field">
-                <input
-                  v-model="userInfo.PASSWORD"
-                  type="PASSWORD"
-                  id="PASSWORD"
-                  class="form-input"
-                  @focus="activateLabel('PASSWORD')"
-                  @focusout="activateLabel('PASSWORD')"
-                />
-                <label
-                  for="PASSWORD"
-                  :class="{ 'label-active': activeLabels.PASSWORD }"
-                  >*********</label
-                >
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="input-container">
-              <div>
-                <h4 style="margin-right: 5px; padding: 6px">닉네임</h4>
-              </div>
-              <div class="input-field">
-                <input
-                  v-model="userInfo.NICKNAME"
-                  type="NICKNAME"
-                  id="NICKNAME"
-                  class="form-input"
-                  @focus="activateLabel('NICKNAME')"
-                  @focusout="activateLabel('NICKNAME')"
-                />
-                <label
-                  for="NICKNAME"
-                  :class="{ 'label-active': activeLabels.NICKNAME }"
-                  >김아무개씨</label
-                >
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="input-container">
-              <div>
-                <h4 style="margin-right: 5px; padding: 6px">이메일</h4>
-              </div>
-              <div class="input-field">
-                <input
-                  v-model="userInfo.EMAIL"
-                  type="email"
-                  id="EMAIL"
-                  class="form-input"
-                  @focus="activateLabel('EMAIL')"
-                  @focusout="activateLabel('EMAIL')"
-                />
-                <label
-                  for="EMAIL"
-                  :class="{ 'label-active': activeLabels.EMAIL }"
-                  >nias2734@naver.com</label
-                >
-              </div>
+            <div class="input-field">
+              <input disable readonly type="id" id="id" class="form-input" />
+              <label for="id" :class="{ 'label-active': activeLabels.ID }">{{
+                userInfo.ID
+              }}</label>
             </div>
           </div>
         </div>
 
-        <button type="submit" class="submit-button">Update Profile</button>
-      </form>
-    </div>
+        <div class="form-group">
+          <div class="input-container">
+            <div>
+              <h4 style="margin-right: 5px; padding: 6px">패스워드</h4>
+            </div>
+            <div class="input-field">
+              <input
+                type="PASSWORD"
+                id="PASSWORD"
+                class="form-input"
+                @focus="activateLabel('PASSWORD')"
+                @focusout="onPasswordFocusOut"
+              />
 
+              <label
+                for="PASSWORD"
+                :class="{ 'label-active': activeLabels.PASSWORD }"
+                >*********</label
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-container">
+            <div>
+              <h4 style="margin-right: 5px; padding: 6px">닉네임</h4>
+            </div>
+            <div class="input-field">
+              <input
+                type="NICKNAME"
+                id="NICKNAME"
+                class="form-input"
+                @focus="activateLabel('NICKNAME')"
+                @focusout="activateLabel('NICKNAME')"
+              />
+              <label
+                for="NICKNAME"
+                :class="{ 'label-active': activeLabels.NICKNAME }"
+                >{{ userInfo.NICKNAME }}</label
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="input-container">
+            <div>
+              <h4 style="margin-right: 5px; padding: 6px">이메일</h4>
+            </div>
+            <div class="input-field">
+              <input
+                type="email"
+                id="EMAIL"
+                class="form-input"
+                @focus="activateLabel('EMAIL')"
+                @focusout="activateLabel('EMAIL')"
+              />
+              <label
+                for="EMAIL"
+                :class="{ 'label-active': activeLabels.EMAIL }"
+                >{{ userInfo.EMAIL }}</label
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-button">Update Profile</button>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -177,39 +165,75 @@ export default {
       this.$axios
         .get("/getuserInfo")
         .then((response) => {
-          this.userInfo = response.data;
+          const userData = response.data[0]; // 데이터 배열의 첫 번째 요소를 사용
+          this.userInfo = {
+            ID: userData.id,
+            EMAIL: userData.email,
+            PASSWORD: userData.password,
+            NICKNAME: userData.name, // 닉네임 필드가 name으로 가정
+          };
         })
         .catch((error) => {
           console.error("Error fetching user info:", error);
         });
     },
     updateUserInfo() {
-      if (this.userInfo.PASSWORD !== this.confirmPassword) {
-        alert("Passwords do not match!");
-        return;
-      }
-
-      // 이미지가 있다면 FormData를 사용
-      let formData = new FormData();
-      for (let key in this.userInfo) {
-        formData.append(key, this.userInfo[key]);
-      }
-
-      // Axios를 사용하여 사용자 정보 업데이트
-      this.$axios
-        .post("/api/user/update", formData)
-        .then((response) => {
-          console.log(response);
-          alert("User info updated successfully!");
+      this.$swal
+        .fire({
+          title: "비밀번호 확인",
+          text: "새 비밀번호를 다시 입력해 주세요",
+          input: "password",
+          // ... 기존 SweetAlert 설정 ...
+          preConfirm: (password) => {
+            if (password !== this.userInfo.PASSWORD) {
+              this.$swal.showValidationMessage("패스워드가 일치하지 않습니다");
+              return false;
+            }
+            return true;
+          },
         })
-        .catch((error) => {
-          console.error("Error updating user info:", error);
+        .then((result) => {
+          if (result.value) {
+            // 여기서 formData 생성 및 서버 요청 로직 작성
+            // 예: this.submitFormData();
+          }
         });
     },
     handleImageChange(event) {
       const file = event.target.files[0];
       this.userInfo.NM_PROFILEIMG = file;
       this.previewImage = URL.createObjectURL(file);
+    },
+    // 패스워드 입력 필드의 focusout 이벤트 처리
+    onPasswordFocusOut() {
+      // SweetAlert를 사용하여 입력 팝업 표시
+      this.$swal
+        .fire({
+          title: "비밀번호 확인",
+          text: "비밀번호를 다시 입력해 주세요",
+          input: "password",
+          inputAttributes: {
+            autocapitalize: "off",
+            autocorrect: "off",
+          },
+          showCancelButton: true,
+          confirmButtonText: "확인",
+          cancelButtonText: "취소",
+          showLoaderOnConfirm: true,
+          preConfirm: (password) => {
+            // 사용자가 입력한 패스워드와 기존 패스워드 비교
+            if (password !== this.userInfo.PASSWORD) {
+              this.$swal.showValidationMessage("패스워드가 일치하지 않습니다");
+            }
+          },
+          allowOutsideClick: () => !this.swal.isLoading(),
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            // 패스워드가 일치하면 실행될 로직
+            console.log("패스워드가 확인되었습니다.");
+          }
+        });
     },
     // 이미지 경로 잡기 위함
     getImageUrl(path) {
