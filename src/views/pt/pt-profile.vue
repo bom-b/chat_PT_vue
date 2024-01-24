@@ -108,6 +108,7 @@ export default {
 <style scoped>
 .m_category {
   padding: 20px;
+}
 button {
   background-color: #e5f5f2;
   color: #085c57;
