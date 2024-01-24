@@ -1,27 +1,14 @@
 <template>
-  <div class="user-edit-form">
+  <div class="user-edit-form" style="user-select: none">
     <form @submit.prevent="updateUserInfo" class="form-container">
       <h2 class="form-title">회원 정보 수정</h2>
       <div class="form-row">
         <div>
-          <img
-            :src="
-              previewImage ||
-              `${this.$s3BaseURL}/normal_user/profile_img/${userInfo.nm_PROFILEIMG}`
-            "
-            alt="Profile Preview"
-            class="profile-image"
-            @click="openImagePicker"
-            style="width: 250px"
-          />
-          <input
-            ref="profileImageInput"
-            @change="handleImageChange"
-            type="file"
-            id="profileImage"
-            class="form-input"
-            style="display: none"
-          />
+          <img :src="previewImage ||
+            `${this.$s3BaseURL}/normal_user/profile_img/${userInfo.nm_PROFILEIMG}`
+            " alt="Profile Preview" class="profile-image" @click="openImagePicker" style="width: 250px" />
+          <input ref="profileImageInput" @change="handleImageChange" type="file" id="profileImage" class="form-input"
+            style="display: none" />
           <p>* 프로필 이미지 : 클릭 시 수정</p>
         </div>
       </div>
@@ -34,81 +21,41 @@
         <div class="col">
           <div class="card">
             <div class="card-title">
-              <img
-                src="@/assets/img/icon/유저정보아이콘.png"
-                alt="기본정보아이콘"
-                style="width: 50px"
-              />
-
+              <img src="@/assets/img/icon/유저정보아이콘.png" alt="기본정보아이콘" style="width: 50px" />
               기본 정보
             </div>
             <div class="form-group">
               <label for="id">
                 <b style="color: red">*</b>
-
-                아이디</label
-              >
-              <input
-                disabled
-                readonly
-                type="text"
-                id="id"
-                class="form-input"
-                :value="userInfo.ID"
-              />
+                아이디
+              </label>
+              <input disabled readonly type="text" id="id" class="form-input" :value="userInfo.ID" />
             </div>
             <div class="form-group">
               <label for="PASSWORD">
                 <b style="color: red">*</b>
-                패스워드</label
-              >
-              <input
-                v-model="userInfo.PASSWORD"
-                type="password"
-                id="PASSWORD"
-                class="form-input"
-                @focus="activateLabel('PASSWORD')"
-                @focusout="onPasswordFocusOut"
-              />
+                패스워드</label>
+              <input v-model="userInfo.PASSWORD" type="password" id="PASSWORD" class="form-input"
+                @focus="activateLabel('PASSWORD')" @focusout="onPasswordFocusOut" />
             </div>
 
             <div class="form-group">
               <label for="region">
                 <b style="color: red">*</b>
-                지역</label
-              >
-              <input
-                @click="search"
-                v-model="userInfo.region"
-                type="text"
-                id="region"
-                class="form-input"
-                @focus="activateLabel('region')"
-                @focusout="activateLabel('region')"
-              />
+                지역</label>
+              <input @click="search" v-model="userInfo.region" type="text" id="region" class="form-input"
+                @focus="activateLabel('region')" @focusout="activateLabel('region')" />
             </div>
 
             <div class="form-group">
-              <label for="kakaocode"
-                >카카오코드 |
+              <label for="kakaocode">카카오코드 |
                 <a style="size: 10px; color: grey">
-                  카카오 챗봇 QR은 아래에 있습니다.</a
-                >
+                  카카오 챗봇 QR은 아래에 있습니다.</a>
               </label>
-              <input
-                v-model="userInfo.kakaocode"
-                type="text"
-                id="kakaocode"
-                class="form-input"
-                @focus="activateLabel('kakaocode')"
-                @focusout="activateLabel('kakaocode')"
-              />
-              <img
-                v-if="userInfo.kakaocode === null"
-                :src="kakaoQRImage"
-                @click="showQRModal"
-                style="border: 20px; margin: 5px;"
-              />
+              <input v-model="userInfo.kakaocode" type="text" id="kakaocode" class="form-input"
+                @focus="activateLabel('kakaocode')" @focusout="activateLabel('kakaocode')" />
+              <img v-if="userInfo.kakaocode === null" :src="kakaoQRImage" @click="showQRModal"
+                style="border: 20px; margin: 5px" />
             </div>
           </div>
         </div>
@@ -116,62 +63,35 @@
         <div class="col">
           <div class="card">
             <div class="card-title">
-              <img
-                src="@\assets\img\icon\건강정보아이콘.png"
-                alt="건강정보아이콘"
-                style="width: 50px"
-              />
+              <img src="@\assets\img\icon\건강정보아이콘.png" alt="건강정보아이콘" style="width: 50px" />
               건강 정보
             </div>
             <div class="form-group">
               <label for="height">
                 <b style="color: red">*</b>
-                신장(cm)</label
-              >
-              <input
-                v-model="userInfo.height"
-                type="text"
-                id="height"
-                class="form-input"
-              />
+                신장(cm)</label>
+              <input v-model="userInfo.height" type="text" id="height" class="form-input" />
             </div>
             <div class="form-group">
               <label for="weight">
                 <b style="color: red">*</b>
-                몸무게(kg)</label
-              >
-              <input
-                v-model="userInfo.weight"
-                type="text"
-                id="weight"
-                class="form-input"
-              />
+                몸무게(kg)</label>
+              <input v-model="userInfo.weight" type="text" id="weight" class="form-input" />
             </div>
             <div class="form-group">
               <label for="target_WEIGHT">
                 <b style="color: red">*</b>
-                목표 몸무게(kg)</label
-              >
-              <input
-                v-model="userInfo.target_WEIGHT"
-                type="text"
-                id="target_WEIGHT"
-                class="form-input"
-              />
+                목표 몸무게(kg)</label>
+              <input v-model="userInfo.target_WEIGHT" type="text" id="target_WEIGHT" class="form-input" />
             </div>
             <div class="form-group">
               <label for="purpose">
                 <b style="color: red">*</b>
-                운동 목적</label
-              >
-              <select
-                v-model="userInfo.purpose"
-                id="purpose"
-                class="form-input"
-              >
-                <option value="0">다이어트</option>
-                <option value="1">체중유지</option>
-                <option value="2">벌크업</option>
+                운동 목적</label>
+              <select v-model="userInfo.purpose" id="purpose" class="form-input">
+                <option value="0">다이어트 📉</option>
+                <option value="1">체중유지 🛑</option>
+                <option value="2">벌크업 📈</option>
               </select>
             </div>
           </div>
@@ -250,50 +170,48 @@ export default {
     activateLabel(field) {
       this.activeLabels[field] = true;
     },
-    // 정보업데이트
-    updateUserInfo() {
-      this.$swal
-        .fire({
+    async updateUserInfo() {
+      try {
+        // 비밀번호 확인
+        const { value: password } = await this.$swal.fire({
           title: "비밀번호 확인",
           text: "새 비밀번호를 다시 입력해 주세요",
           input: "password",
           // ... 기존 SweetAlert 설정 ...
-          preConfirm: (password) => {
-            if (password !== this.userInfo.PASSWORD) {
-              this.$swal.showValidationMessage("패스워드가 일치하지 않습니다");
-              return false;
-            }
-            return true;
-          },
-        })
-        .then((result) => {
-          if (result.value) {
-            let formData = new FormData();
-            for (let key in this.userInfo) {
-              formData.append(key, this.userInfo[key]);
-            }
-
-            // 파일이 변경되었을 경우, formData에 추가
-            if (this.userInfo.NM_PROFILEIMG) {
-              formData.append("profileImage", this.userInfo.NM_PROFILEIMG);
-            }
-
-            this.$axios
-              .post("/updateuserInfo", formData, {
-                headers: {
-                  "Content-Type": "multipart/form-data",
-                },
-              })
-              .then((response) => {
-                // 성공적으로 업데이트되었을 때의 로직
-                console.log("User info updated successfully", response);
-              })
-              .catch((error) => {
-                console.error("정보 보내기 실패", error);
-              });
-          }
         });
+
+        if (!password || password !== this.userInfo.PASSWORD) {
+          this.$swal.showValidationMessage("패스워드가 일치하지 않습니다");
+          return;
+        }
+
+        // 파일 업로드 및 사용자 정보 업데이트
+        let formData = new FormData();
+        for (let key in this.userInfo) {
+          formData.append(key, this.userInfo[key]);
+          console.log(this.userInfo[key], key)
+        }
+
+        if (this.userInfo.NM_PROFILEIMG && typeof this.userInfo.NM_PROFILEIMG === 'object') {
+          formData.append("NM_PROFILEIMG", this.userInfo.NM_PROFILEIMG);
+
+          const imageResponse = await this.$axiosWithoutValidation.post("/s3upload", formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+
+          // S3 업로드 후 반환된 이미지 URL을 userInfo에 설정
+          this.userInfo.NM_PROFILEIMG = imageResponse.data;
+        }
+
+        const updateResponse = await this.$axios.post("/updateuserInfo", formData);
+        console.log("Axios, updateuserInfo 정보 보내기 successfully", updateResponse);
+      } catch (error) {
+        console.error("Axios, updateuserInfo 정보 보내기 실패", error);
+      }
     },
+
     // qr보이기
     showQRModal() {
       this.showQR = true; // QR 이미지 모달 표시
@@ -340,19 +258,6 @@ export default {
         age--;
       }
       return age;
-    },
-    // 운동 목적 to TEXT
-    purposeToText(purpose) {
-      switch (purpose) {
-        case 0:
-          return "다이어트";
-        case 1:
-          return "체중유지";
-        case 2:
-          return "벌크업";
-        default:
-          return "알 수 없음"; // 기본값 처리
-      }
     },
 
     handleImageChange(event) {
@@ -405,11 +310,16 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
+
 .profile-image {
-  width: 250px; /* 원하는 크기 설정 */
-  height: 250px; /* 너비와 높이를 같게 설정하여 원형을 만듦 */
-  border-radius: 50%; /* 원형 모양 만들기 */
-  object-fit: cover; /* 이미지가 태그 경계를 넘지 않도록 조정 */
+  width: 250px;
+  /* 원하는 크기 설정 */
+  height: 250px;
+  /* 너비와 높이를 같게 설정하여 원형을 만듦 */
+  border-radius: 50%;
+  /* 원형 모양 만들기 */
+  object-fit: cover;
+  /* 이미지가 태그 경계를 넘지 않도록 조정 */
 }
 
 .form-container {
