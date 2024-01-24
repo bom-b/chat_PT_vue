@@ -136,6 +136,13 @@ img {
     object-position: center !important;
     border-radius: 20px !important;
 }
+
+.carousel-control-prev,
+.carousel-control-next {
+    /* background-color: green; */
+    /* 원하는 색상으로 변경하세요 */
+}
+
 .carousel-control-prev-icon {
     background-image: url(../../../assets/img/icon/arrow-left-short.svg);
 }

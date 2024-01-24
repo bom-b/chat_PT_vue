@@ -74,7 +74,7 @@
                 alt=""
                 style="width: 60px"
               />
-              오늘의 식단 결과 보기</a>
+              결과 보기</a>
       </router-link>
     </div>
     </div>

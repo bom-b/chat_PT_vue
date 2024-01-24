@@ -38,6 +38,9 @@
         <h2 class="TheJamsil400" v-html="comment"></h2>
       </div>
 
+      <div class="comment-container" v-else>
+        <h2 class="TheJamsil400"> 이 기간 데이터가 없습니다.</h2>
+      </div>
 
       <div class="trend_container">
         <!-- 칼로리 변화표 내용 -->
@@ -208,7 +211,6 @@ export default {
 
           if (res.data.dietList.length === 0) {
             // 데이터 길이가 0이면 알림을 띄우고 함수를 종료합니다.
-            this.$swal('', '선택한 기간에 대한 데이터가 없습니다.', 'warning');
             this.dataLoaded = true;
             this.hasData = false;
             return;

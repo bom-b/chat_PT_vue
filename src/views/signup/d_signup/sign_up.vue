@@ -13,6 +13,7 @@ export default {
         role: "NORMAL",
         password_Check: "",
         region: "",
+        kakaocode: "",
       },
       inputDisplay: {
         id: 0,
@@ -24,7 +25,7 @@ export default {
         serverCode: null,
       },
       showMessage: {
-        resultmessage: "",
+        checkmessage: "",
         emailStatus: "",
       },
       matchpwd: false,
@@ -107,11 +108,11 @@ export default {
     },
     regId(id) {
       if (id !== null && id !== undefined && id.trim() !== "") {
-        const reg = /^[a-zA-Z0-9]+$/;
+        const reg = /^[a-zA-Z0-9]{6,15}$/;
         if (id.match(reg)) {
           return id;
         } else {
-          return this.$swal("", "영문 숫자로 입력해주세요...");
+          return this.$swal("", "영문 숫자로 6자리 이상, 15자리 미만으로 입력해주세요.");
         }
       } else {
         return this.$swal.fire("", "아이디를 입력해주세요", "warning");
@@ -175,6 +176,9 @@ export default {
       } else {
         return (this.auth.passAuth = 0);
       }
+    },
+    goback() {
+      this.$router.go(-1);
     },
     // email 중복체크
     async emailCheck() {
@@ -240,7 +244,8 @@ export default {
           email: this.user.email,
           password: this.user.password,
           role: this.user.role,
-          region: this.user.region
+          region: this.user.region,
+          kakaocode: this.user.kakaocode,
         };
         if (isValid) {
           this.$emit("nextPage", data);
@@ -260,129 +265,171 @@ export default {
       <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
         aria-valuemin="0" aria-valuemax="100"></div>
     </div>
+
     <div class="container">
       <div class="login-container">
+        <div class="back_button">
+          <button class="btn" @click="goback">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+        </div>
         <h2 class="mb-4">일반 회원가입</h2>
         <!-- 아이디 입력 폼 -->
-        <form @submit.prevent="idcheck">
-          <div class="row mb-3">
-            <label for="id" class="col-sm-3 col-form-label">아이디:</label>
-            <div class="col-sm-7">
-              <div class="input-group">
-                <input type="text" class="form-control" id="id" placeholder="아이디를 입력하세요" v-model="user.id"
-                  :disabled="inputDisplay.id == 1" />
-                <button class="btn btn-success" type="submit">
-                  아이디 중복확인
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-        <div class="row mb-3">
-          <label for="region" class="col-sm-3 col-form-label">주소:</label>
-          <div class="col-sm-7">
-            <div class="input-group">
-              <input type="text" class="form-control" id="region" placeholder="도로명주소" readonly @click="search"
-                v-model="user.region">
-            </div>
-          </div>
-        </div>
-        <!-- 이름 입력 폼 -->
-        <div class="row mb-3">
-          <label for="name" class="col-sm-3 col-form-label">이름:</label>
-          <div class="col-sm-7">
-            <div class="input-group">
-              <input type="text" class="form-control" id="name" placeholder="이름을 입력하세요" v-model="user.name" />
-            </div>
-          </div>
-        </div>
-        <div class="row mb-3">
-          <label for="nickname" class="col-sm-3 col-form-label">닉네임:</label>
-          <div class="col-sm-7">
-            <div class="input-group">
-              <input type="text" class="form-control" id="nickname" placeholder="닉네임을 입력하세요" v-model="user.nickname" />
-            </div>
-          </div>
-        </div>
-        <!-- 이메일 입력 폼 -->
-        <form @submit.prevent="emailCheck" class="mt-5">
-          <div class="row mb-3">
-            <label for="email" class="col-sm-3 col-form-label">이메일:</label>
-            <div class="col-sm-7">
-              <div class="input-group">
-                <input type="email" class="form-control" id="email" placeholder="이메일을 입력하세요" v-model="user.email"
-                  :disabled="inputDisplay.email == 1" />
-                <button type="submit" class="btn btn-success">
-                  이메일 확인
-                </button>
-              </div>
-            </div>
-            <div class="loading">
-              <p>
-                <span>
-                  <img v-if="showMessage.emailStatus === '메일을 발송 중입니다...'" src="../../../assets/img/gif/loading.gif"
-                    style="width: 15px; height: 15px;">
-                  <img v-else-if="showMessage.emailStatus === '메일이 발송되었습니다.'" src="../../../assets/img/gif/mail2.gif"
-                    style="width: 15px; height: 15px;">
-                  {{ showMessage.emailStatus }}
+        <section>
+          <form @submit.prevent="idcheck">
+            <div class="row mb-3">
+              <label for="id" class="col-sm-3 col-form-label">
+                <span style="color:red;">
+                  *
                 </span>
-              </p>
-            </div>
-          </div>
-        </form>
-        <!-- 인증번호 입력 폼 -->
-        <div v-if="inputDisplay.email == 1">
-          <form @submit.prevent="confirm">
-            <div class="mt-5 form-group">
-              <label for="code">인증번호</label>
-              <input v-model="auth.clientCode" :disabled="auth.passAuth === 1" type="text" class="form-control"
-                id="code" />
-            </div>
-            <div class="noti">
-              <p v-if="auth.passAuth === 1" style="color: rgb(57, 221, 16)">
-                인증되었습니다.
-              </p>
-              <p v-else-if="auth.passAuth === 0" style="color: rgb(231, 14, 14)">
-                인증 번호가 다릅니다.
-              </p>
-            </div>
-            <div class="mt-5" style="text-align: right">
-              <button type="submit" class="mb-2 btn-signature login-btn">
-                인증하기
-              </button>
+                아이디:</label>
+              <div class="col-sm-7">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="id" placeholder="아이디를 입력하세요" v-model="user.id"
+                    :disabled="inputDisplay.id == 1" />
+                  <button class="btn btn-success" type="submit">
+                    아이디 중복확인
+                  </button>
+                </div>
+              </div>
             </div>
           </form>
-        </div>
-        <!-- 비밀번호 입력 폼 -->
-        <div>
+          <!-- 지역 -->
           <div class="row mb-3">
-            <label for="password" class="col-sm-3 col-form-label">비밀번호:</label>
+            <label for="region" class="col-sm-3 col-form-label">
+              <span style="color:red;">
+                *
+              </span>주소:</label>
             <div class="col-sm-7">
               <div class="input-group">
-                <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요"
-                  v-model="user.password" />
+                <input type="text" class="form-control" id="region" placeholder="도로명주소" readonly @click="search"
+                  v-model="user.region">
               </div>
             </div>
           </div>
+          <!-- 이름 입력 폼 -->
           <div class="row mb-3">
-            <label for="password_Check" class="col-sm-3 col-form-label">비밀번호 확인:</label>
+            <label for="name" class="col-sm-3 col-form-label">
+              <span style="color:red;">
+                *
+              </span>이름:</label>
             <div class="col-sm-7">
               <div class="input-group">
-                <input type="password" class="form-control" id="password_Check" placeholder="비밀번호를 입력하세요"
-                  v-model="user.password_Check" />
+                <input type="text" class="form-control" id="name" placeholder="이름을 입력하세요" v-model="user.name" />
               </div>
             </div>
           </div>
-          <div class="noti">
-            <p v-if="matchpwd" style="color: red">
-              비밀번호가 일치하지 않습니다.
-            </p>
+          <!-- 닉네임 -->
+          <div class="row mb-3">
+            <label for="nickname" class="col-sm-3 col-form-label">
+              <span style="color:red;">
+                *
+              </span>닉네임:</label>
+            <div class="col-sm-7">
+              <div class="input-group">
+                <input type="text" class="form-control" id="nickname" placeholder="닉네임을 입력하세요" v-model="user.nickname" />
+              </div>
+            </div>
           </div>
-        </div>
+          <!-- 이메일 입력 폼 -->
+          <form @submit.prevent="emailCheck" class="mt-5">
+            <div class="row mb-3">
+              <label for="email" class="col-sm-3 col-form-label">
+                <span style="color:red;">
+                  *
+                </span>이메일:</label>
+              <div class="col-sm-7">
+                <div class="input-group">
+                  <input type="email" class="form-control" id="email" placeholder="이메일을 입력하세요" v-model="user.email"
+                    :disabled="inputDisplay.email == 1" />
+                  <button type="submit" class="btn btn-success">
+                    이메일 확인
+                  </button>
+                </div>
+              </div>
+              <div class="loading">
+                <p>
+                  <span>
+                    <img v-if="showMessage.emailStatus === '메일을 발송 중입니다...'" src="../../../assets/img/gif/loading.gif"
+                      style="width: 15px; height: 15px;">
+                    <img v-else-if="showMessage.emailStatus === '메일이 발송되었습니다.'" src="../../../assets/img/gif/mail2.gif"
+                      style="width: 15px; height: 15px;">
+                    {{ showMessage.emailStatus }}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+          </form>
+          <!-- 인증번호 입력 폼 -->
+          <div v-if="inputDisplay.email == 1">
+            <form @submit.prevent="confirm">
+              <div class="mt-5 form-group">
+                <label for="code">인증번호</label>
+                <input v-model="auth.clientCode" :disabled="auth.passAuth === 1" type="text" class="form-control"
+                  id="code" />
+              </div>
+              <div class="noti">
+                <p v-if="auth.passAuth === 1" style="color: rgb(57, 221, 16)">
+                  인증되었습니다.
+                </p>
+                <p v-else-if="auth.passAuth === 0" style="color: rgb(231, 14, 14)">
+                  인증 번호가 다릅니다.
+                </p>
+              </div>
+              <div class="mt-5" style="text-align: right">
+                <button type="submit" class="mb-2 btn-signature login-btn">
+                  인증하기
+                </button>
+              </div>
+            </form>
+          </div>
+          <!-- 비밀번호 입력 폼 -->
+          <div>
+            <div class="row mb-3">
+              <label for="password" class="col-sm-3 col-form-label">
+                <span style="color:red;">
+                  *
+                </span>비밀번호:</label>
+              <div class="col-sm-7">
+                <div class="input-group">
+                  <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요"
+                    v-model="user.password" />
+                </div>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label for="password_Check" class="col-sm-3 col-form-label">
+                <span style="color:red;">
+                  *
+                </span>비밀번호 확인:</label>
+              <div class="col-sm-7">
+                <div class="input-group">
+                  <input type="password" class="form-control" id="password_Check" placeholder="비밀번호를 입력하세요"
+                    v-model="user.password_Check" />
+                </div>
+              </div>
+            </div>
+            <div class="noti">
+              <p v-if="matchpwd" style="color: red">
+                비밀번호가 일치하지 않습니다.
+              </p>
+            </div>
+            <div class="row mb-3">
+              <label for="name" class="col-sm-4 col-form-label">카카오채널 연동코드:</label>
+              <div class="col-sm-6">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="kakaocode" placeholder="카카오채널에서 발급받아주세요."
+                    v-model="user.kakaocode" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
 
-      <div class="button-container">
-        <button type="button" class="btn btn-success" @click="proceedToNextPage" :disabled="!user.id ||
+      <div class="button-container float-end">
+        <button type="button" class="btn btn-success next_button" @click="proceedToNextPage" :disabled="!user.id ||
           !user.name ||
           !user.email ||
           !user.password ||
@@ -396,6 +443,7 @@ export default {
           auth.passAuth != 1 ||
           user.password != user.password_Check
           ">
+
           다음
         </button>
       </div>
@@ -403,12 +451,27 @@ export default {
   </main>
 </template>
 <style scoped>
+.back_button {
+  margin-left: -40px;
+  margin-top: -190px;
+  padding-bottom: 200px;
+}
+
+.btn i {
+  font-size: 1.5rem;
+  transition: font-size 0.3s ease;
+}
+
+.btn:hover i {
+  font-size: 1.8rem;
+}
+
 .main {
-  margin-top: 200px;
+  margin-top: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60%;
+  width: 65%;
   height: 100%;
   background-color: #ffffff;
   border-radius: 10px;
@@ -428,15 +491,4 @@ export default {
   align-items: center;
   /* 자식 요소들을 세로 방향으로 가운데 정렬 */
 }
-
-/* p {
-  display: inline-block;
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  background-image: url("../../../assets/img/gif/loading.gif");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-} */
 </style>

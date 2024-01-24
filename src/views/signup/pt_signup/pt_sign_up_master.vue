@@ -56,8 +56,7 @@ export default {
         async completeSignUp() {
             try {
                 let data = this.userdata;
-                let jsonData = JSON.stringify(data);
-                await this.$axiosWithoutValidation.post("/signUp/PTcompleteSignUp", jsonData)
+                await this.$axiosWithoutValidation.post("/signUp/PTcompleteSignUp", data)
                     .then(async response => {
                         this.serverReturn = response.data;
                         console.log("*********" + this.serverReturn);
@@ -95,7 +94,7 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
 .main {
     margin-top: 90px;
 }

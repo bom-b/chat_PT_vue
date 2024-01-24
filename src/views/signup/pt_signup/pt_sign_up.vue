@@ -216,6 +216,7 @@ export default {
 					email: this.user.email,
 					password: this.user.password,
 					role: this.user.role,
+					isverified: this.user.isverified
 				};
 				if (isValid) {
 					this.$emit("nextPage", data);

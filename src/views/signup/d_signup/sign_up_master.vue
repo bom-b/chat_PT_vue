@@ -25,7 +25,10 @@ export default {
             pages: ['signUp1', 'signUp2', 'signUp3', 'signUp4'],
             currentPageIndex: 1,
             userdata: {},
-            serverReturn: 0
+            serverReturn: 0,
+            serverimageReturn: 0,
+            nm_profileimg: '',
+            formData: new FormData(),
         };
     },
     computed: {
@@ -43,6 +46,31 @@ export default {
             return signUp1;
         },
 
+
+    },
+    mounted() {
+        console.log(`          _____                   _____                   _____            _____                            _____            _____          
+%c         /\\    \\                 /\\    \\                 /\\    \\          /\\    \\                          /\\    \\          /\\    \\         
+        /::\\    \\               /::\\____\\               /::\\    \\        /::\\    \\                        /::\\    \\        /::\\    \\        
+       /::::\\    \\             /:::/    /              /::::\\    \\       \\:::\\    \\                      /::::\\    \\       \\:::\\    \\       
+      /::::::\\    \\           /:::/    /              /::::::\\    \\       \\:::\\    \\                    /::::::\\    \\       \\:::\\    \\      
+     /:::/\\:::\\    \\         /:::/    /              /:::/\\:::\\    \\       \\:::\\    \\                  /:::/\\:::\\    \\       \\:::\\    \\     
+    /:::/  \\:::\\    \\       /:::/____/              /:::/__\\:::\\    \\       \\:::\\    \\                /:::/__\\:::\\    \\       \\:::\\    \\    
+   /:::/    \\:::\\    \\     /::::\\    \\             /::::\\   \\:::\\    \\      /::::\\    \\              /::::\\   \\:::\\    \\      /::::\\    \\   
+  /:::/    / \\:::\\    \\   /::::::\\    \\   _____   /::::::\\   \\:::\\    \\    /::::::\\    \\            /::::::\\   \\:::\\    \\    /::::::\\    \\  
+ /:::/    /   \\:::\\    \\ /:::/\\:::\\    \\ /\\    \\ /:::/\\:::\\   \\:::\\    \\  /:::/\\:::\\    \\          /:::/\\:::\\   \\:::\\____\\  /:::/\\:::\\    \\ 
+/:::/____/     \\:::\\____/:::/  \\:::\\    /::\\____/:::/  \\:::\\   \\:::\\____\\/:::/  \\:::\\____\\        /:::/  \\:::\\   \\:::|    |/:::/  \\:::\\____\\
+\\:::\\    \\      \\::/    \\::/   \\:::\\  /:::/    \\::/    \\:::\\  /:::/    /:::/    \\::/    /        \\::/    \\:::\\  /:::|____/:::/    \\::/    /
+ \\:::\\    \\      \\/____/ \\/____/\\:::\\/:::/    / \\/____/ \\:::\\/:::/    /:::/    / \\/____/          \\/_____/\\:::\\/:::/    /:::/    / \\/____/ 
+  \\:::\\    \\                     \\::::::/    /           \\::::::/    /:::/    /                            \\::::::/    /:::/    /          
+   \\:::\\    \\                     \\::::/    /             \\::::/    /:::/    /                              \\::::/    /:::/    /           
+    \\:::\\    \\                    /:::/    /              /:::/    /\\::/    /                                \\::/____/\\::/    /            
+     \\:::\\    \\                  /:::/    /              /:::/    /  \\/____/                                  ~~       \\/____/             
+      \\:::\\    \\                /:::/    /              /:::/    /                                                                         
+       \\:::\\____\\              /:::/    /              /:::/    /                                                                          
+        \\::/    /              \\::/    /               \\::/    /                                                                           
+         \\/____/                \\/____/                 \\/____/                                                                            
+                                                                                                                                            `, "color:green");
     },
     methods: {
         nextPage: async function (pagesdata) {
@@ -50,6 +78,7 @@ export default {
             console.log(this.userdata);
 
             if (this.currentPageIndex == 4) {
+
                 await this.completeSignUp();
             }
 
@@ -59,9 +88,25 @@ export default {
         },
         async completeSignUp() {
             try {
-                let data = this.userdata;
-                let jsonData = JSON.stringify(data);
-                await this.$axiosWithoutValidation.post("/signUp/completeSignUp", jsonData)
+                for (const key in this.userdata) {
+                    const value = this.userdata[key];
+
+                    if (value instanceof File) {
+                        // 파일인 경우
+                        this.formData.append(key, value);
+                    } else if (Array.isArray(value)) {
+                        // 배열인 경우
+                        for (let i = 0; i < value.length; i++) {
+                            this.formData.append(`${key}[${i}]`, value[i]);
+                        }
+                    } else {
+                        // 일반 데이터인 경우
+                        this.formData.append(key, value);
+                    }
+                }
+                
+
+                await this.$axiosWithoutValidation.post("/signUp/completeSignUp", this.formData)
                     .then(async response => {
                         this.serverReturn = response.data;
                         console.log("*********" + this.serverReturn);
@@ -96,7 +141,7 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
 .main {
     margin-top: 90px;
 }
