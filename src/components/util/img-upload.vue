@@ -221,7 +221,9 @@ button:hover {
   text-align: center;
   cursor: pointer;
   width: 100%; /* 전체 너비를 차지하도록 설정 */
-  height: 100%; /* 전체 높이를 차지하도록 설정 */
+  min-height: 60vh; /* 최소 높이를 원래 설정한 높이로 지정 */
+  max-height: none; /* 최대 높이는 제한 없음 */
+  //height: 100%; /* 전체 높이를 차지하도록 설정 */
   display: flex;
   flex-direction: column;
   justify-content: flex-start; /* 상단 정렬 */

@@ -148,22 +148,20 @@ export default {
 
 }
 
-.selected-tab {
-  font-weight: bold;
-}
+
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
   padding: 40px;
 }
 .main{
   background-color: white;
 }
 h3 {
+
   color: #2a9d8f;
-  margin-bottom: 20px;
 }
 
 p {
@@ -173,6 +171,7 @@ p {
 .btn-primary {
   background-color: #2a9d8f;
   border-color: #2a9d8f;
+  font-size: 1.5rem;
 }
 
 .btn-primary:hover {
@@ -180,15 +179,27 @@ p {
   border-color: #264653;
 }
 
-.pagination-lg .page-link {
+.page-link {
   background-color: #e9f0f5;
   color: #2a9d8f;
-  font-size: 3rem; /* 폰트 크기 증가 */
+  font-size: 1.5rem; /* 폰트 크기 증가 */
   padding: 1.5rem 2.5rem; /* 패딩 증가 (세로, 가로) */
   margin-right: 15px; /* 각 탭 사이의 여백 증가 */
   border-radius: 0.5rem; /* 둥근 모서리 반경 증가 */
+  transition: color 0.3s, background-color 0.3s, transform 0.3s;
+  border: none; /* 기본 테두리 제거 */
 }
-
+.page-link:hover {
+  transform: scale(1.05); /* 마우스 오버시 확대 효과 */
+  background-color: #e9f0f5;
+  color: #2a9d8f;
+}
+.page-link:focus {
+  outline: none; /* 클릭시 테두리 제거 */
+  box-shadow: none;
+  background-color: #2a9d8f;
+  color: #e9f0f5;
+}
 
 imgUpload {
   border: 2px dashed #2a9d8f;
@@ -213,20 +224,12 @@ ul.pagination {
   margin-right: 10px; /* 각 탭 사이의 여백 */
 }
 
-.page-link {
-  background-color: #e9f0f5;
-  color: #2a9d8f;
-  transition: color 0.3s, background-color 0.3s, transform 0.3s;
-  border: none; /* 기본 테두리 제거 */
-}
 
-.page-link:hover {
-  transform: scale(1.05); /* 마우스 오버시 확대 효과 */
-  background-color: #e9f0f5;
-  color: #2a9d8f;
-}
-.page-link:focus {
+.selected-tab{
   outline: none; /* 클릭시 테두리 제거 */
   box-shadow: none;
+  background-color: #2a9d8f;
+  color: #e9f0f5;
+  font-weight: bold;
 }
 </style>
