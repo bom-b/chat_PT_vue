@@ -31,7 +31,21 @@
     </div>
     <!--  섹션2  -->
     <div class="scroll-area ivory" style="display: flex; justify-content: center; align-items: center;">
-      <img class="" src="../../assets/img/열심.png" alt="" style="">
+      <div class="row">
+        <div class="col-6">
+          <div class="row">
+            <div class="col-6">
+              <img class="captureImg" src="../../../public/assets/img/kakaoImages/up1.png" >
+            </div>
+            <div class="col-6">
+              <img class="captureImg" src="../../../public/assets/img/kakaoImages/up2.png">
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+
+        </div>
+      </div>
     </div>
     <!--  섹션3  -->
     <div class="scroll-area ivory" style="display: flex; justify-content: center; align-items: center;">
@@ -100,6 +114,10 @@ export default {
 .font15 {
   font-size: 1.5rem;
   white-space: nowrap;
+}
+
+.captureImg {
+  width: 300px;
 }
 
 @media (max-width: 768px) {
