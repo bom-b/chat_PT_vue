@@ -131,6 +131,7 @@ nav {
               src="../../assets/img/코딩춘식.jpeg"
               alt=""
               style="width: 32px; object-fit: contain"
+              @click="mypage_edit"
           />
         </div>
         <form class="d-flex">
@@ -182,6 +183,7 @@ export default {
         {name: "식단 추천 받기", route: "/default/d_recommand"},
         {name: "식단 분석", route: "/default/d_a_change_calory"},
         {name: "트레이너 찾기", route: "/default/d_find_trainer"},
+        {name: "마이페이지 수정", route: "/default/d_member_edit"},
       ],
       currentRoute: this.$route.path,
       widgetVisible: false, // 마이페이지 위젯

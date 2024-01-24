@@ -15,6 +15,7 @@ import '@/../public/assets/css/button-style.css';
 import 'material-icons/iconfont/material-icons.css';
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 import "xe-utils";
 import vxetable from "vxe-table";
 import "vxe-table/lib/style.css";

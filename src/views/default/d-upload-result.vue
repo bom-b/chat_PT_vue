@@ -1,23 +1,41 @@
 <template>
   <main id="main">
+    <div class="loading_div" v-if="isLoading">
+      <div class="spinner-border" style="color: green;">
+      </div>
+      <span>분석 결과를 가져오고 있습니다.</span>
+    </div>
+    <div v-else>
+    <div class="container-xl">
+      <div class="top-pad-class">
+
+      </div>
     <div class="center-div">
+      <h1>{{ formatSelectedDate(selectedDate) }} 칼로리 :
+        <span class="calorie-value">{{ totalCalories }}</span>
+        Kcal</h1>
+    </div>
+    <div class="date-picker">
       <input type="date"  v-model="selectedDate" @change="getTodayPhoto">
-      <h1>오늘 섭취한 칼로리 : {{ totalCalories }}Kcal</h1>
     </div>
     <div class="categories">
       <div class="categories" v-if="hasData">
         <div v-for="(data, category) in filteredCategorizedImages" :key="category" class="category-center">
           <div class="category-title-container">
-            <h1 class="badge rounded-pill bg-secondary category-name">{{ category }}</h1>
+            <h1 class="badge rounded-pill category-name">{{ category }}</h1>
           </div>
+          <div class="image-items">
           <div v-for="(e, index) in data" :key="index" class="image-item">
             <div class="image-text-container" style="">
-              <img :src="imgLink + e.upphotoid + '.jpg'" alt="Uploaded Image" class="uploaded-image"/>
+              <img :src="`${this.$s3BaseURL}/user_upload_food/${e.upphotoid}.jpg`"
+                   alt="Uploaded Image"
+                   class="uploaded-image"
+              />
+              <span class="food-name">{{ e.foodName }}</span>
+              <button class="btn btn-secondary" @click="togglePopover(e, $event)">
+                상세보기
+              </button>
               <div>
-                <p>{{ foods[e.foodnum] }}</p>
-                <button class="btn btn-secondary" @click="togglePopover(e, $event)">
-                  상세보기
-                </button>
                 <div v-if="activePopover === e" class="popover-content" :style="popoverStyle">
                   <div class="close-button-container">
                     <button class="close-button" @click="closePopover()">&#10006;</button> <!-- X 버튼이 있는 줄 -->
@@ -66,11 +84,18 @@
               </div>
             </div>
           </div>
+          </div>
         </div>
       </div>
       <div v-else class="no-data-message">
         결과가 없습니다.
       </div>
+    </div>
+      <div class="router-button">
+        <button class="analyze-button" @click="goAnalyze">식단분석하러가기</button>
+        <button class="home-button" @click="goHome">홈</button>
+      </div>
+    </div>
     </div>
   </main>
 </template>
@@ -93,6 +118,7 @@ export default {
       activePopover: null,
       popoverStyle: {},
       selectedDate: null, // 선택된 날짜
+      isLoading: true,
     };
   },
   created() {
@@ -106,6 +132,7 @@ export default {
         });
   },
   computed: {
+
     totalCalories() {
       let total = 0;
       for (const category in this.categorizedImages) {
@@ -122,6 +149,7 @@ export default {
           filtered[category] = data;
         }
       }
+
       return filtered;
     },
     hasData() {
@@ -132,35 +160,68 @@ export default {
     return Object.values(this.categorizedImages).some(category => category.length > 0);
   },
   methods: {
-    getTodayPhoto() {
-      this.categorizedImages = { 아침: [], 점심: [], 저녁: [], 간식: [] };
-      this.$axios.get(`/todayPhoto?date=${this.selectedDate}`)
-          .then(response => {
-            console.log("서버 응답:", response.data);
-            for (const food of response.data) {
-              if (!this.categorizedImages[food.category]) {
-                this.categorizedImages[food.category] = [];
-              }
-              const weightRatio = food.mass / food.foodweight;
+    goAnalyze(){
+      this.$router.push('/default/d_a_change_calory');
+    },
+    goHome(){
+      this.$router.push('/default/d_home');
+    },
+    formatSelectedDate(dateString) {
+      const date = new Date(dateString);
+      return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+    },
+    async getTodayPhoto() {
+      this.categorizedImages = {아침: [], 점심: [], 저녁: [], 간식: []};
+      try {
+        const response = await this.$axios.get(`/todayPhoto?date=${this.selectedDate}`);
+        console.log("서버 응답:", response.data);
+        for (const food of response.data) {
+          if (!this.categorizedImages[food.category]) {
+            this.categorizedImages[food.category] = [];
+          }
+          const weightRatio = food.mass / food.foodweight;
 
-              food.foodcal = parseFloat((food.foodcal * weightRatio).toFixed(2));
-              food.food_TAN = parseFloat((food.food_TAN * weightRatio).toFixed(2));
-              food.food_DAN = parseFloat((food.food_DAN * weightRatio).toFixed(2));
-              food.food_GI = parseFloat((food.food_GI * weightRatio).toFixed(2));
-              const extendedFood = {
-                ...food,
-                editMode: false,
-                foodName: this.foods[food.foodnum],
-                quantity: food.mass,
-                selectedCandidate: null
-              };
-              this.categorizedImages[food.category].push(extendedFood);
-            }
-            console.log(this.categorizedImages);
-          })
-          .catch(error => {
-            console.error("서버 통신 오류:", error);
-          });
+          food.foodcal = parseFloat((food.foodcal * weightRatio).toFixed(2));
+          food.food_TAN = parseFloat((food.food_TAN * weightRatio).toFixed(2));
+          food.food_DAN = parseFloat((food.food_DAN * weightRatio).toFixed(2));
+          food.food_GI = parseFloat((food.food_GI * weightRatio).toFixed(2));
+
+          let foodName = "";
+          if (food.foodnum == -1) {
+            // 비동기 함수 호출 시 await 사용
+            foodName = await this.getRequestFoodName(food.upphotoid);
+            console.log("foodName : " + foodName)
+          } else {
+            foodName = this.foods[food.foodnum];
+          }
+          const extendedFood = {
+            ...food,
+            editMode: false,
+            foodName: foodName,
+            originalFoodName: foodName, // 원래 음식명
+            quantity: food.mass,
+            selectedCandidate: null
+          };
+
+          this.categorizedImages[food.category].push(extendedFood);
+        }
+        console.log(this.categorizedImages);
+
+      } catch (error) {
+        this.$swal("결과 정보를 불러올 수 없습니다!");
+        console.error("서버 통신 오류:", error);
+      }
+      this.isLoading = false;
+    },
+    async getRequestFoodName(upphotoid) {
+      try {
+        const response = await this.$axios.get(`/getRequestFoodName?upphotoid=${upphotoid}`);
+        console.log("response.data : " + response.data)
+        return response.data;
+      } catch (error) {
+        console.error("서버 통신 오류:", error);
+        return ""; // 오류 발생 시 빈 문자열 반환
+      }
     },
     togglePopover(foodItem, event) {
       this.activePopover = this.activePopover === foodItem ? null : foodItem;
@@ -211,7 +272,7 @@ export default {
     },
     resetFoodName(foodItem) {
       // 음식명에 대한 '새로고침' 기능
-      foodItem.foodName = this.foods[foodItem.foodnum];
+      foodItem.foodName = foodItem.originalFoodName;
     },
     resetFoodQuantity(foodItem) {
       // 양에 대한 '새로고침' 기능
@@ -243,7 +304,7 @@ export default {
       const quantityChanged = updatedData.quantity !== updatedData.mass;
 
       // 음식명 변경 여부 확인
-      const nameChanged = updatedData.foodName !== this.foods[updatedData.foodnum];
+      const nameChanged = updatedData.foodName !== updatedData.originalFoodName;
 
       // 양이 변경된 경우 즉시 업데이트
       if (quantityChanged) {
@@ -251,26 +312,32 @@ export default {
           upphotoid: upphotoid,
           newQuantity: updatedData.quantity
         })
-        .then(response => {
-          console.log("양 업데이트 응답:", response.data);
-          updatedData.mass = updatedData.quantity;
-          // 영양소 재계산
-          this.calculateNutrients(updatedData, response.data);
-        })
-        .catch(error => {
-          console.error("양 업데이트 실패:", error);
-        });
+            .then(response => {
+              console.log("양 업데이트 응답:", response.data);
+              updatedData.mass = updatedData.quantity;
+              // 영양소 재계산
+              this.calculateNutrients(updatedData, response.data);
+            })
+            .catch(error => {
+              console.error("양 업데이트 실패:", error);
+            });
       }
       console.log("updatedData.foodName : " + updatedData.foodName)
       // 음식명이 변경된 경우 관리자 검수 요청
       if (nameChanged) {
+        if (updatedData.selectedCandidate == null) {
+          updatedData.selectedCandidate = -1;
+        }
         this.$axios.post('/requestNameChange', {
           upphotoid: upphotoid,
-          imgeditcomment: updatedData.foodName
+          imgeditcomment: updatedData.foodName,
+          before: updatedData.foodnum,
+          after: updatedData.selectedCandidate
         })
             .then(response => {
               console.log("음식명 변경 요청 응답:", response.data);
-              alert("음식명 변경 요청이 접수되었습니다. 검수 후 업데이트될 예정입니다.");
+              this.$swal("음식명 변경 요청이 접수되었습니다. 검수 후 업데이트될 예정입니다.");
+              this.getTodayPhoto();
             })
             .catch(error => {
               console.error("음식명 변경 요청 실패:", error);
@@ -286,24 +353,23 @@ export default {
       console.log('upphotoid : ' + upphotoid);
       // 서버에 삭제 요청
       this.$axios.post('/deleteFood', {
-        'upphotoid' : upphotoid
+        'upphotoid': upphotoid
       })
-      .then(response => {
-        console.log("서버 응답:", response.data);
-        // 삭제 성공 시, 클라이언트 측 데이터 업데이트
-        for (const category in this.categorizedImages) {
-          const index = this.categorizedImages[category].findIndex(food => food.upphotoid === upphotoid);
-          if (index !== -1) {
-            this.categorizedImages[category].splice(index, 1);
-            break;
-          }
-        }
-      })
-      .catch(error => {
-        console.error("서버 통신 오류:", error);
-      });
+          .then(response => {
+            console.log("서버 응답:", response.data);
+            // 삭제 성공 시, 클라이언트 측 데이터 업데이트
+            for (const category in this.categorizedImages) {
+              const index = this.categorizedImages[category].findIndex(food => food.upphotoid === upphotoid);
+              if (index !== -1) {
+                this.categorizedImages[category].splice(index, 1);
+                break;
+              }
+            }
+          })
+          .catch(error => {
+            console.error("서버 통신 오류:", error);
+          });
     },
-
 
 
   },
@@ -313,21 +379,132 @@ export default {
 
 
 <style lang="scss" scoped>
+.top-pad-class{
+  padding-top: 100px;
+}
+.food-name{
+  font-weight: bold; // 글자를 굵게
+}
+.uploaded-image{
+  width: 175px;
+  height: 175px;
+}
+.loading_div {
+  margin-top: 300px;
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+}
+.router-button{
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  align-items: center; /* 세로축에서 중앙 정렬 */
+  width: 100%; /* 전체 너비 사용 */
+  margin-right: 30px; // 오른쪽 여백 추가
+  padding-bottom: 50px;
+  padding-top: 10px;
+}
+.analyze-button, .home-button {
+  padding: 10px 20px; // 패딩
+  border-radius: 5px; // 둥근 모서리
+  border: none; // 테두리 제거
+  font-size: 16px; // 폰트 크기
+  cursor: pointer; // 마우스 오버 시 커서 변경
+  transition: background-color 0.3s ease; // 배경색 변화 애니메이션
+}
+
+.analyze-button {
+  background-color: #4CAF50; // 분석 버튼 배경색
+  color: white; // 글자 색상
+  margin-right: 10px; // 분석 버튼과 홈 버튼 사이의 간격
+}
+
+.analyze-button:hover {
+  background-color: #45a049; // 마우스 오버 시 배경색 변경
+}
+
+.home-button {
+  background-color: #008CBA; // 홈 버튼 배경색
+  color: white; // 글자 색상
+}
+
+.home-button:hover {
+  background-color: #007B9E; // 마우스 오버 시 배경색 변경
+}
+
+
+.date-picker {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  align-items: center; /* 세로축에서 중앙 정렬 */
+  width: 100%; /* 전체 너비 사용 */
+  position: relative; // 밑줄을 위한 위치 기준 설정
+  padding-top: 30px;
+}
+.date-picker input[type="date"] {
+  padding: 10px;
+  border: 1px solid #2a9d8f;
+  border-radius: 5px;
+
+  // 밑줄 추가
+  &::after {
+    content: '';
+    display: block;
+    width: 100%; // 밑줄의 길이
+    height: 2px; // 밑줄의 두께
+    background: linear-gradient(90deg, rgba(42,157,143,0) 0%, rgba(42,157,143,1) 50%, rgba(42,157,143,0) 100%); // 그라데이션 밑줄
+    position: absolute;
+    bottom:-10px; // 밑줄의 위치
+    left: 0;
+    transition: background 0.3s; // 그라데이션 애니메이션
+  }
+
+
+}
+
 .no-data-message {
   text-align: center;
   margin-top: 20px;
 }
 
 .category-center {
+  width: 100%;
   text-align: center;
   margin: auto;
+  max-height: none;
+  min-height: 200px;
   /* 필요에 따라 추가 스타일링을 적용할 수 있습니다. 예를 들어, 너비나 패딩 등 */
 }
+
 .center-div {
   margin: auto;
-  width: 50%; /* 또는 원하는 너비 */
+  width: 80%; /* 뷰포트에 따라 조정 가능 */
   text-align: center;
+  padding: 20px; // 패딩 추가
+  background-color: rgba(42, 157, 143, 0.2); // 반투명한 배경색
+  border-radius: 10px; // 둥근 모서리
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // 그림자 효과
+  transition: background-color 0.3s; // 배경색 변화 애니메이션
+
+  h1 {
+    font-size: 2.5rem; // 글꼴 크기
+    color: #2a9d8f; // 글꼴 색상
+    margin: 0; // 기본 마진 제거
+
+    .calorie-value {
+      font-weight: bold;
+      color: #ff6347; // 칼로리 값 색상
+      font-size: 3rem; // 칼로리 값 글꼴 크기
+    }
+
+
+  }
 }
+
+
 .close-button-container {
   display: flex;
   justify-content: flex-end;
@@ -347,6 +524,7 @@ export default {
   padding: 0;
   margin: 5px;
 }
+
 .popover-content {
   position: fixed;
   z-index: 1000;
@@ -376,35 +554,30 @@ export default {
 }
 
 
-
-
 .image-text-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px; /* 이미지와 텍스트 사이의 간격 */
-}
-
-.image-text-container p {
-  white-space: pre-wrap; /* 줄바꿈과 공백 유지 */
+  flex-direction: column; // 요소들을 세로로 쌓기
+  align-items: center; // 가운데 정렬
+  gap: 10px; // 요소들 사이의 간격
+  max-height: none;
 }
 
 .category-title-container {
+  text-align: left; // 왼쪽 정렬
+  margin-top: 100px; // 하단 간격
   flex-grow: 0;
   flex-shrink: 0;
   flex-basis: auto; /* 필요에 따라 조정 가능 */
   /* 추가적인 스타일링 */
 }
+
 .category-name {
   flex-shrink: 0; /* 카테고리 이름의 크기가 줄어들지 않도록 설정 */
   margin-right: 20px; /* 이름과 이미지 사이의 간격을 설정 */
-  font-size: 24px;
-
-}
-#app {
-  width: 100%;
-  height: 100vh; /* 뷰포트 높이 전체를 사용 */
-  position: relative; /* 하위 요소들의 위치 지정 기준 */
+  font-size: 40px;
+  color: #ffffff; // 밝은 파란색 (또는 원하는 색상)
+  --bs-bg-opacity: 1;
+  background-color: mediumseagreen;
 }
 
 .categories {
@@ -441,15 +614,33 @@ export default {
   align-items: stretch;
 
 }
+
 .over {
   background-color: lightblue; /* 드래그 오버 시 시각적 피드백 */
 }
-
+.image-items{
+  width: 100%;
+  margin-bottom: 10px; // 아이템 간의 수직 간격 조정
+  background-color: #eff0f3; // 이미지 아이템에 하얀색 배경 적용
+  padding-top: 30px; // 내부 패딩
+  padding-bottom: 30px;
+  border-radius: 5px; // 둥근 모서리
+  min-height: 125px;
+  max-height: none;
+}
 
 .image-item {
   position: relative;
   flex-shrink: 0; /* 이미지 크기가 줄어들지 않도록 설정 */
   display: inline-block; /* 또는 필요에 따라 다른 디스플레이 속성 사용 */
+  max-width: 100%;
+  transition: transform 1s ease; /* 확대 효과를 부드럽게 */
+  border: 1px solid #ddd; // 테두리 추가
+  padding: 5px; // 내부 패딩
+  margin-left: 20px;
+  margin-right: 20px;
+  border-radius: 5px; // 둥근 모서리
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // 그림자 효과
 }
 
 .delete-button {
@@ -461,9 +652,9 @@ export default {
   border: none;
   cursor: pointer;
   font-size: 12px; /* 폰트 크기 조정 */
-  width: 20px;     /* 버튼 너비 */
-  height: 20px;    /* 버튼 높이 */
-  padding: 0;      /* 패딩 제거 또는 조정 */
+  width: 20px; /* 버튼 너비 */
+  height: 20px; /* 버튼 높이 */
+  padding: 0; /* 패딩 제거 또는 조정 */
   border-radius: 50%; /* 원형 버튼을 원한다면 추가 */
 }
 
@@ -488,12 +679,4 @@ export default {
   flex-wrap: wrap;
 }
 
-.image-item {
-  margin: 10px;
-}
-
-.image-item img {
-  max-width: 100%;
-  max-height: 100px;
-}
 </style>

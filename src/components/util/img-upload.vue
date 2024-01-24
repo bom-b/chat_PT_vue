@@ -109,7 +109,7 @@ export default {
         // 남은 슬롯 수에 따라 업로드할 파일을 제한합니다.
         const filesToUpload = files.slice(0, remainingSlots);
         if(remainingSlots < files.length) {
-          this.$swal('', '5장까지만 등록할 수 있습니다.', 'warning');
+          this.$swal('', this.maxImages + '장까지만 등록할 수 있습니다.', 'warning');
         }
         // 처리된 이미지를 저장할 배열을 초기화합니다.
         const processedImages = [];
@@ -184,6 +184,9 @@ export default {
 </script>
 
 <style scoped>
+
+
+
 button {
   background-color: #e5f5f2;
   color: #085c57;
@@ -202,48 +205,71 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 130vh; /* 컨테이너가 전체 너비를 차지하도록 설정 */
-  height: 60vh; /* 뷰포트 높이만큼의 높이를 가지도록 설정 */
+  width: 130vh;
+  min-height: 60vh; /* 최소 높이를 원래 설정한 높이로 지정 */
+  max-height: none; /* 최대 높이는 제한 없음 */
   padding: 10px;
+  border-radius: 10px;
+  background-color: mintcream;
+  box-shadow: 5px 5px 10px #bebebe, -5px -5px 10px #ffffff;
+  margin-bottom: 30px;
 }
 
 .drag-drop {
-  border: 2px dashed #085c57;
+  border: none;
   padding: 5px;
   text-align: center;
   cursor: pointer;
   width: 100%; /* 전체 너비를 차지하도록 설정 */
-  height: 100%; /* 전체 높이를 차지하도록 설정 */
+  min-height: 60vh; /* 최소 높이를 원래 설정한 높이로 지정 */
+  max-height: none; /* 최대 높이는 제한 없음 */
+  //height: 100%; /* 전체 높이를 차지하도록 설정 */
   display: flex;
   flex-direction: column;
   justify-content: flex-start; /* 상단 정렬 */
   align-items: center; /* 가로 방향에서 중앙 정렬 */
+  transition: transform 0.3s ease; /* 애니메이션 효과 추가 */
 }
+
+.drag-drop:hover {
+  transform: translateY(-5px); /* 호버 시 약간 위로 이동 */
+}
+
+.upload-instructions {
+  text-align: center;
+  padding: 20px;
+  color: #333; /* 텍스트 색상 조정 */
+  font-weight: bold; /* 텍스트 굵게 */
+}
+
 .upload-instructions {
   text-align: center;
   padding: 20px;
 }
+
 .card-container {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap; /* 다음 줄로 넘어가도록 설정 */
   gap: 20px;
   justify-content: center;
-  margin-top: 20px; /* 카드 컨테이너와 드래그 영역 사이의 간격 추가 */
+  align-items: start; /* 위에서 아래로 정렬 */
+  margin-top: 20px;
 }
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  width: calc(100% / var(--num-of-images) - 16px); /* 이미지 개수에 따라 너비 조정 */
+  max-width: 220px; /* 카드의 최대 너비를 설정 */
+  margin-bottom: 20px;
+  position: relative;
+  border-radius: 8px;
+}
+
 
 .drag-over {
   border-color: #2196F3;
 }
 
-
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: border 0.3s ease;
-  width: 100%;
-  max-width: 220px; /* 카드의 최대 너비를 설정 */
-  margin-bottom: 20px;
-  position: relative; /* 삭제 버튼을 위한 상대 위치 설정 */
-}
 .card.selected {
   border: 2px solid #085c57; /* 선택된 이미지에 대한 테두리 스타일 */
 }
@@ -264,68 +290,23 @@ button:hover {
 .card img {
   width: 100%;
   height: auto;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
+  border-radius: 8px; /* 이미지에도 둥근 모서리 적용 */
 }
 
-.card-body {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end; /* 오른쪽 정렬 */
-}
-
-.select-or-input {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px; /* 여백 추가 */
-  width: 100%; /* 전체 너비 사용 */
-}
-
-.form-select, .form-control {
-  margin-right: 10px;
-}
-
-
-
-.btn:hover {
-  background-color: #d73833;
-}
-.btn-secondary {
-  background-color: #6c757d; /* Secondary button color */
+button {
+  background-color: #4CAF50; /* 버튼 색상 변경 */
   color: white;
-  display: inline-block; /* 추가 */
-  white-space: nowrap; /* 추가 */
-  margin-left: auto; /* 오른쪽 정렬을 위한 자동 마진 */
-}
-
-.button-container {
-  display: flex;
-  justify-content: flex-end; /* 오른쪽 정렬 */
-  width: 100%; /* 전체 너비 사용 */
-}
-
-
-.form-control {
-  display: inline-block;
-  width: auto; /* 초기 크기 설정 */
-  min-width: 100px; /* 최소 크기 설정 */
-  /* 나머지 스타일 */
-}
-
-.input-container {
-  display: flex;
-  align-items: center;
-  flex-grow: 1; /* 가능한 모든 공간을 차지하도록 */
-}
-
-.input-addon {
-  margin-left: 2px; /* 인분 텍스트와 인풋창 사이의 간격 줄임 */
-}
-
-.toggle-unit {
-  margin-left: 5px;
-  color: blue;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* 버튼 그림자 추가 */
 }
+
+button:hover {
+  background-color: #45a049; /* 버튼 호버 색상 변경 */
+}
+
 </style>
 
