@@ -4,16 +4,20 @@ let eventGuid = 0;
 let todayStr = new Date().toISOString().replace(/T.*$/, ''); // YYYY-MM-DD of today
 
 export function getEventColor(title) {
+  console.log("sadsad : " + title)
+
   switch (title) {
     case "아침":
-      return '#000000'; 
-    case "점심":
+      console.log("맞지?")
+      return '#555555'; 
+      case "점심":
+      console.log("asasd")
       return '#555555'; 
     case "저녁":
       return '#777777'; 
     // 여기에 더 많은 case를 추가하여 다른 제목에 대한 색상을 지정할 수 있습니다.
     default:
-      return '#378006'; // 제목이 지정되지 않은 경우의 기본 색상
+      return '#777777'; // 제목이 지정되지 않은 경우의 기본 색상
   }
 }
 

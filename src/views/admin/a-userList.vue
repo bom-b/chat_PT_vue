@@ -292,7 +292,7 @@ computed: {
 // <script> 태그 내부
 updateTrainerRole(trainer, event) 
 {
-  const newStatus = event.target.checked ? "승인" : "미승인";
+  const newStatus = event.target.checked ? 1 : 0;
 
   this.$Adminaxios.put(`/updateTrainerStatus/${trainer.tnum}`, { status: newStatus })
     .then(response => {
