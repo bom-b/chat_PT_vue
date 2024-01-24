@@ -4,25 +4,7 @@
 
 
     <div class="row">
-      <div
-        class="col-md-1 "
-        style="background-color: #ffffff; color: #fff"
-      >
-        <img
-          src="@/assets/img/user_icon.png"
-          style="margin: 10px; height: 30px"
-          @click="showTemplate('Dmember_edit')"
-        />
-        <img
-          src="@/assets/img/icon/Frame-1.png"
-          @click="showTemplate('Dmember_edit')"
-          style="margin: 10px"
-        />
-        <img src="@/assets/img/icon/Frame-2.png" style="margin: 10px" />
-        <img src="@/assets/img/icon/Frame-3.png" style="margin: 10px" />
-        <img src="@/assets/img/icon/Frame-4.png" style="margin: 10px" />
-        <img src="@/assets/img/icon/Frame-5.png" style="margin: 10px" />
-      </div>
+      
       <div class="col-md-11">
         <component :is="currentComponent" />
       </div>

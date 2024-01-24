@@ -2,7 +2,6 @@
   <div class="user-edit-form">
     <form @submit.prevent="updateUserInfo" class="form-container">
       <h2 class="form-title">회원 정보 수정</h2>
-
       <div class="form-row">
         <div>
           <img
@@ -35,11 +34,20 @@
         <div class="col">
           <div class="card">
             <div class="card-title">
-              <img src="@/assets/img/icon/유저정보아이콘.png" alt="기본정보아이콘"  style="width: 50px;">
+              <img
+                src="@/assets/img/icon/유저정보아이콘.png"
+                alt="기본정보아이콘"
+                style="width: 50px"
+              />
 
-              기본 정보</div>
+              기본 정보
+            </div>
             <div class="form-group">
-              <label for="id">아이디</label>
+              <label for="id">
+                <b style="color: red">*</b>
+
+                아이디</label
+              >
               <input
                 disabled
                 readonly
@@ -50,7 +58,10 @@
               />
             </div>
             <div class="form-group">
-              <label for="PASSWORD">패스워드</label>
+              <label for="PASSWORD">
+                <b style="color: red">*</b>
+                패스워드</label
+              >
               <input
                 v-model="userInfo.PASSWORD"
                 type="password"
@@ -62,8 +73,12 @@
             </div>
 
             <div class="form-group">
-              <label for="region">지역</label>
+              <label for="region">
+                <b style="color: red">*</b>
+                지역</label
+              >
               <input
+                @click="search"
                 v-model="userInfo.region"
                 type="text"
                 id="region"
@@ -74,7 +89,12 @@
             </div>
 
             <div class="form-group">
-              <label for="kakaocode">카카오코드</label>
+              <label for="kakaocode"
+                >카카오코드 |
+                <a style="size: 10px; color: grey">
+                  카카오 챗봇 QR은 아래에 있습니다.</a
+                >
+              </label>
               <input
                 v-model="userInfo.kakaocode"
                 type="text"
@@ -83,6 +103,12 @@
                 @focus="activateLabel('kakaocode')"
                 @focusout="activateLabel('kakaocode')"
               />
+              <img
+                v-if="userInfo.kakaocode === null"
+                :src="kakaoQRImage"
+                @click="showQRModal"
+                style="border: 20px; margin: 5px;"
+              />
             </div>
           </div>
         </div>
@@ -90,10 +116,18 @@
         <div class="col">
           <div class="card">
             <div class="card-title">
-              <img src="@\assets\img\icon\건강정보아이콘.png" alt="건강정보아이콘" style="width: 50px;">
-              건강 정보</div>
+              <img
+                src="@\assets\img\icon\건강정보아이콘.png"
+                alt="건강정보아이콘"
+                style="width: 50px"
+              />
+              건강 정보
+            </div>
             <div class="form-group">
-              <label for="height">신장</label>
+              <label for="height">
+                <b style="color: red">*</b>
+                신장(cm)</label
+              >
               <input
                 v-model="userInfo.height"
                 type="text"
@@ -102,7 +136,10 @@
               />
             </div>
             <div class="form-group">
-              <label for="weight">몸무게</label>
+              <label for="weight">
+                <b style="color: red">*</b>
+                몸무게(kg)</label
+              >
               <input
                 v-model="userInfo.weight"
                 type="text"
@@ -111,7 +148,10 @@
               />
             </div>
             <div class="form-group">
-              <label for="target_WEIGHT">목표 몸무게</label>
+              <label for="target_WEIGHT">
+                <b style="color: red">*</b>
+                목표 몸무게(kg)</label
+              >
               <input
                 v-model="userInfo.target_WEIGHT"
                 type="text"
@@ -120,7 +160,10 @@
               />
             </div>
             <div class="form-group">
-              <label for="purpose">운동목적</label>
+              <label for="purpose">
+                <b style="color: red">*</b>
+                운동 목적</label
+              >
               <select
                 v-model="userInfo.purpose"
                 id="purpose"
@@ -147,15 +190,43 @@ export default {
         // ... 기존 사용자 정보 ...
         purpose: "0", // 기본값 설정
       },
-
+      postOpen: false, // 포스트 때문에
       confirmPassword: "",
       previewImage: "",
+      kakaoQRImage: this.getImageUrl("qrkakao.png"), // QR 이미지 경로
+      showQR: false, // QR 이미지 모달을 표시할지 여부
     };
   },
   mounted() {
     this.fetchUserInfo();
   },
   methods: {
+    search() {
+      new window.daum.Postcode({
+        oncomplete: (data) => {
+          var roadAddr = data.roadAddress; // 도로명 주소 변수
+          var extraRoadAddr = ""; // 참고 항목 변수
+          // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+          if (data.bname !== "" && /[동|로|가]$/g.test(data.bname)) {
+            extraRoadAddr += data.bname;
+          }
+          // 건물명이 있고, 공동주택일 경우 추가한다.
+          if (data.buildingName !== "" && data.apartment === "Y") {
+            extraRoadAddr +=
+              extraRoadAddr !== ""
+                ? ", " + data.buildingName
+                : data.buildingName;
+          }
+          // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+          if (extraRoadAddr !== "") {
+            extraRoadAddr = " (" + extraRoadAddr + ")";
+          }
+          // 우편번호와 주소 정보를 해당 필드에 넣는다.
+          this.userInfo.region = roadAddr;
+          console.log(this.userInfo.region);
+        },
+      }).open();
+    },
     //[ST] 유효성 검사
     validateForm() {
       if (!this.validateEmail(this.userInfo.EMAIL)) {
@@ -197,7 +268,6 @@ export default {
         })
         .then((result) => {
           if (result.value) {
-            
             let formData = new FormData();
             for (let key in this.userInfo) {
               formData.append(key, this.userInfo[key]);
@@ -224,6 +294,10 @@ export default {
           }
         });
     },
+    // qr보이기
+    showQRModal() {
+      this.showQR = true; // QR 이미지 모달 표시
+    },
 
     fetchUserInfo() {
       // Axios를 사용하여 사용자 정보 가져오기
@@ -245,7 +319,7 @@ export default {
             height: userData.height,
             activity: userData.activity,
             weight: userData.weight,
-            purpose: this.purposeToText(userData.purpose), // v-model 들어갈 데이터라 원본(purpose의 숫자형태) 보존안함
+            purpose: userData.purpose, // v-model 들어갈 데이터라 원본(purpose의 숫자형태) 보존안함
             region: userData.region,
             nm_PROFILEIMG: userData.nm_PROFILEIMG,
             // 변환해서 저장할 데이터
@@ -332,11 +406,11 @@ export default {
   flex-wrap: wrap;
 }
 .profile-image {
-    width: 250px; /* 원하는 크기 설정 */
-    height: 250px; /* 너비와 높이를 같게 설정하여 원형을 만듦 */
-    border-radius: 50%; /* 원형 모양 만들기 */
-    object-fit: cover; /* 이미지가 태그 경계를 넘지 않도록 조정 */
-  }
+  width: 250px; /* 원하는 크기 설정 */
+  height: 250px; /* 너비와 높이를 같게 설정하여 원형을 만듦 */
+  border-radius: 50%; /* 원형 모양 만들기 */
+  object-fit: cover; /* 이미지가 태그 경계를 넘지 않도록 조정 */
+}
 
 .form-container {
   width: 100%;
