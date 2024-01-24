@@ -21,9 +21,9 @@
                 <span>대표이미지</span>
               </div>
               <div class="uploaded-images ">
-                <div v-for="(image) in uploadedImages" :key="image.id" class="uploaded-image"
+                <div v-for="image in uploadedImages" :key="image.id" class="uploaded-image"
                   @click="setMainImage(image.id)">
-                  <img :src="image.url" :alt="'Uploaded Image ' + image.id">
+                  <img :src="image.url" :alt="'Uploaded Image' + image.id">
                   <button class="delete-button1" @click="deleteImage(image.id)">X</button>
                 </div>
                 <label for="image-upload" class="upload-button"
@@ -40,7 +40,7 @@
             <h4>근무하시는 지역</h4>
             <p style="font-size: 10px">주변에 있는 회원과 매칭 해드려요~!!</p>
             <div>
-              <input type="text" id="region" placeholder="도로명 주소" readonly class="address-input" @click="search"
+              <input type="text" id="region" placeholder="도로명 주소" readonly class="address-input" @click="searchRegion"
                 v-model="region">
               <input type="text" placeholder="헬스장 이름 입력" style="width: 150px;" v-model="gym">
             </div>
@@ -73,15 +73,15 @@
           </div>
           <div class="mt-5">
             <h4>수상 경력 등록(선택)</h4>
-            <div class="contest-container" style="text-align: center;">
+            <div class="contest-container" style="text-align: left;">
               <div class="m_category">
                 <h3>수상경력</h3>
                 <div class="career">
                   <div v-for="(award, index) in awards" :key="index" class="input-group mb-3">
-                    <button class="btn btn-danger" @click="removeAward(index)">-</button>
+                    <button class="btn btn-danger" @click.prevent="removeAward(index)">-</button>
                     <input class="form-control" v-model="award.value">
                   </div>
-                  <button class="btn btn-success" @click="addAward">+</button>
+                  <button class="btn btn-success" @click.prevent="addAward">+</button>
                 </div>
               </div>
             </div>
@@ -294,10 +294,6 @@
   margin-top: 20px;
 }
 
-.submit-button:hover {
-  background-color: #0056b3;
-  /* 마우스 오버 시 배경색을 변경합니다 */
-}
 
 /* 반응형 웹 디자인을 위한 미디어 쿼리 */
 @media (max-width: 768px) {
@@ -318,6 +314,13 @@
     /* 모바일 화면에서 제출 버튼의 너비를 100%로 설정합니다 */
   }
 
+  button {
+    background-color: #e5f5f2;
+    color: #085c57;
+    border: none;
+    border-radius: 1px;
+    padding: 10px 20px;
+  }
 }
 </style>
 <script>
@@ -333,11 +336,11 @@ export default {
       // ],
       awards: [],
       region: "",
-      starttime: '',
-      endtime: '',
-      trainercomment: '',
-      trainerintro: '',
-      gym: ''
+      starttime: "",
+      endtime: "",
+      trainercomment: "",
+      trainerintro: "",
+      gym: "",
     };
   },
   mounted() {
@@ -423,7 +426,7 @@ export default {
         alert('최소 한 개의 수상 경력은 필요합니다.');
       }
     },
-    search() {
+    searchRegion() {
       new window.daum.Postcode({
         oncomplete: (data) => {
           var roadAddr = data.roadAddress; // 도로명 주소 변수
@@ -449,23 +452,6 @@ export default {
     formatTime(hour) {
       return hour < 10 ? `오전 0${hour}시` : hour < 12 ? `오전 ${hour}시` : hour === 12 ? `오후 ${hour}시` : `오후 ${(hour - 12).toString().padStart(2, '0')}시`;
     },
-    // submitForm() {
-    //   let count = 0;
-    //   const totalFields = 7; // 총 필드 수
-
-    //   if (this.mainImage) count++;
-    //   if (this.region) count++;
-    //   if (this.starttime) count++;
-    //   if (this.endtime) count++;
-    //   if (this.trainercomment) count++;
-    //   if (this.trainerintro) count++;
-    //   if (this.gym) count++;
-
-    //   if (count == totalFields) {
-    //     this.$router.push('/pt_sign_finish'); // 이름 입력 페이지로 이동
-    //   }
-    // },
-
     async proceedToNextPage() {
       try {
         const isValid = 1;

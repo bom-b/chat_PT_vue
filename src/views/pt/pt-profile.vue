@@ -1,55 +1,3 @@
-<template>
-  <main>
-  <h1 class="main">프로필 관리</h1>
-  <div class="drag-drop-container m_category">
-    <h3>프로필 사진</h3>
-    <form class="d_flex">
-      <div class="drag-drop" @dragover.prevent @dragenter="highlight" @dragleave="unhighlight" @drop.prevent="handleDrop"
-        :class="{ 'drag-over': isDragOver }">
-        <p>이미지를 드래그 앤 드랍하세요</p>
-        <input type="file" ref="fileInput" style="display: none" @change="handleFileInput" />
-        <button class="ml-auto" @click="triggerFileInput">파일 선택</button>
-      </div>
-      <br>
-      <button class="btn btn-save" type="submit">저장</button>
-    </form>
-    <div v-if="uploadedImage" class="preview">
-      <img :src="uploadedImage" alt="Uploaded Preview" />
-    </div>
-  </div>
-
-  <form @submit.prevent> <!-- 폼 자동 제출 방지-->
-  <div class="m_category">
-    <h3>수상경력</h3>
-    <div class="career">
-      <div v-for="(award, index) in awards" :key="index" class="input-group mb-3">
-        <button class="btn btn-danger" @click="removeAward(index)">-</button>
-        <input class="form-control" v-model="award.value">
-      </div>
-      <button class="btn btn-success" @click="addAward">+</button>
-    </div>
-  </div>
-  <div class="m_category">
-    <h3>근무지 등록</h3>
-    <select class="form-select" v-model="selectedLocation">
-      <option value="">선택하세요</option>
-      <option value="강남">강남</option>
-      <option value="신촌">신촌</option>
-      <option value="역삼">역삼</option>
-    </select>
-  </div>
-  <div class="m_category">
-    <h3>메인화면에서 보일 간단 자기소개</h3>
-    <textarea class="form-control resizable" style="width: 700px; height: 400px;"></textarea>
-    <br>
-    <h3>프로필 화면에서 보일 자기소개</h3>
-    <textarea class="form-control resizable" style="width: 700px; height: 400px;"></textarea>
-  </div>
-  <button class="btn btn-save" type="submit">저장</button>
-  </form>
-</main>
-</template>
-
 <script>
 export default {
   data() {
@@ -106,13 +54,60 @@ export default {
   },
 };
 </script>
+<template>
+  <main>
+    <h1 class="main">프로필 관리</h1>
+    <div class="drag-drop-container m_category">
+      <h3>프로필 사진</h3>
+      <form class="d_flex">
+        <div class="drag-drop" @dragover.prevent @dragenter="highlight" @dragleave="unhighlight"
+          @drop.prevent="handleDrop" :class="{ 'drag-over': isDragOver }">
+          <p>이미지를 드래그 앤 드랍하세요</p>
+          <input type="file" ref="fileInput" style="display: none" @change="handleFileInput" />
+          <button class="ml-auto" @click="triggerFileInput">파일 선택</button>
+        </div>
+        <br>
+        <button class="btn btn-save" type="submit">저장</button>
+      </form>
+      <div v-if="uploadedImage" class="preview">
+        <img :src="uploadedImage" alt="Uploaded Preview" />
+      </div>
+    </div>
 
+    <form @submit.prevent> <!-- 폼 자동 제출 방지-->
+      <div class="m_category">
+        <h3>수상경력</h3>
+        <div class="career">
+          <div v-for="(award, index) in awards" :key="index" class="input-group mb-3">
+            <button class="btn btn-danger" @click="removeAward(index)">-</button>
+            <input class="form-control" v-model="award.value">
+          </div>
+          <button class="btn btn-success" @click="addAward">+</button>
+        </div>
+      </div>
+      <div class="m_category">
+        <h3>근무지 등록</h3>
+        <select class="form-select" v-model="selectedLocation">
+          <option value="">선택하세요</option>
+          <option value="강남">강남</option>
+          <option value="신촌">신촌</option>
+          <option value="역삼">역삼</option>
+        </select>
+      </div>
+      <div class="m_category">
+        <h3>메인화면에서 보일 간단 자기소개</h3>
+        <textarea class="form-control resizable" style="width: 700px; height: 400px;"></textarea>
+        <br>
+        <h3>프로필 화면에서 보일 자기소개</h3>
+        <textarea class="form-control resizable" style="width: 700px; height: 400px;"></textarea>
+      </div>
+      <button class="btn btn-save" type="submit">저장</button>
+    </form>
+  </main>
+</template>
 <style scoped>
 .m_category {
   padding: 20px;
-}
-</style>
-<style scoped>
 button {
   background-color: #e5f5f2;
   color: #085c57;
