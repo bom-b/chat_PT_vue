@@ -74,13 +74,15 @@
           <div class="mt-5">
             <h4>수상 경력 등록(선택)</h4>
             <div class="contest-container" style="text-align: center;">
-
-              <div v-for="(contest, index) in awards" :key="index" class="contest-row">
-                <input type="text" class="contest-input" v-model="contest.name" placeholder="수상 내용">
-                <input type="text" class="contest-input" v-model="contest.rank" placeholder="등수">
-                <button type="button" class="delete-button" @click="removeContest(index)"
-                  v-if="index !== awards.length - 1">X</button>
-                <button type="button" class="add-button" @click="addContest" v-if="index === awards.length - 1">+</button>
+              <div class="m_category">
+                <h3>수상경력</h3>
+                <div class="career">
+                  <div v-for="(award, index) in awards" :key="index" class="input-group mb-3">
+                    <button class="btn btn-danger" @click="removeAward(index)">-</button>
+                    <input class="form-control" v-model="award.value">
+                  </div>
+                  <button class="btn btn-success" @click="addAward">+</button>
+                </div>
               </div>
             </div>
           </div>
@@ -326,10 +328,10 @@ export default {
     return {
       uploadedImages: [], // 업로드된 이미지들을 저장하는 배열
       mainImage: null,
-      awards: [
-        { name: '', rank: '' }
-      ],
-      // awards: [],
+      // awards: [
+      //   { name: '', rank: '' }
+      // ],
+      awards: [],
       region: "",
       starttime: '',
       endtime: '',
@@ -408,13 +410,11 @@ export default {
     setMainImage(imageId) {
       this.mainImage = this.uploadedImages.find((image) => image.id === imageId);
     },
-    addContest() {
-      if (this.awards.length < 5) {
-        // this.awards.push({ name: '', rank: '' });
-        this.awards.push();
-      } else {
-        alert('수상 경력은 최대 5개까지만 가능합니다.');
-      }
+    addAward() {
+      this.awards.push({ value: '' });
+    },
+    removeAward(index) {
+      this.awards.splice(index, 1);
     },
     removeContest(index) {
       if (this.awards.length > 1) {
