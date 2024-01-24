@@ -106,10 +106,11 @@ export default defineComponent({
                 <Slide v-for="slide in foodList" :key="slide">
                     <div class="carousel__item">
                         <div class="card" style="width:100%;" @click="selectFood(slide)">
-                            <img :src="`${this.$s3BaseURL}/food_main_images/${slide.FOODIMG}`" style="width: 100%;" />
+                            <img :src="`${this.$s3BaseURL}/food_main_images/${slide.FOODIMG}`" style="width: 100%;" class = "foodimg" />
 
-                            <div class="container">
-                                <h4><b>{{ slide.FOODNAME }}</b></h4>
+                            <div class="container" style="display: flex; justify-content: center; align-items: center;">
+                                <h4><b>{{ slide.FOODNAME }}</b></h4><img style="width: 20px; height: 20px;" src="../../../assets/img/icon/icon-check-mark.png" v-if="rating.includes(slide.FOODNUM)" >
+                                
                             </div>
                         </div>
                     </div>
@@ -147,7 +148,7 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
 }
-img {
+.foodimg {
     min-width: 200px !important;
     min-height: 200px !important;
     max-width: 250px !important;
@@ -156,7 +157,6 @@ img {
     object-position: center !important;
 
 }
-
 .carousel__slide {
     padding: 5px;
 }
