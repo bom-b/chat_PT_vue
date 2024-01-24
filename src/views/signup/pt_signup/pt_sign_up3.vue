@@ -35,14 +35,13 @@
               </div>
             </div>
           </div>
-
           <div class="mt-5">
             <h4>근무하시는 지역</h4>
             <p style="font-size: 10px">주변에 있는 회원과 매칭 해드려요~!!</p>
             <div>
               <input type="text" id="region" placeholder="도로명 주소" readonly class="address-input" @click="searchRegion"
                 v-model="region">
-              <input type="text" placeholder="헬스장 이름 입력" style="width: 150px;" v-model="gym">
+              <input type="text" placeholder="헬스장 이름 입력" style="width: 150px;" v-model="gym"  @keydown.enter.prevent="noSubmit">
             </div>
           </div>
           <div class="mt-5">
@@ -90,7 +89,6 @@
         </form>
       </div>
     </div>
-
   </main>
 </template>
   
@@ -331,9 +329,7 @@ export default {
     return {
       uploadedImages: [], // 업로드된 이미지들을 저장하는 배열
       mainImage: null,
-      // awards: [
-      //   { name: '', rank: '' }
-      // ],
+      // 수상경력
       awards: [],
       region: "",
       starttime: "",
@@ -367,6 +363,8 @@ export default {
     },
   },
   methods: {
+    noSubmit(){
+    },
     handleMainImageUpload(event) {
       const file = event.target.files[0];
       const imageObject = {
@@ -466,6 +464,7 @@ export default {
           gym: this.gym,
 
         };
+        console.log(data);
         if (isValid) {
           const signup = await Swal.fire({
             title: "",
