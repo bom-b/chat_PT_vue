@@ -621,7 +621,7 @@ export default {
 .image-items{
   width: 100%;
   margin-bottom: 10px; // 아이템 간의 수직 간격 조정
-  background-color: #eff0f3; // 이미지 아이템에 하얀색 배경 적용
+  background-color: rgba(233, 235, 238, 0.79); // 이미지 아이템에 하얀색 배경 적용
   padding-top: 30px; // 내부 패딩
   padding-bottom: 30px;
   border-radius: 5px; // 둥근 모서리
