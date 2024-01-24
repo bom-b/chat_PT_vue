@@ -18,3 +18,8 @@ export const INITIAL_EVENTS = [
 export function createEventId() {
   return String(eventGuid++)
 }
+
+export function getEventColor(title) {
+  const colors = ['#FF0000', '#FFA500', '#FFFF00', '#008000', '#0000FF', '#000080']; // 빨강, 주황, 노랑, 초록, 파랑, 남색
+  return colors[title % colors.length];
+}

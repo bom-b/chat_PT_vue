@@ -1,59 +1,84 @@
 <template>
   <main class="main">
-  <analyze_header/>
+    <analyze_header />
 
-  <div class="demo-app">
-
-    <div class="demo-app-main">
-      <FullCalendar
-        class="demo-app-calendar"
-        ref="fullCalendar"
-        :options="calendarOptions"
-      >
-        <template v-slot:eventContent="arg">
-          <b>{{ arg.timeText }}</b>
-          <i>{{ arg.event.title }}</i>
-        </template>
-      </FullCalendar>
-    </div>
-
-    <div v-if="showModal" class="modal">
-      <div class="modal-content">
-        <h3>음식 정보</h3>
-        <div class="image-container">
-          <p v-if="selectedEvent.foodDetails.length > 0">제목: {{ selectedEvent.foodDetails[currentFoodIndex].title }}</p>
-          <button class="nav-button prev" @click="showPreviousFood">&lt;</button>
-    <img
-      v-if="selectedEvent.foodDetails.length > 0 && selectedEvent.foodDetails[currentFoodIndex].foodImgs"
-      :src="`${this.$springBaseURL}/images/foodMainImages/${selectedEvent.foodDetails[currentFoodIndex].foodImgs}`"
-      alt="Event image"
-      class="img-event" style="width: 300px; height: 300px;"
-    />
-    <button class="nav-button next" @click="showNextFood">&gt;</button>
-    </div>
-        <p>칼로리: {{ Math.round(selectedEvent.foodDetails[currentFoodIndex].cal) }}</p>
-        <p>탄수화물: {{ Math.round(selectedEvent.foodDetails[currentFoodIndex].carbohydrate) }}</p>
-        <p>단백질: {{ Math.round(selectedEvent.foodDetails[currentFoodIndex].protein) }}</p>
-        <p>지방: {{ Math.round(selectedEvent.foodDetails[currentFoodIndex].fat) }}</p>
-        <div>
+    <div class="demo-app">
+      <div class="demo-app-main">
+        <FullCalendar
+          class="demo-app-calendar"
+          ref="fullCalendar"
+          :options="calendarOptions"
+        >
+          <template v-slot:eventContent="arg">
+            <i class="title-event">{{ arg.event.title }}</i>
+            <!-- 이벤트 제목 -->
+          </template>
+        </FullCalendar>
       </div>
 
-        <div class="row">
-          <button
-            type="button button-container"
-            class="btn btn-danger"
-            @click="deleteEvent(selectedEvent.id)"
-          >
-            삭제
-          </button>
-          <button type="button" class="btn btn-success" @click="closeModal">
-            닫기
-          </button>
+      <div v-if="showModal" class="modal">
+        <div class="modal-content">
+          <h3>음식 정보</h3>
+          <div class="image-container">
+            <p v-if="selectedEvent.foodDetails.length > 0">
+              제목: {{ selectedEvent.foodDetails[currentFoodIndex].title }}
+            </p>
+            <button class="nav-button prev" @click="showPreviousFood">
+              &lt;
+            </button>
+            <img
+              v-if="
+                selectedEvent.foodDetails.length > 0 &&
+                selectedEvent.foodDetails[currentFoodIndex].img
+              "
+              :src="`${this.$springBaseURL}/images/foodMainImages/${selectedEvent.foodDetails[currentFoodIndex].img}`"
+              alt="Event image"
+              class="img-event"
+              style="width: 300px; height: 300px"
+            />
+            <button class="nav-button next" @click="showNextFood">&gt;</button>
+          </div>
+          <p>
+            칼로리:
+            {{ Math.round(selectedEvent.foodDetails[currentFoodIndex].foodcal) }}kcal
+          </p>
+          <p>
+            탄수화물:
+            {{
+              Math.round(
+                selectedEvent.foodDetails[currentFoodIndex].carbohydrate
+              )
+            }}g
+          </p>
+          <p>
+            단백질:
+            {{
+              Math.round(selectedEvent.foodDetails[currentFoodIndex].protein)
+            }}g
+          </p>
+          <p>
+            지방:
+            {{ Math.round(selectedEvent.foodDetails[currentFoodIndex].fat) }}g
+          </p>
+          <div></div>
+
+          <div class="row">
+            <button
+              type="button button-container"
+              class="btn btn-danger"
+              @click="
+                deleteEvent(selectedEvent.foodDetails[currentFoodIndex].id)
+              "
+            >
+              삭제
+            </button>
+            <button type="button" class="btn btn-success" @click="closeModal">
+              닫기
+            </button>
+          </div>
         </div>
       </div>
     </div>
-    
-  </div>
   </main>
 </template>
 <script>
@@ -63,7 +88,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { getEventColor } from "./event-utils";
-import analyze_header from '@/components/header/d-analyze.vue';
+import analyze_header from "@/components/header/d-analyze.vue";
 
 export default defineComponent({
   components: {
@@ -72,7 +97,7 @@ export default defineComponent({
   },
   data() {
     return {
-      realcategory: ["아침","점심","저녁","간식"],
+      realcategory: ["아침", "점심", "저녁", "간식"],
       allEvents: [],
       calendarOptions: {
         plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -112,109 +137,211 @@ export default defineComponent({
   },
 
   methods: {
-    formatEventDate(dateStr) {
+    formatDateString(dateTimeString) {
+      const parts = dateTimeString.split(" ");
+      if (parts.length !== 2) {
+        return null; // 날짜와 시간을 구분하는 공백이 없으면 null 반환
+      }
 
-      const offset = dateStr.getTimezoneOffset() * 60000; // 로컬 타임존 오프셋을 밀리초 단위로 계산
-      const localDate = new Date(dateStr.getTime() - offset); // 로컬 시간으로 조정
+      const dateParts = parts[0].split("-");
+      if (dateParts.length !== 3) {
+        return null; // 날짜 형식이 잘못되었으면 null 반환
+      }
 
-      return localDate;
+      const year = parseInt(dateParts[0], 10);
+      const month = parseInt(dateParts[1], 10) - 1; // JavaScript의 월은 0부터 시작합니다.
+      const day = parseInt(dateParts[2], 10);
+
+      const timeParts = parts[1].split(":");
+      if (timeParts.length !== 3) {
+        return null; // 시간 형식이 잘못되었으면 null 반환
+      }
+
+      const hours = parseInt(timeParts[0], 10);
+      const minutes = parseInt(timeParts[1], 10);
+      const seconds = parseInt(timeParts[2], 10);
+
+      const date = new Date(year, month, day, hours, minutes, seconds);
+      if (isNaN(date.getTime())) {
+        return null; // 유효하지 않은 날짜의 경우 null 반환
+      }
+
+      return date.toISOString();
+    },
+
+    formatTime(date) {
+      if (!date) {
+        return "";
+      }
+      let d = new Date(date);
+      let hours = d.getHours();
+      let minutes = d.getMinutes();
+      let ampm = hours >= 12 ? "pm" : "am";
+      hours = hours % 12;
+      hours = hours ? hours : 12; // 시간이 '0'이면 '12'로 변경
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      let strTime = hours + ":" + minutes + " " + ampm;
+      return strTime;
     },
 
     async fetchEvents() {
-  for (let category of this.realcategory) {
-    try {
-      const response = await this.$axios.get("/myCalendarList", { params: { category } });
-      const events = response.data.map(eventData => {
-      // const startDateParts = eventData.startStr.split('/');
-      // const endDateParts = eventData.endStr.split('/');
-      // const startDate1 = new Date(`20${startDateParts[0]}-${startDateParts[1]}-${startDateParts[2]}`);
-      // const endDate1 = new Date(`20${endDateParts[0]}-${endDateParts[1]}-${endDateParts[2]}`);
-      const startDate = eventData.startStr;
-      const endDate = eventData.startStr;
+      try {
+        const response = await this.$axios.get("/myCalendarList");
+        const events = response.data.map((eventData) => {
+          let startDate = new Date(this.formatDateString(eventData.eatdate));
+          let endDate = new Date(startDate);
+          endDate.setHours(startDate.getHours() + 5); // 시작 시간에서 5시간 뒤로 설정
 
-      console.log(startDate);
+          return {
+            id: eventData.id,
+            title: eventData.title,
+            start: startDate,
+            end: endDate,
+            color: getEventColor(eventData.title),
+          };
+        });
 
-  return {
-    id: eventData.eventNum,
-    title: eventData.title,
-    start: startDate,
-    end: endDate,
-    color: getEventColor(eventData.title),
-  };
-});
+        // 날짜별로 이벤트를 그룹화합니다.
+        const groupedByDate = events.reduce((acc, event) => {
+          const dateKey = event.start.toISOString().split("T")[0]; // 날짜 부분만 추출
+          if (!acc[dateKey]) {
+            acc[dateKey] = [];
+          }
+          acc[dateKey].push(event);
+          return acc;
+        }, {});
 
+        // 각 날짜에서 title별로 이벤트를 그룹화하고 합칩니다.
+        const mergedEvents = [];
+        Object.values(groupedByDate).forEach((dateGroup) => {
+          const groupedByTitle = dateGroup.reduce((acc, event) => {
+            if (!acc[event.title]) {
+              acc[event.title] = { ...event, count: 0 };
+            }
+            acc[event.title].count++;
+            return acc;
+          }, {});
 
-      this.allEvents.push(...events);
+          Object.values(groupedByTitle).forEach((event) => {
+            if (event.count > 1) {
+              event.title = `${event.title}`;
+            }
+            mergedEvents.push(event);
+          });
+        });
 
-    } catch (error) {
-      console.error(`Error fetching ${category} events:`, error);
-    }
-  }
-  this.updateCalendarEvents();
-}
-,
+        this.allEvents.push(...mergedEvents);
+        console.log(this.allEvents);
+      } catch (error) {
+        console.error(`Error fetching events:`, error);
+      }
+      this.updateCalendarEvents();
+    },
 
-updateCalendarEvents() {
-    if (this.$refs.fullCalendar) {
-      const calendarApi = this.$refs.fullCalendar.getApi();
-      calendarApi.removeAllEvents();
-      this.allEvents.forEach(event => calendarApi.addEvent(event));
-    } else {
-      console.error("FullCalendar 참조가 존재하지 않습니다.");
-    }
-  },
+    updateCalendarEvents() {
+      if (this.$refs.fullCalendar) {
+        const calendarApi = this.$refs.fullCalendar.getApi();
+        calendarApi.removeAllEvents();
+        this.allEvents.forEach((event) => calendarApi.addEvent(event));
+      } else {
+        console.error("FullCalendar 참조가 존재하지 않습니다.");
+      }
+    },
 
-  handleEventClick(clickInfo) {
+    handleEventClick(clickInfo) {
       this.currentFoodIndex = 0;
-      const eventStartDate = clickInfo.event.start;
-      const offset = eventStartDate.getTimezoneOffset() * 60000; // 로컬 타임존 오프셋을 밀리초 단위로 계산
-      const localDate = new Date(eventStartDate.getTime() - offset); // 로컬 시간으로 조정
-      const formattedDate = localDate.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식으로 변환
+      // 이벤트의 고유 식별자를 가져옵니다. 여기서는 'id'를 예시로 사용합니다.
+      const eventId = clickInfo.event.id;
+      const eventtitle = clickInfo.event.title;
+      const eventdate = clickInfo.event.start;
+      const dateKey = eventdate.toISOString().split("T")[0]; // 날짜 부분만 추출 ("2024-01-23")
+      const parts = dateKey.split("-"); // ["2024", "01", "23"]
+      const formattedDate = `${parts[0].substring(2)}/${parts[1]}/${parts[2]}`; // "24/01/23"
 
-    const params = {
-      date: formattedDate,
-      category: clickInfo.event.title,
-    };
-      this.$axios.get("/selectedFoodDetails", { params })
-        .then(response => {
-          this.selectedEvent = {
-        ...clickInfo.event.extendedProps,
-        foodDetails: response.data, // 이제 foodDetails는 배열입니다.
+      const params = {
+        id: eventId,
+        title: eventtitle,
+        eatdate: formattedDate,
       };
+      console.log(params);
+
+      // 서버에 해당 이벤트 ID에 대한 상세 정보를 요청합니다.
+      this.$axios
+        .get(`/selectedFoodDetails`, { params })
+        .then((response) => {
+          console.log("반응오냐",response)
+          // 서버로부터 받은 응답을 사용하여 모달의 상태를 업데이트합니다.
+          this.selectedEvent = {
+            ...clickInfo.event.extendedProps,
+            foodDetails: response.data,
+          };
+          
+          // 모달을 표시합니다.
           this.showModal = true;
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error fetching food details:", error);
         });
     },
 
-    showNextFood() {
-  if (this.currentFoodIndex < this.selectedEvent.foodDetails.length - 1) {
-    this.currentFoodIndex++;
-  }
-},
+    async showNextFood() {
+      if (this.currentFoodIndex < this.selectedEvent.foodDetails.length - 1) {
+        this.currentFoodIndex++;
+        await this.fetchSelectedFoodDetails(this.selectedEvent.id);
+      }
+    },
 
-showPreviousFood() {
-  if (this.currentFoodIndex > 0) {
-    this.currentFoodIndex--;
-  }
-},
+    async showPreviousFood() {
+      if (this.currentFoodIndex > 0) {
+        this.currentFoodIndex--;
+        await this.fetchSelectedFoodDetails(this.selectedEvent.id);
+      }
+    },
+
+    async fetchSelectedFoodDetails(eventId) {
+      try {
+        // 모달의 내용을 초기화합니다.
+        this.selectedEvent = {
+          id: null,
+          title: "",
+          img: "",
+          carbohydrate: null,
+          protein: null,
+          fat: null,
+          cal: null,
+        };
+
+        // 서버로부터 선택된 이벤트의 상세 정보를 불러옵니다.
+        const response = await this.$axios.get(
+          `/selectedFoodDetails/${eventId}`
+        )
+        // 응답 데이터로 모달의 상태를 업데이트합니다.
+        this.selectedEvent = {
+          ...this.selectedEvent,
+          ...response.data,
+        };
+      } catch (error) {
+        console.error("Error fetching food details:", error);
+      }
+    },
 
     handleEvents(events) {
       this.currentEvents = events;
     },
 
     deleteEvent(eventId) {
+      console.log("삭제 시작");
       let calendarApi = this.$refs.fullCalendar.getApi();
       let event = calendarApi.getEventById(eventId);
       if (event) {
-        this.$axios.delete(`/delteCalendarInfo/${eventId}`)
+        this.$axios
+          .delete(`/delteCalendarInfo/${eventId}`)
           .then(() => {
             event.remove();
             alert("삭제되었습니다.");
             this.showModal = false;
           })
-          .catch(err => {
+          .catch((err) => {
             console.error("이벤트 삭제 중 오류 발생", err);
           });
       }
@@ -232,11 +359,13 @@ showPreviousFood() {
 });
 </script>
 
-
-<style lang="scss" scoped>
+<style scoped>
 h2 {
   margin: 0;
   font-size: 16px;
+}
+i {
+  justify-content: center;
 }
 
 ul {
@@ -264,8 +393,6 @@ b {
 .demo-app-sidebar {
   width: 300px;
   line-height: 1.5;
-  background: #eaf9ff;
-  border-right: 1px solid #d3e2e8;
 }
 
 .demo-app-sidebar-section {
@@ -275,6 +402,12 @@ b {
 .demo-app-main {
   flex-grow: 1;
   padding: 3em;
+}
+
+.demo-app-calendar .fc-event-title {
+  /* FullCalendar v4 이하 */
+  text-align: center;
+  width: 100%;
 }
 
 .fc {
@@ -299,21 +432,21 @@ body,
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.75); // 배경을 약간 더 어둡게 조정
-  z-index: 1000; // z-index를 높여서 다른 요소들 위에 표시되도록 함
-}
+  background-color: rgba(0, 0, 0, 0.75);
 
+  z-index: 1000;
+}
 .modal-content {
   background: #fff;
   width: auto;
-  max-width: 500px; // 모달의 최대 너비를 지정
+  max-width: 500px;
   padding: 2rem;
-  border-radius: 10px; // 모달의 모서리를 둥글게
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); // 모달에 그림자 효과 추가
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  overflow: hidden; // 내용이 넘칠 경우 숨김 처리
-  align-items: center; // 내용을 센터로 정렬
+  overflow: hidden;
+  align-items: center;
 }
 
 .button-container {
@@ -323,45 +456,41 @@ body,
 }
 
 .img-event {
-  max-width: 100%; // 이미지가 모달 너비를 넘지 않도록 조정
-  max-height: 300px; // 이미지의 최대 높이를 제한
-  width: 90%; // 모달 너비에 맞게 이미지 크기 조정
-  object-fit: contain; // 이미지 비율을 유지하면서 전체 내용을 표시
-  margin-bottom: 1rem; // 이미지와 텍스트 사이의 간격을 둠
+  max-width: 100%;
+  max-height: 300px;
+  width: 90%;
+  object-fit: contain;
+  margin-bottom: 1rem;
 }
 
 .text-content {
-  color: #333; // 텍스트 색상을 어둡게 조정하여 가독성 향상
-  margin-bottom: 1rem; // 텍스트 사이의 간격을 둠
-  text-align: center; // 텍스트를 가운데 정렬
-  width: 100%; // 텍스트 너비를 모달에 맞게 조정
+  color: #333;
+  margin-bottom: 1rem;
+  text-align: center;
+  width: 100%;
 }
 
-// 각 요소의 스타일을 세밀하게 조정
 .title {
-  font-size: 1.5rem; // 제목의 폰트 크기를 크게 조정
-  font-weight: bold; // 제목을 굵게 표시
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 .detail {
-  font-size: 1rem; // 상세 정보의 폰트 크기를 조정
-  color: #555; // 상세 정보의 텍스트 색상을 조정
+  font-size: 1rem;
+  color: #555;
 }
 
 .btn {
-  padding: 0.5rem 1rem; // 버튼의 패딩을 조정
-  margin-top: 1rem; // 버튼과 다른 요소 사이의 간격을 둠
-  font-size: 1rem; // 버튼 텍스트의 폰트 크기를 조정
-  color: white; // 버튼 텍스트 색상을 흰색으로 조정
-  border: none; // 버튼 테두리 제거
-  flex:1;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: white;
+  border: none;
+  flex: 1;
   padding: 0.5em 1em;
-  margin: 0 0.5rem; // 버튼 사이의 간격 조정
-  border-radius: 5px; // 버튼 모서리를 둥글게 조정
-  cursor: pointer; // 마우스 오버 시 커서 변경
-  &:hover {
-    background: #0056b3; // 버튼 호버 시 배경색을 어둡게 조정
-  }
+  margin: 0 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .nav-button {
@@ -379,6 +508,4 @@ body,
   object-fit: contain;
   margin: 0 10px;
 }
-
-
 </style>

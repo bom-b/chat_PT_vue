@@ -20,7 +20,7 @@ import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { INITIAL_EVENTS } from "./event-utils";
+import { INITIAL_EVENTS , getEventColor } from "./event-utils";
 import dragula from 'dragula';
 import 'dragula/dist/dragula.css';
 
@@ -96,23 +96,17 @@ export default defineComponent({
     const response = await this.$axios.get("/getMyPtList");
     const events = response.data.map(eventData => {
       let startDate = new Date(eventData.ptstart);
-      let endDate = new Date(startDate.getTime() + 3 * 60 * 60 * 1000); // 3시간 추가
+      let endDate = new Date(startDate.getTime() + (1/2) * 60 * 60 * 1000); // 3시간 추가
 
-      let startFormatted = startDate.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식으로 변환
-      let endFormatted = endDate.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식으로 변환
-
-      let startTime = startDate.toISOString().split('T')[1]; // 'YYYY-MM-DD' 형식으로 변환
-      let endTime = endDate.toISOString().split('T')[1];
-      console.log(startFormatted, endFormatted);
-      console.log(startTime, endTime);
+      console.log("d : " + eventData.ptstart)
+      console.log(startDate, endDate);
 
       return {
-        timeZoneStart:"",
-        timeZoneEnd:"",
         id: eventData.scnum,
         title: eventData.title,
         start: startDate,
         end: endDate,
+        color:getEventColor(eventData.scnum),
       };
     });
 
@@ -129,7 +123,7 @@ updateCalendarEvents() {
     if (this.$refs.fullCalendar) {
       const calendarApi = this.$refs.fullCalendar.getApi();
       calendarApi.removeAllEvents();
-      this.allEvents.forEach(event => console.log(event));
+      this.allEvents.forEach(event => calendarApi.addEvent(event));
     } else {
       console.error("FullCalendar 참조가 존재하지 않습니다.");
     }
