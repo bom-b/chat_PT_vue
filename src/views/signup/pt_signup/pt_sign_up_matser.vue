@@ -9,20 +9,18 @@
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import { mapState } from "vuex";
-import signUp1 from "@/views/signup/d_signup/sign_up.vue";
-import signUp2 from "@/views/signup/d_signup/sign_up2.vue";
-import signUp3 from "@/views/signup/d_signup/sign_up3.vue";
-import signUp4 from "@/views/signup/d_signup/sign_up4.vue";
+import signUp1 from "@/views/signup/pt_signup/pt_sign_up.vue";
+import signUp2 from "@/views/signup/pt_signup/pt_sign_up2.vue";
+import signUp3 from "@/views/signup/pt_signup/pt_sign_up3.vue";
 export default {
     components: {
         signUp1,
         signUp2,
         signUp3,
-        signUp4,
     },
     data() {
         return {
-            pages: ['signUp1', 'signUp2', 'signUp3', 'signUp4'],
+            pages: ['signUp1', 'signUp2', 'signUp3'],
             currentPageIndex: 1,
             userdata: {},
             serverReturn: 0
@@ -37,8 +35,6 @@ export default {
                 return signUp2;
             } else if (this.currentPageIndex == 3) {
                 return signUp3;
-            } else if (this.currentPageIndex == 4) {
-                return signUp4;
             }
             return signUp1;
         },
@@ -49,7 +45,7 @@ export default {
             this.userdata = { ...this.userdata, ...pagesdata };
             console.log(this.userdata);
 
-            if (this.currentPageIndex == 4) {
+            if (this.currentPageIndex == 3) {
                 await this.completeSignUp();
             }
 
@@ -61,7 +57,7 @@ export default {
             try {
                 let data = this.userdata;
                 let jsonData = JSON.stringify(data);
-                await this.$axiosWithoutValidation.post("/signUp/completeSignUp", jsonData)
+                await this.$axiosWithoutValidation.post("/signUp/PTcompleteSignUp", jsonData)
                     .then(async response => {
                         this.serverReturn = response.data;
                         console.log("*********" + this.serverReturn);
@@ -79,7 +75,10 @@ export default {
                             })
                             await Toast.fire({
                                 icon: 'success',
-                                title: '회원가입이 완료되었습니다. 잠시후 로그인 페이지로 이동합니다.'
+                                title: '회원가입이 완료되었습니다. 잠시후 로그인 페이지로 이동합니다.',
+                                content: '관리자의 승인이 필요합니다.'
+
+
                             });
                             this.$router.push('/service/login');
                         } else {

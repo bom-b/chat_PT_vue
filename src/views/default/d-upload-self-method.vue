@@ -1,7 +1,9 @@
 <template>
   <main id="main" class="main">
+    <!-- 날짜 선택 입력 필드 추가 -->
+
     <div class="container" style="text-align: center; ">
-      <h3 id="plz-up" class="" style=" white-space: nowrap">오늘의 식단을 업로드 해주세요!</h3>
+      <h3 id="plz-up" class="" style=" white-space: nowrap">식단을 업로드 해주세요!</h3>
       <div class="d-flex justify-content-center">
         <ul class="pagination pagination-lg">
           <li class="page-item" v-for="tab in ['아침', '점심', '저녁', '간식']" :key="tab">
@@ -10,8 +12,11 @@
             </a>
           </li>
         </ul>
-      </div>
 
+      </div>
+      <div class="date-picker">
+        <input type="date" v-model="selectedDate">
+      </div>
       <div v-if="selectedTab === '아침'">
         <imgUpload :max-images="5" :uploaded-images="tabImages.아침"
                    @image-removed="removeImage('아침', $event)"
@@ -55,8 +60,13 @@ export default {
         점심: [],
         저녁: [],
         간식: [],
-      }
+      },
+      selectedDate: null, // 추가된 날짜 데이터
     };
+  },
+  created() {
+    // 컴포넌트가 생성될 때 오늘 날짜로 초기화
+    this.selectedDate = new Date().toISOString().substring(0, 10);
   },
   methods: {
     selectTab(tab) {
@@ -78,6 +88,12 @@ export default {
           formData.append(`${tab}[${index}]`, base64Image);
         });
       });
+
+      // 선택된 날짜를 formData에 추가
+      if (this.selectedDate) {
+        formData.append('date', this.selectedDate);
+      }
+
       console.log("formData : " + formData)
       this.$axios.post('/food_up', formData, {
         headers: {
@@ -101,6 +117,17 @@ export default {
 </script>
 
 <style scoped>
+/* 날짜 선택 입력 필드 스타일링 */
+.date-picker {
+  margin-bottom: 20px;
+}
+
+.date-picker input[type="date"] {
+  padding: 10px;
+  border: 1px solid #2a9d8f;
+  border-radius: 5px;
+}
+
 .selected-tab {
   font-weight: bold;
 }
