@@ -2,18 +2,18 @@
   <div class="user-edit-form">
     <form @submit.prevent="updateUserInfo" class="form-container">
       <h2 class="form-title">회원 정보 수정</h2>
-      <div class="form-row">
-        <!-- :src="getImageUrl(user.nm_PROFILEIMG)" -->
 
-        <div class="form-group form-row">
-          <h1 for="name">이성한, 29</h1>
-        </div>
+      <div class="form-row">
         <div>
           <img
-            :src="`${this.$s3BaseURL}/normal_user/profile_img/${foodFirst.foodimg}`"
+            :src="
+              previewImage ||
+              `${this.$s3BaseURL}/normal_user/profile_img/${userInfo.nm_PROFILEIMG}`
+            "
             alt="Profile Preview"
             class="profile-image"
             @click="openImagePicker"
+            style="width: 250px"
           />
           <input
             ref="profileImageInput"
@@ -25,107 +25,127 @@
           />
           <p>* 프로필 이미지 : 클릭 시 수정</p>
         </div>
+      </div>
 
-        <div class="form-group">
-          <div class="input-container">
-            <div>
-              <h4 style="margin-right: 5px; padding: 6px">아이디</h4>
-            </div>
-            <div class="input-field">
-              <input disable readonly type="id" id="id" class="form-input" />
-              <label for="id" :class="{ 'label-active': activeLabels.ID }">{{
-                userInfo.ID
-              }}</label>
-            </div>
-          </div>
+      <div class="row">
+        <div class="form-group form-row">
+          <h1 for="name">{{ userInfo.name }}, {{ userInfo.age }}</h1>
         </div>
 
-        <div class="form-group">
-          <div class="input-container">
-            <div>
-              <h4 style="margin-right: 5px; padding: 6px">패스워드</h4>
-            </div>
-            <div class="input-field">
+        <div class="col">
+          <div class="card">
+            <div class="card-title">
+              <img src="@/assets/img/icon/유저정보아이콘.png" alt="기본정보아이콘"  style="width: 50px;">
+
+              기본 정보</div>
+            <div class="form-group">
+              <label for="id">아이디</label>
               <input
-                type="PASSWORD"
+                disabled
+                readonly
+                type="text"
+                id="id"
+                class="form-input"
+                :value="userInfo.ID"
+              />
+            </div>
+            <div class="form-group">
+              <label for="PASSWORD">패스워드</label>
+              <input
+                v-model="userInfo.PASSWORD"
+                type="password"
                 id="PASSWORD"
                 class="form-input"
                 @focus="activateLabel('PASSWORD')"
                 @focusout="onPasswordFocusOut"
               />
+            </div>
 
-              <label
-                for="PASSWORD"
-                :class="{ 'label-active': activeLabels.PASSWORD }"
-                >*********</label
-              >
+            <div class="form-group">
+              <label for="region">지역</label>
+              <input
+                v-model="userInfo.region"
+                type="text"
+                id="region"
+                class="form-input"
+                @focus="activateLabel('region')"
+                @focusout="activateLabel('region')"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="kakaocode">카카오코드</label>
+              <input
+                v-model="userInfo.kakaocode"
+                type="text"
+                id="kakaocode"
+                class="form-input"
+                @focus="activateLabel('kakaocode')"
+                @focusout="activateLabel('kakaocode')"
+              />
             </div>
           </div>
         </div>
 
-        <div class="form-group">
-          <div class="input-container">
-            <div>
-              <h4 style="margin-right: 5px; padding: 6px">닉네임</h4>
-            </div>
-            <div class="input-field">
+        <div class="col">
+          <div class="card">
+            <div class="card-title">
+              <img src="@\assets\img\icon\건강정보아이콘.png" alt="건강정보아이콘" style="width: 50px;">
+              건강 정보</div>
+            <div class="form-group">
+              <label for="height">신장</label>
               <input
-                type="NICKNAME"
-                id="NICKNAME"
+                v-model="userInfo.height"
+                type="text"
+                id="height"
                 class="form-input"
-                @focus="activateLabel('NICKNAME')"
-                @focusout="activateLabel('NICKNAME')"
               />
-              <label
-                for="NICKNAME"
-                :class="{ 'label-active': activeLabels.NICKNAME }"
-                >{{ userInfo.NICKNAME }}</label
-              >
             </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="input-container">
-            <div>
-              <h4 style="margin-right: 5px; padding: 6px">이메일</h4>
-            </div>
-            <div class="input-field">
+            <div class="form-group">
+              <label for="weight">몸무게</label>
               <input
-                type="email"
-                id="EMAIL"
+                v-model="userInfo.weight"
+                type="text"
+                id="weight"
                 class="form-input"
-                @focus="activateLabel('EMAIL')"
-                @focusout="activateLabel('EMAIL')"
               />
-              <label
-                for="EMAIL"
-                :class="{ 'label-active': activeLabels.EMAIL }"
-                >{{ userInfo.EMAIL }}</label
+            </div>
+            <div class="form-group">
+              <label for="target_WEIGHT">목표 몸무게</label>
+              <input
+                v-model="userInfo.target_WEIGHT"
+                type="text"
+                id="target_WEIGHT"
+                class="form-input"
+              />
+            </div>
+            <div class="form-group">
+              <label for="purpose">운동목적</label>
+              <select
+                v-model="userInfo.purpose"
+                id="purpose"
+                class="form-input"
               >
+                <option value="0">다이어트</option>
+                <option value="1">체중유지</option>
+                <option value="2">벌크업</option>
+              </select>
             </div>
           </div>
         </div>
       </div>
 
-      <button type="submit" class="submit-button">Update Profile</button>
+      <button type="submit" class="submit-button">회원 정보 수정</button>
     </form>
   </div>
 </template>
-
 <script>
 export default {
   data() {
     return {
       userInfo: {
-        EMAIL: "",
-        PASSWORD: "",
-        // ... 다른 필드들
-      },
-      activeLabels: {
-        ID: false,
-        EMAIL: false,
-        NICKNAME: false,
+        // ... 기존 사용자 정보 ...
+        purpose: "0", // 기본값 설정
       },
 
       confirmPassword: "",
@@ -159,24 +179,7 @@ export default {
     activateLabel(field) {
       this.activeLabels[field] = true;
     },
-
-    fetchUserInfo() {
-      // Axios를 사용하여 사용자 정보 가져오기
-      this.$axios
-        .get("/getuserInfo")
-        .then((response) => {
-          const userData = response.data[0]; // 데이터 배열의 첫 번째 요소를 사용
-          this.userInfo = {
-            ID: userData.id,
-            EMAIL: userData.email,
-            PASSWORD: userData.password,
-            NICKNAME: userData.name, // 닉네임 필드가 name으로 가정
-          };
-        })
-        .catch((error) => {
-          console.error("Error fetching user info:", error);
-        });
-    },
+    // 정보업데이트
     updateUserInfo() {
       this.$swal
         .fire({
@@ -194,15 +197,96 @@ export default {
         })
         .then((result) => {
           if (result.value) {
-            // 여기서 formData 생성 및 서버 요청 로직 작성
-            // 예: this.submitFormData();
+            
+            let formData = new FormData();
+            for (let key in this.userInfo) {
+              formData.append(key, this.userInfo[key]);
+            }
+
+            // 파일이 변경되었을 경우, formData에 추가
+            if (this.userInfo.NM_PROFILEIMG) {
+              formData.append("profileImage", this.userInfo.NM_PROFILEIMG);
+            }
+
+            this.$axios
+              .post("/updateuserInfo", formData, {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              })
+              .then((response) => {
+                // 성공적으로 업데이트되었을 때의 로직
+                console.log("User info updated successfully", response);
+              })
+              .catch((error) => {
+                console.error("정보 보내기 실패", error);
+              });
           }
         });
     },
+
+    fetchUserInfo() {
+      // Axios를 사용하여 사용자 정보 가져오기
+      this.$axios
+        .get("/getuserInfo")
+        .then((response) => {
+          const userData = response.data[0]; // 데이터 배열의 첫 번째 요소를 사용
+          this.userInfo = {
+            ID: userData.id,
+            EMAIL: userData.email,
+            PASSWORD: userData.password,
+            NICKNAME: userData.nickname, // 닉네임 필드가 name으로 가정
+            name: userData.name,
+            gender: userData.gender,
+            role: userData.role,
+            // birth:  userData.birth,
+            target_WEIGHT: userData.target_WEIGHT,
+            kakaocode: userData.kakaocode,
+            height: userData.height,
+            activity: userData.activity,
+            weight: userData.weight,
+            purpose: this.purposeToText(userData.purpose), // v-model 들어갈 데이터라 원본(purpose의 숫자형태) 보존안함
+            region: userData.region,
+            nm_PROFILEIMG: userData.nm_PROFILEIMG,
+            // 변환해서 저장할 데이터
+            age: this.calculateAge(userData.birth),
+          };
+        })
+        .catch((error) => {
+          console.error("Error fetching user info:", error);
+        });
+    },
+    // 생일 변환
+    calculateAge(birthDate) {
+      const birth = new Date(birthDate);
+      const today = new Date();
+      let age = today.getFullYear() - birth.getFullYear();
+      const m = today.getMonth() - birth.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+        age--;
+      }
+      return age;
+    },
+    // 운동 목적 to TEXT
+    purposeToText(purpose) {
+      switch (purpose) {
+        case 0:
+          return "다이어트";
+        case 1:
+          return "체중유지";
+        case 2:
+          return "벌크업";
+        default:
+          return "알 수 없음"; // 기본값 처리
+      }
+    },
+
     handleImageChange(event) {
       const file = event.target.files[0];
-      this.userInfo.NM_PROFILEIMG = file;
-      this.previewImage = URL.createObjectURL(file);
+      if (file) {
+        this.previewImage = URL.createObjectURL(file);
+        this.userInfo.NM_PROFILEIMG = file; // 사용자 정보에 이미지 파일 추가
+      }
     },
     // 패스워드 입력 필드의 focusout 이벤트 처리
     onPasswordFocusOut() {
@@ -242,62 +326,62 @@ export default {
   },
 };
 </script>
-
-
 <style scoped>
 .user-edit-form {
-  background-color: #f0f4f1;
-  border-radius: 15px;
-  padding: 25px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  font-family: "Helvetica Neue", Arial, sans-serif;
+  display: flex;
+  flex-wrap: wrap;
+}
+.profile-image {
+    width: 250px; /* 원하는 크기 설정 */
+    height: 250px; /* 너비와 높이를 같게 설정하여 원형을 만듦 */
+    border-radius: 50%; /* 원형 모양 만들기 */
+    object-fit: cover; /* 이미지가 태그 경계를 넘지 않도록 조정 */
+  }
+
+.form-container {
+  width: 100%;
 }
 
 .form-title {
   font-size: 28px;
-  margin-bottom: 25px;
   color: #3a6b35;
+  margin-bottom: 20px;
   font-weight: bold;
 }
 
-.form-row {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+.card {
+  flex-basis: calc(50% - 20px);
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 24px;
+  color: #3a6b35;
+  margin-bottom: 15px;
+  font-weight: bold;
 }
 
 .form-group {
-  flex-basis: calc(50% - 15px);
-  margin-bottom: 25px;
-}
-
-.label {
-  font-size: 18px;
-  margin-bottom: 10px;
-  color: #3a6b35;
+  margin-bottom: 20px;
+  text-align: left;
 }
 
 .form-input {
   width: 100%;
   padding: 12px 15px;
-  border: 2px solid #d4e6d1;
-  border-radius: 8px;
+  border: 1px solid #d4e6d1;
+  border-radius: 4px;
   font-size: 16px;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  align-content: center;
-  vertical-align: -webkit-baseline-middle;
 }
 
 .form-input:focus {
   border-color: #6dbb72;
   box-shadow: 0 0 8px rgba(109, 187, 114, 0.6);
   outline: none;
-}
-
-.profile-image {
-  max-width: 120px;
-  margin-top: 15px;
-  border-radius: 8px;
 }
 
 .submit-button {
@@ -307,7 +391,8 @@ export default {
   padding: 12px 25px;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
+  font-size: 18px;
+  margin-top: 20px;
 }
 
 .submit-button:hover {
@@ -316,63 +401,8 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .form-group {
+  .card {
     flex-basis: 100%;
   }
 }
-
-/* 원형 자기 프로필 사진 */
-.card-profile-img {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%; /* 원형으로 만들기 */
-
-  top: 180px; /* 조정하여 적절한 위치에 배치 */
-  transform: translateX(-50%);
-  margin-bottom: 60px;
-}
-
-/* [st] 인풋창 애니메이션 효과 */
-.form-group {
-  position: relative;
-  margin-bottom: 15px;
-}
-
-.input-container {
-  position: relative;
-  display: flex;
-  align-content: center;
-}
-
-.form-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-.input-field {
-  position: relative;
-  flex-grow: 1; /* 남은 공간을 채우도록 설정 */
-  font-weight: bold;
-  color: #3f3f3f;
-}
-
-label {
-  position: absolute;
-  font-weight: bold;
-  left: 10px;
-  top: 10px;
-  font-size: 15px;
-  color: #3838389c;
-  transition: all 0.3s ease;
-  pointer-events: none;
-}
-
-.label-active {
-  top: -16px;
-  left: 10px;
-  font-size: 20px;
-  color: rgb(10, 10, 10) d3d;
-}
-/* [ed] 인풋창 애니메이션 효과 */
 </style>
