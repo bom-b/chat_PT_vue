@@ -5,6 +5,7 @@ export default {
       isDragOver: false,
       uploadedImage: null,
       awards: []
+      
     };
   },
   methods: {

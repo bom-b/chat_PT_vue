@@ -87,7 +87,6 @@ export default {
         <img v-if="imageUrl" :src="this.imageUrl" alt="일반회원 이미지" />
       </div>
       <div class="container mt-5 pt-2">
-        <!-- <h2 class="text-center mb-4">개인정보 동의</h2> -->
         <div class="accordion" id="agreementAccordion">
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
