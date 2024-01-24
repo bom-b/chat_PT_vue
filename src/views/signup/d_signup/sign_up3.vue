@@ -22,37 +22,6 @@ export default {
         return 50;
       }
     },
-    arrowX1() {
-      // x1 값 계산 로직
-      // 예: return someCalculation(this.bmi);
-      return this.user.bmi;
-    },
-    arrowY1() {
-      // y1 값 계산 로직
-      // 예: return someCalculation(this.bmi);
-      return this.user.bmi;
-    },
-    arrowX2() {
-      // x2 값 계산 로직
-      // 예: return someCalculation(this.bmi);
-      return this.user.bmi;
-    },
-    arrowY2() {
-      // y2 값 계산 로직
-      // 예: return someCalculation(this.bmi);
-      return this.user.bmi;
-    },
-    arrowRotationFrom() {
-      // 회전 각도 from 값 계산 로직
-      // 예: return someCalculation(this.bmi);
-      return this.user.bmi;
-    },
-    arrowRotationTo() {
-      // 회전 각도 to 값 계산 로직
-      // 예: return someCalculation(this.bmi);
-      return this.user.bmi;
-    },
-
     images() {
       return [
         { path: require('../../../../public/assets/img/bmi/bmi1.png'), alt: 'Image 1', active: this.user.bmi >= 0 && this.user.bmi < 18.5 },
@@ -194,10 +163,7 @@ export default {
                   <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 140 140"
                     to="70 140 140" dur="1s" fill="freeze" repeatCount="1"></animateTransform>
                 </line>
-                <!-- <line x1="140" y1="140" x2="65" y2="140" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)">
-                  <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 140 140"
-                    to="87 140 140" dur="1s" fill="freeze" repeatCount="1"></animateTransform>
-                </line> -->
+
                 
 
                 <text x="100" y="120" style="font-size: 30px;font-weight:bold;color:#000;">{{ calculatebmi() }}</text>
