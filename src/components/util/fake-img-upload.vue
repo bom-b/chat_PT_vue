@@ -79,16 +79,6 @@ button:hover {
   align-items: start; /* 위에서 아래로 정렬 */
   margin-top: 20px;
 }
-.card {
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-  width: calc(100% / var(--num-of-images) - 16px); /* 이미지 개수에 따라 너비 조정 */
-  max-width: 220px; /* 카드의 최대 너비를 설정 */
-  margin-bottom: 20px;
-  position: relative;
-  border-radius: 8px;
-}
-
 
 .drag-over {
   border-color: #2196F3;
