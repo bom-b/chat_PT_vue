@@ -62,14 +62,18 @@ export default {
         password !== undefined &&
         password.trim() !== ""
       ) {
-        const reg = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
-        if (password.match(reg)) {          
+        const reg = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
+
+        if (password.match(reg)) {
+          this.validpwd = false;
           return password;
         } else {
-          return this.validpwd = true;
+          this.validpwd = true;
+          return false;
         }
       } else {
-        return this.$swal.fire("", "비밀번호를 입력해주세요", "warning");
+        this.validpwd = true;
+        return '';
       }
     },
     checkPasswordMatch() {
@@ -416,7 +420,7 @@ export default {
                 비밀번호가 일치하지 않습니다.
               </p>
               <p v-if="validpwd" style="color: red;">
-                비밀번호는 8~16자리 특수문자를 추가해주세요.
+                대문자, 특수문자를 포함한 8~16자리의 비밀번호를 만들어주세요.
               </p>
             </div>
           </div>
