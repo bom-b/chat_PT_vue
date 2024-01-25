@@ -13,7 +13,9 @@ export default {
         target_weight: '',
       },
       // 기본값
-      arrowXpoint: 90,
+      // 33, 70, 103, 133, 163
+      // 16.5, 51.5, 118, 148, 171.5
+      arrowXpoint: 171.5,
     };
   },
   computed: {
@@ -25,24 +27,39 @@ export default {
       }
     },
   },
-  watch: {
-    arrowXpoint: function (newVal, oldVal) {
-      const line = this.$refs.arrowLine;
-      line.setAttribute('from', `${oldVal} 140 140`);
-    }
-  },
-
-
   methods: {
     calculatebmi() {
       if (this.user.height && this.user.weight) {
         this.user.bmi = (this.user.weight / ((this.user.height / 100) ** 2)).toFixed(2);
-        this.arrowXpoint = this.user.bmi;
-        return this.user.bmi;
+        let bmi = this.user.bmi;
+        if (bmi < 15) {
+          return "Error";
+        } else if (bmi < 18.5) {
+          this.arrowXpoint = 16.5;
+          return bmi;
+        } else if (bmi < 25) {
+          this.arrowXpoint = 51.5;
+          return bmi;
+        } else if (bmi < 30) {
+          this.arrowXpoint = 118;
+          return bmi;
+        } else if (bmi < 35) {
+          this.arrowXpoint = 148;
+          return bmi;
+        } else if (bmi < 40) {
+          this.arrowXpoint = 171.5;
+          return bmi;
+        } else if (this.arrowXpoint > 50) {
+          this.arrowXpoint = 16.5;
+          return "Error"
+        }
       } else {
         return '';
       }
     },
+
+    
+
     setgender(gender) {
       this.user.gender = gender;
     },
@@ -90,12 +107,12 @@ export default {
             <li>
               <label for="user.gender">성별</label>
               <div class="btn-group" role="group">
-                <button type="button" class="btn" :class="{ 'btn-male': user.gender === 'male' }"
-                  @click="setgender('male')">
+                <button type="button" class="btn btn-gender btn-gender-male"
+                  :class="{ 'btn-male': user.gender === 'male' }" @click="setgender('male')">
                   <i class="material-icons">male</i>
                 </button>
-                <button type="button" class="btn" :class="{ 'btn-female': user.gender === 'female' }"
-                  @click="setgender('female')">
+                <button type="button" class="btn btn-gender btn-gender-female"
+                  :class="{ 'btn-female': user.gender === 'female' }" @click="setgender('female')">
                   <i class="material-icons">female</i>
                 </button>
               </div>
@@ -118,7 +135,6 @@ export default {
             </li>
             <li>
               <label for="user.bmi"> BMI </label>
-              <!-- <div>{{ calculatebmi() }}</div> -->
             </li>
 
 
@@ -164,10 +180,8 @@ export default {
                 <line ref="arrowLine" x1="140" y1="140" x2="80" y2="140" stroke="#666" stroke-width="2"
                   marker-end="url(#arrowhead)">
                   <animateTransform attributeName="transform" attributeType="XML" type="rotate" :from="'0 140 140'"
-                    :to="arrowXpoint + ' 140 140'" dur="2s" fill="freeze" repeatCount="1"></animateTransform>
+                    :to="arrowXpoint + ' 140 140'" dur="1s" fill="freeze" repeatCount="1"></animateTransform>
                 </line>
-
-
                 <text x="100" y="120" style="font-size: 30px;font-weight:bold;color:#000;">{{ calculatebmi() }}</text>
               </g>
             </svg>
@@ -276,10 +290,6 @@ export default {
   transition: background-color 0.2s ease;
 }
 
-.active-image {
-  border: 2px solid red;
-}
-
 .button-container {
   display: flex;
   justify-content: center;
@@ -300,11 +310,36 @@ export default {
 
 .btn-male {
   background-color: skyblue;
+  border: 2px solid skyblue;
 }
 
 .btn-female {
   background-color: pink;
 }
+
+.btn-gender-male:hover {
+  background-color: skyblue;
+  border: 2px solid skyblue;
+  transform: scale(1.1);
+  transition: transform 0.3s;
+}
+
+.btn-gender-male {
+  border: 2px solid skyblue;
+}
+
+.btn-gender-female {
+  border: 2px solid pink;
+}
+
+.btn-gender-female:hover {
+  background-color: pink;
+  border: 2px solid pink;
+  transform: scale(1.1);
+  transition: transform 0.3s;
+}
+
+
 
 @import url("https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap");
 
@@ -333,5 +368,4 @@ button {
 .selected-activity {
   background-color: rgb(255, 255, 255);
   color: #00997b;
-}
-</style>
+}</style>
