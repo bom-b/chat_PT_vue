@@ -100,7 +100,7 @@
           placeholder="이름을 입력하세요"
           @input="handleSearch"
         />
-        <button class="btn">검색</button>
+        <button class="btn btn-primary">검색</button>
 
         <div v-for="(item, index) in filteredItems" :key="index">
           <div v-if="filteredItems.length <= 3">
@@ -126,10 +126,6 @@
           </option>
         </select>
         <!-- 선택된 카테고리에 따른 내용 표시 -->
-        <div v-if="selectedCategory">
-          선택된 카테고리: {{ selectedCategory }}
-          <!-- 여기에 해당 카테고리에 맞는 내용을 표시하거나 로직을 수행할 수 있습니다. -->
-        </div>
       </div>
       <!-- [ed] 카테고리 -->
 
@@ -153,7 +149,10 @@
               <p class="TheJamsil400 mb-3">아이디 : {{trainer.userid}}  </p>
               <p class="TheJamsil400 mb-3">이름 : {{ trainer.username }}</p>
               <p class="TheJamsil400 mb-3">Role : {{trainer.usertype}} </p>
-              <p v-if="trainer.userstatus != null"> {{trainer.userstatus}}</p>
+                <li v-if="trainer.usertype === 'TRAINER'">
+                  <p v-if="trainer.userstatus == 1"> 승인</p>
+                  <p v-else>미승인</p>
+                </li>
               
             </td>
             <td class="pt-description">
@@ -170,7 +169,7 @@
                 <input
   class="form-check-input checkbox1"
   type="checkbox"
-  :checked="trainer.userstatus === '승인'"
+  :checked="trainer.userstatus === 1"
   :key="trainer.tnum"
   @click="event => event.stopPropagation()"
   @change="updateTrainerRole(trainer, $event)"
@@ -318,9 +317,9 @@ updateTrainerRole(trainer, event)
 
 filterItemsByCategory(category) {
   if (category === "PT선생님(승인X)") {
-    return this.items.filter(item => item.userstatus === "미승인");
+    return this.items.filter(item => item.userstatus === 0);
   } else if (category === "PT선생님(승인O)") {
-    return this.items.filter(item => item.userstatus === "승인");
+    return this.items.filter(item => item.userstatus === 1);
   } 
   // 다른 카테고리에 대한 조건을 추가합니다.
   return this.items; // 기본적으로 모든 항목을 반환합니다.

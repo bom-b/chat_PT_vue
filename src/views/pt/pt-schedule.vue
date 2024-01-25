@@ -1,6 +1,11 @@
 <template>
   <main>
-      <div class='demo-app-main'>
+    <div class="side-bar row">
+      <span class="" style="width: 100%; color:aqua"></span>
+      
+    </div>
+
+    <div class='demo-app-main'>
         <FullCalendar class='demo-app-calendar' :options='calendarOptions' ref='fullCalendar'>
         <template v-slot:eventContent='arg'>
           <b>{{ formatTime(arg.event.start) }}</b> <!-- 이벤트 시작 시간 포맷팅 -->
@@ -20,8 +25,7 @@ import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { INITIAL_EVENTS , getEventColor } from "./event-utils";
-import dragula from 'dragula';
+// import dragula from 'dragula';
 import 'dragula/dist/dragula.css';
 
 
@@ -33,7 +37,9 @@ export default defineComponent({
     return {
       allEvents: [],
       calendarOptions: {
+        timeZone: 'Asia/Seoul',
         plugins: [
+
           dayGridPlugin,
           timeGridPlugin,
           interactionPlugin,
@@ -49,21 +55,18 @@ export default defineComponent({
         selectMirror: true,
         dayMaxEvents: true,
         weekends: true,
+        eventChange: this.handleEventChange,
         select: this.handleDateSelect,
         eventClick: this.handleEventClick,
         eventsSet: this.handleEvents,
+        // eventSet:this.handleEvents,
         drop: true,
         droppable: true,
 
       },
       currentEvents: [],
       externalEvents: [
-        {
-          title: '나는 오늘부터 지지관계에서 벗어나',
-          backgroudColor: "#008000"
-        },
-        { title: '춘식이와 나는 한몸으로 일체가 된다' },
-        { title: '춘식이에 대한 공격은 나에 대한 공격으로 간주한다.' },
+
       ],
       drake: null,
     };
@@ -71,55 +74,54 @@ export default defineComponent({
 
   created() {
     this.fetchData();
-    // INITIAL_EVENTS를 allEvents에 추가합니다.
-    this.allEvents.push(...INITIAL_EVENTS);
   },
 
   mounted() {
-    this.initCalendar();
+    // this.initCalendar();
     this.updateCalendarEvents(); // 초기 이벤트 추가를 위해 호출
   },
 
 
 
   methods: {
-
     formatTime(date) {
-    if (!date) {
-      return '';
-    }
-    let d = new Date(date);
-    let hours = d.getHours();
-    let minutes = d.getMinutes();
-    let ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // 시간이 '0'이면 '12'로 변경
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    let strTime = hours + ':' + minutes + ' ' + ampm;
-    return strTime;
-  },
+  if (!date) {
+    return '';
+  }
+  let d = new Date(date);
+  let hours = d.getHours();
+  let minutes = d.getMinutes();
+  let ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // 시간이 '0'이면 '12'로 변경
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  let strTime = hours + ':' + minutes + ' ' + ampm;
+  return strTime;
+},
 
   async fetchData() {
   try {
     const response = await this.$axios.get("/getMyPtList");
     const events = response.data.map(eventData => {
       let startDate = new Date(eventData.ptstart);
-      let endDate = new Date(startDate.getTime() + (1/2) * 60 * 60 * 1000); // 3시간 추가
+      let endDate = new Date(startDate.getTime() + 1 * 60 * 60 * 1000); // 1시간 추가
 
-      console.log("d : " + eventData.ptstart)
-      console.log(startDate, endDate);
+            // UTC to KST 변환
+      startDate = new Date(startDate.getTime() + (9*60*60*1000));
+      endDate = new Date(endDate.getTime() + (9*60*60*1000));
+
+      console.log("start : " + startDate);
+      console.log("end : " + endDate);
 
       return {
-        id: eventData.scnum,
+        id: eventData.id,
         title: eventData.title,
         start: startDate,
         end: endDate,
-        color:getEventColor(eventData.scnum),
       };
     });
 
     this.allEvents.push(...events);
-    console.log("ALL EVENTS : " + this.allEvents);
     this.updateCalendarEvents();
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -159,32 +161,74 @@ updateCalendarEvents() {
       }
     },
     handleEvents(events) {
+      console.log(events)
       this.currentEvents = events;
+
+
+      
+
+
+
+      
+      
+      
 
     },
     handleWeekendsToggle() {
       this.calendarOptions.weekends = !this.calendarOptions.weekends; // update a property
     },
-    initCalendar() {
-      const containerEl = document.getElementById('external-events-list');
 
-      this.drake = dragula({
-        containers: [containerEl],
-        copy: true,
-      });
 
-      this.drake.on('drop', (el, target) => {
-        const title = el.innerText;
-        const calendarApi = this.$refs.fullCalendar.getApi();
+    updateEventTime(eventId, newStart, newEnd) {
+    const event = this.events.find(e => e.id === eventId);
+    if (event) {
+      event.start = newStart;
+      event.end = newEnd;
 
-        calendarApi.addEvent({
-          title,
-          start: calendarApi.getDateFromElement(target),
-          allDay: !calendarApi.getOption('allDaySlot'),
-        });
-      });
+      // 서버에 업데이트 요청을 보내는 함수를 호출
+      this.updateEventOnServer(eventId, newStart, newEnd);
+    }
+  },
 
+  handleEventChange(changeInfo) {
+      const event = changeInfo.event;
+      const eventId = event.id;
+      const eventTitle = event.title;
+      const newStart = event.start;
+      const newEnd = event.end;
+
+      // 서버에 변경 사항을 업데이트하는 함수를 호출
+      this.updateEventOnServer(eventId,eventTitle, newStart, newEnd);
     },
+
+    async updateEventOnServer(eventId,eventTitle, newStart, newEnd) {
+
+      console.log("자 이제 시작이야 : " + eventId, newStart, newEnd)
+
+
+      const map = {
+        id: eventId,
+        title: eventTitle,
+        start: newStart,
+        end: newEnd,
+      }
+
+      console.log(map);
+      try {
+        await this.$axios.put(`/updatePtTime`, map);
+        // 성공적으로 업데이트 후 처리
+
+      } catch (error) {
+        console.error("Error updating event:", error);
+        // 에러 처리
+      }
+    },
+
+
+
+
+
+
   },
 
 });

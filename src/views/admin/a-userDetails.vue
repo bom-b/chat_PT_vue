@@ -2,19 +2,32 @@
     <main>
         <div class="user-details-container" v-if="trainer">
         <div class="user-image-container">
-          <img v-if="trainer.image" :src="trainer.image" alt="User profile image" class="user-image"/>
-          <div v-else class="user-image default-image">No Image</div>
+          <div>
+            <img v-if="trainer.timg != null"
+           :src="`${this.$s3BaseURL}/trainer/profile_img/${trainer.timg}`"
+            alt="Trainer profile image" class="user-image"
+            style="width: 300px ; height: 300px;"/>
+
+            <img v-else-if="trainer.userimg != null"
+            :src="`${this.$s3BaseURL}/normal_user/profile_img/${trainer.userimg}`"
+            alt="User profile image"
+            style="width: 300px ; height: 300px;"
+            />
+            <img v-else class="default-image"/>
+
+          </div>
         </div>
         <div class="info-container">
           <div class="info-section">
-            <p><strong>ID:</strong> {{ trainer.userid }}</p>
-            <p><strong>NAME: </strong> {{ trainer.username }}</p>
-            <p><strong>Type: </strong> {{ trainer.usertype }}</p>
-            <p><strong>Status: </strong> {{ trainer.userstatus }}</p>
-            <p><strong>num: </strong> {{ trainer.tnum}}</p>
-            <p><strong>email: </strong> {{ member.email }}</p>
-            <p><strong>gender: </strong> {{ member.gender }}</p>
-            <p><strong>birth: </strong> {{ member.birth }}</p>
+            <p><strong>아이디 :</strong> {{ trainer.userid }}</p>
+            <p><strong>이름 : </strong> {{ trainer.username }}</p>
+            <p><strong>성별: </strong> {{ member.gender }}</p>
+            <p><strong>역할 : </strong> {{ trainer.usertype }}</p>
+            <p v-if="trainer.usertype==='TRAINER'"><strong>승인 상태: </strong> {{ trainer.userstatus }}</p>
+            <p v-if="trainer.usertype==='TRAINER'"><strong>회원번호: </strong> {{ trainer.tnum}}</p>
+            <p v-else><strong>회원번호 : </strong> {{ trainer.nnum}}</p>
+            <p><strong>생일: </strong> {{ formattingDate(member.birth) }}</p>
+            <p><strong>Email: </strong> {{ member.email }}</p>
             <button class="delete-button" @click="deleteMember()">삭제</button>
           </div>
         </div>
@@ -40,11 +53,11 @@ export default {
   },
   created() 
   {
-
     this.$Adminaxios.get(`/MembersDetails/${this.$route.params.id}`)
       .then(resp => {
-        this.trainer = resp.data[0];
-        console.log(resp.data);
+        console.log(this.$route.params.id);
+        this.trainer = resp.data;
+        console.log("trainer : " + this.trainer);
       })
       .catch(error => {
         console.error("Error fetching user details: ", error);
@@ -52,8 +65,8 @@ export default {
 
       this.$Adminaxios.get(`/MembersFind/${this.$route.params.id}`)
       .then(resp => {
-        console.log(resp.data);
         this.member = resp.data;
+        console.log("member : " + this.member);
       })
       .catch(error => {
         console.error("Error fetching user details: ", error);
@@ -61,6 +74,17 @@ export default {
   }
   ,
   methods: {
+
+    formattingDate(dateValue) {
+    const date = new Date(dateValue);
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 1을 더합니다.
+    const day = date.getDate().toString().padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+},
+
+
   deleteMember() {
     const nnum = this.trainer.nnum;
     const tnum = this.trainer.tnum;
@@ -72,7 +96,7 @@ export default {
           this.$Adminaxios.delete(`/nordel/${nnum}`)
             .then(response => {
             alert(response.data);
-            this.$router.push('/a_userList')
+            this.$router.push('/admin/a_userList')
             })
             .catch(error => {
             console.error('Error deleting the user:', error);
@@ -87,7 +111,7 @@ export default {
           this.$Adminaxios.delete(`/ptdel/${tnum}`)
             .then(response => {
             alert(response.data);
-            this.$router.push('/a_userList')
+            this.$router.push('/admin/a_userList')
             })
             .catch(error => {
             console.error('Error deleting the user:', error);

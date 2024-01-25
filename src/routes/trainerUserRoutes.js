@@ -6,6 +6,8 @@ import pt_coupon from "@/views/pt/pt-coupon.vue";
 import pt_review from "@/views/pt/pt-review.vue";
 import pt_chat from "@/views/pt/pt-chat.vue";
 import pt_chatroom from "@/views/pt/pt-chatroom.vue";
+import PTmember_edit from "@/views/pt/pt-member_edit.vue";
+
 
 const trainerRoutes = [
     {path: "/trainer/pt_home", component: PT_Home},
@@ -16,6 +18,8 @@ const trainerRoutes = [
     {path: "/trainer/pt_review", component: pt_review},
     {path: "/trainer/pt_chat", component: pt_chat},
     {path: "/trainer/pt_chatroom", component: pt_chatroom},
+    { path: "/trainer/pt_member_edit/", component: PTmember_edit },
+
 ];
 
 export default trainerRoutes;
