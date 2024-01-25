@@ -69,18 +69,7 @@ export default {
         arrowLine.setAttribute('transform', `rotate(${this.arrowXpoint} 140 140)`);
       }
     },
-    handleDateChange() {
-      // 사용자가 선택한 날짜를 받아옴
-      const selectedDate = new Date(this.user.birth);
-
-      // 날짜를 원하는 형식으로 변환 (여기서는 "YY/MM/DD" 형식)
-      const year = selectedDate.getFullYear() % 100;
-      const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
-      const day = selectedDate.getDate().toString().padStart(2, '0');
-
-      // 변환된 날짜를 다시 모델에 할당
-      this.user.birth = `${year}/${month}/${day}`;
-    },
+    
 
 
     setgender(gender) {
@@ -145,7 +134,7 @@ export default {
             </li>
             <li>
               <label for="user.birth">생년월일</label>
-              <input class="form-control" type="date" id="user.birth" v-model="user.birth" @change="handleDateChange">
+              <input class="form-control" type="date" id="user.birth" v-model="user.birth">
             </li>
             <li>
               <label for="user.height">키(cm)</label>
@@ -298,7 +287,9 @@ export default {
     transform: rotateY(1turn);
   }
 } */
-
+.btn{
+  background-color: #000000;
+}
 .main {
   display: flex;
   justify-content: center;
