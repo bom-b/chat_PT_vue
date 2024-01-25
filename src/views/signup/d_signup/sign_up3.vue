@@ -164,6 +164,7 @@ export default {
                   <path id="curvetxt3" d="M95 3 A140 140, 0, 0, 1, 284 140" style="fill: #none;"></path>
                   <path id="curvetxt4" d="M235.4 33 A140 140, 0, 0, 1, 284 140" style="fill: #none;"></path>
                 </defs>
+                
                 <path
                   d="M0 140 A140 140, 0, 0, 1, 6.9 96.7 A140 140, 0, 0, 1, 12.1 83.1 A140 140, 0, 0, 1, 22.6 63.8 L140 140 Z"
                   fill="#1E90FF"></path>
