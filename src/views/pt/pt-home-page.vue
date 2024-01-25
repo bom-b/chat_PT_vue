@@ -127,7 +127,7 @@
       </div>
     </section>
 
-    <!--  -->
+
     <section>
       <div class="card card_plale">
         <div class="card-header">
