@@ -156,10 +156,13 @@ export default {
   },
   data() {
     return {
+      
       navLinks: [
         {name: "수강회원 관리", route: "/trainer/pt_members"},
         {name: "스케줄 관리", route: "/trainer/pt_schedule"},
         {name: "프로필 관리", route: "/trainer/pt_profile"},
+        {name: "마이페이지 수정", route: "/trainer/pt_member_edit"},
+
       ],
     };
   },
