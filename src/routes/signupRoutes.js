@@ -22,10 +22,10 @@ const adminRoutes = [
 
     // 일반 회원가입
     {path: "/signUp/sign_up", component:Sign_up_master},
-    // {path: "/signUp/sign_up1", component: Sign_up},
-    // {path: "/signUp/sign_up2", component: Sign_up2},
-    // {path: "/signUp/sign_up3", component: Sign_up3},
-    // {path: "/signUp/sign_up4", component: Sign_up4},
+    {path: "/signUp/sign_up1", component: Sign_up},
+    {path: "/signUp/sign_up2", component: Sign_up2},
+    {path: "/signUp/sign_up3", component: Sign_up3},
+    {path: "/signUp/sign_up4", component: Sign_up4},
 
     // pt쌤 회원가입
     {path: "/signUp/pt_sign_up", component: PT_Sign_up_master},
