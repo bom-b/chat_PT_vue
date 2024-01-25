@@ -133,7 +133,6 @@ export default {
       navLinks: [
         {name: "회원 관리", route: "/admin/a_userList"},
         {name: "데이터 관리", route: "/admin/a_checkFood"},
-        {name: "신고 관리", route: "/admin/a_report"},
       ],
     };
   },

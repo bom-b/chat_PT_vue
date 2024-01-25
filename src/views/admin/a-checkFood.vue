@@ -20,13 +20,34 @@
   width: 80px;
 }
 
-.transparent-table {
-  background-color: #f8f9f8;
+.checkbox-custom {
+  transform: scale(1.5); /* 크기 조정 */
+  cursor: pointer; /* 마우스 오버 시 커서 변경 */
+}
+
+/* 테이블 헤더 및 셀을 위한 스타일 */
+.transparent-table th,
+.transparent-table td {
+  text-align: left; /* 기본적으로 왼쪽 정렬 */
+  vertical-align: middle; /* 수직 중앙 정렬 */
   border: none;
 }
 
-.transparent-table th,
-.transparent-table td {
+/* 체크박스 열을 오른쪽 정렬 */
+.transparent-table th:last-child,
+.transparent-table td:last-child {
+  text-align: right; /* 오른쪽 정렬 */
+}
+
+/* 이미지 크기 조정 */
+.list-profile {
+  width: auto; /* 원본 비율 유지 */
+  height: 80px; /* 높이 설정 */
+  border-radius: 50%; /* 원형 이미지 */
+}
+
+.transparent-table {
+  background-color: #f8f9f8;
   border: none;
 }
 
@@ -90,7 +111,7 @@
             id="search"
           />
         </div>
-        <div class="col-12 col-md-6 text-right">
+        <div class="col-12 col-md-2 text-right">
           <button class="btn btn-primary" @click="handleSendJson">학습시키기</button>
           <button class="btn btn-danger" @click="handleDelete">삭제</button>
         </div>
@@ -99,38 +120,40 @@
       <table class="table transparent-table mt-3">
         <thead>
           <tr>
-            <th class="col-1">
+            <th class="col-6">업로드 사진</th>
+            <th class="col-6">정보</th>
+            <th class="col-2">
               <input type="checkbox" @change="handleSelectAllChange" v-model="selectAll" />
             </th>
-            <th class="col-3">사진</th>
-            <th class="col-8">정보</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(dataRow, index) in filteredItems" :key="dataRow.edit_request_id">
-  <td>
-    <input
-      type="checkbox"
-      :id="`checkbox${index + 1}`"
-      :value="dataRow.edit_request_id"
-      v-model="checkItems"
-    />
-  </td>
+          <tr v-for="(dataRow, index) in filteredSortedItems" :key="dataRow.edit_request_id">
             <td>
               <img
-                :src="dataRow.img_edit"
+                :src="`${this.$s3BaseURL}/user_upload_food/${dataRow.upphotoid}.jpg`"
                 alt=""
                 class="list-profile rounded-circle"
+                style="width:300px; height:300px;"
               />
             </td>
             <td class="pt-description">
-              <p class="mb-3">수정 요청 ID : {{ dataRow.edit_request_id }}</p>
-              <p class="mb-3">업로드 사진 ID : {{ dataRow.up_photo_id }}</p>
-              <p class="mb-3">요청 상태 : {{ dataRow.edit_request_status }}</p>
-              <p class="mb-3">수정 코멘트 : {{ dataRow.img_editcomment }}</p>
+              <p class="mb-3">요청 번호 : {{ dataRow.edit_request_id }}</p>
+              <p class="mb-3">요청 아이디: {{ dataRow.nnum }}</p>
+              <p class="mb-3">번호: {{ dataRow.upphotoid }}</p>
+              <p class="mb-3">코멘트 : {{ dataRow.img_editcomment }}</p>
               <p class="mb-3">수정 전 데이터 : {{ dataRow.before_data }}</p>
               <p class="mb-3">수정 후 데이터 : {{ dataRow.after_data }}</p>
             </td>
+              <td>
+                <input
+                  type="checkbox"
+                  :id="`checkbox${index + 1}`"
+                  :value="dataRow.edit_request_id"
+                  style="width: 50px ; height: 50px; margin: height: 300px; display: flex; align: right;"
+                  v-model="checkItems"
+                />
+              </td>
           </tr>
         </tbody>
       </table>
@@ -157,11 +180,23 @@ export default {
   computed: {
     filteredItems() {
       return this.items.filter((item) => 
-        item.after_data.toLowerCase().includes(this.searchKeyword.toLowerCase())
+        item.img_editcomment.toLowerCase().includes(this.searchKeyword.toLowerCase())
       );
     },
+    sortedItems() {
+    return this.items.slice().sort((a, b) => {
+      return a.edit_request_id - b.edit_request_id; // 오름차순 정렬
+    });
   },
-
+  filteredSortedItems() {
+    if (!this.searchKeyword) {
+      return this.sortedItems;
+    }
+    return this.sortedItems.filter(item => 
+      item.img_editcomment.toLowerCase().includes(this.searchKeyword.toLowerCase())
+    );
+  }
+},
   watch: {
     // checkItems 배열을 감시
     checkItems(newVal) {

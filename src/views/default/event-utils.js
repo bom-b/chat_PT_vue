@@ -8,10 +8,8 @@ export function getEventColor(title) {
 
   switch (title) {
     case "아침":
-      console.log("맞지?")
       return '#555555'; 
       case "점심":
-      console.log("asasd")
       return '#555555'; 
     case "저녁":
       return '#777777'; 
