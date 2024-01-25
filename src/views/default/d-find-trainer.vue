@@ -10,7 +10,7 @@
           <div class="carousel__item">
             <a :href="`/default/d_trainer_detail/${slide.memberVO.id}`">
               <div class="card" style="width:100%;">
-                <img :src="`${this.$s3BaseURL}/trainer/profile_img/${slide.mainimage}`" style="width: 100%;" />
+                <img :src="`${this.$s3BaseURL}/trainer/profile_img/${slide.mainimage}`" style="width: 300px; height: 450px;" />
 
                 <div class="container">
                   <h4><b>{{ slide.memberVO.name }}</b></h4>
@@ -47,7 +47,7 @@
           <li v-for="(trainer, idx) in myRegionTrainer" :key="idx" class="card2">
 
             <div class="image-container">
-              <img :src="`${this.$s3BaseURL}/trainer/profile_img/${trainer.mainimage}`" alt="Profile Picture">
+              <img :src="`${this.$s3BaseURL}/trainer/profile_img/${trainer.mainimage}`" alt="Profile Picture" >
             </div>
             <div class="info">
               <div class="card-title">
@@ -57,11 +57,11 @@
               <table class="mt-4 trainer-info-table">
                 <tr>
                   <td class="pine_Green_text" style="font-size: 1.25rem; font-weight: bold;">간단 자기 소개 : </td>
-                  <td>{{ trainer.trainerintro }}</td>
+                  <td>{{ trainer.trainercomment }}</td>
                 </tr>
                 <tr>
                   <td class="pine_Green_text" style="font-size: 1.25rem; font-weight: bold;">상담 가능 시간 : </td>
-                  <td>{{ trainer.starttime }} ~ {{ trainer.endtime }} </td>
+                  <td> {{ trainer.starttime }}시 ~ {{ trainer.endtime }}시 </td>
                 </tr>
               </table>
             </div>
