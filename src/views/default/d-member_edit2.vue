@@ -1,16 +1,32 @@
+S3되는코드
+
 <template>
   <div class="user-edit-form" style="user-select: none">
     <form @submit.prevent="updateUserInfo" class="form-container">
       <h2 class="form-title">회원 정보 수정</h2>
-      <div class="form-row">
-        <div>
-          <img :src="previewImage ||
+      <div class="form-row profile-image-section">
+        <img
+          :src="
+            previewImage ||
             `${this.$s3BaseURL}/normal_user/profile_img/${userInfo.nm_PROFILEIMG}`
-            " alt="Profile Preview" class="profile-image" @click="openImagePicker" style="width: 250px" />
-          <input ref="profileImageInput" @change="handleImageChange" type="file" id="profileImage" class="form-input"
-            style="display: none" />
-          <p>* 프로필 이미지 : 클릭 시 수정</p>
-        </div>
+          "
+          alt="Profile Preview"
+          class="profile-image"
+          @click="openImagePicker"
+        />
+        <input
+          ref="profileImageInput"
+          @change="handleImageChange"
+          type="file"
+          id="profileImage"
+          class="form-input"
+          style="display: none"
+        />
+        <p>* 프로필 이미지 : 클릭 시 수정</p>
+
+        <button @click="updateProfileImage" class="submit-button">
+          프로필 이미지 업데이트
+        </button>
       </div>
 
       <div class="row">
@@ -21,7 +37,11 @@
         <div class="col">
           <div class="card">
             <div class="card-title">
-              <img src="@/assets/img/icon/유저정보아이콘.png" alt="기본정보아이콘" style="width: 50px" />
+              <img
+                src="@/assets/img/icon/유저정보아이콘.png"
+                alt="기본정보아이콘"
+                style="width: 50px"
+              />
               기본 정보
             </div>
             <div class="form-group">
@@ -29,33 +49,76 @@
                 <b style="color: red">*</b>
                 아이디
               </label>
-              <input disabled readonly type="text" id="id" class="form-input" :value="userInfo.ID" />
+              <input
+                disabled
+                readonly
+                type="text"
+                id="id"
+                class="form-input"
+                :value="userInfo.ID"
+              />
             </div>
             <div class="form-group">
-              <label for="PASSWORD">
-                <b style="color: red">*</b>
-                패스워드</label>
-              <input v-model="userInfo.PASSWORD" type="password" id="PASSWORD" class="form-input"
-                @focus="activateLabel('PASSWORD')" @focusout="onPasswordFocusOut" />
+              <label for="newPassword"
+                ><b style="color: red">*</b>새 비밀번호</label
+              >
+              <input
+                v-model="userInfo.password"
+                type="password"
+                id="newPassword"
+                class="form-input"
+              />
+              {{ this.newPassword }}
+            </div>
+            <div class="form-group">
+              <label for="confirmPassword"
+                ><b style="color: red">*</b>새 비밀번호 확인</label
+              >
+              <input
+                v-model="confirmPassword"
+                type="password"
+                id="confirmPassword"
+                class="form-input"
+              />
             </div>
 
             <div class="form-group">
               <label for="region">
                 <b style="color: red">*</b>
-                지역</label>
-              <input @click="search" v-model="userInfo.region" type="text" id="region" class="form-input"
-                @focus="activateLabel('region')" @focusout="activateLabel('region')" />
+                지역</label
+              >
+              <input
+                @click="search"
+                v-model="userInfo.region"
+                type="text"
+                id="region"
+                class="form-input"
+                @focus="activateLabel('region')"
+                @focusout="activateLabel('region')"
+              />
             </div>
 
             <div class="form-group">
-              <label for="kakaocode">카카오코드 |
-                <a style="size: 10px; color: grey">
-                  카카오 챗봇 QR은 아래에 있습니다.</a>
+              <label for="kakaocode"
+                >카카오코드 |
+                <a style="size: 10px; color: grey"
+                  >카카오 챗봇 QR은 아래에 있습니다.</a
+                >
               </label>
-              <input v-model="userInfo.kakaocode" type="text" id="kakaocode" class="form-input"
-                @focus="activateLabel('kakaocode')" @focusout="activateLabel('kakaocode')" />
-              <img v-if="userInfo.kakaocode === null" :src="kakaoQRImage" @click="showQRModal"
-                style="border: 20px; margin: 5px" />
+              <input
+                v-model="kakaoCodeInput"
+                type="text"
+                id="kakaocode"
+                class="form-input"
+                @focus="activateLabel('kakaocode')"
+                @focusout="activateLabel('kakaocode')"
+              />
+              <img
+                v-if="userInfo.kakaocode === null"
+                :src="kakaoQRImage"
+                @click="showQRModal"
+                style="border: 20px; margin: 5px"
+              />
             </div>
           </div>
         </div>
@@ -63,32 +126,59 @@
         <div class="col">
           <div class="card">
             <div class="card-title">
-              <img src="@\assets\img\icon\건강정보아이콘.png" alt="건강정보아이콘" style="width: 50px" />
+              <img
+                src="@\assets\img\icon\건강정보아이콘.png"
+                alt="건강정보아이콘"
+                style="width: 50px"
+              />
               건강 정보
             </div>
             <div class="form-group">
               <label for="height">
                 <b style="color: red">*</b>
-                신장(cm)</label>
-              <input v-model="userInfo.height" type="text" id="height" class="form-input" />
+                신장(cm)</label
+              >
+              <input
+                v-model="userInfo.height"
+                type="text"
+                id="height"
+                class="form-input"
+              />
             </div>
             <div class="form-group">
               <label for="weight">
                 <b style="color: red">*</b>
-                몸무게(kg)</label>
-              <input v-model="userInfo.weight" type="text" id="weight" class="form-input" />
+                몸무게(kg)</label
+              >
+              <input
+                v-model="userInfo.weight"
+                type="text"
+                id="weight"
+                class="form-input"
+              />
             </div>
             <div class="form-group">
               <label for="target_WEIGHT">
                 <b style="color: red">*</b>
-                목표 몸무게(kg)</label>
-              <input v-model="userInfo.target_WEIGHT" type="text" id="target_WEIGHT" class="form-input" />
+                목표 몸무게(kg)</label
+              >
+              <input
+                v-model="userInfo.target_WEIGHT"
+                type="text"
+                id="target_WEIGHT"
+                class="form-input"
+              />
             </div>
             <div class="form-group">
               <label for="purpose">
                 <b style="color: red">*</b>
-                운동 목적</label>
-              <select v-model="userInfo.purpose" id="purpose" class="form-input">
+                운동 목적</label
+              >
+              <select
+                v-model="userInfo.purpose"
+                id="purpose"
+                class="form-input"
+              >
                 <option value="0">다이어트 📉</option>
                 <option value="1">체중유지 🛑</option>
                 <option value="2">벌크업 📈</option>
@@ -111,7 +201,9 @@ export default {
         purpose: "0", // 기본값 설정
       },
       postOpen: false, // 포스트 때문에
+      newPassword: "",
       confirmPassword: "",
+
       previewImage: "",
       kakaoQRImage: this.getImageUrl("qrkakao.png"), // QR 이미지 경로
       showQR: false, // QR 이미지 모달을 표시할지 여부
@@ -119,6 +211,16 @@ export default {
   },
   mounted() {
     this.fetchUserInfo();
+  },
+  computed: {
+    kakaoCodeInput: {
+      get() {
+        return this.userInfo.kakaocode === null ? "" : this.userInfo.kakaocode;
+      },
+      set(value) {
+        this.userInfo.kakaocode = value;
+      },
+    },
   },
   methods: {
     search() {
@@ -170,43 +272,82 @@ export default {
     activateLabel(field) {
       this.activeLabels[field] = true;
     },
-    async updateUserInfo() {
-      try {
-        // 비밀번호 확인
-        const { value: password } = await this.$swal.fire({
-          title: "비밀번호 확인",
-          text: "새 비밀번호를 다시 입력해 주세요",
-          input: "password",
-          // ... 기존 SweetAlert 설정 ...
-        });
+    // 프로필 이미지 업데이트 메서드
+    async updateProfileImage() {
+      if (
+        this.userInfo.nm_PROFILEIMG_file &&
+        typeof this.userInfo.nm_PROFILEIMG_file === "object"
+      ) {
+        try {
+          let formData = new FormData();
+          formData.append("uploadImgs", this.userInfo.nm_PROFILEIMG_file);
+          const imageResponse = await this.$axiosWithoutValidation.post(
+            "/updateprofileimg",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+          // 서버로부터 반환된 파일 이름을 nm_PROFILEIMG에 저장
+          if (imageResponse.data && imageResponse.data.filename) {
+            this.userInfo.nm_PROFILEIMG_file = imageResponse.data.filename;
+          }
+          this.fetchUserInfo(); // 사용자 정보를 다시 가져옵니다.
 
-        if (!password || password !== this.userInfo.PASSWORD) {
-          this.$swal.showValidationMessage("패스워드가 일치하지 않습니다");
-          return;
+        } catch (error) {
+          console.error("프로필 이미지 업데이트 실패", error);
         }
+      }
+    },
 
-        // 파일 업로드 및 사용자 정보 업데이트
+    // 기존 사용자 정보 업데이트 메서드 (프로필 이미지 관련 코드 제거)
+    async updateUserInfo() {
+      // 새 비밀번호 확인
+      if (
+        this.userInfo.password !== this.confirmPassword &&
+        this.userInfo.password != null
+      ) {
+        alert("비밀번호가 일치하지 않습니다.");
+        return;
+      }
+
+      // 새 비밀번호 설정
+      this.userInfo.PASSWORD = this.userInfo.password;
+
+      try {
+        // 사용자 정보 업데이트를 위한 FormData 준비
         let formData = new FormData();
         for (let key in this.userInfo) {
-          formData.append(key, this.userInfo[key]);
-          console.log(this.userInfo[key], key)
+            // 프로필 이미지 관련 항목 제외
+            formData.append(key, this.userInfo[key]);
+            console.log(key, this.userInfo[key])
+          
         }
 
-        if (this.userInfo.NM_PROFILEIMG && typeof this.userInfo.NM_PROFILEIMG === 'object') {
-          formData.append("NM_PROFILEIMG", this.userInfo.NM_PROFILEIMG);
+        console.log(formData)
 
-          const imageResponse = await this.$axiosWithoutValidation.post("/s3upload", formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
+        // 사용자 정보 업데이트 요청
+        const updateResponse = await this.$axios.post(
+          "/updateUserInfo",
+          formData
+        );
+        console.log(
+          "Axios, updateuserInfo 정보 보내기 successfully",
+          updateResponse
+        );
 
-          // S3 업로드 후 반환된 이미지 URL을 userInfo에 설정
-          this.userInfo.NM_PROFILEIMG = imageResponse.data;
-        }
+        // 정보 수정 완료 확인 메시지
+        await this.$swal.fire({
+          title: "성공!",
+          text: "회원 정보가 성공적으로 수정되었습니다.",
+          icon: "success",
+          confirmButtonText: "확인",
+        });
 
-        const updateResponse = await this.$axios.post("/updateuserInfo", formData);
-        console.log("Axios, updateuserInfo 정보 보내기 successfully", updateResponse);
+        // 페이지 새로고침
+        location.reload();
       } catch (error) {
         console.error("Axios, updateuserInfo 정보 보내기 실패", error);
       }
@@ -233,7 +374,7 @@ export default {
             role: userData.role,
             // birth:  userData.birth,
             target_WEIGHT: userData.target_WEIGHT,
-            kakaocode: userData.kakaocode,
+            kakaocode: userData.kakaocode ? userData.kakaocode : "",
             height: userData.height,
             activity: userData.activity,
             weight: userData.weight,
@@ -264,40 +405,13 @@ export default {
       const file = event.target.files[0];
       if (file) {
         this.previewImage = URL.createObjectURL(file);
-        this.userInfo.NM_PROFILEIMG = file; // 사용자 정보에 이미지 파일 추가
+        this.userInfo.nm_PROFILEIMG = file.name; // 사용자 정보에 이미지 파일 추가
+        this.userInfo.nm_PROFILEIMG_file = file; // 사용자 정보에 이미지 파일 추가
+
       }
     },
     // 패스워드 입력 필드의 focusout 이벤트 처리
-    onPasswordFocusOut() {
-      // SweetAlert를 사용하여 입력 팝업 표시
-      this.$swal
-        .fire({
-          title: "비밀번호 확인",
-          text: "비밀번호를 다시 입력해 주세요",
-          input: "password",
-          inputAttributes: {
-            autocapitalize: "off",
-            autocorrect: "off",
-          },
-          showCancelButton: true,
-          confirmButtonText: "확인",
-          cancelButtonText: "취소",
-          showLoaderOnConfirm: true,
-          preConfirm: (password) => {
-            // 사용자가 입력한 패스워드와 기존 패스워드 비교
-            if (password !== this.userInfo.PASSWORD) {
-              this.$swal.showValidationMessage("패스워드가 일치하지 않습니다");
-            }
-          },
-          allowOutsideClick: () => !this.swal.isLoading(),
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            // 패스워드가 일치하면 실행될 로직
-            console.log("패스워드가 확인되었습니다.");
-          }
-        });
-    },
+
     // 이미지 경로 잡기 위함
     getImageUrl(path) {
       return require("@/assets/img/" + path);
