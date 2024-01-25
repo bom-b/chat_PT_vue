@@ -69,6 +69,18 @@ export default {
         arrowLine.setAttribute('transform', `rotate(${this.arrowXpoint} 140 140)`);
       }
     },
+    handleDateChange() {
+      // 사용자가 선택한 날짜를 받아옴
+      const selectedDate = new Date(this.user.birth);
+
+      // 날짜를 원하는 형식으로 변환 (여기서는 "YY/MM/DD" 형식)
+      const year = selectedDate.getFullYear() % 100;
+      const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+      const day = selectedDate.getDate().toString().padStart(2, '0');
+
+      // 변환된 날짜를 다시 모델에 할당
+      this.user.birth = `${year}/${month}/${day}`;
+    },
 
 
     setgender(gender) {
@@ -113,7 +125,7 @@ export default {
           aria-valuemin="0" aria-valuemax="100"></div>
       </div>
       <div class="container mt-5 pt-2" style="margin-top: 100px;">
-        <div id="title-box" >
+        <div id="title-box">
           <h2 id="title">정확한 판단을 위해 정보를 입력해주세요.</h2>
         </div>
         <div class="input-container">
@@ -133,7 +145,7 @@ export default {
             </li>
             <li>
               <label for="user.birth">생년월일</label>
-              <input class="form-control" type="date" id="user.birth" v-model="user.birth">
+              <input class="form-control" type="date" id="user.birth" v-model="user.birth" @change="handleDateChange">
             </li>
             <li>
               <label for="user.height">키(cm)</label>
@@ -164,7 +176,7 @@ export default {
                   <path id="curvetxt3" d="M95 3 A140 140, 0, 0, 1, 284 140" style="fill: #none;"></path>
                   <path id="curvetxt4" d="M235.4 33 A140 140, 0, 0, 1, 284 140" style="fill: #none;"></path>
                 </defs>
-                
+
                 <path
                   d="M0 140 A140 140, 0, 0, 1, 6.9 96.7 A140 140, 0, 0, 1, 12.1 83.1 A140 140, 0, 0, 1, 22.6 63.8 L140 140 Z"
                   fill="#1E90FF"></path>
