@@ -24,7 +24,7 @@
 }
 
 #upload-section {
-  height: 750px;
+  height: 650px;
 }
 
 .chart-section {
@@ -133,8 +133,11 @@ img {
 }
 
 .drag-drop-container {
-  width: 900px !important;
-  height: 450px !important;
+  width: 600px ;
+  height: 250px; /* 최소 높이를 원래 설정한 높이로 지정 */
+  background-color: transparent;
+  border: 2px dashed green;
+  box-shadow: none;
 }
 
 #changeWeight-container {
@@ -301,10 +304,10 @@ img {
             <h3 id="plz-up" class="TheJamsil400" style=" white-space: nowrap">오늘의 식단을 업로드 해주세요!</h3>
             <p class="pine_Green_text" style=" white-space: nowrap">사진을 전부 등록 해주시면 저희가 분류해드릴게요.</p>
             <div id="MultiImageUploader">
-              <MultiImageUploader/>
+              <FakeMultiImageUploader/>
             </div>
             <div id="mobile-btn-box">
-              <button class="mobile-btn" @click="triggerFileInput">파일 선택</button>
+              <button class="mobile-btn" @click="$router.push('/default/d_upload_main')">등록하러가기</button>
             </div>
           </div>
         </div>
@@ -364,7 +367,7 @@ img {
     </section>
 
     <!--  식단 분석  -->
-    <section class="lime-green" style="min-height: 100%; height: 100; padding: 30px;">
+    <section class="lime-green" style="min-height: 100%; padding: 30px;">
       <div class="section1800">
         <div class="row" style="margin-top: 50px; text-align: center; display: flex;">
 
@@ -408,14 +411,14 @@ img {
   </main><!-- End #main -->
 </template>
 <script>
-import MultiImageUploader from '@/components/util/img-upload.vue';
+import FakeMultiImageUploader from '@/components/util/fake-img-upload.vue';
 import DynamicImage from '@/components/util/dynamic-image.vue';
 import {Chart, registerables} from 'chart.js';
 
 Chart.register(...registerables);
 export default {
   components: {
-    MultiImageUploader,
+    FakeMultiImageUploader,
     DynamicImage,
   },
 
@@ -473,6 +476,7 @@ export default {
         ]
       },
       showChart: true, // 차트를 보여줄지 여부를 조정하는 데이터 속성
+      isModalVisible: false, // 모달 표시 여부
     };
   },
   mounted() {
@@ -483,6 +487,10 @@ export default {
   },
 
   methods: {
+    submitClassification() {
+      // 모달 표시
+      this.isModalVisible = true;
+    },
     async fetchDataAndCreateCharts() {
       try{
       const res = await this.$axios.get('/getRecommandDailyTandangi')

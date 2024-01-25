@@ -29,7 +29,7 @@
           </div>
           <!-- imgUpload 영역 -->
           <div class="imgUploadDiv">
-            <imgUpload :max-images="20" @image-uploaded="printImages($event)" />
+            <imgUpload :max-images="20" @image-uploaded="printImages($event)" @image-removed="removeImageFromTabs($event)"/>
           </div>
 
 
@@ -113,6 +113,15 @@ export default {
     this.selectedDate = new Date().toISOString().substring(0, 10);
   },
   methods: {
+    removeImageFromTabs(eventData) {
+      // eventData에는 삭제된 이미지의 인덱스 정보가 포함되어 있습니다.
+      const { index } = eventData;
+
+      // tabImages의 각 카테고리에서 해당 인덱스의 이미지를 삭제합니다.
+      Object.keys(this.tabImages).forEach(category => {
+        this.tabImages[category] = this.tabImages[category].filter((_, imgIndex) => imgIndex !== index);
+      });
+    },
     dragStart(event, image, category) {
       event.dataTransfer.setData('image-info', JSON.stringify({ image, category }));
     },

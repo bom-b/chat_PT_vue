@@ -77,9 +77,9 @@
               <div class="m_category">
                 <h3>수상경력</h3>
                 <div class="career">
-                  <div v-for="(award, index) in awards" :key="index" class="input-group mb-3">
-                    <button class="btn btn-danger" @click="removeAward(index)">-</button>
-                    <input class="form-control" v-model="award.value">
+                  <div v-for="(value, key) in awards" :key="key" class="input-group mb-3">
+                    <button class="btn btn-danger" @click="removeAward(key)">-</button>
+                    <input class="form-control" v-model="awards[key]">
                   </div>
                   <button class="btn btn-success" @click.prevent="addAward">+</button>
                 </div>
@@ -328,7 +328,7 @@ export default {
     return {
       uploadedImages: [], // 업로드된 이미지들을 저장하는 배열
       mainImage: null,
-      awards: [],
+      awards: {},
       region: "",
       starttime: '',
       endtime: '',
@@ -448,13 +448,17 @@ export default {
         this.mainImage = selectedImage;
       }
     },
-
     addAward() {
-      this.awards.push({ value: '' });
+      const nextKey = Object.keys(this.awards).length;
+      this.awards[nextKey] = '';
+      console.log('Awards after adding:', this.awards);
     },
-    removeAward(index) {
-      this.awards.splice(index, 1);
+
+    removeAward(key) {
+      delete this.awards[key];
+      console.log('Awards after removal:', this.awards);
     },
+
     removeContest(index) {
       if (this.awards.length > 1) {
         this.awards.splice(index, 1);
@@ -496,16 +500,14 @@ export default {
           region: this.region,
           trainercomment: this.trainercomment,
           trainerintro: this.trainerintro,
-          awards: this.awards,
+          awards: Object.values(this.awards),
           starttime: this.starttime,
           endtime: this.endtime,
           // mainimage: this.mainImage,
           gym: this.gym,
           imgs: this.myBase64Img
-
-        
-
         };
+        console.log("data.imgs : " + data.imgs);
         if (isValid) {
           const signup = await Swal.fire({
             title: "",
