@@ -41,15 +41,19 @@
                     <button class="close-button" @click="closePopover()">&#10006;</button> <!-- X 버튼이 있는 줄 -->
                   </div>
                   <div v-if="!e.editMode">
-                    <p>음식명: {{ foods[e.foodnum] }} {{ e.predictrate }}%</p>
+                    <p>음식명: {{ e.foodName }}
+                      <span v-if="e.predictrate !== 0">
+                        {{ e.predictrate }}%
+                      </span>
+                    </p>
                     <p>양: {{ e.mass }}g</p>
                     <p>칼로리: {{ e.foodcal.toFixed(2) }}Kcal</p>
                     <p>탄수화물: {{ e.food_TAN }}g</p>
                     <p>단백질: {{ e.food_DAN }}g</p>
                     <p>지방: {{ e.food_GI }}g</p>
-                    <p>후보1: {{ foods[e.candidate1] }} {{ e.candidate1RATE }}%</p>
-                    <p>후보2: {{ foods[e.candidate2] }} {{ e.candidate2RATE }}%</p>
-                    <p>후보3: {{ foods[e.candidate3] }} {{ e.candidate3RATE }}%</p>
+                    <p>후보1: {{ foods[e.candidate1] }} <span v-if="e.candidate1RATE !== 0">{{ e.candidate1RATE }}%</span></p>
+                    <p>후보2: {{ foods[e.candidate2] }} <span v-if="e.candidate2RATE !== 0">{{ e.candidate2RATE }}%</span></p>
+                    <p>후보3: {{ foods[e.candidate3] }} <span v-if="e.candidate3RATE !== 0">{{ e.candidate3RATE }}%</span></p>
                     <button class="btn btn-primary" @click="editFood(e)" style="float: right;">수정</button>
                     <button class="btn btn-danger" @click="deleteFood(e.upphotoid)" style="float: right;">삭제</button>
                   </div>
@@ -339,9 +343,18 @@ export default {
       console.log("updatedData.foodName : " + updatedData.foodName)
       // 음식명이 변경된 경우 관리자 검수 요청
       if (nameChanged) {
-        if (updatedData.selectedCandidate == null) {
-          updatedData.selectedCandidate = -1;
+        // foods 객체에서 음식 이름으로 번호 찾기
+        let matchedKey = Object.keys(this.foods).find(key =>
+            this.foods[key].normalize().includes(updatedData.foodName.normalize())
+        );
+        // 음식명이 foods 객체에 있으면 해당 번호를 사용, 없으면 -1
+        if (matchedKey !== undefined) {
+          updatedData.selectedCandidate = matchedKey;
+        } else {
+          updatedData.selectedCandidate = -1; // 일치하는 항목이 없는 경우
         }
+        console.log("updatedData.selectedCandidate : " + updatedData.selectedCandidate)
+
         this.$axios.post('/requestNameChange', {
           upphotoid: upphotoid,
           imgeditcomment: updatedData.foodName,
