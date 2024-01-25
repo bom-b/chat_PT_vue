@@ -324,6 +324,7 @@
 <script>
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
+// import ImgUpload from "@/components/util/img-upload.vue";
 export default {
   data() {
     return {
