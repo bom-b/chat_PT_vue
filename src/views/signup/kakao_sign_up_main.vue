@@ -107,7 +107,7 @@ export default {
       return this.newKakaoUserData.nickname || '';
     },
     kakaoEmail() {
-      return this.kakaoUserData.email || '';
+      return this.newKakaoUserData.email || '';
     }
   },
   methods: {
