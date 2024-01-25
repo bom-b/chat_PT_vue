@@ -287,9 +287,9 @@ button:hover {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
 }
 
-.card img {
-  width: 100%;
-  height: auto;
+.card-img-top {
+  width: 218px;
+  height: 218px;
   border-radius: 8px; /* 이미지에도 둥근 모서리 적용 */
 }
 
