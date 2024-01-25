@@ -230,14 +230,12 @@ export default {
             <li>
               <label for="activity">활동량</label>
               <div class="purpose_list">
-                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 0 }" id=""
-                  @click="setActivity(0)"> 안 함</button>
-                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 1 }" id="no1"
-                  @click="setActivity(1)"> 저강도 </button>
-                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 2 }" id="no2"
-                  @click="setActivity(2)"> 중강도 </button>
-                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 3 }" id="no2"
-                  @click="setActivity(3)"> 고강도 </button>
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 0 }" id="week12"
+                  @click="setActivity(0)"> 주 1~2일 운동 </button>
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 1 }" id="week34"
+                  @click="setActivity(1)"> 주 3~4일 운동 </button>
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 2 }" id="every"
+                  @click="setActivity(2)"> 매일 운동 </button>
               </div>
             </li>
           </ul>
