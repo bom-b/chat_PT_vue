@@ -1,9 +1,28 @@
 <style scoped>
 @media (max-width: 768px) {
   #hero {
-    margin-left: 10px;
+    margin: 10px;
     height: 350px;
     width: 6px;
+    background-position: center; /* 배경 이미지를 가운데 정렬 */
+    color: white; /* 텍스트 색상을 설정하세요 (배경 이미지에 대한 대비를 높이기 위해) */
+    text-align: left;
+  }
+
+  .floating-widget {
+    position: fixed;
+    top: 100px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255);
+    border: 1px solid #ccc;
+    opacity: 1;
+  }
+}
+@media (min-width: 769px) {
+  #hero {
+    margin: 10px;
+    height: 350px;
+    width: 10px;
     background-position: center; /* 배경 이미지를 가운데 정렬 */
     color: white; /* 텍스트 색상을 설정하세요 (배경 이미지에 대한 대비를 높이기 위해) */
     text-align: left;
@@ -45,7 +64,6 @@
         <img src="@/assets/img/icon/Frame-5.png" style="margin: 10px" />
       </div>
       <div class="col-md-11">
-        target
         <component :is="currentComponent" />
       </div>
     </div>
@@ -53,11 +71,11 @@
 </template>
 
 <script>
-import PtSchedule from "@/views/default/d-find-trainer.vue"; //피티스케쥴로 링크
+// import PtSchedule from "@/views/default/d-find-trainer.vue"; //피티스케쥴로 링크
 
 export default {
   components: {
-    PtSchedule, //피티스케쥴로 링크
+    // PtSchedule, //피티스케쥴로 링크
   },
   data() {
     return {

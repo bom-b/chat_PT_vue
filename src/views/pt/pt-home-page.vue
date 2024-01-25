@@ -252,12 +252,10 @@
         <div class="card-header">
           <div class="faq-tab">
             <a class="faq-tab-item active">공지사항</a>
-            <!-- 추가 질문 탭들을 필요에 따라 추가 -->
           </div>
         </div>
 
         <div class="card-body">
-          <!-- 나머지 코드는 그대로 유지 -->
 
           <div class="content-box">
             <div class="title">
