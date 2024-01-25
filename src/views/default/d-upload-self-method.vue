@@ -83,6 +83,10 @@ export default {
       this.tabImages[tab].push(...newImages);
     },
     submitImages() {
+      if(Object.values(this.tabImages).every(images => images.length === 0)){
+        this.$swal.fire("음식 사진을 올려주세요!","","warning");
+        return;
+      }
       this.isLoading = true;
       const formData = new FormData();
       // tabImages 객체에 있는 각 탭별로 이미지 데이터를 순회

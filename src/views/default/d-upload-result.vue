@@ -32,7 +32,7 @@
                    class="uploaded-image"
               />
               <span class="food-name">{{ e.foodName }}</span>
-              <button class="btn btn-secondary" @click="togglePopover(e, $event)">
+              <button class="btn btn-detail" @click="togglePopover(e, $event)">
                 상세보기
               </button>
               <div>
@@ -228,40 +228,54 @@ export default {
       if (this.activePopover) {
         this.calculatePopoverPosition(event.target);
       }
+
     },
     calculatePopoverPosition(button) {
       const popoverWidth = 300; // 팝오버 너비
-      const popoverHeight = 450; // 팝오버 높이, 필요에 따라 조정
+      const popoverHeight = 450; // 팝오버 높이
+
       const buttonRect = button.getBoundingClientRect();
-      const buttonCenterX = buttonRect.left + (buttonRect.width / 2);
-      const buttonBottomY = buttonRect.bottom + window.scrollY;
 
-      let popoverX, popoverTop;
-      // 가로 위치 계산
-      if (buttonCenterX < window.innerWidth / 2) {
-        popoverX = buttonCenterX;
-      } else {
-        popoverX = buttonCenterX - popoverWidth;
+      let popoverX, popoverY;
+
+      // 버튼의 위치 계산
+      const buttonLeft = buttonRect.left;
+      const buttonTop = buttonRect.top;
+      const buttonRight = buttonRect.right;
+      const buttonBottom = buttonRect.bottom;
+      console.log("buttonLeft : " + buttonLeft);
+      console.log("buttonTop : " + buttonTop);
+      console.log("buttonRight : " + buttonRight);
+      console.log("buttonBottom : " + buttonBottom);
+
+      // 팝오버 위치 우선순위: 아래 > 오른쪽 > 위 > 왼쪽
+      popoverX = 0; // 기본적으로 버튼의 오른쪽
+      popoverY = 0; // 기본적으로 버튼의 아래쪽
+
+      // 오른쪽에 공간이 부족한 경우
+      if (window.innerWidth - buttonRight < popoverWidth) {
+        popoverX = -250; // 왼쪽으로 이동
+      }else{
+        popoverX = 150;
       }
 
-      // 세로 위치 계산
-      if (buttonBottomY + popoverHeight > window.innerHeight + window.scrollY) {
-        // 화면 아래쪽에 공간 부족 시, 팝오버를 위로
-        popoverTop = buttonRect.top + window.scrollY - popoverHeight;
-      } else {
-        // 공간 충분 시, 팝오버를 아래로
-        popoverTop = buttonBottomY;
+      // 아래쪽에 공간이 부족한 경우
+      if (window.innerHeight - buttonBottom< popoverHeight) {
+        popoverY = -240; // 위쪽으로 이동
+      }else{
+        popoverY = 260;
       }
-
+      console.log("popoverX : " + popoverX);
+      console.log("popoverY : " + popoverY);
       this.popoverStyle = {
-        left: popoverX + 'px',
-        top: popoverTop + 'px',
+        left: `${popoverX}px`,
+        top: `${popoverY}px`,
         opacity: 1,
+        position: 'absolute',
         transform: 'translateY(10px)',
         transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
       };
     },
-
     editFood(foodItem) {
       // 음식 편집 모드 활성화
       foodItem.editMode = true;
@@ -379,6 +393,20 @@ export default {
 
 
 <style lang="scss" scoped>
+.btn-detail {
+  background-color: #47b749; // 버튼 기본 배경색
+  color: white; // 버튼 글자색
+  border-radius: 5px; // 버튼의 모서리 둥글게
+  padding: 8px 15px; // 내부 여백
+  border: 1px solid transparent; // 테두리 스타일
+  transition: all 0.3s ease; // 부드러운 효과
+
+  &:hover {
+    background-color: #45a049; // 마우스 오버 시 배경색 변경
+    font-weight: bold;
+  }
+}
+
 .top-pad-class{
   padding-top: 100px;
 }

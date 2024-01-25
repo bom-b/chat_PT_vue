@@ -9,7 +9,8 @@
     <div class="row">
       <div class="col-3"></div>
       <div class="container col-6" style="margin: 100px 0 100px 0; text-align: center;">
-        <h3 id="plz-up" class="" style=" white-space: nowrap">식단을 한 번에 업로드 해주세요
+        <h3 id="plz-up" class="" style=" white-space: nowrap">
+          <span style="color: #2a9d8f;">식단을 한 번에 업로드 해주세요 </span>
           <i
               class="fas fa-info-circle"
               data-bs-toggle="tooltip"
@@ -147,6 +148,10 @@ export default {
       this.isModalVisible = true;
     },
     submitImages() {
+      if(Object.values(this.tabImages).every(images => images.length === 0)){
+        this.$swal.fire("음식 사진을 올려주세요!","","warning");
+        return;
+      }
       this.isLoading = true;
       const formData = new FormData();
       // tabImages 객체에 있는 각 탭별로 이미지 데이터를 순회
@@ -162,6 +167,7 @@ export default {
       if (this.selectedDate) {
         formData.append('date', this.selectedDate);
       }
+      console.log(formData.entries());
       this.$axios.post('/food_up', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
