@@ -23,7 +23,8 @@ export default {
             pages: ['signUp1', 'signUp2', 'signUp3'],
             currentPageIndex: 1,
             userdata: {},
-            serverReturn: 0
+            serverReturn: 0,
+            formData: new FormData()
         };
     },
     computed: {
@@ -55,8 +56,22 @@ export default {
         },
         async completeSignUp() {
             try {
-                let data = this.userdata;
-                await this.$axiosWithoutValidation.post("/signUp/PTcompleteSignUp", data)
+                for (const key in this.userdata) {
+                    const value = this.userdata[key];
+                    if (value instanceof File) {
+                        // 파일인 경우
+                        this.form1Data.append(key, value);
+                    } else if (Array.isArray(value)) {
+                        // 배열인 경우
+                        for (let i = 0; i < value.length; i++) {
+                            this.formData.append(`${key}[${i}]`, value[i]);
+                        }
+                    } else {
+                        // 일반 데이터인 경우
+                        this.formData.append(key, value);
+                    }
+                }
+                await this.$axiosWithoutValidation.post("/signUp/PTcompleteSignUp", this.formData)
                     .then(async response => {
                         this.serverReturn = response.data;
                         console.log("*********" + this.serverReturn);

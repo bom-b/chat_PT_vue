@@ -21,9 +21,9 @@
                 <span>대표이미지</span>
               </div>
               <div class="uploaded-images ">
-                <div v-for="image in uploadedImages" :key="image.id" class="uploaded-image"
+                <div v-for="(image) in uploadedImages" :key="image.id" class="uploaded-image"
                   @click="setMainImage(image.id)">
-                  <img :src="image.url" :alt="'Uploaded Image' + image.id">
+                  <img :src="image.url" :alt="'Uploaded Image ' + image.id">
                   <button class="delete-button1" @click="deleteImage(image.id)">X</button>
                 </div>
                 <label for="image-upload" class="upload-button"
@@ -31,7 +31,7 @@
                   <i class="fas fa-plus"></i>
                   <span>사진 추가</span>
                 </label>
-                <input type="file" accept="image/*" @change="handleImageUpload" multiple id="image-upload" hidden>
+                <input type="file" ref="fileInput" accept="image/*" @change="handleImageUpload" multiple id="image-upload" hidden>
               </div>
             </div>
           </div>
@@ -40,7 +40,7 @@
             <h4>근무하시는 지역</h4>
             <p style="font-size: 10px">주변에 있는 회원과 매칭 해드려요~!!</p>
             <div>
-              <input type="text" id="region" placeholder="도로명 주소" readonly class="address-input" @click="searchRegion"
+              <input type="text" id="region" placeholder="도로명 주소" readonly class="address-input" @click="search"
                 v-model="region">
               <input type="text" placeholder="헬스장 이름 입력" style="width: 150px;" v-model="gym">
             </div>
@@ -73,12 +73,12 @@
           </div>
           <div class="mt-5">
             <h4>수상 경력 등록(선택)</h4>
-            <div class="contest-container" style="text-align: left;">
+            <div class="contest-container" style="text-align: center;">
               <div class="m_category">
                 <h3>수상경력</h3>
                 <div class="career">
                   <div v-for="(award, index) in awards" :key="index" class="input-group mb-3">
-                    <button class="btn btn-danger" @click.prevent="removeAward(index)">-</button>
+                    <button class="btn btn-danger" @click="removeAward(index)">-</button>
                     <input class="form-control" v-model="award.value">
                   </div>
                   <button class="btn btn-success" @click.prevent="addAward">+</button>
@@ -294,6 +294,10 @@
   margin-top: 20px;
 }
 
+.submit-button:hover {
+  background-color: #0056b3;
+  /* 마우스 오버 시 배경색을 변경합니다 */
+}
 
 /* 반응형 웹 디자인을 위한 미디어 쿼리 */
 @media (max-width: 768px) {
@@ -314,13 +318,6 @@
     /* 모바일 화면에서 제출 버튼의 너비를 100%로 설정합니다 */
   }
 
-  button {
-    background-color: #e5f5f2;
-    color: #085c57;
-    border: none;
-    border-radius: 1px;
-    padding: 10px 20px;
-  }
 }
 </style>
 <script>
@@ -331,16 +328,14 @@ export default {
     return {
       uploadedImages: [], // 업로드된 이미지들을 저장하는 배열
       mainImage: null,
-      // awards: [
-      //   { name: '', rank: '' }
-      // ],
       awards: [],
       region: "",
-      starttime: "",
-      endtime: "",
-      trainercomment: "",
-      trainerintro: "",
-      gym: "",
+      starttime: '',
+      endtime: '',
+      trainercomment: '',
+      trainerintro: '',
+      gym: '',
+      myBase64Img : [],
     };
   },
   mounted() {
@@ -370,22 +365,52 @@ export default {
     handleMainImageUpload(event) {
       const file = event.target.files[0];
       const imageObject = {
-        name: "",
+        name: "mainimage",
         url: FileReader.createObjectURL(file),
       };
       this.mainImage = imageObject;
+      console.log("메인 이미지:", this.mainImage);
     },
-    handleImageUpload(event) {
-      const files = event.target.files; // 선택한 파일들 가져오기
+    handleImageUpload(e) {
+      console.log("handleImageUpload 실행");
+      const fileInput = this.$refs.fileInput;
+      const files = Array.from(fileInput.files);
+
+      // 처리된 이미지를 저장할 배열을 초기화합니다.
+      const processedImages = [];
+
+      Promise.all(files.map((file) => {
+        return new Promise((resolve, reject) => {
+          
+          const reader = new FileReader();
+          reader.onload = (ee) => {
+            processedImages.push(ee.target.result);
+            resolve();
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+          
+        });
+      })).then(() => {
+        // 모든 이미지 처리가 완료된 후
+        
+        this.myBase64Img.push(processedImages);
+        this.$emit('image-uploaded', this.myBase64Img);
+      });
+
+      console.log("processedImages : " + processedImages) ;
+
+      const files1 = e.target.files; // 선택한 파일들 가져오기
       const maxImages = 3;
       const remainingSlots = maxImages - this.uploadedImages.length;
-      const uploadCount = Math.min(files.length, remainingSlots);
-
+      const uploadCount = Math.min(files1.length, remainingSlots);
       for (let i = 0; i < uploadCount; i++) {
-        const file = files[i];
+
+        const file = files1[i];
         const imageObject = {
           id: this.uploadedImages.length + 1, // 이미지 식별을 위한 ID
           url: URL.createObjectURL(file), // 업로드된 이미지의 URL
+          file: file
         };
 
         this.uploadedImages.push(imageObject);
@@ -393,9 +418,11 @@ export default {
           this.mainImage = imageObject;
         }
       }
-
+      // this.uploadedImages = e.target.files[];
+      console.log("업로드 된 이미지들:", this.uploadedImages);
+      console.log("업로드 된 base64이미지들:", this.myBase64Img);
       // 파일 선택 버튼 초기화
-      event.target.value = '';
+      e.target.value = '';
     },
     deleteImage(imageId) {
       this.uploadedImages = this.uploadedImages.filter((image) => image.id !== imageId);
@@ -411,8 +438,17 @@ export default {
       }
     },
     setMainImage(imageId) {
-      this.mainImage = this.uploadedImages.find((image) => image.id === imageId);
+      const selectedImage = this.uploadedImages.find(image => image.id === imageId);
+
+      if (selectedImage) {
+        const index = this.uploadedImages.indexOf(selectedImage);
+
+        this.uploadedImages = [selectedImage, ...this.uploadedImages.slice(0, index), ...this.uploadedImages.slice(index + 1)];
+
+        this.mainImage = selectedImage;
+      }
     },
+
     addAward() {
       this.awards.push({ value: '' });
     },
@@ -426,7 +462,7 @@ export default {
         alert('최소 한 개의 수상 경력은 필요합니다.');
       }
     },
-    searchRegion() {
+    search() {
       new window.daum.Postcode({
         oncomplete: (data) => {
           var roadAddr = data.roadAddress; // 도로명 주소 변수
@@ -452,6 +488,7 @@ export default {
     formatTime(hour) {
       return hour < 10 ? `오전 0${hour}시` : hour < 12 ? `오전 ${hour}시` : hour === 12 ? `오후 ${hour}시` : `오후 ${(hour - 12).toString().padStart(2, '0')}시`;
     },
+
     async proceedToNextPage() {
       try {
         const isValid = 1;
@@ -462,8 +499,11 @@ export default {
           awards: this.awards,
           starttime: this.starttime,
           endtime: this.endtime,
-          mainimage: this.mainImage,
+          // mainimage: this.mainImage,
           gym: this.gym,
+          imgs: this.myBase64Img
+
+        
 
         };
         if (isValid) {
