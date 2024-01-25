@@ -20,12 +20,12 @@ nav {
   background-color: #c0e0d6;
   color: #085c57;
   border-radius: 15px;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease ;
 }
 
 .btn-login:hover {
   background-color: #b0d5c8;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease ;
 }
 
 .profile-img-container {
@@ -55,10 +55,11 @@ nav {
 .nav-link {
   font-weight: bold;
 }
+
 </style>
 <style lang="scss" scoped>
-.floating-widget {
-  // [st]마이페이지 위젯 스타일링
+
+.floating-widget { // [st]마이페이지 위젯 스타일링
   position: fixed;
   top: 100px;
   right: 20px;
@@ -72,28 +73,28 @@ nav {
 
 <template>
   <nav
-    class="navbar navbar-expand-sm navbar-light bg-light fixed-top"
-    style="min-height: 80px; background-color: white !important"
+      class="navbar navbar-expand-sm navbar-light bg-light fixed-top"
+      style="min-height: 80px; background-color: white !important"
   >
     <div class="container-fluid">
       <router-link to="/trainer/pt_home" class="router-link">
         <img
-          src="../../assets/img/배경지운 로고.png"
-          alt=""
-          style="width: 50px"
+            src="../../assets/img/배경지운 로고.png"
+            alt=""
+            style="width: 50px"
         />
         <a class="navbar-brand TheJamsil400" style="font-weight: bold"
-          >Chat
+        >Chat
           <span class="TheJamsil400 pine_Green_text" style="font-weight: bold"
-            >PT</span
+          >PT</span
           ></a
         >
       </router-link>
       <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#mynavbar"
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mynavbar"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -101,26 +102,27 @@ nav {
         <ul class="navbar-nav me-auto">
           <li class="nav-item" v-for="link in navLinks" :key="link.name">
             <router-link
-              :to="link.route"
-              class="nav-link"
-              :class="{ activeLink: currentRoute === link.route }"
-              >{{ link.name }}
-            </router-link>
+                :to="link.route"
+                class="nav-link"
+                :class="{ activeLink: currentRoute === link.route }"
+            >{{ link.name }}
+            </router-link
+            >
           </li>
         </ul>
-        <button class="btn">{{ name }} 님</button>
+        <button class="btn">
+          {{name}} 님
+        </button>
         <div class="profile-img-container d-flex" style="margin-right: 20px">
           <img
-            class="profile-img"
-              :src="`${this.$s3BaseURL}/normal_user/profile_img/${userInfo.nm_PROFILEIMG}`"
-            alt=""
-            style="width: 32px; object-fit: contain"
+              class="profile-img"
+              src="../../assets/img/trainer1.jpg"
+              alt=""
+              style="width: 32px; object-fit: contain"
           />
         </div>
         <form class="d-flex">
-          <button @click="logout" class="btn btn-login" type="button">
-            로그아웃
-          </button>
+          <button @click="logout" class="btn btn-login" type="button">로그아웃</button>
         </form>
       </div>
     </div>
@@ -128,7 +130,7 @@ nav {
 </template>
 
 <script>
-import { ref } from "vue";
+import {ref} from "vue";
 import router from "@/router";
 
 export default {
@@ -136,73 +138,37 @@ export default {
   components: {},
   computed: {
     name() {
-      return window.localStorage.getItem("name");
-    },
+      return window.localStorage.getItem('name');
+    }
   },
-  setup() {
-    // useRoute, useRouter 대신 VueRouter.createRouter를 사용합니다.
+  setup() { // useRoute, useRouter 대신 VueRouter.createRouter를 사용합니다.
     const isLoggedIn = ref(!!localStorage.getItem("jwtToken"));
 
     const logout = () => {
-      window.localStorage.removeItem("jwtToken");
-      window.localStorage.removeItem("name");
-      window.localStorage.removeItem("role");
+      window.localStorage.removeItem('jwtToken');
+      window.localStorage.removeItem('name');
+      window.localStorage.removeItem('role');
       isLoggedIn.value = false; // isLoggedIn 상태를 업데이트
       router.push("/");
     };
 
-    return { isLoggedIn, logout };
+    return {isLoggedIn, logout};
   },
   data() {
     return {
+      
       navLinks: [
-        { name: "수강회원 관리", route: "/trainer/pt_members" },
-        { name: "스케줄 관리", route: "/trainer/pt_schedule" },
-        { name: "프로필 관리", route: "/trainer/pt_profile" },
-        { name: "마이페이지 수정", route: "/trainer/pt_member_edit" },
+        {name: "수강회원 관리", route: "/trainer/pt_members"},
+        {name: "스케줄 관리", route: "/trainer/pt_schedule"},
+        {name: "프로필 관리", route: "/trainer/pt_profile"},
+        {name: "마이페이지 수정", route: "/trainer/pt_member_edit"},
+
       ],
     };
   },
   watch: {
     $route(newRoute) {
       this.currentRoute = newRoute.path;
-    },
-  },
-  mounted() {
-    this.fetchUserInfo();
-  },
-  methods: {
-    // 유저 인포
-    fetchUserInfo() {
-      // Axios를 사용하여 사용자 정보 가져오기
-      this.$axios
-        .get("/getuserInfo")
-        .then((response) => {
-          const userData = response.data[0]; // 데이터 배열의 첫 번째 요소를 사용
-          this.userInfo = {
-            // ID: userData.id,
-            // EMAIL: userData.email,
-            // PASSWORD: userData.password,
-            // NICKNAME: userData.nickname, // 닉네임 필드가 name으로 가정
-            // name: userData.name,
-            // gender: userData.gender,
-            // role: userData.role,
-            // // birth:  userData.birth,
-            // target_WEIGHT: userData.target_WEIGHT,
-            // kakaocode: userData.kakaocode ? userData.kakaocode : "",
-            // height: userData.height,
-            // activity: userData.activity,
-            // weight: userData.weight,
-            // purpose: userData.purpose, // v-model 들어갈 데이터라 원본(purpose의 숫자형태) 보존안함
-            // region: userData.region,
-            nm_PROFILEIMG: userData.nm_PROFILEIMG,
-            // 변환해서 저장할 데이터
-            // age: this.calculateAge(userData.birth),
-          };
-        })
-        .catch((error) => {
-          console.error("Error fetching user info:", error);
-        });
     },
   },
 };
