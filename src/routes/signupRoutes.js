@@ -1,10 +1,10 @@
 import Sign_up_main from "@/views/signup/sign_up_main.vue";
 import kakao_sign_up_main from "@/views/signup/kakao_sign_up_main.vue";
 
-// import Sign_up from "@/views/signup/d_signup/sign_up1.vue";
-// import Sign_up2 from "@/views/signup/d_signup/sign_up2.vue";
-// import Sign_up3 from "@/views/signup/d_signup/sign_up3.vue";
-// import Sign_up4 from "@/views/signup/d_signup/sign_up4.vue";
+import Sign_up from "@/views/signup/d_signup/sign_up1.vue";
+import Sign_up2 from "@/views/signup/d_signup/sign_up2.vue";
+import Sign_up3 from "@/views/signup/d_signup/sign_up3.vue";
+import Sign_up4 from "@/views/signup/d_signup/sign_up4.vue";
 
 
 import Sign_up_master from "@/views/signup/d_signup/sign_up_master.vue";
