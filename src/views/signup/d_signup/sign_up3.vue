@@ -287,9 +287,7 @@ export default {
     transform: rotateY(1turn);
   }
 } */
-.btn{
-  background-color: #000000;
-}
+
 .main {
   display: flex;
   justify-content: center;
