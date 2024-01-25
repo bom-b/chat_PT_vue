@@ -32,6 +32,15 @@ export default {
     this.updateArrowAndText();
   },
   methods: {
+    formatBirthDate() {
+      const date = new Date();
+      const year = date.getFullYear().toString().slice(-2);
+      const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+      const day = date.getDate().toString().padStart(2, '0');
+
+      const formattedDate = `${year}/${month}/${day}`;
+      return this.user.birth = formattedDate;
+    },
     calculatebmi() {
       if (this.user.height && this.user.weight) {
         this.user.bmi = (this.user.weight / ((this.user.height / 100) ** 2)).toFixed(2);
@@ -69,7 +78,7 @@ export default {
         arrowLine.setAttribute('transform', `rotate(${this.arrowXpoint} 140 140)`);
       }
     },
-    
+
 
 
     setgender(gender) {
@@ -82,6 +91,7 @@ export default {
       this.user.activity = activity;
     },
     proceedToNextPage() {
+      this.formatBirthDate();
       try {
         const isValid = 1;
         const data = {
@@ -134,7 +144,7 @@ export default {
             </li>
             <li>
               <label for="user.birth">생년월일</label>
-              <input class="form-control" type="date" id="user.birth" v-model="user.birth">
+              <input class="form-control" type="date" id="user.birth" v-model="user.birth" >
             </li>
             <li>
               <label for="user.height">키(cm)</label>
@@ -196,7 +206,7 @@ export default {
                 <line ref="arrowLine" x1="140" y1="140" x2="80" y2="140" stroke="#666" stroke-width="2"
                   marker-end="url(#arrowhead)">
                   <animateTransform attributeName="transform" attributeType="XML" type="rotate" :from="'0 140 140'"
-                    :to="arrowXpoint + ' 140 140'" dur="1s" fill="freeze" repeatCount="1"></animateTransform>
+                    :to="arrowXpoint + ' 140 140'" dur="1s" fill="freeze" repeatCount="3"></animateTransform>
                 </line>
                 <text x="100" y="120" style="font-size: 30px;font-weight:bold;color:#000;">{{ calculatebmi() }}</text>
               </g>
@@ -287,9 +297,7 @@ export default {
     transform: rotateY(1turn);
   }
 } */
-.btn{
-  background-color: #000000;
-}
+
 .main {
   display: flex;
   justify-content: center;
