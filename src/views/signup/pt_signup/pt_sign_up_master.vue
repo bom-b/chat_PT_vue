@@ -90,6 +90,8 @@ export default {
                         this.serverReturn = response.data;
                         console.log("*********" + this.serverReturn);
                         if (this.serverReturn > 0) {
+                            // 로컬스토리지에 있는 카카오 정보 삭제 (카카오 회원가입을 통해 들어온 경우.)
+                            window.localStorage.removeItem('newKakaoUserData');
                             const Toast = Swal.mixin({
                                 toast: true,
                                 position: 'center-center',
