@@ -122,4 +122,12 @@ export default {
 .accordion-button:not(.collapsed) {
     background-color: #67c23a;
 }
+
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100vw;
+  }
+}
 </style>

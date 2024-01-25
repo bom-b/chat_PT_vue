@@ -10,11 +10,13 @@ import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import { mapState } from "vuex";
 import signUp1 from "@/views/signup/pt_signup/pt_sign_up.vue";
+import signUp1_kakao from "@/views/signup/pt_signup/pt_sign_up_kakao.vue";
 import signUp2 from "@/views/signup/pt_signup/pt_sign_up2.vue";
 import signUp3 from "@/views/signup/pt_signup/pt_sign_up3.vue";
 export default {
     components: {
         signUp1,
+        signUp1_kakao,
         signUp2,
         signUp3,
     },
@@ -30,7 +32,11 @@ export default {
         ...mapState(['page']),
         page() {
             if (this.currentPageIndex == 1) {
+              if (window.localStorage.getItem('newKakaoUserData')) {
+                return signUp1_kakao;
+              } else {
                 return signUp1;
+              }
             } else if (this.currentPageIndex == 2) {
                 return signUp2;
             } else if (this.currentPageIndex == 3) {
