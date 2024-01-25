@@ -24,7 +24,6 @@ export default {
             currentPageIndex: 1,
             userdata: {},
             serverReturn: 0,
-            formData: new FormData()
         };
     },
     computed: {
@@ -55,6 +54,7 @@ export default {
             }
         },
         async completeSignUp() {
+          const formData = new FormData();
             try {
                 for (const key in this.userdata) {
                     const value = this.userdata[key];
@@ -64,14 +64,22 @@ export default {
                     } else if (Array.isArray(value)) {
                         // 배열인 경우
                         for (let i = 0; i < value.length; i++) {
-                            this.formData.append(`${key}[${i}]`, value[i]);
+                            formData.append(`${key}[${i}]`, value[i]);
+                            console.log("key : " + `${key}[${i}]`);
+                            console.log("value : " + value[i]);
                         }
                     } else {
                         // 일반 데이터인 경우
-                        this.formData.append(key, value);
+                        formData.append(key, value);
+                      console.log("key : " + key);
+                      console.log("value : " + value);
                     }
                 }
-                await this.$axiosWithoutValidation.post("/signUp/PTcompleteSignUp", this.formData)
+              // formData의 모든 키-값 쌍을 순회하여 콘솔에 출력
+              for (let [key, value] of formData.entries()) {
+                console.log(key, value);
+              }
+                await this.$axiosWithoutValidation.post("/signUp/PTcompleteSignUp", formData)
                     .then(async response => {
                         this.serverReturn = response.data;
                         console.log("*********" + this.serverReturn);
