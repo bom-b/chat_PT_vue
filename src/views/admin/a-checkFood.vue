@@ -168,7 +168,6 @@ export default {
       searchKeyword: "",
       items: [], // 검색 대상 항목들
       selectedCategory: "",
-      categories: ["판독 전", "판독 완료", "전체 리스트"], // 카테고리 목록
       checkItems: [],
       selectAll: false,
       delTem: "",
@@ -178,31 +177,26 @@ export default {
     this.fetchEditList();
   },
   computed: {
-    filteredItems() {
-      return this.items.filter((item) => 
-        item.img_editcomment.toLowerCase().includes(this.searchKeyword.toLowerCase())
+  filteredItems() {
+      return this.filteredSortedItems;
+    },
+
+    sortedItems() {
+      return this.items.slice().sort((a, b) => a.edit_request_id - b.edit_request_id);
+    },
+    filteredSortedItems() {
+      const searchTerm = this.searchKeyword.toLowerCase();
+      return this.sortedItems.filter(item => 
+        item.img_editcomment && item.img_editcomment.toLowerCase().includes(searchTerm)
       );
     },
-    sortedItems() {
-    return this.items.slice().sort((a, b) => {
-      return a.edit_request_id - b.edit_request_id; // 오름차순 정렬
-    });
   },
-  filteredSortedItems() {
-    if (!this.searchKeyword) {
-      return this.sortedItems;
-    }
-    return this.sortedItems.filter(item => 
-      item.img_editcomment.toLowerCase().includes(this.searchKeyword.toLowerCase())
-    );
-  }
-},
-  watch: {
+watch: {
     // checkItems 배열을 감시
     checkItems(newVal) {
-      // 전체 항목이 선택되어 있는지 확인
+      // 전체 항목이 선택되었는지 확인하여 전체 선택 체크박스 상태 업데이트
       this.selectAll = newVal.length === this.filteredItems.length;
-    }
+    },
   },
 
   methods: {
@@ -211,36 +205,21 @@ export default {
       console.log(this.selectAll);
     },
 
+    handleCheckboxChange(event) {
+      const checkedId = event.target.value;
+      if (event.target.checked) {
+        this.checkItems.push(checkedId);
+      } else {
+        this.checkItems = this.checkItems.filter(id => id !== checkedId);
+      }
+      this.selectAll = this.checkItems.length === this.items.length;
+    },
     handleSelectAllChange() {
-    if (this.selectAll) {
-      this.checkItems = this.filteredItems.map(item => item.edit_request_id);
-    } else {
-      this.checkItems = [];
-    }
-  },
-
-  // 개별 체크박스 변경 처리
-  handleCheckboxChange(event) {
-    const checkedId = event.target.value;
-    if (event.target.checked) {
-      this.checkItems.push(checkedId);
-    } else {
-      this.checkItems = this.checkItems.filter(id => id !== checkedId);
-    }
-
-    // 전체 선택 체크박스 상태 업데이트
-    this.selectAll = this.checkItems.length === this.filteredItems.length;
-  },
-
-    getColumnName(index) {
-      // 각 열의 데이터에 대한 컬럼명 반환 로직
-      const columnNames = [
-        "수정 요청 내용(음식이름)",
-        "수정 전 내용(음식이름)",
-        "수정한 회원",
-        "수정한 날짜",
-      ];
-      return columnNames[index];
+      if (this.selectAll) {
+        this.checkItems = this.items.map(item => item.edit_request_id);
+      } else {
+        this.checkItems = [];
+      }
     },
     fetchEditList() {
       this.$Adminaxios.get("/editList")

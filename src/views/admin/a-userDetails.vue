@@ -96,7 +96,7 @@ export default {
           this.$Adminaxios.delete(`/nordel/${nnum}`)
             .then(response => {
             alert(response.data);
-            this.$router.push('/a_userList')
+            this.$router.push('/admin/a_userList')
             })
             .catch(error => {
             console.error('Error deleting the user:', error);
@@ -111,7 +111,7 @@ export default {
           this.$Adminaxios.delete(`/ptdel/${tnum}`)
             .then(response => {
             alert(response.data);
-            this.$router.push('/a_userList')
+            this.$router.push('/admin/a_userList')
             })
             .catch(error => {
             console.error('Error deleting the user:', error);
