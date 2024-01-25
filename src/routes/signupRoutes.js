@@ -6,7 +6,6 @@ import kakao_sign_up_main from "@/views/signup/kakao_sign_up_main.vue";
 // import Sign_up3 from "@/views/signup/d_signup/sign_up3.vue";
 // import Sign_up4 from "@/views/signup/d_signup/sign_up4.vue";
 
-
 import Sign_up_master from "@/views/signup/d_signup/sign_up_master.vue";
 
 import PT_Sign_Up from "@/views/signup/pt_signup/pt_sign_up.vue";
