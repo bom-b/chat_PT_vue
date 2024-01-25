@@ -38,8 +38,9 @@
       </div>
     </section>
     <!-- End Hero Section -->
+<!-- [st]추후 개발 요망 -->
 
-    <!--  오늘 어쩌구~ -->
+<!-- 
     <section>
       <div class="gray" style="min-height: 100%; height: auto; padding: 30px">
         <div class="section1800">
@@ -65,14 +66,15 @@
               data-aos-delay="200"
             >
               <p class="TheJamsil400" style="display: inline-block">
-                <router-link to="/trainer/pt_members" class="router-link">
+                <router-link to="/trainer/pt_members" class="router-link" >
                   <img
                     class=""
                     src="../../assets/img/time.png"
                     alt=""
                     style="width: 32px"
-                  /><button class="select_button_menu time_cl">휴무일</button
-                  ><br />
+                  /><button class="select_button_menu time_cl" style="background-color: none
+                  ;">휴무일</button>
+                  <br />
                 </router-link>
               </p>
             </div>
@@ -159,8 +161,8 @@
         </div>
       </div>
     </section>
-    <div class="col-12 green" style="height: 80px; margin-bottom: 0"></div>
-
+    <div class="col-12 green" style="height: 80px; margin-bottom: 0"></div> -->
+<!-- [ed]추후 개발 요망 -->
     <div
       class="info-container p-4 my-4 d-flex align-items-center justify-content-between bg-light border rounded"
       style="
