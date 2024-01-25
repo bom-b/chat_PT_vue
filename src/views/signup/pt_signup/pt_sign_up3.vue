@@ -4,9 +4,11 @@
       <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
         aria-valuemin="0" aria-valuemax="100"></div>
     </div>
-    <div class="container">
-      <h2 class="mb-4">회원들에게 보여줄 정보를 입력하세요</h2>
-      <div class="container">
+    <div class="container main-container">
+      <div class="title-box">
+        <h2 class="" id="title">회원들에게 보여줄 정보를 입력하세요.</h2>
+      </div>
+      <div class="container insert-container toMobile">
         <form @submit.prevent="proceedToNextPage">
           <div>
             <h4>프로필 사진 등록</h4>
@@ -42,7 +44,9 @@
             <div>
               <input type="text" id="region" placeholder="도로명 주소" readonly class="address-input" @click="search"
                 v-model="region">
-              <input type="text" placeholder="헬스장 이름 입력" style="width: 150px;" v-model="gym">
+              <div id="healthclub">
+                <input type="text" placeholder="헬스장 이름 입력" style="width: 150px; display: block; " v-model="gym">
+              </div>
             </div>
           </div>
           <div class="mt-5">
@@ -76,7 +80,10 @@
             <div class="contest-container" style="text-align: center;">
               <div class="m_category">
                 <h3>수상경력</h3>
-                <div class="career">
+                <div id="career-mobile">
+                  <p>PC에서 정보수정으로 등록해주세요.</p>
+                </div>
+                <div id="career-pc" class="career">
                   <div v-for="(value, key) in awards" :key="key" class="input-group mb-3">
                     <button class="btn btn-danger" @click="removeAward(key)">-</button>
                     <input class="form-control" v-model="awards[key]">
@@ -299,6 +306,14 @@
   /* 마우스 오버 시 배경색을 변경합니다 */
 }
 
+#career-mobile {
+  display: none;
+}
+
+#career-pc {
+  display: block;
+}
+
 /* 반응형 웹 디자인을 위한 미디어 쿼리 */
 @media (max-width: 768px) {
 
@@ -316,6 +331,65 @@
   .submit-button {
     width: 100%;
     /* 모바일 화면에서 제출 버튼의 너비를 100%로 설정합니다 */
+  }
+
+  .insert-container {
+    width: 100vw;
+  }
+
+  .main-container {
+    padding: 0;
+  }
+
+  .main {
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100vw;
+  }
+
+  .title-box{
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+
+  #title {
+    font-family: 'TheJamsil400', sans-serif;
+    font-size: 18px;
+  }
+
+  .toMobile{
+    width: 100vw !important;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  input {
+    width: 90vw !important;
+  }
+
+  textarea {
+    width: 90vw !important;
+  }
+
+  .career {
+    width: 90vw !important;
+    display: flex;
+    justify-content: center;
+  }
+
+  #healthclub {
+    display: flex;
+    justify-content: center;
+  }
+
+  #career-mobile {
+    display: block;
+  }
+
+  #career-pc {
+    display: none;
   }
 
 }
