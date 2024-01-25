@@ -27,6 +27,10 @@ export default {
       }
     },
   },
+  mounted() {
+    // 페이지 로딩 시 화살표와 텍스트를 업데이트
+    this.updateArrowAndText();
+  },
   methods: {
     calculatebmi() {
       if (this.user.height && this.user.weight) {
@@ -49,16 +53,23 @@ export default {
         } else if (bmi < 40) {
           this.arrowXpoint = 171.5;
           return bmi;
-        } else if (this.arrowXpoint > 50) {
+        } else if (bmi > 50) {
           this.arrowXpoint = 16.5;
-          return "Error"
+          return "Error";
         }
       } else {
         return '';
       }
     },
 
-    
+    updateArrowAndText() {
+      // 화살표와 텍스트를 업데이트
+      const arrowLine = this.$refs.arrowLine;
+      if (arrowLine) {
+        arrowLine.setAttribute('transform', `rotate(${this.arrowXpoint} 140 140)`);
+      }
+    },
+
 
     setgender(gender) {
       this.user.gender = gender;
@@ -80,6 +91,7 @@ export default {
           gender: this.user.gender,
           purpose: this.user.purpose,
           activity: this.user.activity,
+          target_weight: this.user.target_weight
         };
         if (isValid) {
           this.$emit("nextPage", data);
@@ -368,4 +380,5 @@ button {
 .selected-activity {
   background-color: rgb(255, 255, 255);
   color: #00997b;
-}</style>
+}
+</style>
