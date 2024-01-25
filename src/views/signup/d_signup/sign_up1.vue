@@ -417,13 +417,13 @@ export default {
                 비밀번호가 일치하지 않습니다.
               </p>
             </div>
-            <div class="row mb-3">
-              <label for="name" class="col-sm-4 col-form-label">카카오채널 연동코드:</label>
-              <div class="col-sm-6">
-                <div class="input-group">
-                  <input type="text" class="form-control" id="kakaocode" placeholder="카카오채널에서 발급받아주세요."
-                         v-model="user.kakaocode"/>
-                </div>
+          </div>
+          <div class="row mt-5 mb-3">
+            <label for="name" class="col-sm-4 col-form-label">카카오채널 연동코드:</label>
+            <div class="col-sm-6">
+              <div class="input-group">
+                <input type="text" class="form-control" id="kakaocode" placeholder="(선택)카카오채널에서 발급받아주세요."
+                       v-model="user.kakaocode"/>
               </div>
             </div>
           </div>
@@ -492,10 +492,6 @@ export default {
   display: flex;
   align-items: center;
   /* 자식 요소들을 세로 방향으로 가운데 정렬 */
-}
-
-.title-box {
-  padding-top: 50px;
 }
 
 @media (max-width: 768px) {

@@ -170,7 +170,6 @@ img {
   }
 
   .profileIMG {
-    margin-top: 50px;
     width: 100vw;
   }
 }

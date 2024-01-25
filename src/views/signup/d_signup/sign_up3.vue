@@ -314,7 +314,6 @@ button {
 }
 
 #title-box {
-  padding-top: 50px;
   padding-bottom: 100px;
 }
 
@@ -332,7 +331,6 @@ button {
   }
 
   #title-box {
-    padding-top: 50px;
     padding-bottom: 50px;
   }
 
