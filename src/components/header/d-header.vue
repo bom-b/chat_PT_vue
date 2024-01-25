@@ -111,13 +111,12 @@ nav {
             >
           </li>
         </ul>
-        <!-- [st]위젯 -->
-
-
-
-        <!-- [ed]위젯 -->
-
+        <div style="vertical-align: center; align-items: center;">
+          <button class="btn">
+{{nickname}} 님 환영합니다.</button>
+      </div>
         <div class="profile-img-container d-flex" style="margin-right: 20px">
+          
           <img
               class="profile-img"
               :src="`${this.$s3BaseURL}/normal_user/profile_img/${userInfo.nm_PROFILEIMG}`"

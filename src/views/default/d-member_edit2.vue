@@ -1,5 +1,3 @@
-S3되는코드
-
 <template>
   <div class="user-edit-form" style="user-select: none">
     <form @submit.prevent="updateUserInfo" class="form-container">

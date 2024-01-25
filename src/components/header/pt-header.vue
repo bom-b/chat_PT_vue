@@ -111,7 +111,7 @@ nav {
           </li>
         </ul>
         <button class="btn">
-          {{name+"님"}}
+          {{name}} 님
         </button>
         <div class="profile-img-container d-flex" style="margin-right: 20px">
           <img
