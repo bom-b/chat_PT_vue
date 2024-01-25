@@ -80,8 +80,10 @@ export default {
         <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
           aria-valuemin="0" aria-valuemax="100"></div>
       </div>
-      <div class="container mt-5 pt-2">
-        <h2>정확한 판단을 위해 정보를 입력해주세요.</h2>
+      <div class="container mt-5 pt-2" style="margin-top: 100px;">
+        <div id="title-box" >
+          <h2 id="title">정확한 판단을 위해 정보를 입력해주세요.</h2>
+        </div>
         <div class="input-container">
           <ul>
             <li>
@@ -309,5 +311,33 @@ button {
 
 .selected-activity {
   background-color: rgb(13, 73, 204);
+}
+
+#title-box {
+  padding-bottom: 100px;
+}
+
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100vw;
+  }
+
+  .container {
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 95vw;
+  }
+
+  #title-box {
+    padding-bottom: 50px;
+  }
+
+  #title {
+    font-family: 'TheJamsil400', sans-serif;
+    font-size: 18px;
+  }
+
 }
 </style>

@@ -160,6 +160,18 @@ img {
   background-color: #67c23a;
 }
 
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100vw;
+    margin-top: 80px;
+    min-height: calc(100vh - 80px - 140px); /* 화면 최대길이 - 헤더높이 - 풋터높이*/
+  }
 
+  .profileIMG {
+    width: 100vw;
+  }
+}
 
 </style>
