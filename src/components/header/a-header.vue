@@ -71,7 +71,7 @@ nav {
       style="min-height: 80px; background-color: white !important"
   >
     <div class="container-fluid">
-      <router-link to="/d_home" class="router-link">
+      <router-link to="/admin/a_userList" class="router-link">
         <img
             src="../../assets/img/배경지운 로고.png"
             alt=""
@@ -114,7 +114,7 @@ nav {
         </div>
         <form class="d-flex">
           <router-link to="/" class="router-link">
-            <button class="btn btn-login" type="button">로그아웃</button>
+            <button @click="logout" class="btn btn-login" type="button">로그아웃</button>
           </router-link>
         </form>
       </div>
@@ -123,11 +123,30 @@ nav {
 </template>
 
 <script>
+import {ref} from "vue";
+import router from "@/router";
+
 export default {
   components: {
 
   },
   name: "app-header",
+
+  setup() 
+  { 
+    const isLoggedIn = ref(!!localStorage.getItem("jwtToken"));
+
+    const logout = () => {
+      window.localStorage.removeItem('jwtToken');
+      window.localStorage.removeItem('name');
+      window.localStorage.removeItem('role');
+      isLoggedIn.value = false; // isLoggedIn 상태를 업데이트
+      router.push("/");
+    };
+
+    return {isLoggedIn, logout};
+  },
+
   data() {
     return {
       navLinks: [
