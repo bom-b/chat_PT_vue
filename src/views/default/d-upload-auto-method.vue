@@ -34,8 +34,6 @@
         <div class="imgUploadDiv">
           <imgUpload :max-images="20" @image-uploaded="printImages($event)"/>
         </div>
-
-
         <div class="col-3"></div>
       </div>
 

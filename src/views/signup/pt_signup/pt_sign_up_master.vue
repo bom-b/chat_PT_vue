@@ -60,7 +60,7 @@ export default {
                     const value = this.userdata[key];
                     if (value instanceof File) {
                         // 파일인 경우
-                        this.formData.append(key, value);
+                        this.form1Data.append(key, value);
                     } else if (Array.isArray(value)) {
                         // 배열인 경우
                         for (let i = 0; i < value.length; i++) {
