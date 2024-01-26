@@ -104,14 +104,6 @@ nav {
             >
           </li>
         </ul>
-        <div class="profile-img-container d-flex" style="margin-right: 20px">
-          <img
-              class="profile-img"
-              :src="`${this.$s3BaseURL}/normal_user/profile_img/${userInfo.nm_PROFILEIMG}`"
-              alt="adsf"
-              style="width: 32px; object-fit: contain"
-          />
-        </div>
         <form class="d-flex">
           <router-link to="/" class="router-link">
             <button @click="logout" class="btn btn-login" type="button">로그아웃</button>
