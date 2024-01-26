@@ -59,8 +59,8 @@ export default {
         } else if (bmi < 40) {
           this.arrowXpoint = 171.5;
           return bmi;
-        } else if (bmi > 50) {
-          this.arrowXpoint = 16.5;
+        } else if (bmi < 50) {
+          this.arrowXpoint = 16.;
           return "Error";
         }
       } else {
