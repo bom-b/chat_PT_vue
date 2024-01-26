@@ -3,7 +3,14 @@
 #search {
   max-width: 200px;
 }
-
+.row {
+  display: flex;
+  justify-content: flex-end; /* 요소들을 오른쪽으로 정렬 */
+}
+.col-12.col-md-2.text-right {
+  display: flex;
+  justify-content: flex-end; /* 요소들을 오른쪽으로 정렬 */
+}
 
 .checkboxes-container {
   display: flex;
@@ -28,7 +35,7 @@
 /* 테이블 헤더 및 셀을 위한 스타일 */
 .transparent-table th,
 .transparent-table td {
-  text-align: left; /* 기본적으로 왼쪽 정렬 */
+  text-align: center; /* 기본적으로 왼쪽 정렬 */
   vertical-align: middle; /* 수직 중앙 정렬 */
   border: none;
 }
@@ -36,7 +43,7 @@
 /* 체크박스 열을 오른쪽 정렬 */
 .transparent-table th:last-child,
 .transparent-table td:last-child {
-  text-align: right; /* 오른쪽 정렬 */
+  text-align: left; /* 오른쪽 정렬 */
 }
 
 /* 이미지 크기 조정 */
@@ -101,8 +108,8 @@
     <div class="container mt-3">
       <h5 class="display-5 text-center" style="margin: 20px">수정 데이터 목록</h5>
 
-      <div class="row">
-        <div class="col-12 col-md-6">
+      <div class="row justify-content-end">
+        <!-- <div class="col-12 col-md-6">
           <input
             type="text"
             v-model="searchKeyword"
@@ -110,8 +117,8 @@
             @input="handleSearch"
             id="search"
           />
-        </div>
-        <div class="col-12 col-md-2 text-right">
+        </div> -->
+        <div class="col-auto">
           <button class="btn btn-primary" @click="handleSendJson">학습시키기</button>
           <button class="btn btn-danger" @click="handleDelete">삭제</button>
         </div>
@@ -177,10 +184,6 @@ export default {
     this.fetchEditList();
   },
   computed: {
-  filteredItems() {
-      return this.filteredSortedItems;
-    },
-
     sortedItems() {
       return this.items.slice().sort((a, b) => a.edit_request_id - b.edit_request_id);
     },
@@ -195,7 +198,7 @@ watch: {
     // checkItems 배열을 감시
     checkItems(newVal) {
       // 전체 항목이 선택되었는지 확인하여 전체 선택 체크박스 상태 업데이트
-      this.selectAll = newVal.length === this.filteredItems.length;
+      this.selectAll = newVal.length === this.filteredSortedItems.length;
     },
   },
 
@@ -270,7 +273,7 @@ watch: {
     this.$nextTick(() => {
         // 최신 데이터를 다시 불러오기
         this.fetchEditList();
-      });
+      }); 
 
   } catch (error) {
     console.error("데이터 전송 오류: ", error);

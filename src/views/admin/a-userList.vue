@@ -14,21 +14,32 @@
 .transparent-table {
   background-color: #f8f9f8;
   border: none;
-  width: 80%; 
+  width: 100%; 
   margin: auto; 
 }
 
 .transparent-table th,
 .transparent-table td {
   border: none;
+  padding: 8px;
 }
 
 .transparent-table tr {
   border-bottom: 1px solid #ddd; /* 원하는 색상 및 두께로 조절 가능 */
+  height: 30px; /* 행의 높이를 조절하여 공간을 줄임 */
 }
 
 #section3 {
   margin-top: 100px;
+}
+.search-container {
+  display: flex;
+  justify-content: flex-end; /* Aligns the search input and button to the right */
+  width: 100%; /* Ensures the container takes full width */
+  margin-bottom: 1rem; /* Adds space below the search-container */
+}
+.table-container {
+  width: 100%; /* Ensures the table takes full width */
 }
 
 /* 모바일 환경에서의 스타일 적용 */
@@ -53,9 +64,9 @@
   }
 
   .pt-description {
-    padding: 30px 0px;
-    padding-left: 20px;
-  }
+  padding: 10px 10px; /* 위아래 패딩을 줄임 */
+  padding-left: 20px; /* 왼쪽 패딩을 조금 줄임 */
+}
 
   #section3 {
     margin-top: 50px;
@@ -76,12 +87,11 @@
     cursor: pointer;
     border: none;
   }
-  .main-container{
-    display: flex;
-  flex-direction: row; /* 가로 방향으로 요소를 배치 */
-  align-items: center; /* Y축 정렬을 중앙으로 */
-  justify-content: space-between;
-  }
+  .main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Aligns the children (search-container) to the right */
+}
 }
 </style>
 
@@ -92,8 +102,21 @@
         사용자(USER) 목록
       </h5>
 
+      <div class="search-container">
+        <select v-model="selectedCategory" @change="handleCategoryChange">
+          <option disabled value="">카테고리 선택</option>
+          <option
+            v-for="(category, index) in categories"
+            :key="index"
+            :value="category"
+          >
+            {{ category }}
+          </option>
+        </select>
+        <!-- 선택된 카테고리에 따른 내용 표시 -->
+      </div>
       <!-- [st]검색상자 -->
-      <div>
+      <div class="search-container">
         <input
           type="text"
           v-model="searchKeyword"
@@ -114,27 +137,15 @@
       <!-- [ed]검색상자 -->
   
       <!-- [st] 카테고리 -->
-      <div>
-        <select v-model="selectedCategory" @change="handleCategoryChange">
-          <option disabled value="">카테고리 선택</option>
-          <option
-            v-for="(category, index) in categories"
-            :key="index"
-            :value="category"
-          >
-            {{ category }}
-          </option>
-        </select>
-        <!-- 선택된 카테고리에 따른 내용 표시 -->
-      </div>
+
       <!-- [ed] 카테고리 -->
 
       <table class="table transparent-table">
         <thead>
-          <tr style="border-bottom: none">
-            <th class="col-1"></th>
-            <th class="col-5"></th>
-            <th class="col-6"></th>
+          <tr style="color:#00997b;">
+            <th class="col-3"></th>
+            <th class="col-5">정보</th>
+            <th class="col-9"></th>
           </tr>
         </thead>
         <tbody style="text-align: left">
@@ -142,7 +153,7 @@
           
           <tr v-for="(trainer, index) in filteredItems" :key="index" @click="goToDetailPage(trainer)">
 
-            <th style="padding: 30px 10px"></th>
+            <th style="padding: 20px 90px;"></th>
             <td class="pt-description">
               
               <!-- 유저 표시 -->
