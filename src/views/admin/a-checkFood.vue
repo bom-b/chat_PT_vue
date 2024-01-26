@@ -177,10 +177,6 @@ export default {
     this.fetchEditList();
   },
   computed: {
-  filteredItems() {
-      return this.filteredSortedItems;
-    },
-
     sortedItems() {
       return this.items.slice().sort((a, b) => a.edit_request_id - b.edit_request_id);
     },
@@ -195,7 +191,7 @@ watch: {
     // checkItems 배열을 감시
     checkItems(newVal) {
       // 전체 항목이 선택되었는지 확인하여 전체 선택 체크박스 상태 업데이트
-      this.selectAll = newVal.length === this.filteredItems.length;
+      this.selectAll = newVal.length === this.filteredSortedItems.length;
     },
   },
 
