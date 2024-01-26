@@ -4,25 +4,16 @@ export default {
         return {
             agreementItems: [
                 {
-                    text: "1. 수집하는 개인정보 항목",
-                    detail: "개인 회원: 서명, 이메일 주소, 비밀번호SNS 회원: 성명, 이메일 주소 SNS 회원: 성명, 이메일 주소",
-
+                    detail: "이용약관 동의",
                     checked: false,
                 },
                 {
-                    text: "안전을 최우선으로",
-                    detail: "상대방을 잘 모르는 상태에서 개인 정보를 알려주지마세요.",
+                    detail: "개인정보수집이용",
                     checked: false,
                 },
                 {
-                    text: "매너 있는 대화",
-                    detail: "위트 있게",
+                    detail: "만 14세 이상입니다.",
                     checked: false,
-                },
-                {
-                    text: "개인정보 수집에 동의합니다",
-                    detail: "",
-                    checked: false
                 },
             ],
             agreeAll: false,
@@ -63,34 +54,45 @@ export default {
             <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
                 aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-        <div class="container mt-5 pt-2">
-            <h2 class="text-center mb-4">회원가입</h2>
-            <div class="signup-container">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item" v-for="(item, index) in agreementItems" :key="index">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" :id="`agree${index + 1}`"
-                                v-model="item.checked" />
-                            <label class="form-check-label" :for="`agree${index + 1}`">
-                                <div class="checkbox-content">
-                                    <h3 v-if="index === 0">{{ item.text }}</h3>
-                                    <h4 v-else>{{ item.text }}</h4>
-                                    <p>{{ item.detail }}</p>
-                                </div>
-                            </label>
+        <div class="container mt-5 pt-2" style="display: flex; flex-direction: column; align-items: center;">
+            <div class="accordion" id="agreementAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            꼭 읽어보세요!
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                        data-bs-parent="#agreementAccordion">
+                        <div class="accordion-body">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" v-for="(item, index) in agreementItems" :key="index">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" :id="`agree${index + 1}`"
+                                            v-model="item.checked" />
+                                        <label class="form-check-label" :for="`agree${index + 1}`">
+                                            <div class="checkbox-content">
+                                                <h3 v-if="index === 0">{{ item.text }}</h3>
+                                                <h4 v-else>{{ item.text }}</h4>
+                                                <p>{{ item.detail }}</p>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="form-check mt-3">
+                                <input class="form-check-input" type="checkbox" id="agreeAll" v-model="agreeAll" />
+                                <label class="form-check-label" for="agreeAll">전체 동의</label>
+                            </div>
                         </div>
-                    </li>
-                </ul>
-                <div class="form-check mt-3">
-                    <input class="form-check-input" type="checkbox" id="agreeAll" v-model="agreeAll" />
-                    <label class="form-check-label" for="agreeAll">전체 동의</label>
+                    </div>
                 </div>
             </div>
-            <div class="d-grid gap-2 mt-4">
-                <!-- "동의함" 버튼 -->
+            <div style="margin-top: 20px;">
                 <button type="button" class="btn btn-success btn-lg" @click="proceedToNextPage"
                     :disabled="!agreementItems.every((item) => item.checked)">
-                    동의함
+                    다음
                 </button>
             </div>
         </div>
@@ -102,7 +104,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50%;
+    width: 55%;
     height: auto;
     background-color: #ffffff;
     border-radius: 10px;
@@ -115,5 +117,17 @@ export default {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     /* 그림자 추가 */
     transition: background-color 0.2s ease;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #67c23a;
+}
+
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100vw;
+  }
 }
 </style>

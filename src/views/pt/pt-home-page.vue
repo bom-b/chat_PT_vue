@@ -1,6 +1,6 @@
 <template>
-  <main style="user-select: none">
-    <section id="hero" class="hero d-flex align-items-center section-bg">
+  <main style="user-select: none" >
+    <section id="hero" class="hero d-flex align-items-center section-bg" style="padding: 20px;">
       <div class="col-12" style="max-width: 1600px; margin: 0 auto">
         <div
           data-aos="fade-in"
@@ -39,126 +39,7 @@
     </section>
     <!-- End Hero Section -->
 
-    <!--  오늘 어쩌구~ -->
-    <section>
-      <div class="gray" style="min-height: 100%; height: auto; padding: 30px">
-        <div class="section1800">
-          <h3
-            class="TheJamsil400"
-            data-aos="fade-in"
-            data-aos-duration="2000"
-            data-aos-delay="100"
-          ></h3>
-          <div
-            class="row justify-content-center align-items-center"
-            style="margin-top: 50px; text-align: center"
-          >
-            <div
-              class="goal-box col-2"
-              style="
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-              "
-              data-aos="fade-in"
-              data-aos-duration="1000"
-              data-aos-delay="200"
-            >
-              <p class="TheJamsil400" style="display: inline-block">
-                <router-link to="/trainer/pt_members" class="router-link">
-                  <img
-                    class=""
-                    src="../../assets/img/time.png"
-                    alt=""
-                    style="width: 32px"
-                  /><button class="select_button_menu time_cl">휴무일</button
-                  ><br />
-                </router-link>
-              </p>
-            </div>
-            <div
-              class="goal-box col-2"
-              style="
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-              "
-              data-aos="fade-in"
-              data-aos-duration="1000"
-              data-aos-delay="200"
-            >
-              <p class="TheJamsil400" style="display: inline-block">
-                <router-link to="/trainer/pt_members" class="router-link">
-                  <img
-                    class=""  
-                    src="../../assets/img/user_icon.png"
-                    alt=""
-                    style="width: 32px"
-                  /><button class="select_button_menu mem_cl">
-                    회원 관리_수정중(이성한)</button
-                  ><br />
-                </router-link>
-              </p>
-            </div>
-            <div
-              class="goal-box col-2"
-              style="
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-              "
-              data-aos="fade-in"
-              data-aos-duration="1000"
-              data-aos-delay="200"
-            >
-              <p class="TheJamsil400" style="display: inline-block">
-                <router-link to="/trainer/pt_chat" class="router-link">
-                </router-link>
-              </p>
-            </div>
-
-            <div
-              class="goal-box col-2"
-              style="
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-              "
-              data-aos="fade-in"
-              data-aos-duration="1000"
-              data-aos-delay="200"
-            >
-              <p class="TheJamsil400" style="display: inline-block">
-                <router-link to="/trainer/pt_review#" class="router-link">
-                  <img
-                    class=""
-                    src="../../assets/img/recommend.png"
-                    alt=""
-                    style="width: 32px"
-                  /><button class="select_button_menu review_cl">
-                    리뷰 관리</button
-                  ><br />
-                </router-link>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section style="display: flex; justify-content: center">
-      <div class="chart-section row">
-        <div class="chart-container">
-          <canvas id="myChart1" width="300" height="200"></canvas>
-        </div>
-        <div class="chart-container">
-          <canvas id="myChart2" width="300" height="200"></canvas>
-        </div>
-        <div class="chart-container">
-          <canvas id="myChart3" width="300" height="200"></canvas>
-        </div>
-      </div>
-    </section>
+  
     <div class="col-12 green" style="height: 80px; margin-bottom: 0"></div>
 
     <div
@@ -300,27 +181,8 @@
   
   
 <script>
-import Chart from "chart.js/auto";
-const chartData = [
-  {
-    chartId: "myChart1",
-    filledPercentage: 70,
-    actualValue: 1,
-    title: "신규 신청",
-  },
-  {
-    chartId: "myChart2",
-    filledPercentage: 80,
-    actualValue: 2,
-    title: "새로운 채팅",
-  },
-  {
-    chartId: "myChart3",
-    filledPercentage: 50,
-    actualValue: 3,
-    title: "신규 리뷰",
-  },
-];
+
+
 export default {
   name: "PtHomePage",
   data() {
@@ -333,14 +195,7 @@ export default {
   },
   mounted() {
     this.fetchData();
-    chartData.forEach((data) => {
-      this.createChart(
-        data.chartId,
-        data.filledPercentage,
-        data.actualValue,
-        data.title
-      );
-    });
+
   },
   computed: {
     // 'live' 상태인 데이터만 필터링
@@ -453,80 +308,7 @@ export default {
     getImageUrl(path) {
       return require("@/assets/img/" + path);
     },
-    // [st]차트를 위한 스크립트
-    createChart(chartId, filledPercentage, actualValue, title) {
-      const ctx = document.getElementById(chartId).getContext("2d");
-      new Chart(ctx, {
-        type: "doughnut",
-        data: {
-          labels: [`${actualValue}명`, ""],
-          datasets: [
-            {
-              data: [filledPercentage, 100 - filledPercentage], // 항상 70% 차트
-              backgroundColor: [
-                "rgba(54, 162, 235, 0.6)",
-                "rgba(211, 211, 211, 0.5)",
-              ],
-              borderColor: ["rgba(54, 162, 235, 1)", "rgba(211, 211, 211, 1)"],
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          cutout: "50%",
-          responsive: false,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false,
-            },
-            tooltip: {
-              enabled: false,
-            },
-            title: {
-              display: true,
-              text: title,
-            },
-
-            annotation: {
-              annotations: [
-                {
-                  type: "text",
-                  font: {
-                    size: 14,
-                  },
-                  textAlign: "center",
-                  mode: "point",
-                  x: "50%",
-                  y: "50%",
-                  text: actualValue + "명",
-                },
-              ],
-            },
-          },
-        },
-        plugins: [
-          {
-            beforeDraw: function (chart) {
-              var width = chart.width,
-                height = chart.height,
-                ctx = chart.ctx;
-              ctx.restore();
-              var fontSize = (height / 114).toFixed(2);
-              ctx.font = fontSize + "em sans-serif";
-              ctx.textBaseline = "middle";
-
-              var text = actualValue + "명", // 중앙에 표시할 실제 값
-                textX = Math.round((width - ctx.measureText(text).width) / 2),
-                textY = height / 2 + 15;
-              ctx.fillText(text, textX, textY);
-              ctx.save();
-            },
-          },
-        ],
-      });
-    },
-    // [ed]차트를 위한 스크립트
+   
   },
 };
 

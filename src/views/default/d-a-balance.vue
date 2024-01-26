@@ -1,5 +1,5 @@
 <template>
-  <main id="main" class="">
+  <main id="main" class="" style="padding-bottom: 25px ;">
     <analyze_header />
     <div class="container">
       <div class="mt-4">
@@ -21,7 +21,7 @@
       </div>
 
 
-      <div class="row" v-if="hasData">
+      <div class="row mt-5" v-if="hasData && chooseone != 'foodcal'" >
         <div class="col-md-4">
 
           <div class="card">
@@ -114,7 +114,6 @@
 <style scoped>
 .comment-container {
   margin-top: 45px;
-  margin-bottom: 45px;
   padding: 20px;
   background: #ffffff;
   display: flex;

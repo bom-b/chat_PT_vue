@@ -223,7 +223,7 @@ button:hover {
   width: 100%; /* 전체 너비를 차지하도록 설정 */
   min-height: 60vh; /* 최소 높이를 원래 설정한 높이로 지정 */
   max-height: none; /* 최대 높이는 제한 없음 */
-  //height: 100%; /* 전체 높이를 차지하도록 설정 */
+  height: 100%; /* 전체 높이를 차지하도록 설정 */
   display: flex;
   flex-direction: column;
   justify-content: flex-start; /* 상단 정렬 */
@@ -287,9 +287,9 @@ button:hover {
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.3);
 }
 
-.card img {
-  width: 100%;
-  height: auto;
+.card-img-top {
+  width: 218px;
+  height: 218px;
   border-radius: 8px; /* 이미지에도 둥근 모서리 적용 */
 }
 

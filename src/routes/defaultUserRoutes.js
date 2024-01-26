@@ -14,7 +14,7 @@ import D_A_Balance from "@/views/default/d-a-balance.vue";
 import D_A_Record from "@/views/default/d-a-record.vue";
 import D_A_Recommand from "@/views/default/d-diet-recommand.vue";
 import D_T_Detail from "@/views/default/d-trainer-detail.vue";
-import D_Member_Edit from "@/views/default/d-member_edit.vue";
+import Dmember_edit from "@/views/default/d-member_edit.vue";
 
 const defaultRoutes = [
     { path: "/default/d_home", component: D_Home },
@@ -32,7 +32,7 @@ const defaultRoutes = [
     { path: "/default/d_recommand", component: D_A_Recommand },
     { path: "/default/d_a_record", component: D_A_Record },
     { path: "/default/d_trainer_detail/:id", component: D_T_Detail },
-    { path: "/default/d_member_edit/", component: D_Member_Edit },
+    { path: "/default/d_member_edit/", component: Dmember_edit },
     
 ];
 

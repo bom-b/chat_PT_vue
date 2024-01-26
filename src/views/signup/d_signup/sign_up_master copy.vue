@@ -9,7 +9,7 @@
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import { mapState } from "vuex";
-import signUp1 from "@/views/signup/d_signup/sign_up.vue";
+import signUp1 from "@/views/signup/d_signup/sign_up1.vue";
 import signUp2 from "@/views/signup/d_signup/sign_up2.vue";
 import signUp3 from "@/views/signup/d_signup/sign_up3.vue";
 import signUp4 from "@/views/signup/d_signup/sign_up4.vue";

@@ -19,7 +19,7 @@
             <p style="font-size: 1.75rem;">회원님의 선호 음식을 <img src="../../assets/img/배경지운 로고.png" alt=""
                 style="width: 50px" /><span class="TheJamsil400"
                 style="font-size: 2.0rem; color: coral; font-weight: bold;"> "AI"</span> 가 분석해 추천해 드려요</p>
-            <div id="app" style="margin-top: 45px;">
+            <div id="app" style="margin-top: 45px;" v-if="lastfood">
               <div class="header section1400">
                 <span class="title">마지막으로 등록한 음식</span>
                 <div class="profile-image-wrapper">

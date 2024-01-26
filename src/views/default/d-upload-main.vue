@@ -10,7 +10,7 @@
         >
           <span class="highlight">등록 방법</span>을 선택해주세요.
         </h2>
-        <div class="row" style="text-align: center; margin: auto; padding-bottom : 50px;" >
+        <div class="row" style="text-align: center; margin: auto; padding-bottom : 50px;">
           <router-link
             to="/default/d_upload_self"
             class="col-md-6 col-sm-12 router-link"

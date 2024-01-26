@@ -11,7 +11,11 @@ export default {
         purpose: null,
         activity: null,
         target_weight: '',
-      }
+      },
+      // 기본값
+      // 33, 70, 103, 133, 163
+      // 16.5, 51.5, 118, 148, 171.5
+      arrowXpoint: 171.5,
     };
   },
   computed: {
@@ -22,24 +26,61 @@ export default {
         return 50;
       }
     },
-    images() {
-      return [
-        { path: require('../../../../public/assets/img/bmi/bmi1.png'), alt: 'Image 1', active: this.user.bmi >= 0 && this.user.bmi < 18.5 },
-        { path: require('../../../../public/assets/img/bmi/bmi2.png'), alt: 'Image 2', active: this.user.bmi >= 18.5 && this.user.bmi < 23 },
-        { path: require('../../../../public/assets/img/bmi/bmi3.png'), alt: 'Image 3', active: this.user.bmi >= 23 && this.user.bmi < 25 },
-        { path: require('../../../../public/assets/img/bmi/bmi4.png'), alt: 'Image 4', active: this.user.bmi >= 25 },
-      ];
-    },
+  },
+  mounted() {
+    // 페이지 로딩 시 화살표와 텍스트를 업데이트
+    this.updateArrowAndText();
   },
   methods: {
+    formatBirthDate() {
+      const date = new Date();
+      const year = date.getFullYear().toString().slice(-2);
+      const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+      const day = date.getDate().toString().padStart(2, '0');
+
+      const formattedDate = `${year}/${month}/${day}`;
+      return this.user.birth = formattedDate;
+    },
     calculatebmi() {
       if (this.user.height && this.user.weight) {
         this.user.bmi = (this.user.weight / ((this.user.height / 100) ** 2)).toFixed(2);
-        return this.user.bmi;
+        let bmi = this.user.bmi;
+        if (bmi < 15) {
+          return "Error";
+        } else if (bmi < 18.5) {
+          this.arrowXpoint = 16.5;
+          return bmi;
+        } else if (bmi < 25) {
+          this.arrowXpoint = 51.5;
+          return bmi;
+        } else if (bmi < 30) {
+          this.arrowXpoint = 118;
+          return bmi;
+        } else if (bmi < 35) {
+          this.arrowXpoint = 148;
+          return bmi;
+        } else if (bmi < 40) {
+          this.arrowXpoint = 171.5;
+          return bmi;
+        } else if (bmi > 50) {
+          this.arrowXpoint = 16.5;
+          return "Error";
+        }
       } else {
         return '';
       }
     },
+
+    updateArrowAndText() {
+      // 화살표와 텍스트를 업데이트
+      const arrowLine = this.$refs.arrowLine;
+      if (arrowLine) {
+        arrowLine.setAttribute('transform', `rotate(${this.arrowXpoint} 140 140)`);
+      }
+    },
+
+
+
     setgender(gender) {
       this.user.gender = gender;
     },
@@ -50,6 +91,7 @@ export default {
       this.user.activity = activity;
     },
     proceedToNextPage() {
+      this.formatBirthDate();
       try {
         const isValid = 1;
         const data = {
@@ -60,6 +102,7 @@ export default {
           gender: this.user.gender,
           purpose: this.user.purpose,
           activity: this.user.activity,
+          target_weight: this.user.target_weight
         };
         if (isValid) {
           this.$emit("nextPage", data);
@@ -80,26 +123,28 @@ export default {
         <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
           aria-valuemin="0" aria-valuemax="100"></div>
       </div>
-      <div class="container mt-5 pt-2">
-        <h2>정확한 판단을 위해 정보를 입력해주세요.</h2>
+      <div class="container mt-5 pt-2" style="margin-top: 100px;">
+        <div id="title-box">
+          <h2 id="title">정확한 판단을 위해 정보를 입력해주세요.</h2>
+        </div>
         <div class="input-container">
           <ul>
             <li>
               <label for="user.gender">성별</label>
               <div class="btn-group" role="group">
-                <button type="button" class="btn" :class="{ 'btn-male': user.gender === 'male' }"
-                  @click="setgender('male')">
+                <button type="button" class="btn btn-gender btn-gender-male"
+                  :class="{ 'btn-male': user.gender === 'male' }" @click="setgender('male')">
                   <i class="material-icons">male</i>
                 </button>
-                <button type="button" class="btn" :class="{ 'btn-female': user.gender === 'female' }"
-                  @click="setgender('female')">
+                <button type="button" class="btn btn-gender btn-gender-female"
+                  :class="{ 'btn-female': user.gender === 'female' }" @click="setgender('female')">
                   <i class="material-icons">female</i>
                 </button>
               </div>
             </li>
             <li>
               <label for="user.birth">생년월일</label>
-              <input class="form-control" type="date" id="user.birth" v-model="user.birth">
+              <input class="form-control" type="date" id="user.birth" v-model="user.birth" >
             </li>
             <li>
               <label for="user.height">키(cm)</label>
@@ -115,21 +160,59 @@ export default {
             </li>
             <li>
               <label for="user.bmi"> BMI </label>
-              <div>{{ calculatebmi() }}</div>
             </li>
 
 
-            <!-- 
-            <div class="image-container">
-              <div v-for="image in images" :key="image.path" :class="{ 'active-image': image.active }">
-                <img :src="image.path" :alt="image.alt" class="image">
-              </div>
-            </div> -->
-            <div class="carousel">
-              <div v-for="image in images" :key="image.path" class="carousel__face">
-                <img :src="image.path" :alt="image.alt" :class="{ 'active-image': image.active }">
-              </div>
-            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="300px"
+              height="163px" viewBox="0 0 300 163">
+              <g transform="translate(18,18)" style="font-family:arial,helvetica,sans-serif;font-size: 12px;">
+                <defs>
+                  <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                    <polygon points="0 0, 10 3.5, 0 7"></polygon>
+                  </marker>
+                  <path id="curvetxt1" d="M-4 140 A140 140, 0, 0, 1, 284 140" style="fill: none;"></path>
+                  <path id="curvetxt2" d="M33 43.6 A140 140, 0, 0, 1, 280 140" style="fill: #none;"></path>
+                  <path id="curvetxt3" d="M95 3 A140 140, 0, 0, 1, 284 140" style="fill: #none;"></path>
+                  <path id="curvetxt4" d="M235.4 33 A140 140, 0, 0, 1, 284 140" style="fill: #none;"></path>
+                </defs>
+
+                <path
+                  d="M0 140 A140 140, 0, 0, 1, 6.9 96.7 A140 140, 0, 0, 1, 12.1 83.1 A140 140, 0, 0, 1, 22.6 63.8 L140 140 Z"
+                  fill="#1E90FF"></path>
+                <path d="M22.6 63.8 A140 140, 0, 0, 1, 96.7 6.9 L140 140 Z" fill="#008137"></path>
+                <path d="M96.7 6.9 A140 140, 0, 0, 1, 169.1 3.1 L140 140 Z" fill="#ffe400"></path>
+                <path d="M169.1 3.1 A140 140, 0, 0, 1, 233.7 36 L140 140 Z" fill="#d38888"></path>
+                <path d="M233.7 36 A140 140, 0, 0, 1, 273.1 96.7 L140 140 Z" fill="#bc2020"></path>
+                <path d="M273.1 96.7 A140 140, 0, 0, 1, 280 140 L140 140 Z" fill="#8a0101"></path>
+                <path d="M45 140 A90 90, 0, 0, 1, 230 140 Z" fill="#fff"></path>
+                <circle cx="140" cy="140" r="10" fill="#666"></circle>
+                <g style="paint-order: stroke;stroke: #fff;stroke-width: 2px;">
+                  <text x="25" y="111" transform="rotate(-57, 10, 83)">18.5</text>
+                  <text x="97" y="29" transform="rotate(-18, 97, 29)">25</text>
+                  <text x="157" y="20" transform="rotate(12, 157, 20)">30</text>
+                  <text x="214" y="45" transform="rotate(42, 214, 45)">35</text>
+                  <text x="252" y="95" transform="rotate(72, 252, 95)">40</text>
+                </g>
+                <g style="font-size: 14px;"><text>
+                    <textPath xlink:href="#curvetxt1">저체중</textPath>
+                  </text><text>
+                    <textPath xlink:href="#curvetxt2">정상</textPath>
+                  </text><text>
+                    <textPath xlink:href="#curvetxt3">과체중</textPath>
+                  </text><text>
+                    <textPath xlink:href="#curvetxt4">비만</textPath>
+                  </text></g>
+                <!-- 여기서 to 앞 값 고치기 -->
+                <line ref="arrowLine" x1="140" y1="140" x2="80" y2="140" stroke="#666" stroke-width="2"
+                  marker-end="url(#arrowhead)">
+                  <animateTransform attributeName="transform" attributeType="XML" type="rotate" :from="'0 140 140'"
+                    :to="arrowXpoint + ' 140 140'" dur="1s" fill="freeze" repeatCount="3"></animateTransform>
+                </line>
+                <text x="100" y="120" style="font-size: 30px;font-weight:bold;color:#000;">{{ calculatebmi() }}</text>
+              </g>
+            </svg>
+
+
 
             <li>
               <label for="purpose">목적</label>
@@ -233,31 +316,6 @@ export default {
   transition: background-color 0.2s ease;
 }
 
-.active-image {
-  border: 2px solid red;
-}
-
-.image-container .image {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  max-height: 200px;
-  max-width: 100%;
-  height: auto;
-}
-
-
-.image {
-  width: 100px;
-  height: 200px;
-  margin: 5px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-
 .button-container {
   display: flex;
   justify-content: center;
@@ -278,11 +336,36 @@ export default {
 
 .btn-male {
   background-color: skyblue;
+  border: 2px solid skyblue;
 }
 
 .btn-female {
   background-color: pink;
 }
+
+.btn-gender-male:hover {
+  background-color: skyblue;
+  border: 2px solid skyblue;
+  transform: scale(1.1);
+  transition: transform 0.3s;
+}
+
+.btn-gender-male {
+  border: 2px solid skyblue;
+}
+
+.btn-gender-female {
+  border: 2px solid pink;
+}
+
+.btn-gender-female:hover {
+  background-color: pink;
+  border: 2px solid pink;
+  transform: scale(1.1);
+  transition: transform 0.3s;
+}
+
+
 
 @import url("https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap");
 
@@ -304,10 +387,40 @@ button {
 }
 
 .selected-purpose {
-  background-color: rgb(13, 73, 204);
+  background-color: rgb(255, 255, 255);
+  color: #00997b;
 }
 
 .selected-activity {
-  background-color: rgb(13, 73, 204);
+  background-color: rgb(255, 255, 255);
+  color: #00997b;
+}
+
+#title-box {
+  padding-bottom: 100px;
+}
+
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100vw;
+  }
+
+  .container {
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 95vw;
+  }
+
+  #title-box {
+    padding-bottom: 50px;
+  }
+
+  #title {
+    font-family: 'TheJamsil400', sans-serif;
+    font-size: 18px;
+  }
+
 }
 </style>

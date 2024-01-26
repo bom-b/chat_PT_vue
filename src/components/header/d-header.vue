@@ -111,25 +111,16 @@ nav {
             >
           </li>
         </ul>
-        <!-- [st]위젯 -->
-
-        <button @click="toggleWidget" class="btn">
-          {{ widgetVisible ? "❌ 닫기" : nickname + "님의 마이페이지" }}
-        </button>
-
-        <div v-if="widgetVisible" class="floating-widget" :style="{ width: widgetWidth, height: widgetHeight }">
-          <!-- <div v-if="widgetVisible" class="floating-widget"> -->
-          <!-- 위젯 내용 -->
-          <WidgetContent :widgetVisible="widgetVisible"/>
-        </div>
-
-        <!-- [ed]위젯 -->
-
+        <div style="vertical-align: center; align-items: center;">
+          <button class="btn">
+{{nickname}} 님 환영합니다.</button>
+      </div>
         <div class="profile-img-container d-flex" style="margin-right: 20px">
+          
           <img
               class="profile-img"
-              src="../../assets/img/코딩춘식.jpeg"
-              alt=""
+              :src="`${this.$s3BaseURL}/normal_user/profile_img/${userInfo.nm_PROFILEIMG}`"
+              alt="프로필이미지"
               style="width: 32px; object-fit: contain"
               @click="mypage_edit"
           />
@@ -143,7 +134,6 @@ nav {
 </template>
 
 <script>
-import WidgetContent from "@/components/header/mypage/WidgetContent.vue";
 import {ref} from "vue";
 import router from "@/router";
 
@@ -152,7 +142,7 @@ export default {
   name: "app-header",
 
   components: {
-    WidgetContent, // 마이페이지 위젯사용을 위한 추가
+
   },
 
   computed: {
@@ -177,6 +167,8 @@ export default {
 
   data() {
     return {
+      userInfo: {},
+
       navLinks: [
         {name: "카카오톡 채널", route: "/default/d_kakao"},
         {name: "식단등록", route: "/default/d_upload_main"},
@@ -194,6 +186,8 @@ export default {
   mounted() { //마이페이지 위젯
     window.addEventListener("resize", this.handleResize);
     this.handleResize(); // 초기 렌더링 시 호출
+    this.fetchUserInfo();
+
   },
   unmounted() { //마이페이지 위젯
     window.removeEventListener('resize', this.handleResize);
@@ -214,6 +208,39 @@ export default {
       this.widgetWidth = window.innerWidth > 768 ? '960px' : '468px';
       this.widgetHeight = window.innerWidth > 768 ? '607px' : '750px';
       // 원하는 조건에 따라 크기를 동적으로 변경할 수 있습니다.
+    },
+
+    // 유저 인포
+    fetchUserInfo() {
+      // Axios를 사용하여 사용자 정보 가져오기
+      this.$axios
+        .get("/getuserInfo")
+        .then((response) => {
+          const userData = response.data[0]; // 데이터 배열의 첫 번째 요소를 사용
+          this.userInfo = {
+            // ID: userData.id,
+            // EMAIL: userData.email,
+            // PASSWORD: userData.password,
+            // NICKNAME: userData.nickname, // 닉네임 필드가 name으로 가정
+            // name: userData.name,
+            // gender: userData.gender,
+            // role: userData.role,
+            // // birth:  userData.birth,
+            // target_WEIGHT: userData.target_WEIGHT,
+            // kakaocode: userData.kakaocode ? userData.kakaocode : "",
+            // height: userData.height,
+            // activity: userData.activity,
+            // weight: userData.weight,
+            // purpose: userData.purpose, // v-model 들어갈 데이터라 원본(purpose의 숫자형태) 보존안함
+            // region: userData.region,
+            nm_PROFILEIMG: userData.nm_PROFILEIMG,
+            // 변환해서 저장할 데이터
+            // age: this.calculateAge(userData.birth),
+          };
+        })
+        .catch((error) => {
+          console.error("Error fetching user info:", error);
+        });
     },
   },
 };
