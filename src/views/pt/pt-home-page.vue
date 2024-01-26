@@ -1,6 +1,10 @@
 <template>
-  <main style="user-select: none" >
-    <section id="hero" class="hero d-flex align-items-center section-bg" style="padding: 20px;">
+  <main style="user-select: none">
+    <section
+      id="hero"
+      class="hero d-flex align-items-center section-bg"
+      style="padding: 20px"
+    >
       <div class="col-12" style="max-width: 1600px; margin: 0 auto">
         <div
           data-aos="fade-in"
@@ -39,7 +43,6 @@
     </section>
     <!-- End Hero Section -->
 
-  
     <div class="col-12 green" style="height: 80px; margin-bottom: 0"></div>
 
     <div
@@ -113,8 +116,9 @@
             backgroundImage: 'url(' + getImageUrl(user.backgroundImage) + ')',
           }"
         ></div>
+        <!-- :src="getImageUrl(user.nm_PROFILEIMG)" -->
         <img
-          :src="getImageUrl(user.nm_PROFILEIMG)"
+          :src="`${this.$s3BaseURL}/normal_user/profile_img/${user.nm_PROFILEIMG}`"
           class="card-profile-img"
           alt="Profile Image"
         />
@@ -127,7 +131,6 @@
       </div>
     </section>
 
-
     <section>
       <div class="card card_plale">
         <div class="card-header">
@@ -137,7 +140,6 @@
         </div>
 
         <div class="card-body">
-
           <div class="content-box">
             <div class="title">
               <a href="view.html">안녕하세요 이것은 게시판 제목입니다 .</a>
@@ -181,8 +183,6 @@
   
   
 <script>
-
-
 export default {
   name: "PtHomePage",
   data() {
@@ -195,7 +195,6 @@ export default {
   },
   mounted() {
     this.fetchData();
-
   },
   computed: {
     // 'live' 상태인 데이터만 필터링
@@ -308,7 +307,6 @@ export default {
     getImageUrl(path) {
       return require("@/assets/img/" + path);
     },
-   
   },
 };
 
