@@ -37,7 +37,6 @@ AdminaxiosInstance.interceptors.request.use(
                 });
             window.localStorage.removeItem('jwtToken');
             window.localStorage.removeItem('role');
-            window.localStorage.removeItem('name');
         }
 
         return config;
