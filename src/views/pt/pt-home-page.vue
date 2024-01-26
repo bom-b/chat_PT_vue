@@ -1,46 +1,20 @@
 <template>
-  <main style="user-select: none" >
-    <section id="hero" class="hero d-flex align-items-center section-bg" style="padding: 20px;">
-      <div class="col-12" style="max-width: 1600px; margin: 0 auto">
-        <div
-          data-aos="fade-in"
-          data-aos-duration="1000"
-          class="TheJamsil400"
-          style="white-space: nowrap; margin: 1vw"
-        >
-          <h1>간편하게 관리하는 회원 식단 관리 솔루션</h1>
-          <h2>Chat PT</h2>
-        </div>
-        <p
-          data-aos="fade-in"
-          data-aos-duration="2000"
-          data-aos-delay="100"
-          class=""
-          style="white-space: nowrap; margin: 1vw; color: #727070"
-        >
-          건강한 식단을 찾고 계신 당신에게
-          <br />
-          맞춤 식단 전문가가 되어 드립니다.
+  <main style="user-select: none">
+    <section id="hero" class="hero d-flex align-items-center section-bg">
+      <div class="col-12" style="max-width: 1600px; margin: 0 auto;">
+        <p data-aos="fade-in" data-aos-duration="1000" class="TheJamsil400" id="hero-title">간편하게 이용하는 식단관리
+          솔루션,<br>Chat PT</p>
+        <p data-aos="fade-in" data-aos-duration="2000" data-aos-delay="100" class="" id="hero-sub"
+           style="color: #727070;">
+          회원의 식단관리를 대신 해줄 사람이 필요한 당신에게
+          <br>
+          식단 관리 솔루션을 제공합니다.
         </p>
-        <div
-          class="d-flex"
-          data-aos="fade-in"
-          data-aos-duration="2000"
-          data-aos-delay="100"
-        >
-          <a
-            href="shipdan.me/"
-            class=""
-            style="margin: 1vw; text-decoration: none"
-            >자세히 알아보기</a
-          >
-        </div>
       </div>
     </section>
     <!-- End Hero Section -->
 
-  
-    <div class="col-12 green" style="height: 80px; margin-bottom: 0"></div>
+    <div class="col-12 green" style="height: 40px; margin-bottom: 0"></div>
 
     <div
       class="info-container p-4 my-4 d-flex align-items-center justify-content-between bg-light border rounded"
@@ -113,8 +87,9 @@
             backgroundImage: 'url(' + getImageUrl(user.backgroundImage) + ')',
           }"
         ></div>
+        <!-- :src="getImageUrl(user.nm_PROFILEIMG)" -->
         <img
-          :src="getImageUrl(user.nm_PROFILEIMG)"
+          :src="`${this.$s3BaseURL}/normal_user/profile_img/${user.nm_PROFILEIMG}`"
           class="card-profile-img"
           alt="Profile Image"
         />
@@ -126,63 +101,11 @@
         </div>
       </div>
     </section>
-
-
-    <section>
-      <div class="card card_plale">
-        <div class="card-header">
-          <div class="faq-tab">
-            <a class="faq-tab-item active">공지사항</a>
-          </div>
-        </div>
-
-        <div class="card-body">
-
-          <div class="content-box">
-            <div class="title">
-              <a href="view.html">안녕하세요 이것은 게시판 제목입니다 .</a>
-            </div>
-          </div>
-
-          <div class="content-list">
-            <div class="title">
-              <a href="view.html">게시판에 제목을 입력합니다.</a>
-            </div>
-          </div>
-
-          <div class="content-box">
-            <div class="title">
-              <a href="view.html">이곳에 제목을 입력해주세요.</a>
-            </div>
-          </div>
-
-          <div class="content-box">
-            <div class="title">
-              <a href="view.html">오늘의 날씨는 어떤가요.</a>
-            </div>
-          </div>
-
-          <ul class="number">
-            <li><a href="#">&lt; </a></li>
-            <li><a href="#" class="active">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">&gt; </a></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-    <div>
-      <a><img src="../../assets/img/춘식이눕기.png" /></a>
-    </div>
   </main>
 </template>
   
   
 <script>
-
-
 export default {
   name: "PtHomePage",
   data() {
@@ -195,7 +118,6 @@ export default {
   },
   mounted() {
     this.fetchData();
-
   },
   computed: {
     // 'live' 상태인 데이터만 필터링
@@ -308,7 +230,6 @@ export default {
     getImageUrl(path) {
       return require("@/assets/img/" + path);
     },
-   
   },
 };
 
@@ -524,9 +445,12 @@ body {
 }
 
 /* 반응형 디자인 */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .card-grid {
     grid-template-columns: repeat(1, 1fr); /* 모바일에서는 1열 그리드 */
+  }
+  .card {
+    width: 70%;
   }
 }
 </style>
@@ -566,5 +490,52 @@ body {
 
 .image-hover-item:hover .image-hover-text {
   opacity: 1;
+}
+</style>
+
+<style lang="scss" scoped>
+#hero {
+  height: 350px;
+  background-image: url('../../../public/assets/img/background/3-2.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  //background-attachment: fixed; /* 스크롤을 내려도 이미지는 고정 */
+  color: white; /* 텍스트 색상을 설정하세요 (배경 이미지에 대한 대비를 높이기 위해) */
+  text-align: left;
+
+  #hero-title {
+    white-space: nowrap;
+    margin: 1vw;
+    font-size: 1.5rem;
+  }
+
+  #hero-sub {
+    white-space: nowrap;
+    margin: 1vw;
+    font-size: 1rem;
+    text-decoration: none;
+  }
+}
+
+@media (max-width: 768px) {
+  #hero {
+    height: 300px;
+    padding: 0 20px;
+
+    // 글자크기 작게
+    #hero-title {
+      white-space: nowrap;
+      margin: 1vw;
+      font-size: 1.3rem;
+    }
+
+    #hero-sub {
+      white-space: nowrap;
+      margin: 3vw 1vw 1vw;
+      font-size: 1rem;
+      text-decoration: none;
+    }
+  }
 }
 </style>

@@ -27,15 +27,12 @@ export default {
       }
     },
   },
-  mounted() {
-    // 페이지 로딩 시 화살표와 텍스트를 업데이트
-    this.updateArrowAndText();
-  },
+
   methods: {
     formatBirthDate() {
       const date = new Date();
       const year = date.getFullYear().toString().slice(-2);
-      const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
       const day = date.getDate().toString().padStart(2, '0');
 
       const formattedDate = `${year}/${month}/${day}`;
@@ -70,16 +67,6 @@ export default {
         return '';
       }
     },
-
-    updateArrowAndText() {
-      // 화살표와 텍스트를 업데이트
-      const arrowLine = this.$refs.arrowLine;
-      if (arrowLine) {
-        arrowLine.setAttribute('transform', `rotate(${this.arrowXpoint} 140 140)`);
-      }
-    },
-
-
 
     setgender(gender) {
       this.user.gender = gender;
@@ -144,7 +131,7 @@ export default {
             </li>
             <li>
               <label for="user.birth">생년월일</label>
-              <input class="form-control" type="date" id="user.birth" v-model="user.birth" >
+              <input class="form-control" type="date" id="user.birth" v-model="user.birth">
             </li>
             <li>
               <label for="user.height">키(cm)</label>
@@ -203,10 +190,10 @@ export default {
                     <textPath xlink:href="#curvetxt4">비만</textPath>
                   </text></g>
                 <!-- 여기서 to 앞 값 고치기 -->
-                <line ref="arrowLine" x1="140" y1="140" x2="80" y2="140" stroke="#666" stroke-width="2"
+                <line x1="140" y1="140" x2="80" y2="140" stroke="#666" stroke-width="2"
                   marker-end="url(#arrowhead)">
                   <animateTransform attributeName="transform" attributeType="XML" type="rotate" :from="'0 140 140'"
-                    :to="arrowXpoint + ' 140 140'" dur="1s" fill="freeze" repeatCount="3"></animateTransform>
+                    :to="arrowXpoint + ' 140 140'" dur="1s" fill="freeze" repeatCount="1"></animateTransform>
                 </line>
                 <text x="100" y="120" style="font-size: 30px;font-weight:bold;color:#000;">{{ calculatebmi() }}</text>
               </g>
@@ -230,14 +217,12 @@ export default {
             <li>
               <label for="activity">활동량</label>
               <div class="purpose_list">
-                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 0 }" id=""
-                  @click="setActivity(0)"> 안 함</button>
-                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 1 }" id="no1"
-                  @click="setActivity(1)"> 저강도 </button>
-                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 2 }" id="no2"
-                  @click="setActivity(2)"> 중강도 </button>
-                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 3 }" id="no2"
-                  @click="setActivity(3)"> 고강도 </button>
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 0 }" id="week12"
+                  @click="setActivity(0)"> 주 1~2일 운동 </button>
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 1 }" id="week34"
+                  @click="setActivity(1)"> 주 3~4일 운동 </button>
+                <button class="btn btn-success" :class="{ 'selected-activity': user.activity === 2 }" id="every"
+                  @click="setActivity(2)"> 매일 운동 </button>
               </div>
             </li>
           </ul>

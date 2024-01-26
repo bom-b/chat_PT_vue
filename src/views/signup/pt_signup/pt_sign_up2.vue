@@ -45,6 +45,7 @@ export default {
             this.$emit("nextPage");
         },
     },
+
 };
 </script>
 
@@ -54,7 +55,7 @@ export default {
             <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
                 aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-        <div class="container mt-5 pt-2" style="display: flex; flex-direction: column; align-items: center;">
+        <div class="container mt-5 pt-2">
             <div class="accordion" id="agreementAccordion">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingOne">
@@ -89,12 +90,6 @@ export default {
                     </div>
                 </div>
             </div>
-            <div style="margin-top: 20px;">
-                <button type="button" class="btn btn-success btn-lg" @click="proceedToNextPage"
-                    :disabled="!agreementItems.every((item) => item.checked)">
-                    다음
-                </button>
-            </div>
         </div>
     </main>
 </template>
@@ -124,10 +119,10 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .main {
-    margin-left: 0px;
-    margin-right: 0px;
-    width: 100vw;
-  }
+    .main {
+        margin-left: 0px;
+        margin-right: 0px;
+        width: 100vw;
+    }
 }
 </style>
