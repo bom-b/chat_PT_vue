@@ -153,44 +153,65 @@ export default {
       // 모달 표시
       this.isModalVisible = true;
     },
-    submitImages() {
+    async submitImages() {
       if(Object.values(this.tabImages).every(images => images.length === 0)){
         this.$swal.fire("음식 사진을 올려주세요!","","warning");
         return;
       }
       this.isLoading = true;
       const formData = new FormData();
-      // tabImages 객체에 있는 각 탭별로 이미지 데이터를 순회
-      Object.keys(this.tabImages).forEach(tab => {
-        // 해당 탭에 있는 모든 이미지에 대해 순회
-        this.tabImages[tab].forEach((image, index) => {
-          // 각 이미지를 formData에 추가
-          // 키는 '탭이름[인덱스]' 형식이며, 값은 Base64 인코딩된 이미지 데이터
-          formData.append(`${tab}[${index}]`, image.src);
-        });
-      });
+
+      // 이미지 리사이즈 및 재인코딩 작업
+      for (const tab of Object.keys(this.tabImages)) {
+        for (let i = 0; i < this.tabImages[tab].length; i++) {
+          const image = this.tabImages[tab][i];
+          const resizedImage = await this.resizeImage(image.src);
+          formData.append(`${tab}[${i}]`, resizedImage);
+        }
+      }
+
       // 선택된 날짜를 formData에 추가
       if (this.selectedDate) {
         formData.append('date', this.selectedDate);
       }
-      console.log(formData.entries());
+
+      // 서버에 이미지 데이터 전송
       this.$axios.post('/food_up', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
-        .then(response => {
-          console.log("서버 응답:", response);
-          // 서버 응답 후 라우팅
-          this.isLoading = false;
-          this.$router.push('/default/d_upload_result');
-        })
-        .catch(error => {
-          this.isLoading = false;
-          this.$swal("분석 실패!");
-          console.error("에러 발생:", error);
-        });
+          .then(response => {
+            console.log("response : " + response);
+            // 처리 로직
+            this.isLoading = false;
+            this.$router.push('/default/d_upload_result');
+          })
+          .catch(error => {
+            this.isLoading = false;
+            this.$swal("분석 실패!");
+            console.error("에러 발생:", error);
+          });
     },
+
+// 이미지를 300x300으로 리사이즈하고 다시 인코딩하는 함수
+    resizeImage(base64Image) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = 300;
+          canvas.height = 300;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, 300, 300);
+          const resizedImage = canvas.toDataURL('image/jpeg');
+          resolve(resizedImage);
+        };
+        img.onerror = reject;
+        img.src = base64Image;
+      });
+    },
+
     // 사진 찍은 날짜 및 시간 추출
     async extractExifData(base64Image) {
       // Base64 인코딩된 데이터를 Blob 객체로 변환

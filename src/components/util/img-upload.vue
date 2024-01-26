@@ -64,6 +64,32 @@ export default {
       this.isDragOver = false;
 
     },
+    // 이미지를 리사이즈하고 처리하는 함수
+    resizeAndProcessImage(file) {
+      return new Promise((resolve, reject) => {
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              canvas.width = 300;
+              canvas.height = 300;
+
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+              const resizedImage = canvas.toDataURL('image/jpeg');
+              resolve(resizedImage);
+            };
+            img.src = e.target.result;
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        } else {
+          reject(new Error('파일 타입이 이미지가 아닙니다.'));
+        }
+      });
+    },
     handleDrop(event) {
       event.preventDefault();
       this.unhighlight();
@@ -75,7 +101,6 @@ export default {
         this.$swal('', '5장까지만 등록할 수 있습니다.', 'warning');
       }
       const processedImages = []; // 처리된 이미지들을 저장할 배열
-
       Promise.all(filesToUpload.map((file) => {
         return new Promise((resolve, reject) => {
           if (file.type.startsWith('image/')) {
