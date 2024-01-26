@@ -58,7 +58,7 @@
     <!-- 팝업 창 -->
     <div class="image-popup" v-if="popupImage" @click="hidePopup">
       <img
-        :src="`${this.$s3BaseURL}/trainer/awards_img/${popupImage}`"
+        :src="`${this.$s3BaseURL}/trainer/profile_img/${popupImage}`"
         alt="Enlarged Image"
       />
     </div>
@@ -67,7 +67,7 @@
       <img
         v-for="(image, index) in [trainerInfo.subimage1, trainerInfo.subimage2]"
         :key="index"
-        :src="`${this.$s3BaseURL}/trainer/awards_img/${image}`"
+        :src="`${this.$s3BaseURL}/trainer/profile_img/${image}`"
         alt="Profile Picture"
         @click="showPopup(image)"
       />

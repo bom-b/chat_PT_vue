@@ -48,6 +48,7 @@ export default {
         const isValid = 1;
         const data = {
           nm_profileimg: this.imageUrl
+          
         };
         if (isValid) {
           this.$emit("nextPage", data);
@@ -87,7 +88,6 @@ export default {
         <img v-if="imageUrl" :src="this.imageUrl" alt="일반회원 이미지" />
       </div>
       <div class="container mt-5 pt-2">
-        <!-- <h2 class="text-center mb-4">개인정보 동의</h2> -->
         <div class="accordion" id="agreementAccordion">
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
@@ -160,6 +160,18 @@ img {
   background-color: #67c23a;
 }
 
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100vw;
+    margin-top: 80px;
+    min-height: calc(100vh - 80px - 140px); /* 화면 최대길이 - 헤더높이 - 풋터높이*/
+  }
 
+  .profileIMG {
+    width: 100vw;
+  }
+}
 
 </style>

@@ -71,7 +71,7 @@ nav {
       style="min-height: 80px; background-color: white !important"
   >
     <div class="container-fluid">
-      <router-link to="/d_home" class="router-link">
+      <router-link to="/admin/a_userList" class="router-link">
         <img
             src="../../assets/img/배경지운 로고.png"
             alt=""
@@ -107,14 +107,14 @@ nav {
         <div class="profile-img-container d-flex" style="margin-right: 20px">
           <img
               class="profile-img"
-              src="../../assets/img/trainer1.jpg"
-              alt=""
+              :src="`${this.$s3BaseURL}/normal_user/profile_img/${userInfo.nm_PROFILEIMG}`"
+              alt="adsf"
               style="width: 32px; object-fit: contain"
           />
         </div>
         <form class="d-flex">
           <router-link to="/" class="router-link">
-            <button class="btn btn-login" type="button">로그아웃</button>
+            <button @click="logout" class="btn btn-login" type="button">로그아웃</button>
           </router-link>
         </form>
       </div>
@@ -123,20 +123,102 @@ nav {
 </template>
 
 <script>
+import {ref} from "vue";
+import router from "@/router";
+
 export default {
   components: {
 
   },
   name: "app-header",
+
+  setup() 
+  { 
+    const isLoggedIn = ref(!!localStorage.getItem("jwtToken"));
+
+    const logout = () => {
+      window.localStorage.removeItem('jwtToken');
+      window.localStorage.removeItem('name');
+      window.localStorage.removeItem('role');
+      isLoggedIn.value = false; // isLoggedIn 상태를 업데이트
+      router.push("/");
+    };
+
+    return {isLoggedIn, logout};
+  },
+
   data() {
     return {
       navLinks: [
         {name: "회원 관리", route: "/admin/a_userList"},
         {name: "데이터 관리", route: "/admin/a_checkFood"},
-        {name: "신고 관리", route: "/admin/a_report"},
       ],
+      userInfo: {
+      },
     };
   },
+  mounted() {
+    this.fetchUserInfo();
+  },
+  methods:{
+    fetchUserInfo() {
+      // Axios를 사용하여 사용자 정보 가져오기
+      this.$axios
+        .get("/getuserInfo")
+        .then((response) => {
+          const userData = response.data[0]; // 데이터 배열의 첫 번째 요소를 사용
+          this.userInfo = {
+            // ID: userData.id,
+            // // EMAIL: userData.email,
+            // // PASSWORD: userData.password,
+            // NICKNAME: userData.nickname, // 닉네임 필드가 name으로 가정
+            // name:userData.name,
+            // gender: userData.gender,
+            // role:  userData.role,
+            // birth:  userData.birth,
+            // target_WEIGHT:  userData.target_WEIGHT,
+            // kakaocode:  userData.kakaocode,
+            // height:  userData.height,
+            // activity:  userData.activity ,
+            // weight:  userData.weight,
+            // purpose:  this.purposeToText(userData.purpose),// v-model 들어갈 데이터라 원본(purpose의 숫자형태) 보존안함
+            // region: userData.region,
+            nm_PROFILEIMG:  userData.nm_PROFILEIMG,
+            // // 변환해서 저장할 데이터
+            // age: this.calculateAge(userData.birth),
+
+          };
+        })
+        .catch((error) => {
+          console.error("Error fetching user info:", error);
+        });
+    },
+    // 생일 변환
+    calculateAge(birthDate) {
+      const birth = new Date(birthDate);
+      const today = new Date();
+      let age = today.getFullYear() - birth.getFullYear();
+      const m = today.getMonth() - birth.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+        age--;
+      }
+      return age;
+    },
+    // 운동 목적 to TEXT
+    purposeToText(purpose) {
+      switch (purpose) {
+        case 0:
+          return "다이어트";
+        case 1:
+          return "체중유지";
+        case 2:
+          return "벌크업";
+        default:
+          return "알 수 없음"; // 기본값 처리
+      }
+    },
+  },
+  
   watch: {
     $route(newRoute) {
       this.currentRoute = newRoute.path;

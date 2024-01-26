@@ -6,77 +6,75 @@
       <span>음식 이미지를 분석 중입니다.</span>
     </div>
     <div v-else>
-    <div class="row">
-      <div class="col-3"></div>
-      <div class="container col-6" style="margin: 100px 0 100px 0; text-align: center;">
-        <h3 id="plz-up" class="" style=" white-space: nowrap">식단을 한 번에 업로드 해주세요
-          <i
-              class="fas fa-info-circle"
-              data-bs-toggle="tooltip"
-              data-bs-placement="top"
-              title="찍은 시간을 확인해서 자동으로 분류할 수 있어요
-      (아침 : 04:00~10:30, 점심 : 10:30~15:00, 저녁 : 17:00~21:00)
-        나머지 시간은 간식시간이에요!"
-              ref="info"
-          ></i>
-        </h3>
-        <!-- 날짜 선택기와 분류 버튼을 포함하는 컨테이너 -->
-        <div class="main-container">
-          <!-- 날짜 선택기와 분류 버튼을 포함하는 컨테이너 -->
-          <div class="date-and-classify-container">
-            <div class="date-picker">
-              <input class="datedate" type="date" v-model="selectedDate">
-            </div>
-            <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary" @click="submitClassification">분류</button>
-          </div>
-        </div>
-        <!-- imgUpload 영역 -->
-        <div class="imgUploadDiv">
-          <imgUpload :max-images="20" @image-uploaded="printImages($event)"/>
-        </div>
 
 
+      <div class="row">
         <div class="col-3"></div>
-      </div>
-
-    </div>
-    <!-- 부트스트랩 모달 -->
-    <div class="modal fade" id="myModal">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title">분류된 이미지</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="container col-6" style="margin: 100px 0 100px 0; text-align: center;">
+          <h3 id="plz-up" class="" style=" white-space: nowrap">식단을 한 번에 업로드 해주세요
+            <i class="fas fa-info-circle" data-bs-toggle="tooltip" data-bs-placement="top" title="찍은 시간을 확인해서 자동으로 분류할 수 있어요
+      (아침 : 04:00~10:30, 점심 : 10:30~15:00, 저녁 : 17:00~21:00)
+        나머지 시간은 간식시간이에요!" ref="info"></i>
+          </h3>
+          <!-- 날짜 선택기와 분류 버튼을 포함하는 컨테이너 -->
+          <div class="main-container">
+            <!-- 날짜 선택기와 분류 버튼을 포함하는 컨테이너 -->
+            <div class="date-and-classify-container">
+              <div class="date-picker">
+                <input class="datedate" type="date" v-model="selectedDate">
+              </div>
+              <button data-bs-toggle="modal" data-bs-target="#myModal" class="btn btn-primary"
+                @click="submitClassification">분류</button>
+            </div>
+          </div>
+          <!-- imgUpload 영역 -->
+          <div class="imgUploadDiv">
+            <imgUpload :max-images="20" @image-uploaded="printImages($event)" @image-removed="removeImageFromTabs($event)"/>
           </div>
 
-          <!-- Modal Body -->
-          <div class="modal-body">
-            <div v-for="(images, category) in tabImages" :key="category" class="category-container"
-                 @drop="drop($event, category)" @dragover.prevent>
-              <h5>{{ category }}</h5>
-              <div class="d-flex flex-wrap">
-                <div v-for="(image, index) in images" :key="index" class="m-2" draggable="true"
-                     @dragstart="dragStart($event, image, category)">
-                  <img :src="image.src" alt="Uploaded Preview" class="img-thumbnail" style="width: 100px; height: 100px;">
-                  <p>{{ image.time || '시간 데이터 없음' }}</p>
+
+          <div class="col-3"></div>
+        </div>
+
+      </div>
+      <!-- 부트스트랩 모달 -->
+      <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">분류된 이미지</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+              <div v-for="(images, category) in tabImages" :key="category" class="category-container"
+                @drop="drop($event, category)" @dragover.prevent>
+                <h5>{{ category }}</h5>
+                <div class="d-flex flex-wrap">
+                  <div v-for="(image, index) in images" :key="index" class="m-2" draggable="true"
+                    @dragstart="dragStart($event, image, category)">
+                    <img :src="image.src" alt="Uploaded Preview" class="img-thumbnail"
+                      style="width: 100px; height: 100px;">
+                    <p>{{ image.time || '시간 데이터 없음' }}</p>
+                  </div>
                 </div>
               </div>
             </div>
+
+
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">닫기</button>
+              <button class="btn btn-primary" data-bs-dismiss="modal" @click="submitImages">제출</button>
+            </div>
+
           </div>
-
-
-
-          <!-- Modal Footer -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">닫기</button>
-            <button class="btn btn-primary" data-bs-dismiss="modal" @click="submitImages">제출</button>
-          </div>
-
         </div>
       </div>
-    </div>
     </div>
   </main>
 </template>
@@ -115,6 +113,15 @@ export default {
     this.selectedDate = new Date().toISOString().substring(0, 10);
   },
   methods: {
+    removeImageFromTabs(eventData) {
+      // eventData에는 삭제된 이미지의 인덱스 정보가 포함되어 있습니다.
+      const { index } = eventData;
+
+      // tabImages의 각 카테고리에서 해당 인덱스의 이미지를 삭제합니다.
+      Object.keys(this.tabImages).forEach(category => {
+        this.tabImages[category] = this.tabImages[category].filter((_, imgIndex) => imgIndex !== index);
+      });
+    },
     dragStart(event, image, category) {
       event.dataTransfer.setData('image-info', JSON.stringify({ image, category }));
     },
@@ -133,7 +140,7 @@ export default {
       }
       this.tabImages[newCategory].push(image);
     },
-    printImages(newImages){
+    printImages(newImages) {
       newImages.forEach(async base64Image => {
         const { category, time } = await this.extractExifData(base64Image);
         if (!this.tabImages[category]) {
@@ -142,11 +149,15 @@ export default {
         this.tabImages[category].push({ src: base64Image, time });
       });
     },
-    submitClassification(){
+    submitClassification() {
       // 모달 표시
       this.isModalVisible = true;
     },
     submitImages() {
+      if(Object.values(this.tabImages).every(images => images.length === 0)){
+        this.$swal.fire("음식 사진을 올려주세요!","","warning");
+        return;
+      }
       this.isLoading = true;
       const formData = new FormData();
       // tabImages 객체에 있는 각 탭별로 이미지 데이터를 순회
@@ -162,22 +173,23 @@ export default {
       if (this.selectedDate) {
         formData.append('date', this.selectedDate);
       }
+      console.log(formData.entries());
       this.$axios.post('/food_up', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       })
-          .then(response => {
-            console.log("서버 응답:", response);
-            // 서버 응답 후 라우팅
-            this.isLoading = false;
-            this.$router.push('/default/d_upload_result');
-          })
-          .catch(error => {
-            this.isLoading = false;
-            this.$swal("분석 실패!");
-            console.error("에러 발생:", error);
-          });
+        .then(response => {
+          console.log("서버 응답:", response);
+          // 서버 응답 후 라우팅
+          this.isLoading = false;
+          this.$router.push('/default/d_upload_result');
+        })
+        .catch(error => {
+          this.isLoading = false;
+          this.$swal("분석 실패!");
+          console.error("에러 발생:", error);
+        });
     },
     // 사진 찍은 날짜 및 시간 추출
     async extractExifData(base64Image) {
@@ -212,7 +224,7 @@ export default {
                 category = '간식'; // 기타 시간대는 '간식'으로 분류
               }
             }
-            resolve({ category, time});
+            resolve({ category, time });
           } catch (error) {
             reject("EXIF 데이터 처리 중 오류 발생");
           }
@@ -233,64 +245,93 @@ export default {
   align-items: center;
   background-color: #ffffff;
 }
+
 .category-container {
-  width: 100%; /* 너비 고정 */
-  min-height: 150px; /* 최소 높이 설정 */
-  margin-bottom: 20px; /* 하단 마진 */
-  border: 1px solid #ccc; /* 테두리 */
-  padding: 10px; /* 내부 여백 */
-  background-color: #f8f9fa; /* 배경 색상 */
+  width: 100%;
+  /* 너비 고정 */
+  min-height: 150px;
+  /* 최소 높이 설정 */
+  margin-bottom: 20px;
+  /* 하단 마진 */
+  border: 1px solid #ccc;
+  /* 테두리 */
+  padding: 10px;
+  /* 내부 여백 */
+  background-color: #f8f9fa;
+  /* 배경 색상 */
 }
 
 
 .container {
-  display: flex; /* Flex 컨테이너로 설정 */
-  flex-direction: column; /* 자식 요소들을 세로 방향으로 정렬 */
-  align-items: center; /* 가로 축에서 중앙 정렬 */
-  justify-content: center; /* 세로 축에서 중앙 정렬 */
-  width: 100%; /* 컨테이너의 너비를 화면 너비에 맞춤 */
-  max-width: 130vh; /* 최대 너비 설정 */
-  margin: auto; /* 자동 마진을 사용하여 수평 중앙 정렬 */
-  height: auto; /* 높이 자동으로 설정 */
+  display: flex;
+  /* Flex 컨테이너로 설정 */
+  flex-direction: column;
+  /* 자식 요소들을 세로 방향으로 정렬 */
+  align-items: center;
+  /* 가로 축에서 중앙 정렬 */
+  justify-content: center;
+  /* 세로 축에서 중앙 정렬 */
+  width: 100%;
+  /* 컨테이너의 너비를 화면 너비에 맞춤 */
+  max-width: 130vh;
+  /* 최대 너비 설정 */
+  margin: auto;
+  /* 자동 마진을 사용하여 수평 중앙 정렬 */
+  height: auto;
+  /* 높이 자동으로 설정 */
 }
 
-.imgUploadDiv {
-}
+.imgUploadDiv {}
 
 .btn-primary {
   background-color: #45a049;
-  border: none; /* 테두리 제거 */
-  color: white; /* 텍스트 색상 */
-  padding: 10px 20px; /* 내부 여백 */
-  border-radius: 5px; /* 둥근 모서리 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
-  transition: all 0.3s ease; /* 부드러운 전환 효과 */
+  border: none;
+  /* 테두리 제거 */
+  color: white;
+  /* 텍스트 색상 */
+  padding: 10px 20px;
+  /* 내부 여백 */
+  border-radius: 5px;
+  /* 둥근 모서리 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* 그림자 효과 */
+  transition: all 0.3s ease;
+  /* 부드러운 전환 효과 */
 }
 
 .btn-primary:hover {
   background-color: #45a049;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* 호버 시 그림자 증가 */
-  transform: translateY(-2px); /* 위로 약간 이동 */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  /* 호버 시 그림자 증가 */
+  transform: translateY(-2px);
+  /* 위로 약간 이동 */
 }
 
 .main-container {
   display: flex;
-  justify-content: flex-end; /* 오른쪽 정렬 */
-  align-items: center; /* 세로축에서 중앙 정렬 */
-  width: 100%; /* 전체 너비 사용 */
+  justify-content: flex-end;
+  /* 오른쪽 정렬 */
+  align-items: center;
+  /* 세로축에서 중앙 정렬 */
+  width: 100%;
+  /* 전체 너비 사용 */
 }
 
 .date-and-classify-container {
-  display: flex; /* Flex 컨테이너로 설정 */
-  align-items: center; /* 자식 요소를 세로축 중앙에 배치 */
+  display: flex;
+  /* Flex 컨테이너로 설정 */
+  align-items: center;
+  /* 자식 요소를 세로축 중앙에 배치 */
 }
 
 .date-picker input[type="date"] {
   border: 1px solid #2a9d8f;
   border-radius: 5px;
-  margin-right: 10px; /* 오른쪽 여백 추가 */
+  margin-right: 10px;
+  /* 오른쪽 여백 추가 */
 }
-.datedate{
+
+.datedate {
   padding: 10px;
   margin-top: 20px;
 }
@@ -298,7 +339,7 @@ export default {
 .main {
   background-color: white;
 }
+
 .date-picker {
   margin-bottom: 20px;
-}
-</style>
+}</style>

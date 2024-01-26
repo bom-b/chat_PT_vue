@@ -1,6 +1,7 @@
 <script>
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
+
 export default {
   data() {
     return {
@@ -30,6 +31,7 @@ export default {
       },
       matchpwd: false,
       gogonext: false,
+      validpwd: false,
     };
   },
   computed: {
@@ -47,30 +49,31 @@ export default {
   watch: {
     "user.password": function (newPassword) {
       this.checkPasswordMatch(newPassword);
+      this.passwordValidCheck(newPassword);
     },
     "user.password_Check": function (newPasswordCheck) {
       this.checkPasswordMatch(newPasswordCheck);
     },
   },
   methods: {
-    regPassword(password) {
+    regPwd(password) {
       if (
         password !== null &&
         password !== undefined &&
         password.trim() !== ""
       ) {
-        const reg =
-          /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
+        const reg = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,16}$/;
+
         if (password.match(reg)) {
+          this.validpwd = false;
           return password;
         } else {
-          return this.$swal(
-            "형식오류",
-            "비밀번호는 영문, 숫자, 특수문자를 섞어서 만들어주세요."
-          );
+          this.validpwd = true;
+          return false;
         }
       } else {
-        return this.$swal.fire("형식오류", "아이디를 입력해주세요", "warning");
+        this.validpwd = true;
+        return '';
       }
     },
     checkPasswordMatch() {
@@ -158,10 +161,11 @@ export default {
         console.log(e);
       }
     },
-    passwordCheck() {
+    passwordValidCheck() {
       try {
-        const password = this.regPassword(this.user.password);
-        password;
+        const password = this.regPwd(this.user.password);
+
+        return password;
       } catch (e) {
         console.log(e);
       }
@@ -212,8 +216,7 @@ export default {
           } else {
             await this.$swal("이미 사용중인 이메일 입니다.");
           }
-        }
-        else {
+        } else {
           this.$swal("", "이메일을 입력하세요.", "warning")
         }
       } catch (e) {
@@ -273,7 +276,9 @@ export default {
             <i class="bi bi-arrow-left"></i>
           </button>
         </div>
-        <h2 class="mb-4">일반 회원가입</h2>
+        <div class="title-box">
+          <h2 class="mb-4">일반 회원가입</h2>
+        </div>
         <!-- 아이디 입력 폼 -->
         <section>
           <form @submit.prevent="idcheck">
@@ -394,7 +399,7 @@ export default {
               <div class="col-sm-7">
                 <div class="input-group">
                   <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력하세요"
-                    v-model="user.password" />
+                    v-model="user.password" @input="passwordValidCheck" />
                 </div>
               </div>
             </div>
@@ -414,14 +419,17 @@ export default {
               <p v-if="matchpwd" style="color: red">
                 비밀번호가 일치하지 않습니다.
               </p>
+              <p v-if="validpwd" style="color: red;">
+                대문자, 특수문자를 포함한 8~16자리의 비밀번호를 만들어주세요.
+              </p>
             </div>
-            <div class="row mb-3">
-              <label for="name" class="col-sm-4 col-form-label">카카오채널 연동코드:</label>
-              <div class="col-sm-6">
-                <div class="input-group">
-                  <input type="text" class="form-control" id="kakaocode" placeholder="카카오채널에서 발급받아주세요."
-                    v-model="user.kakaocode" />
-                </div>
+          </div>
+          <div class="row mt-5 mb-3">
+            <label for="name" class="col-sm-4 col-form-label">카카오채널 연동코드:</label>
+            <div class="col-sm-6">
+              <div class="input-group">
+                <input type="text" class="form-control" id="kakaocode" placeholder="(선택)카카오채널에서 발급받아주세요."
+                  v-model="user.kakaocode" />
               </div>
             </div>
           </div>
@@ -490,5 +498,13 @@ export default {
   display: flex;
   align-items: center;
   /* 자식 요소들을 세로 방향으로 가운데 정렬 */
+}
+
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100vw;
+  }
 }
 </style>

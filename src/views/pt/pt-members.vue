@@ -24,16 +24,8 @@
             <tbody>
               <tr v-for="(item, index) in wait_data" :key="index">
                 <td>
-                  <span
-                    v-if="editingIndex !== index"
-                    @click="startEdit(index, 'name')"
-                    >{{ item.name }}</span
-                  >
-                  <input
-                    v-else
-                    v-model="wait_data[index].name"
-                    @blur="endEdit()"
-                  />
+                  <span v-if="editingIndex !== index" @click="startEdit(index, 'name')">{{ item.name }}</span>
+                  <input v-else v-model="wait_data[index].name" @blur="endEdit()" />
                 </td>
                 <!-- 다른 열에 대해서도 동일한 방식으로 처리 -->
                 <td>{{ item.age }}</td>
@@ -41,35 +33,17 @@
                 <td>{{ item.height }}</td>
                 <td>{{ item.weight }}</td>
                 <td>
-                  <span
-                    v-if="editingIndex !== index"
-                    @click="startEdit(index, 'target_WEIGHT')"
-                    >{{ item.target_WEIGHT }}</span
-                  >
-                  <input
-                    v-else
-                    v-model="wait_data[index].target_WEIGHT"
-                    @blur="endEdit()"
-                  />
+                  <span v-if="editingIndex !== index" @click="startEdit(index, 'target_WEIGHT')">{{ item.target_WEIGHT
+                  }}</span>
+                  <input v-else v-model="wait_data[index].target_WEIGHT" @blur="endEdit()" />
                 </td>
                 <td>
-                  <span
-                    v-if="editingIndex !== index"
-                    @click="startEdit(index, 'goal')"
-                    >{{ item.goal }}</span
-                  >
-                  <input
-                    v-else
-                    v-model="wait_data[index].goal"
-                    @blur="endEdit()"
-                  />
+                  <span v-if="editingIndex !== index" @click="startEdit(index, 'goal')">{{ item.goal }}</span>
+                  <input v-else v-model="wait_data[index].goal" @blur="endEdit()" />
                 </td>
                 <td>{{ item.ptstart }}</td>
                 <td>
-                  <button
-                    class="btn-signature"
-                    @click="confirmReservation(item)"
-                  >
+                  <button class="btn-signature" @click="confirmReservation(item)">
                     예약 확인
                   </button>
                 </td>
@@ -111,43 +85,20 @@
                 <td>{{ item.height }}</td>
                 <td>{{ item.weight }}</td>
                 <td>
-                  <span
-                    v-if="editingIndex !== index"
-                    @click="startEdit(index, 'target_WEIGHT')"
-                    >{{ item.target_WEIGHT }}</span
-                  >
-                  <input
-                    v-else
-                    v-model="live_data[index].target_WEIGHT"
-                    @blur="endEdit()"
-                  />
+                  <span v-if="editingIndex !== index" @click="startEdit(index, 'target_WEIGHT')">{{ item.target_WEIGHT
+                  }}</span>
+                  <input v-else v-model="live_data[index].target_WEIGHT" @blur="endEdit()" />
                 </td>
                 <td>
-                  <span
-                    v-if="editingIndex !== index"
-                    @click="startEdit(index, 'goal')"
-                    >{{ item.goal }}</span
-                  >
-                  <input
-                    v-else
-                    v-model="live_data[index].goal"
-                    @blur="endEdit()"
-                  />
+                  <span v-if="editingIndex !== index" @click="startEdit(index, 'goal')">{{ item.goal }}</span>
+                  <input v-else v-model="live_data[index].goal" @blur="endEdit()" />
                 </td>
                 <td>
                   {{ item.ptstart }}
                 </td>
                 <td>
-                  <span
-                    v-if="editingIndex !== index"
-                    @click="startEdit(index, 'ptend')"
-                    >{{ item.ptend }}</span
-                  >
-                  <input
-                    v-else
-                    v-model="live_data[index].ptend"
-                    @blur="endEdit()"
-                  />
+                  <span v-if="editingIndex !== index" @click="startEdit(index, 'ptend')">{{ item.ptend }}</span>
+                  <input v-else v-model="live_data[index].ptend" @blur="endEdit()" />
                 </td>
                 <!-- 나머지 열에 대해서도 동일한 방식으로 처리 -->
               </tr>
@@ -354,9 +305,12 @@ export default {
 .vxe-table--empty-content {
   display: none !important;
 }
+
 .text-wrap {
-  white-space: normal; /* 줄바꿈 허용 */
-  word-break: break-word; /* 단어 내에서도 줄바꿈 허용 */
+  white-space: normal;
+  /* 줄바꿈 허용 */
+  word-break: break-word;
+  /* 단어 내에서도 줄바꿈 허용 */
 }
 
 .button-animation {
@@ -364,8 +318,10 @@ export default {
 }
 
 .button-animation:hover {
-  background-color: #3f232d; /* 네온 색상으로 변경 */
-  transform: translateY(-5px); /* 버튼이 살짝 위로 올라감 */
+  background-color: #3f232d;
+  /* 네온 색상으로 변경 */
+  transform: translateY(-5px);
+  /* 버튼이 살짝 위로 올라감 */
 }
 
 .fade-in {
@@ -376,6 +332,7 @@ export default {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }

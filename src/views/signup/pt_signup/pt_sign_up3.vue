@@ -4,9 +4,11 @@
       <div class="progress-bar" role="progressbar" :style="{ width: progress + '%' }" aria-valuenow="progress"
         aria-valuemin="0" aria-valuemax="100"></div>
     </div>
-    <div class="container">
-      <h2 class="mb-4">회원들에게 보여줄 정보를 입력하세요</h2>
-      <div class="container">
+    <div class="container main-container">
+      <div class="title-box">
+        <h2 class="" id="title">회원들에게 보여줄 정보를 입력하세요.</h2>
+      </div>
+      <div class="container insert-container toMobile">
         <form @submit.prevent="proceedToNextPage">
           <div>
             <h4>프로필 사진 등록</h4>
@@ -31,7 +33,7 @@
                   <i class="fas fa-plus"></i>
                   <span>사진 추가</span>
                 </label>
-                <input type="file" accept="image/*" @change="handleImageUpload" multiple id="image-upload" hidden>
+                <input type="file" ref="fileInput" accept="image/*" @change="handleImageUpload" multiple id="image-upload" hidden>
               </div>
             </div>
           </div>
@@ -42,7 +44,9 @@
             <div>
               <input type="text" id="region" placeholder="도로명 주소" readonly class="address-input" @click="search"
                 v-model="region">
-              <input type="text" placeholder="헬스장 이름 입력" style="width: 150px;" v-model="gym">
+              <div id="healthclub">
+                <input type="text" placeholder="헬스장 이름 입력" style="width: 150px; display: block; " v-model="gym">
+              </div>
             </div>
           </div>
           <div class="mt-5">
@@ -76,12 +80,15 @@
             <div class="contest-container" style="text-align: center;">
               <div class="m_category">
                 <h3>수상경력</h3>
-                <div class="career">
-                  <div v-for="(award, index) in awards" :key="index" class="input-group mb-3">
-                    <button class="btn btn-danger" @click="removeAward(index)">-</button>
-                    <input class="form-control" v-model="award.value">
+                <div id="career-mobile">
+                  <p>PC에서 정보수정으로 등록해주세요.</p>
+                </div>
+                <div id="career-pc" class="career">
+                  <div v-for="(value, key) in awards" :key="key" class="input-group mb-3">
+                    <button class="btn btn-danger" @click="removeAward(key)">-</button>
+                    <input class="form-control" v-model="awards[key]">
                   </div>
-                  <button class="btn btn-success" @click="addAward">+</button>
+                  <button class="btn btn-success" @click.prevent="addAward">+</button>
                 </div>
               </div>
             </div>
@@ -299,6 +306,14 @@
   /* 마우스 오버 시 배경색을 변경합니다 */
 }
 
+#career-mobile {
+  display: none;
+}
+
+#career-pc {
+  display: block;
+}
+
 /* 반응형 웹 디자인을 위한 미디어 쿼리 */
 @media (max-width: 768px) {
 
@@ -318,6 +333,65 @@
     /* 모바일 화면에서 제출 버튼의 너비를 100%로 설정합니다 */
   }
 
+  .insert-container {
+    width: 100vw;
+  }
+
+  .main-container {
+    padding: 0;
+  }
+
+  .main {
+    margin-left: 0px;
+    margin-right: 0px;
+    width: 100vw;
+  }
+
+  .title-box{
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+
+  #title {
+    font-family: 'TheJamsil400', sans-serif;
+    font-size: 18px;
+  }
+
+  .toMobile{
+    width: 100vw !important;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  input {
+    width: 90vw !important;
+  }
+
+  textarea {
+    width: 90vw !important;
+  }
+
+  .career {
+    width: 90vw !important;
+    display: flex;
+    justify-content: center;
+  }
+
+  #healthclub {
+    display: flex;
+    justify-content: center;
+  }
+
+  #career-mobile {
+    display: block;
+  }
+
+  #career-pc {
+    display: none;
+  }
+
 }
 </style>
 <script>
@@ -328,16 +402,14 @@ export default {
     return {
       uploadedImages: [], // 업로드된 이미지들을 저장하는 배열
       mainImage: null,
-      // awards: [
-      //   { name: '', rank: '' }
-      // ],
-      awards: [],
+      awards: {},
       region: "",
       starttime: '',
       endtime: '',
       trainercomment: '',
       trainerintro: '',
-      gym: ''
+      gym: '',
+      myBase64Img : [],
     };
   },
   mounted() {
@@ -367,22 +439,52 @@ export default {
     handleMainImageUpload(event) {
       const file = event.target.files[0];
       const imageObject = {
-        name: "",
+        name: "mainimage",
         url: FileReader.createObjectURL(file),
       };
       this.mainImage = imageObject;
+      console.log("메인 이미지:", this.mainImage);
     },
-    handleImageUpload(event) {
-      const files = event.target.files; // 선택한 파일들 가져오기
+    handleImageUpload(e) {
+      console.log("handleImageUpload 실행");
+      const fileInput = this.$refs.fileInput;
+      const files = Array.from(fileInput.files);
+
+      // 처리된 이미지를 저장할 배열을 초기화합니다.
+      const processedImages = [];
+
+      Promise.all(files.map((file) => {
+        return new Promise((resolve, reject) => {
+          
+          const reader = new FileReader();
+          reader.onload = (ee) => {
+            processedImages.push(ee.target.result);
+            resolve();
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+          
+        });
+      })).then(() => {
+        // 모든 이미지 처리가 완료된 후
+        
+        this.myBase64Img.push(processedImages);
+        this.$emit('image-uploaded', this.myBase64Img);
+      });
+
+      console.log("processedImages : " + processedImages) ;
+
+      const files1 = e.target.files; // 선택한 파일들 가져오기
       const maxImages = 3;
       const remainingSlots = maxImages - this.uploadedImages.length;
-      const uploadCount = Math.min(files.length, remainingSlots);
-
+      const uploadCount = Math.min(files1.length, remainingSlots);
       for (let i = 0; i < uploadCount; i++) {
-        const file = files[i];
+
+        const file = files1[i];
         const imageObject = {
           id: this.uploadedImages.length + 1, // 이미지 식별을 위한 ID
           url: URL.createObjectURL(file), // 업로드된 이미지의 URL
+          file: file
         };
 
         this.uploadedImages.push(imageObject);
@@ -390,9 +492,11 @@ export default {
           this.mainImage = imageObject;
         }
       }
-
+      // this.uploadedImages = e.target.files[];
+      console.log("업로드 된 이미지들:", this.uploadedImages);
+      console.log("업로드 된 base64이미지들:", this.myBase64Img);
       // 파일 선택 버튼 초기화
-      event.target.value = '';
+      e.target.value = '';
     },
     deleteImage(imageId) {
       this.uploadedImages = this.uploadedImages.filter((image) => image.id !== imageId);
@@ -408,14 +512,27 @@ export default {
       }
     },
     setMainImage(imageId) {
-      this.mainImage = this.uploadedImages.find((image) => image.id === imageId);
+      const selectedImage = this.uploadedImages.find(image => image.id === imageId);
+
+      if (selectedImage) {
+        const index = this.uploadedImages.indexOf(selectedImage);
+
+        this.uploadedImages = [selectedImage, ...this.uploadedImages.slice(0, index), ...this.uploadedImages.slice(index + 1)];
+
+        this.mainImage = selectedImage;
+      }
     },
     addAward() {
-      this.awards.push({ value: '' });
+      const nextKey = Object.keys(this.awards).length;
+      this.awards[nextKey] = '';
+      console.log('Awards after adding:', this.awards);
     },
-    removeAward(index) {
-      this.awards.splice(index, 1);
+
+    removeAward(key) {
+      delete this.awards[key];
+      console.log('Awards after removal:', this.awards);
     },
+
     removeContest(index) {
       if (this.awards.length > 1) {
         this.awards.splice(index, 1);
@@ -449,22 +566,6 @@ export default {
     formatTime(hour) {
       return hour < 10 ? `오전 0${hour}시` : hour < 12 ? `오전 ${hour}시` : hour === 12 ? `오후 ${hour}시` : `오후 ${(hour - 12).toString().padStart(2, '0')}시`;
     },
-    // submitForm() {
-    //   let count = 0;
-    //   const totalFields = 7; // 총 필드 수
-
-    //   if (this.mainImage) count++;
-    //   if (this.region) count++;
-    //   if (this.starttime) count++;
-    //   if (this.endtime) count++;
-    //   if (this.trainercomment) count++;
-    //   if (this.trainerintro) count++;
-    //   if (this.gym) count++;
-
-    //   if (count == totalFields) {
-    //     this.$router.push('/pt_sign_finish'); // 이름 입력 페이지로 이동
-    //   }
-    // },
 
     async proceedToNextPage() {
       try {
@@ -473,13 +574,14 @@ export default {
           region: this.region,
           trainercomment: this.trainercomment,
           trainerintro: this.trainerintro,
-          awards: this.awards,
+          awards: Object.values(this.awards),
           starttime: this.starttime,
           endtime: this.endtime,
-          mainimage: this.mainImage,
+          // mainimage: this.mainImage,
           gym: this.gym,
-
+          imgs: this.myBase64Img
         };
+        console.log("data.imgs : " + data.imgs);
         if (isValid) {
           const signup = await Swal.fire({
             title: "",

@@ -32,7 +32,7 @@
                    class="uploaded-image"
               />
               <span class="food-name">{{ e.foodName }}</span>
-              <button class="btn btn-secondary" @click="togglePopover(e, $event)">
+              <button class="btn btn-detail" @click="togglePopover(e, $event)">
                 상세보기
               </button>
               <div>
@@ -41,15 +41,19 @@
                     <button class="close-button" @click="closePopover()">&#10006;</button> <!-- X 버튼이 있는 줄 -->
                   </div>
                   <div v-if="!e.editMode">
-                    <p>음식명: {{ foods[e.foodnum] }} {{ e.predictrate }}%</p>
+                    <p>음식명: {{ e.foodName }}
+                      <span v-if="e.predictrate !== 0">
+                        {{ e.predictrate }}%
+                      </span>
+                    </p>
                     <p>양: {{ e.mass }}g</p>
                     <p>칼로리: {{ e.foodcal.toFixed(2) }}Kcal</p>
                     <p>탄수화물: {{ e.food_TAN }}g</p>
                     <p>단백질: {{ e.food_DAN }}g</p>
                     <p>지방: {{ e.food_GI }}g</p>
-                    <p>후보1: {{ foods[e.candidate1] }} {{ e.candidate1RATE }}%</p>
-                    <p>후보2: {{ foods[e.candidate2] }} {{ e.candidate2RATE }}%</p>
-                    <p>후보3: {{ foods[e.candidate3] }} {{ e.candidate3RATE }}%</p>
+                    <p>후보1: {{ foods[e.candidate1] }} <span v-if="e.candidate1RATE !== 0">{{ e.candidate1RATE }}%</span></p>
+                    <p>후보2: {{ foods[e.candidate2] }} <span v-if="e.candidate2RATE !== 0">{{ e.candidate2RATE }}%</span></p>
+                    <p>후보3: {{ foods[e.candidate3] }} <span v-if="e.candidate3RATE !== 0">{{ e.candidate3RATE }}%</span></p>
                     <button class="btn btn-primary" @click="editFood(e)" style="float: right;">수정</button>
                     <button class="btn btn-danger" @click="deleteFood(e.upphotoid)" style="float: right;">삭제</button>
                   </div>
@@ -228,40 +232,54 @@ export default {
       if (this.activePopover) {
         this.calculatePopoverPosition(event.target);
       }
+
     },
     calculatePopoverPosition(button) {
       const popoverWidth = 300; // 팝오버 너비
-      const popoverHeight = 450; // 팝오버 높이, 필요에 따라 조정
+      const popoverHeight = 450; // 팝오버 높이
+
       const buttonRect = button.getBoundingClientRect();
-      const buttonCenterX = buttonRect.left + (buttonRect.width / 2);
-      const buttonBottomY = buttonRect.bottom + window.scrollY;
 
-      let popoverX, popoverTop;
-      // 가로 위치 계산
-      if (buttonCenterX < window.innerWidth / 2) {
-        popoverX = buttonCenterX;
-      } else {
-        popoverX = buttonCenterX - popoverWidth;
+      let popoverX, popoverY;
+
+      // 버튼의 위치 계산
+      const buttonLeft = buttonRect.left;
+      const buttonTop = buttonRect.top;
+      const buttonRight = buttonRect.right;
+      const buttonBottom = buttonRect.bottom;
+      console.log("buttonLeft : " + buttonLeft);
+      console.log("buttonTop : " + buttonTop);
+      console.log("buttonRight : " + buttonRight);
+      console.log("buttonBottom : " + buttonBottom);
+
+      // 팝오버 위치 우선순위: 아래 > 오른쪽 > 위 > 왼쪽
+      popoverX = 0; // 기본적으로 버튼의 오른쪽
+      popoverY = 0; // 기본적으로 버튼의 아래쪽
+
+      // 오른쪽에 공간이 부족한 경우
+      if (window.innerWidth - buttonRight < popoverWidth) {
+        popoverX = -250; // 왼쪽으로 이동
+      }else{
+        popoverX = 150;
       }
 
-      // 세로 위치 계산
-      if (buttonBottomY + popoverHeight > window.innerHeight + window.scrollY) {
-        // 화면 아래쪽에 공간 부족 시, 팝오버를 위로
-        popoverTop = buttonRect.top + window.scrollY - popoverHeight;
-      } else {
-        // 공간 충분 시, 팝오버를 아래로
-        popoverTop = buttonBottomY;
+      // 아래쪽에 공간이 부족한 경우
+      if (window.innerHeight - buttonBottom< popoverHeight) {
+        popoverY = -240; // 위쪽으로 이동
+      }else{
+        popoverY = 260;
       }
-
+      console.log("popoverX : " + popoverX);
+      console.log("popoverY : " + popoverY);
       this.popoverStyle = {
-        left: popoverX + 'px',
-        top: popoverTop + 'px',
+        left: `${popoverX}px`,
+        top: `${popoverY}px`,
         opacity: 1,
+        position: 'absolute',
         transform: 'translateY(10px)',
         transition: 'transform 0.2s ease-out, opacity 0.2s ease-out',
       };
     },
-
     editFood(foodItem) {
       // 음식 편집 모드 활성화
       foodItem.editMode = true;
@@ -325,9 +343,18 @@ export default {
       console.log("updatedData.foodName : " + updatedData.foodName)
       // 음식명이 변경된 경우 관리자 검수 요청
       if (nameChanged) {
-        if (updatedData.selectedCandidate == null) {
-          updatedData.selectedCandidate = -1;
+        // foods 객체에서 음식 이름으로 번호 찾기
+        let matchedKey = Object.keys(this.foods).find(key =>
+            this.foods[key].normalize().includes(updatedData.foodName.normalize())
+        );
+        // 음식명이 foods 객체에 있으면 해당 번호를 사용, 없으면 -1
+        if (matchedKey !== undefined) {
+          updatedData.selectedCandidate = matchedKey;
+        } else {
+          updatedData.selectedCandidate = -1; // 일치하는 항목이 없는 경우
         }
+        console.log("updatedData.selectedCandidate : " + updatedData.selectedCandidate)
+
         this.$axios.post('/requestNameChange', {
           upphotoid: upphotoid,
           imgeditcomment: updatedData.foodName,
@@ -379,6 +406,20 @@ export default {
 
 
 <style lang="scss" scoped>
+.btn-detail {
+  background-color: #47b749; // 버튼 기본 배경색
+  color: white; // 버튼 글자색
+  border-radius: 5px; // 버튼의 모서리 둥글게
+  padding: 8px 15px; // 내부 여백
+  border: 1px solid transparent; // 테두리 스타일
+  transition: all 0.3s ease; // 부드러운 효과
+
+  &:hover {
+    background-color: #45a049; // 마우스 오버 시 배경색 변경
+    font-weight: bold;
+  }
+}
+
 .top-pad-class{
   padding-top: 100px;
 }
@@ -621,7 +662,7 @@ export default {
 .image-items{
   width: 100%;
   margin-bottom: 10px; // 아이템 간의 수직 간격 조정
-  background-color: #eff0f3; // 이미지 아이템에 하얀색 배경 적용
+  background-color: rgba(233, 235, 238, 0.79); // 이미지 아이템에 하얀색 배경 적용
   padding-top: 30px; // 내부 패딩
   padding-bottom: 30px;
   border-radius: 5px; // 둥근 모서리

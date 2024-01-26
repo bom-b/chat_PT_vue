@@ -111,12 +111,12 @@ nav {
           </li>
         </ul>
         <button class="btn">
-          {{name+"님"}}
+          {{name}} {{ userInfo }} 님
         </button>
         <div class="profile-img-container d-flex" style="margin-right: 20px">
           <img
               class="profile-img"
-              src="../../assets/img/trainer1.jpg"
+              :src="`${this.$s3BaseURL}/trainer/profile_img/${userimg}`"
               alt=""
               style="width: 32px; object-fit: contain"
           />
@@ -128,6 +128,7 @@ nav {
     </div>
   </nav>
 </template>
+
 
 <script>
 import {ref} from "vue";
@@ -156,16 +157,42 @@ export default {
   },
   data() {
     return {
+      userimg:"",
       navLinks: [
         {name: "수강회원 관리", route: "/trainer/pt_members"},
         {name: "스케줄 관리", route: "/trainer/pt_schedule"},
         {name: "프로필 관리", route: "/trainer/pt_profile"},
+        {name: "마이페이지 수정", route: "/trainer/pt_member_edit"},
+
       ],
     };
   },
   watch: {
     $route(newRoute) {
       this.currentRoute = newRoute.path;
+    },
+  },
+  mounted() { //마이페이지 위젯
+    this.fetchUserInfo();
+
+  },
+  methods: { //마이페이지 위젯 사용을 위해 추가
+
+    // 유저 인포
+    fetchUserInfo() {
+      // Axios를 사용하여 사용자 정보 가져오기
+      this.$axios
+        .get("/gettrainerInfo")
+        .then((response) => {
+          this.userimg = response.data
+          console.log(this.userimg)
+
+        })
+        .catch((error) => {
+          console.error("Error fetching user info:", error);
+          console.log(this.userimg)
+
+        });
     },
   },
 };

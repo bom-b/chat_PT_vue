@@ -15,7 +15,7 @@
       src="../../assets/img/icon/backtothe.png"
       alt="back_icon"
       @click="goback()"
-      style="height: 50px; margin-bottom: 2px"
+      style="height: 30px; margin-bottom: 4px"
     />
     <ul class="list-group" ref="chatList">
       <li

@@ -9,13 +9,15 @@
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import { mapState } from "vuex";
-import signUp1 from "@/views/signup/d_signup/sign_up.vue";
+import signUp1 from "@/views/signup/d_signup/sign_up1.vue";
+import signUp1_kakao from "@/views/signup/d_signup/sign_up1_kakao.vue";
 import signUp2 from "@/views/signup/d_signup/sign_up2.vue";
 import signUp3 from "@/views/signup/d_signup/sign_up3.vue";
 import signUp4 from "@/views/signup/d_signup/sign_up4.vue";
 export default {
     components: {
         signUp1,
+        signUp1_kakao,
         signUp2,
         signUp3,
         signUp4,
@@ -35,7 +37,11 @@ export default {
         ...mapState(['page']),
         page() {
             if (this.currentPageIndex == 1) {
+              if (window.localStorage.getItem('newKakaoUserData')) {
+                return signUp1_kakao;
+              } else {
                 return signUp1;
+              }
             } else if (this.currentPageIndex == 2) {
                 return signUp2;
             } else if (this.currentPageIndex == 3) {
@@ -49,7 +55,7 @@ export default {
 
     },
     mounted() {
-        console.log(`          _____                   _____                   _____            _____                            _____            _____          
+        console.log(`          _____                   _____                   _____            _____                            _____            _____
 %c         /\\    \\                 /\\    \\                 /\\    \\          /\\    \\                          /\\    \\          /\\    \\         
         /::\\    \\               /::\\____\\               /::\\    \\        /::\\    \\                        /::\\    \\        /::\\    \\        
        /::::\\    \\             /:::/    /              /::::\\    \\       \\:::\\    \\                      /::::\\    \\       \\:::\\    \\       
@@ -104,13 +110,15 @@ export default {
                         this.formData.append(key, value);
                     }
                 }
-                
+
 
                 await this.$axiosWithoutValidation.post("/signUp/completeSignUp", this.formData)
                     .then(async response => {
                         this.serverReturn = response.data;
                         console.log("*********" + this.serverReturn);
                         if (this.serverReturn > 0) {
+                            // 로컬스토리지에 있는 카카오 정보 삭제 (카카오 회원가입을 통해 들어온 경우.)
+                            window.localStorage.removeItem('newKakaoUserData');
                             const Toast = Swal.mixin({
                                 toast: true,
                                 position: 'center-center',
