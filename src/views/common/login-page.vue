@@ -142,13 +142,13 @@ a {
           <div class="form-group">
             <label for="username">아이디:</label>
             <input v-model="user.userName" type="text" class="form-control" id="username"
-                   placeholder="아이디를 입력해주세요.">
+                   placeholder="테스트용 ID: 1">
           </div>
 
           <div class="form-group">
             <label for="password">패스워드:</label>
             <input v-model="user.password" type="password" class="form-control" id="password"
-                   placeholder="비밀번호를 입력해주세요.">
+                   placeholder="테스트용 PW: 1">
           </div>
 
           <!--     아이디 저장     -->
